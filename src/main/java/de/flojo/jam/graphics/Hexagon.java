@@ -16,9 +16,6 @@ public class Hexagon extends Polygon {
     private Point[] points = new Point[SIDES];
     private Point center = new Point(0, 0);
     private int radius;
-    private float scale = 1f;
-    private float scaleTarget = 1f;
-    private static Point zoomPoint = new Point();
     public AtomicBoolean hover = new AtomicBoolean();
 
     public Hexagon(Point center, int radius) {
@@ -32,10 +29,6 @@ public class Hexagon extends Polygon {
         updatePoints();
     }
 
-    public void scale(float newScale) {
-        this.scaleTarget = newScale;
-        updatePoints();
-    }
 
     public Hexagon(int x, int y, int radius) {
         this(new Point(x, y), radius);
@@ -49,10 +42,6 @@ public class Hexagon extends Polygon {
         this.radius = radius;
 
         updatePoints();
-    }
-
-    public static void updateZoomPoint(int x, int y) {
-        zoomPoint = new Point(x, y);
     }
 
     public void setCenter(Point center) {
@@ -86,17 +75,9 @@ public class Hexagon extends Polygon {
     }
 
     public synchronized void updatePoints() {
-        float relativeScale = Math.signum(scaleTarget - scale) * (scale != scaleTarget ? 0.1f : 0); 
-        int scaledCenterX = (int)((center.x - zoomPoint.getX()) * relativeScale + center.x);
-        int scaledCenterY = (int)((center.y - zoomPoint.getY()) * relativeScale + center.y);
-        if(Math.abs(scale - scaleTarget) < 0.01) {
-            scale = scaleTarget;
-        } else {
-            scale += (scaleTarget - scale)/20;
-        }
         for (int p = 0; p < SIDES; p++) {
             double angle = findAngle((double) p / SIDES);
-            Point point = findPoint(scaledCenterX, scaledCenterY, radius * scale, angle);
+            Point point = findPoint((int)center.getX(), (int)center.getY(), radius, angle);
             xpoints[p] = point.x;
             ypoints[p] = point.y;
             points[p] = point;
@@ -104,8 +85,8 @@ public class Hexagon extends Polygon {
         super.invalidate();
     }
 
-    public void draw(Graphics2D g, int lineThickness, int colorValue, boolean filled) {
-        g.setColor(new Color(colorValue));
+    public void draw(Graphics2D g, int lineThickness, Color color, boolean filled) {
+        g.setColor(color);
         g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
 
         if (filled)
@@ -114,21 +95,21 @@ public class Hexagon extends Polygon {
             g.drawPolygon(xpoints, ypoints, npoints);
     }
 
-    public static double getWidthOf(int radius, double scale) {
-        Point point0 = findPoint(0, 0, radius * scale, findAngle(0d));
-        Point point1 = findPoint(0, 0, radius * scale, findAngle(0.5));
+    public static double getWidthOf(int radius) {
+        Point point0 = findPoint(0, 0, radius, findAngle(0d));
+        Point point1 = findPoint(0, 0, radius, findAngle(0.5));
         return Math.abs(point0.getX() - point1.getX());
     }
 
-    public static double getSegmentWidthOf(int radius, double scale) {
-        Point point0 = findPoint(0, 0, radius * scale, findAngle(0d));
-        Point point1 = findPoint(0, 0, radius * scale, findAngle(1 / 6d));
+    public static double getSegmentWidthOf(int radius) {
+        Point point0 = findPoint(0, 0, radius, findAngle(0d));
+        Point point1 = findPoint(0, 0, radius, findAngle(1 / 6d));
         return Math.abs(point0.getX() - point1.getX());
     }
 
-    public static double getHeightOf(int radius, double scale) {
-        Point point0 = findPoint(0, 0, radius * scale, findAngle(1 / 6d));
-        Point point1 = findPoint(0, 0, radius * scale, findAngle(5 / 6d));
+    public static double getHeightOf(int radius) {
+        Point point0 = findPoint(0, 0, radius, findAngle(1 / 6d));
+        Point point1 = findPoint(0, 0, radius, findAngle(5 / 6d));
         return Math.abs(point0.getY() - point1.getY());
     }
 

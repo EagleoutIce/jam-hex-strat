@@ -1,25 +1,46 @@
 package de.flojo.jam.screens;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
 import de.flojo.jam.graphics.Hexagon;
 import de.gurkenlabs.litiengine.Game;
+import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
-import de.gurkenlabs.litiengine.input.Input;//
+import de.gurkenlabs.litiengine.input.Input;
+import de.gurkenlabs.litiengine.resources.Resources;
 
 public class IngameScreen extends Screen {
+    private static final BufferedImage background = Resources.images().get("Rcihtiges Hexfeld Vorlage 0.1.png");
+    int bx = 0, by=0;
     public static final String NAME = "INGAME";
 
     List<Hexagon> hexagons = new LinkedList<>();
-    float scale = 1f;
     public IngameScreen() {
         super(NAME);
-
+        Game.window().onResolutionChanged(r -> {
+            if(Game.window().getHeight() - by  >= background.getHeight() - 5) {
+                int offset = Math.min(0, Game.window().getHeight() - background.getHeight() - 5);
+                int rof = by - offset;
+                by = offset;
+                hexagons.forEach(h -> h.move(0, -rof));
+            }
+            
+            if(Game.window().getWidth() - bx  >= background.getWidth() - 5) { 
+                int offset = Math.min(0, Game.window().getWidth() - background.getWidth() - 5);
+                bx = offset;
+                int rof = bx - offset;
+                hexagons.forEach(h -> h.move(-rof, 0));
+            }
+            }
+        );
     }
 
     private int lineToggle(int row) {
@@ -28,15 +49,15 @@ public class IngameScreen extends Screen {
 
     private void drawHexGrid(Point2D upperLeft, int width, int height, int padding) {
         final int radius = 30;
-        final double hexWidth = Hexagon.getWidthOf(radius,scale);
-        final double hexHeight = Hexagon.getHeightOf(radius,scale);
-        final double hexSeg = Hexagon.getSegmentWidthOf(radius,scale);
+        final double hexWidth = Hexagon.getWidthOf(radius);
+        final double hexHeight = Hexagon.getHeightOf(radius);
+        final double hexSeg = Hexagon.getSegmentWidthOf(radius);
         final double rowShift = hexWidth - hexSeg + padding;
         final double hexMidWidth = hexWidth - 2 * hexSeg;
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
-                int x = (int) (upperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift);
-                int y = (int) (upperLeft.getY() + row * (0.5 * hexHeight + padding));
+                int x = (int) (upperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift) + 200;
+                int y = (int) (upperLeft.getY() + row * (0.5 * hexHeight + padding)) + 100;
                 drawHex(x, y, radius);
             }
         }
@@ -51,25 +72,27 @@ public class IngameScreen extends Screen {
         super.prepare();
 
         Input.keyboard().onKeyPressed(KeyEvent.VK_W, e -> {
-            hexagons.forEach(h -> h.move(0, 5));
+            if(by <=-5){
+                by += 5;
+                hexagons.forEach(h -> h.move(0, 5));
+            }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_A, e -> {
-            hexagons.forEach(h -> h.move(5, 0));
+            if(bx <= -5){
+                hexagons.forEach(h -> h.move(5, 0));
+                bx += 5;
+            }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_S, e -> {
-            hexagons.forEach(h -> h.move(0, -5));
+            if(Game.window().getHeight() - by  < background.getHeight() - 5){
+                hexagons.forEach(h -> h.move(0, -5));
+                by -= 5;
+            }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_D, e -> {
-            hexagons.forEach(h -> h.move(-5, 0));
-        });
-
-        Input.mouse().onWheelMoved(e -> {
-            float oldScale = scale;
-            float zoom = 0.1f*Math.signum(e.getWheelRotation());
-            scale = Math.max(Math.min(scale - zoom, 6f),1f);
-            if(oldScale != scale) {
-                Hexagon.updateZoomPoint(mx, my);
-                hexagons.forEach(h -> h.scale(scale));
+            if(Game.window().getWidth() - bx  < background.getWidth() - 5){
+                hexagons.forEach(h -> h.move(-5, 0));
+                bx -= 5;
             }
         });
 
@@ -78,7 +101,7 @@ public class IngameScreen extends Screen {
                 System.exit(0);
             }
         });
-        drawHexGrid(Game.window().getCenter(), 24, 33, 0);
+        drawHexGrid(new Point(0,0), 24, 33, 0);
     }
 
     private int mx;
@@ -108,19 +131,17 @@ public class IngameScreen extends Screen {
 
     @Override
     public void render(final Graphics2D g) {
-        if (Game.world().environment() != null) {
-            Game.world().environment().render(g);
-        }
+        ImageRenderer.render(g, background, bx, by);
+
         for (var hex : hexagons) {
 
-            if (hex.hover.get()) {
-                hex.draw(g, 0, 0x038844, false);
-            } else {
-                hex.draw(g, 0, 0x008844, true);
-            }
-            hex.draw(g, 4, 0xFFDD88, false);
-        }
 
+            if (hex.hover.get()) {
+                hex.draw(g, 0, new Color(0.6f,0.6f,0.3f,0.2f), true);
+            }
+            hex.draw(g, 4, new Color(0.4f,0.6f,0.3f,0.6f), false);
+
+        }
     }
 
 }

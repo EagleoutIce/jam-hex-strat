@@ -40,7 +40,6 @@ public class Main {
 
         Game.screens().add(new IngameScreen());
         Game.screens().add(new MenuScreen());
-
         Game.addGameListener(new GameListener() {
             @Override
             public void initialized(String... args) {
