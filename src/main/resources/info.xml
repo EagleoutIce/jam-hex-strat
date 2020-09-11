@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gameinfo>
+ <name>A Testgame</name>
+ <subTitle>Superduper testgame</subTitle>
+ <description>Just a cheaty little testgame.</description>
+ <version>v1.0.0</version>
+ <developer>Florian Sihler</developer>
+ <developer>Florian Sihler2</developer>
+</gameinfo>
