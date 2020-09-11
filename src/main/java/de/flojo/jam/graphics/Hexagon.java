@@ -16,7 +16,9 @@ public class Hexagon extends Polygon {
     private Point[] points = new Point[SIDES];
     private Point center = new Point(0, 0);
     private int radius;
-
+    private float scale = 1f;
+    private float scaleTarget = 1f;
+    private static Point zoomPoint = new Point();
     public AtomicBoolean hover = new AtomicBoolean();
 
     public Hexagon(Point center, int radius) {
@@ -27,6 +29,11 @@ public class Hexagon extends Polygon {
         this.center = center;
         this.radius = radius;
 
+        updatePoints();
+    }
+
+    public void scale(float newScale) {
+        this.scaleTarget = newScale;
         updatePoints();
     }
 
@@ -42,6 +49,10 @@ public class Hexagon extends Polygon {
         this.radius = radius;
 
         updatePoints();
+    }
+
+    public static void updateZoomPoint(int x, int y) {
+        zoomPoint = new Point(x, y);
     }
 
     public void setCenter(Point center) {
@@ -63,21 +74,29 @@ public class Hexagon extends Polygon {
         return fraction * Math.PI * 2;
     }
 
-    private static Point findPoint(Point center, double radius, double angle) {
+    private static Point findPoint(int x, int y, double radius, double angle) {
         double factor = 1.4;
         if (angle == 0.0d || angle == Math.PI)
             factor = 1.25;
 
-        int x = (int) (center.x + Math.cos(angle) * radius * factor);
-        int y = (int) (center.y + Math.sin(angle) * radius);
+        double targetX = x + Math.cos(angle) * radius * factor;
+        double targetY = y + Math.sin(angle) * radius;
 
-        return new Point(x, y);
+        return new Point((int) targetX, (int) targetY);
     }
 
-    protected void updatePoints() {
+    public synchronized void updatePoints() {
+        float relativeScale = Math.signum(scaleTarget - scale) * (scale != scaleTarget ? 0.1f : 0); 
+        int scaledCenterX = (int)((center.x - zoomPoint.getX()) * relativeScale + center.x);
+        int scaledCenterY = (int)((center.y - zoomPoint.getY()) * relativeScale + center.y);
+        if(Math.abs(scale - scaleTarget) < 0.01) {
+            scale = scaleTarget;
+        } else {
+            scale += (scaleTarget - scale)/20;
+        }
         for (int p = 0; p < SIDES; p++) {
             double angle = findAngle((double) p / SIDES);
-            Point point = findPoint(center, radius, angle);
+            Point point = findPoint(scaledCenterX, scaledCenterY, radius * scale, angle);
             xpoints[p] = point.x;
             ypoints[p] = point.y;
             points[p] = point;
@@ -95,21 +114,21 @@ public class Hexagon extends Polygon {
             g.drawPolygon(xpoints, ypoints, npoints);
     }
 
-    public static double getWidthOf(int radius) {
-        Point point0 = findPoint(new Point(0, 0), radius, findAngle(0d));
-        Point point1 = findPoint(new Point(0, 0), radius, findAngle(0.5));
+    public static double getWidthOf(int radius, double scale) {
+        Point point0 = findPoint(0, 0, radius * scale, findAngle(0d));
+        Point point1 = findPoint(0, 0, radius * scale, findAngle(0.5));
         return Math.abs(point0.getX() - point1.getX());
     }
 
-    public static double getSegmentWidthOf(int radius) {
-        Point point0 = findPoint(new Point(0, 0), radius, findAngle(0d));
-        Point point1 = findPoint(new Point(0, 0), radius, findAngle(1 / 6d));
+    public static double getSegmentWidthOf(int radius, double scale) {
+        Point point0 = findPoint(0, 0, radius * scale, findAngle(0d));
+        Point point1 = findPoint(0, 0, radius * scale, findAngle(1 / 6d));
         return Math.abs(point0.getX() - point1.getX());
     }
 
-    public static double getHeightOf(int radius) {
-        Point point0 = findPoint(new Point(0, 0), radius, findAngle(1 / 6d));
-        Point point1 = findPoint(new Point(0, 0), radius, findAngle(5 / 6d));
+    public static double getHeightOf(int radius, double scale) {
+        Point point0 = findPoint(0, 0, radius * scale, findAngle(1 / 6d));
+        Point point1 = findPoint(0, 0, radius * scale, findAngle(5 / 6d));
         return Math.abs(point0.getY() - point1.getY());
     }
 
