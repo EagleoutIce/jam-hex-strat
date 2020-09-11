@@ -33,5 +33,10 @@ public class SimpleImageRenderer implements IRenderData {
     public boolean hasImage() {
         return true;
     }
+
+    @Override
+    public BufferedImage getImage() {
+        return image;
+    }
     
 }

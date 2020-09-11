@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.util.logging.Level;
 
+import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.IngameScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.gurkenlabs.litiengine.Game;
@@ -19,6 +20,7 @@ public class Main {
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
+    public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
     public static void main(String[] args) {
 
@@ -40,6 +42,7 @@ public class Main {
 
         Game.screens().add(new MenuScreen());
         Game.screens().add(new IngameScreen());
+        Game.screens().add(new EditorScreen());
         
         Game.addGameListener(new GameListener() {
             @Override

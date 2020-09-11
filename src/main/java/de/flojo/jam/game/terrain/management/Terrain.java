@@ -1,25 +1,24 @@
-package de.flojo.jam.game.terrain;
+package de.flojo.jam.game.terrain.management;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class Terrain implements Serializable {
 
     private static final long serialVersionUID = 8198115689285126822L;
 
     private final String name;
-    private final List<List<TerrainType>> data;
+    private final TerrainData data;
 
     public String getName() {
         return name;
     }
 
 
-    public List<List<TerrainType>> getData() {
+    public TerrainData getData() {
         return data;
     }
 
-    public Terrain(String name, List<List<TerrainType>> terrain) {
+    public Terrain(String name, TerrainData terrain) {
         this.name = name;
         this.data = terrain;
     }

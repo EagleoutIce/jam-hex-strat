@@ -2,6 +2,7 @@ package de.flojo.jam.game.terrain.renderer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
 
 public class VoidRenderer implements IRenderData {
 
@@ -22,6 +23,11 @@ public class VoidRenderer implements IRenderData {
     @Override
     public boolean hasImage() {
         return false;
+    }
+
+    @Override
+    public BufferedImage getImage() {
+        return null;
     }
     
 }
