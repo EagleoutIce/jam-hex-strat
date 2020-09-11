@@ -1,4 +1,4 @@
-package de.flojo.jam.game;
+package de.flojo.jam.game.board;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -14,7 +14,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import de.flojo.jam.game.terrain.TerrainMap;
+import de.flojo.jam.game.board.highlighting.IHighlightMask;
+import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -36,6 +37,8 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private int shiftX;
     private int shiftY;
     private final Point tilesUpperLeft;
+
+    private IHighlightMask highlightMask;
 
     private final Map<BoardCoordinate, Tile> tiles;
 
@@ -169,7 +172,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
             } else {
                 tile.clearHover();// clear all
             }
-            
         }
         return foundTile;
     }

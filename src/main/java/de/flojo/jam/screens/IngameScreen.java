@@ -2,7 +2,7 @@ package de.flojo.jam.screens;
 
 import java.awt.Graphics2D;
 
-import de.flojo.jam.game.Board;
+import de.flojo.jam.game.board.Board;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 

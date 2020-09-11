@@ -1,4 +1,4 @@
-package de.flojo.jam.game;
+package de.flojo.jam.game.board;
 
 public interface IAmNode {
     

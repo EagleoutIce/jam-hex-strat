@@ -1,11 +1,11 @@
-package de.flojo.jam.game.terrain.management;
+package de.flojo.jam.game.board.terrain.management;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-import de.flojo.jam.game.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainType;
 
 public class TerrainImprint {
 

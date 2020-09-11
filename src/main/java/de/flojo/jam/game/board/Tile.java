@@ -1,11 +1,11 @@
-package de.flojo.jam.game;
+package de.flojo.jam.game.board;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import de.flojo.jam.game.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.graphics.Hexagon;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;

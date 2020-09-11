@@ -1,12 +1,12 @@
-package de.flojo.jam.game.terrain;
+package de.flojo.jam.game.board.terrain;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
 
-import de.flojo.jam.game.Direction;
-import de.flojo.jam.game.terrain.renderer.IRenderData;
-import de.flojo.jam.game.terrain.renderer.SimpleImageRenderer;
-import de.flojo.jam.game.terrain.renderer.VoidRenderer;
+import de.flojo.jam.game.board.Direction;
+import de.flojo.jam.game.board.terrain.renderer.IRenderData;
+import de.flojo.jam.game.board.terrain.renderer.SimpleImageRenderer;
+import de.flojo.jam.game.board.terrain.renderer.VoidRenderer;
 
 public enum TerrainType {
     EMPTY("Nothing.", false, false, false, false, 1, Direction.NONE, VoidRenderer.get()), //

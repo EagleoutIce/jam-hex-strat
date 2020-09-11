@@ -1,4 +1,4 @@
-package de.flojo.jam.game.terrain.management;
+package de.flojo.jam.game.board.terrain.management;
 
 import java.io.Serializable;
 

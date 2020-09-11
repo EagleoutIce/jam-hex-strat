@@ -1,4 +1,4 @@
-package de.flojo.jam.game.terrain.management;
+package de.flojo.jam.game.board.terrain.management;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 
-import de.flojo.jam.game.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainType;
 import de.gurkenlabs.litiengine.Game;
 
 // assert rectangle :/

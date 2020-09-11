@@ -1,10 +1,10 @@
-package de.flojo.jam.game.terrain.management;
+package de.flojo.jam.game.board.terrain.management;
 
 import java.awt.Color;
 import java.awt.Point;
 import java.util.Arrays;
 
-import de.flojo.jam.game.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainType;
 
 public enum TerrainId {
     T_EMPTY("Leer", TerrainImprint.getSingle(TerrainType.EMPTY), Color.WHITE),

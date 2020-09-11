@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.flojo.jam.Main;
-import de.flojo.jam.game.Board;
-import de.flojo.jam.game.terrain.management.TerrainId;
-import de.flojo.jam.game.terrain.management.TerrainImprint;
+import de.flojo.jam.game.board.Board;
+import de.flojo.jam.game.board.terrain.management.TerrainId;
+import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.graphics.ImageButton;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.screens.Screen;

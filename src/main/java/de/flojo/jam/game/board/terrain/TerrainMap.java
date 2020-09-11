@@ -1,4 +1,4 @@
-package de.flojo.jam.game.terrain;
+package de.flojo.jam.game.board.terrain;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonIOException;
 import com.google.gson.JsonSyntaxException;
 
-import de.flojo.jam.game.terrain.management.Terrain;
-import de.flojo.jam.game.terrain.management.TerrainData;
+import de.flojo.jam.game.board.terrain.management.Terrain;
+import de.flojo.jam.game.board.terrain.management.TerrainData;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 

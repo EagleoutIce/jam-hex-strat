@@ -1,4 +1,4 @@
-package de.flojo.jam.game;
+package de.flojo.jam.game.board;
 
 import java.awt.Point;
 
