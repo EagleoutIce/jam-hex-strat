@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Polygon;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Hexagon extends Polygon {
 
@@ -16,7 +15,6 @@ public class Hexagon extends Polygon {
     private Point[] points = new Point[SIDES];
     private Point center = new Point(0, 0);
     private int radius;
-    public AtomicBoolean hover = new AtomicBoolean();
 
     public Hexagon(Point center, int radius) {
         npoints = SIDES;
@@ -48,6 +46,10 @@ public class Hexagon extends Polygon {
         this.center = center;
 
         updatePoints();
+    }
+
+    public Point getCenter() {
+        return center;
     }
 
     public void move(int rx, int ry) {
