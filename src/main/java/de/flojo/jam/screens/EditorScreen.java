@@ -6,6 +6,8 @@ import java.util.List;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
+import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.graphics.ImageButton;
@@ -47,8 +49,11 @@ public class EditorScreen extends Screen {
                 if(imprint.hasBaseResource()) {
                     Game.window().cursor().setVisible(true);
                     Game.window().cursor().set(terrain.getImprint().getBaseResource());
+                    // TODO: maybe make more efficient?
+                    board.setHighlightMask(new ImprintHighlighter(imprint));
                 } else {
                     Game.window().cursor().setVisible(false);
+                    board.setHighlightMask(SimpleHighlighter.get());
                 }
                 Game.window().cursor().showDefaultCursor();
             });

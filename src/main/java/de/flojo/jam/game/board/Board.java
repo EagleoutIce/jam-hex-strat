@@ -15,6 +15,7 @@ import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import de.flojo.jam.game.board.highlighting.IHighlightMask;
+import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
@@ -51,9 +52,10 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         this.terrainMap = new TerrainMap(w, h, terrainPath);
         tilesUpperLeft = getTilesUpperLeft();
         setupTiles();
-        setupInput();
         setupResizeListener();
         initialShifts();
+        highlightMask = SimpleHighlighter.get();
+        setupInput();
         Game.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
     }
 
@@ -94,6 +96,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private double freeSpaceVertical(final double topWidth) {
         return background.getWidth()
                 - (Math.ceil(width / 2d) * Tile.getWidth() + (Math.ceil(width / 2d) - 1) * topWidth);
+    }
+
+
+    public synchronized void setHighlightMask(IHighlightMask mask) {
+        this.highlightMask = mask;
     }
 
     private void setupInput() {
@@ -150,10 +157,13 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         final double rowShift = hexWidth - hexSeg + PADDING;
         final double hexMidWidth = hexWidth - 2 * hexSeg;
         for (int row = 0; row < height; row++) {
-            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
-                final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
+            int colStart = lineToggle(row);
+            for (int col = colStart; col < width - lineToggle(row); col+=2) {
+                int effectiveRow = Math.floorDiv(row, 2);
+                int visualCol = Math.floorDiv(col, 2);
+                final double x = tilesUpperLeft.getX() + visualCol * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
-                tiles.put(new BoardCoordinate(col, row), new Tile(new BoardCoordinate(col, row), (int) x, (int) y, terrainMap.getTerrainAt(col, row)));
+                tiles.put(new BoardCoordinate(col, effectiveRow), new Tile(new BoardCoordinate(col, effectiveRow), (int) x, (int) y, terrainMap.getTerrainAt(col, row)));
             }
         }
     }
@@ -183,7 +193,22 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
             return;
         
         // apply hover mask
+        boolean[][] hl = this.highlightMask.getGrid();
+        Point anchor = this.highlightMask.getAnchor();
+        BoardCoordinate hPoint = hoveredTile.getCoordinate();
 
+        for (int y = 0; y < hl.length; y++) {
+            for (int x = 0; x < hl[y].length; x++) {
+                if(hl[y][x]) {
+                    // transform target in boardCoordinates
+                    BoardCoordinate target = new BoardCoordinate(hPoint.x + x - anchor.x, hPoint.y + y - anchor.y);
+                    Tile targetTile = tiles.get(target);
+                    if(targetTile != null) {
+                        targetTile.setHover();
+                    }
+                }
+            }
+        }
     }
 
     @Override

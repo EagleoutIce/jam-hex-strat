@@ -1,7 +1,7 @@
 {
     "name": "Tolles Terrain",
     "data" : [
-        ["EMPTY", "EMPTY", "GRASS_HILL", "EMPTY",       "EMPTY",      "EMPTY",     "EMPTY",      "EMPTY",      "EMPTY",    "EMPTY", "EMPTY"], 
+        ["GRASS_HILL", "GRASS_HILL", "GRASS_HILL", "GRASS_HILL",       "GRASS_HILL",      "GRASS_HILL",     "GRASS_HILL",      "GRASS_HILL",      "GRASS_HILL",    "EMPTY", "EMPTY"], 
         ["EMPTY", "EMPTY", "EMPTY", "GRASS_HILL", "GRASS_HILL", "GRASS_HILL", "GRASS_HILL", "GRASS_HILL", "GRASS_HILL"], 
         ["EMPTY", "WDL_LEFT_WINDOW", "EMPTY", "EMPTY",      "EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],
         ["EMPTY", "EMPTY", "WDL_LEFT", "EMPTY",      "EMPTY", "EMPTY", "EMPTY", "EMPTY", "EMPTY"],

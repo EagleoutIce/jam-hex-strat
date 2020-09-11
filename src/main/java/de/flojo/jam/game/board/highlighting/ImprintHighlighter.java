@@ -1,21 +1,44 @@
 package de.flojo.jam.game.board.highlighting;
 
+import java.awt.Color;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
+
+import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 
 public class ImprintHighlighter implements IHighlightMask {
 
     private static final long serialVersionUID = -3444826491775345869L;
 
+    private final TerrainImprint imprint;
+
+    private boolean[][] grid;
+
+    public ImprintHighlighter(TerrainImprint imprint) {
+        this.imprint = imprint;
+        setupGrid();
+    }
+
+    private void setupGrid() {
+        BufferedImage bufImg = imprint.getBitMap();
+        grid = new boolean[bufImg.getHeight()][bufImg.getWidth()];
+        final int wRgb = Color.WHITE.getRGB();
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[y].length; x++) {
+                grid[y][x] = bufImg.getRGB(x, y) == wRgb;
+            }
+        }
+    }
+
     @Override
     public boolean[][] getGrid() {
-        // TODO Auto-generated method stub
-        return null;
+        return grid;
     }
 
     @Override
     public Point getAnchor() {
-        // TODO Auto-generated method stub
-        return null;
+        return imprint.getAnchor();
     }
+
 
 }

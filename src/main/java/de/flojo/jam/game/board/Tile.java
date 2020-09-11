@@ -72,7 +72,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
             this.draw(g, 0, new Color(0.6f, 0.6f, 0.3f, 0.2f), true);
         }
         this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
-        final String cord = coordinate.getX() + " + " + coordinate.getY();
+        final String cord = coordinate.getX() + "/" + coordinate.getY();
         TextRenderer.render(g, cord, getCenter().x - TextRenderer.getWidth(g, cord) / 2, getCenter().y);
     }
 

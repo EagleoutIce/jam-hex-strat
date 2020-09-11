@@ -3,15 +3,18 @@ package de.flojo.jam.game.board.terrain.management;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.List;
 
 import de.flojo.jam.game.board.terrain.TerrainType;
 
-public class TerrainImprint {
+public class TerrainImprint implements Serializable {
+
+    private static final long serialVersionUID = -7701536199670624780L;
 
     private final TerrainData data;
     private final TerrainType baseType;
-    private final BufferedImage bitMap;
+    private final transient BufferedImage bitMap;
 
     // image drawing part
     Point anchor;
