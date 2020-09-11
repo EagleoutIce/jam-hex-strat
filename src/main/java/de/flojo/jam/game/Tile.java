@@ -5,22 +5,25 @@ import java.awt.Graphics2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.flojo.jam.game.terrain.TerrainType;
 import de.flojo.jam.graphics.Hexagon;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
-public class Tile extends Hexagon implements IRenderable, IAmMoveable, IAmNode {
+public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmMoveable, IAmNode {
 
     // TODO: decorations
 
     public static final int DEFAULT_RADIUS = 30;
     private BoardCoordinate coordinate;
+    private TerrainType terrainType;
 
     private AtomicBoolean hover = new AtomicBoolean();
 
-    public Tile(BoardCoordinate coordinate, int x, int y) {
+    public Tile(BoardCoordinate coordinate, int x, int y, TerrainType type) {
         super(x, y, DEFAULT_RADIUS);
         this.coordinate = coordinate;
+        this.terrainType = type;
     }
 
     private static final long serialVersionUID = 9075282633765587910L;
@@ -65,19 +68,30 @@ public class Tile extends Hexagon implements IRenderable, IAmMoveable, IAmNode {
 
     @Override
     public void render(Graphics2D g) {
-        // TODO: decor
         if (hover.get()) {
-            this.draw(g, 0, new Color(0.6f,0.6f,0.3f,0.2f), true);
+            this.draw(g, 0, new Color(0.6f, 0.6f, 0.3f, 0.2f), true);
         }
-        this.draw(g, 4, new Color(0.4f,0.6f,0.3f,0.6f), false);
+        this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
         final String cord = coordinate.getX() + " + " + coordinate.getY();
-        TextRenderer.render(g, cord, getCenter().x - TextRenderer.getWidth(g, cord)/2, getCenter().y);
+        TextRenderer.render(g, cord, getCenter().x - TextRenderer.getWidth(g, cord) / 2, getCenter().y);
+    }
+
+    @Override
+    public void renderDecorations(Graphics2D g) {
+        terrainType.render(g, getCenter(), hover.get());
     }
 
     @Override
     public void move(int rx, int ry) {
         super.move(rx, ry);
         // TODO: other
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(terrainType).append("]");
+        return builder.toString();
     }
 
 }

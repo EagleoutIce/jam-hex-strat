@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import de.flojo.jam.game.terrain.TerrainMap;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -24,70 +25,102 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable,  
 
     private final transient BufferedImage background;
 
+    private final TerrainMap terrainMap;
+
     public static final int PADDING = 0;
 
-    private int width;
-    private int height;
-    private String backgroundPath;
+    private final int width;
+    private final int height;
+    private final String backgroundPath;
     private int shiftX;
     private int shiftY;
     private final Point tilesUpperLeft;
 
-    
     private final List<Tile> tiles;
 
-    public Board(int w, int h, String backgroundPath) {
+    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
         this.width = w;
         this.height = h;
-        this.backgroundPath = backgroundPath; 
+        this.backgroundPath = backgroundPath;
         this.background = Resources.images().get(backgroundPath);
         this.tiles = new ArrayList<>(w * h);
+        this.terrainMap = new TerrainMap(w, h, terrainPath);
         tilesUpperLeft = getTilesUpperLeft();
         setupTiles();
         setupInput();
-        // TODO: resize listener
+        setupResizeListener();
+        initialShifts();
+    }
+
+    private void initialShifts() {
+        move(getBackgroundOffsetPosX()/2,0);
+        move(0,getBackgroundOffsetPosY()/2);
+    }
+
+    private void setupResizeListener() {
+        Game.window().onResolutionChanged(r -> {
+            if (Game.window().getHeight() - shiftY >= background.getHeight() - 5) {
+                int offset = getBackgroundOffsetPosY();
+                move(0, offset - shiftY);
+            }
+
+            if (Game.window().getWidth() - shiftX >= background.getWidth() - 5) {
+                int offset = getBackgroundOffsetPosX();
+                move(offset - shiftX, 0);
+            }
+        });
+    }
+
+    private int getBackgroundOffsetPosX() {
+        return Math.min(0, Game.window().getWidth() - background.getWidth() - 5);
+    }
+
+    private int getBackgroundOffsetPosY() {
+        return Math.min(0, Game.window().getHeight() - background.getHeight() - 5);
     }
 
     private Point getTilesUpperLeft() {
-        double topWidth = Tile.getWidth() - 2*Tile.getSegmentWidth(); // ----
-        double startX = freeSpaceVertical(topWidth)/2 + Tile.getWidth()/2; // drawn centered
-        double startY = background.getHeight()/2d - height/4d * Tile.getHeight() + Tile.getHeight()/2;
-        return new Point((int)startX, (int)startY);
+        final double topWidth = Tile.getWidth() - 2 * Tile.getSegmentWidth(); // ----
+        final double startX = freeSpaceVertical(topWidth) / 2 + Tile.getWidth() / 2; // drawn centered
+        final double startY = background.getHeight() / 2d - height / 4d * Tile.getHeight();
+        return new Point((int) startX, (int) startY);
     }
 
-    private double freeSpaceVertical(double topWidth) {
-        return background.getWidth()-(Math.ceil(width/2d)*Tile.getWidth() + (Math.ceil(width/2d)-1) * topWidth);
+    private double freeSpaceVertical(final double topWidth) {
+        return background.getWidth()
+                - (Math.ceil(width / 2d) * Tile.getWidth() + (Math.ceil(width / 2d) - 1) * topWidth);
     }
 
     private void setupInput() {
         Input.mouse().addMouseMotionListener(this);
+        // TODO: Input controller only one key at a time
         Input.keyboard().onKeyPressed(KeyEvent.VK_W, e -> {
-            if(shiftY <=-5){
+            if (shiftY <= -5) {
                 shiftY += 5;
                 tiles.forEach(h -> h.move(0, 5));
             }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_A, e -> {
-            if(shiftX <= -5){
+            if (shiftX <= -5) {
                 tiles.forEach(h -> h.move(5, 0));
                 shiftX += 5;
             }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_S, e -> {
-            if(Game.window().getHeight() - shiftY  < background.getHeight() - 5){
+            if (Game.window().getHeight() - shiftY < background.getHeight() - 5) {
                 tiles.forEach(h -> h.move(0, -5));
                 shiftY -= 5;
             }
         });
         Input.keyboard().onKeyPressed(KeyEvent.VK_D, e -> {
-            if(Game.window().getWidth() - shiftX  < background.getWidth() - 5){
+            if (Game.window().getWidth() - shiftX < background.getWidth() - 5) {
                 tiles.forEach(h -> h.move(-5, 0));
                 shiftX -= 5;
             }
         });
     }
 
-    private int lineToggle(int row) {
+    private int lineToggle(final int row) {
         return (row + 1) % 2;
     }
 
@@ -98,8 +131,9 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable,  
     }
 
     private void populateNeighbours() {
-        for (Tile tile : tiles) {
-            Set<Tile> neighbours = tiles.stream().filter(tile::isNeighbour).collect(Collectors.toCollection(HashSet::new));
+        for (final Tile tile : tiles) {
+            final Set<Tile> neighbours = tiles.stream().filter(tile::isNeighbour)
+                    .collect(Collectors.toCollection(HashSet::new));
             tile.setNeighbours(neighbours);
         }
     }
@@ -112,24 +146,24 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable,  
         final double hexMidWidth = hexWidth - 2 * hexSeg;
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
-                double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
-                double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
-                tiles.add(new Tile(new BoardCoordinate(col, row), (int) x, (int) y));
+                final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
+                final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
+                tiles.add(new Tile(new BoardCoordinate(col, row), (int) x, (int) y, terrainMap.getTerrainAt(col, row)));
             }
         }
     }
 
-    public void move(int rx, int ry) {
+    public void move(final int rx, final int ry) {
         this.shiftX += rx;
         this.shiftY += ry;
         tiles.forEach(t -> t.move(rx, ry));
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
+    public void mouseMoved(final MouseEvent e) {
         boolean hovered = false;
         Tile hoveredTile = null;
-        for (Tile tile : tiles) {
+        for (final Tile tile : tiles) {
             if (!hovered && tile.contains(e.getX(), e.getY())) {
                 tile.setHover();
                 hoveredTile = tile;
@@ -138,17 +172,18 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable,  
                 tile.clearHover();
             }
         }
-        if(hoveredTile != null)
+        if (hoveredTile != null)
             hoveredTile.getNeighbours().forEach(Tile::setHover);
     }
 
-
     @Override
-    public void render(Graphics2D g) {
+    public void render(final Graphics2D g) {
         ImageRenderer.render(g, background, shiftX, shiftY);
-        for (Tile tile : tiles) {
+        for (final Tile tile : tiles)
             tile.render(g);
-        }
+        
+        for (final Tile tile : tiles)
+            tile.renderDecorations(g);
     }
 
     @Override
@@ -158,7 +193,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable,  
     }
 
     @Override
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(final MouseEvent e) {
         // Do nothing for now
     }
 

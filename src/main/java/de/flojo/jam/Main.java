@@ -38,8 +38,9 @@ public class Main {
         GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
         GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
 
-        Game.screens().add(new IngameScreen());
         Game.screens().add(new MenuScreen());
+        Game.screens().add(new IngameScreen());
+        
         Game.addGameListener(new GameListener() {
             @Override
             public void initialized(String... args) {

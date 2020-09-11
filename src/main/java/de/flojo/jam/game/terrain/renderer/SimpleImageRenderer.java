@@ -1,0 +1,37 @@
+package de.flojo.jam.game.terrain.renderer;
+
+import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.awt.image.RescaleOp;
+
+import de.gurkenlabs.litiengine.graphics.ImageRenderer;
+import de.gurkenlabs.litiengine.resources.Resources;
+
+public class SimpleImageRenderer implements IRenderData {
+    private final BufferedImage image;
+    private final double offsetX;
+    private final double offsetY;
+    BufferedImage highlightImage;
+
+    public SimpleImageRenderer(final String path, final double offsetX, final double offsetY) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.image = Resources.images().get(path);
+        highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        RescaleOp lighterOperation = new RescaleOp(new float[] {1.45f, 1.45f, 1.45f, 1}, new float[4], null);
+        lighterOperation.filter(image,highlightImage);
+
+    }
+
+    @Override
+    public void render(final Graphics2D g, final Point2D pos, boolean highlight) {
+            ImageRenderer.render(g, highlight ? highlightImage : image, pos.getX() + offsetX, pos.getY() + offsetY);
+    }
+
+    @Override
+    public boolean hasImage() {
+        return true;
+    }
+    
+}

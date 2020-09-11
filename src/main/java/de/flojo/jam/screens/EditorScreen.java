@@ -11,7 +11,7 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.input.Input;
 
-public class IngameScreen extends Screen {
+public class EditorScreen extends Screen {
     private boolean locked;
 
     Board board;
@@ -20,7 +20,7 @@ public class IngameScreen extends Screen {
     public static final String NAME = "INGAME";
 
     List<Hexagon> hexagons = new LinkedList<>();
-    public IngameScreen() {
+    public EditorScreen() {
         super(NAME);
     }
 
