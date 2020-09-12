@@ -43,7 +43,7 @@ public class Architect {
     private boolean processSingleTileForImprint(BoardCoordinate at, TerrainImprint imprint,
             final Map<Tile, TerrainType> targetTiles, int x, int y, TerrainType type) {
         // transform target in boardCoordinates
-        BoardCoordinate effectiveCoordinate = at.translateRelative(x - imprint.getAnchor().x,
+        BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - imprint.getAnchor().x,
                 y - imprint.getAnchor().y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
         final TerrainType targetTileType = targetTile == null ? null : targetTile.getTerrainType();
@@ -81,7 +81,7 @@ public class Architect {
 
     private boolean processSingleTileForImprintRemoval(BoardCoordinate at, TerrainImprint imprint,
             final Set<Tile> targetTiles, int x, int y, TerrainType type, Point anchor) {
-        BoardCoordinate effectiveCoordinate = at.translateRelative(x - anchor.x, y - anchor.y);
+        BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
         final TerrainType targetTileType = targetTile == null ? null : targetTile.getTerrainType();
         if (targetTileType != null) {

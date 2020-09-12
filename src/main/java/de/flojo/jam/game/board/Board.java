@@ -268,7 +268,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private boolean processSingleTileHighlight(BoardCoordinate hPoint, int x, int y, Point anchor,
         Set<Tile> highlightTiles) {
         // transform target in boardCoordinates
-        BoardCoordinate effectiveCoordinate = hPoint.translateRelative(x - anchor.x, y - anchor.y);
+        BoardCoordinate effectiveCoordinate = hPoint.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = getTile(effectiveCoordinate);
         TerrainType targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
 

@@ -63,4 +63,9 @@ public class SimplePunch implements ICreatureSkill {
         return name;
     }
 
+    @Override
+    public SkillId getSkillId() {
+        return SkillId.SIMPLE_PUNCH;
+    }
+
 }

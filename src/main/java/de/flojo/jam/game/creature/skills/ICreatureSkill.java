@@ -19,4 +19,6 @@ public interface ICreatureSkill {
 
     public String getName();
 
+    public SkillId getSkillId();
+
 }

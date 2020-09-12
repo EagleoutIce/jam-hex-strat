@@ -7,18 +7,18 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureBase;
+import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.SimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreaturePeasant extends Creature {
 
-
-    public CreaturePeasant(Tile startBase, PlayerId playerId, IRenderData normal, IRenderData dying) {
-        super("Bauer", new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
+    public CreaturePeasant(String name, Tile startBase, PlayerId playerId, CreatureCollection collection, IRenderData normal, IRenderData dying) {
+        super(name, collection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
     }
-
 
     private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
         return new CreatureCore(playerId, normal, dying, createPeasantAttributes());
@@ -26,7 +26,7 @@ public class CreaturePeasant extends Creature {
     
     private static CreatureAttributes createPeasantAttributes() {
         Set<ICreatureSkill> skills = new HashSet<>();
-        // skills.add(arg0);
+        skills.add(new SimplePunch(3, 1, 1, "Einfacher Harkenhieb", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
         return new CreatureAttributes(1, 1, skills);
     }
 

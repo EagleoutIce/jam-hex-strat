@@ -31,11 +31,16 @@ public class CreatureCore implements IRenderable {
         this.base = base;
     }
 
+
+    public CreatureAttributes getAttributes() {
+        return attributes;
+    }
+
     @Override
     public void render(Graphics2D g) {
         IRenderData renderCore = isDying ? dyingData : mainData;
         final Point c = base.getTile().getCenter();
-        renderCore.render(g, new Point(c.x + base.getMovementOffsetX(), c.y + base.getMovementOffsetY()),
+        renderCore.render(g, new Point(c.x - base.getMovementOffsetX(), c.y - base.getMovementOffsetY()),
                 base.getTile().isHovered());
     }
 }

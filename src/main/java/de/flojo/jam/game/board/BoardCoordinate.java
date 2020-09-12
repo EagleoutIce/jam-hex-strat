@@ -18,7 +18,7 @@ public class BoardCoordinate extends Point {
         super(x, y);
     }
 
-    public BoardCoordinate translateRelative(int rx, int ry) {
+    public BoardCoordinate translateRelativeX(int rx, int ry) {
         int mX = Math.floorMod(x, 2);
         int mY = Math.floorMod(y, 2);
         if (rx != 0) { // marker kompensation

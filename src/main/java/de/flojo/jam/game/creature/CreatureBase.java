@@ -13,6 +13,8 @@ public class CreatureBase implements IRenderable {
     private CreatureCore core;
     private boolean locked = false;
 
+    private final Object targetLocationReachedLock = new Object();
+
     public CreatureBase(Tile position) {
         this.position = position;
     }
@@ -24,14 +26,34 @@ public class CreatureBase implements IRenderable {
     }
 
     public void move(Tile target){
-        movementOffsetX = target.getCenter().x - position.getCenter().x;
-        movementOffsetY = target.getCenter().y - position.getCenter().y;
+        movementOffsetX += target.getCenter().x - position.getCenter().x;
+        movementOffsetY += target.getCenter().y - position.getCenter().y;
         position = target;
     }
 
 
+    public Object getTargetLocationReachedLock() {
+        return targetLocationReachedLock;
+    }
+
+    public boolean moveTargetReached() {
+        return movementOffsetX == 0 && movementOffsetY == 0;
+    }
+
     @Override
     public void render(Graphics2D g) {
+        if(movementOffsetX != 0)
+            movementOffsetX =  (int)(Math.signum(movementOffsetX) * Math.max(Math.abs(movementOffsetX) * 0.94, 0));
+        if(movementOffsetY != 0)
+            movementOffsetY = (int)(Math.signum(movementOffsetY) * Math.max(Math.abs(movementOffsetY) * 0.94, 0));
+        
+        if(moveTargetReached()) {
+            synchronized(targetLocationReachedLock) {
+                targetLocationReachedLock.notify();
+            }
+        }
+
+
         core.render(g);
     }
 

@@ -50,6 +50,11 @@
             <artifactId>litiengine</artifactId>
             <version>0.5.0-flomod</version>
         </dependency>
+        <dependency>
+            <groupId>org.java-websocket</groupId>
+            <artifactId>Java-WebSocket</artifactId>
+            <version>1.4.1</version>
+        </dependency>
     </dependencies>
 
     <build>
