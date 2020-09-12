@@ -34,4 +34,17 @@ public class BoardCoordinate extends Point {
         return new BoardCoordinate(x + rx, y + ry);
     }
 
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#toString()
+     */
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("(BC@").append(x).append(",").append(y).append(")");
+        return builder.toString();
+    }
+
 }

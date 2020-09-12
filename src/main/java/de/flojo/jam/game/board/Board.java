@@ -185,6 +185,10 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         return tiles.values().stream().filter(t -> t.contains(position)).findAny().orElse(null);
     }
 
+    public Tile getTile(final BoardCoordinate coordinate) {
+        return tiles.get(coordinate);
+    }
+
     private Tile findAndClearHovered(final MouseEvent e) {
         Tile foundTile = null;
         for (final Tile tile : tiles.values()) {
@@ -227,7 +231,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
             for (int x = 0; x < hl[y].length; x++) {
                 if (hl[y][x]) {
                     // transform target in boardCoordinates
-                    final Tile targetTile = tiles.get(hPoint.translateRelative(x - anchor.x, y - anchor.y));
+                    final Tile targetTile = getTile(hPoint.translateRelative(x - anchor.x, y - anchor.y));
                     if (targetTile != null)
                         highlightTiles.add(targetTile);
                     else // invalid as too close to border

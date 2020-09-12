@@ -4,6 +4,7 @@ import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -21,8 +22,7 @@ import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
-import de.flojo.jam.game.board.terrain.TerrainMap;
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.Architect;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.graphics.Button;
@@ -34,6 +34,7 @@ import de.gurkenlabs.litiengine.input.Input;
 public class EditorScreen extends Screen {
 
     private Board board;
+    private Architect architect;
 
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -58,15 +59,23 @@ public class EditorScreen extends Screen {
 
         board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, "Rcihtiges Hexfeld Vorlage 0.1.png",
                 "configs/empty.terrain");
+        architect = new Architect(board);
+
         Game.window().onResolutionChanged(r -> {
             updateButtonPositions();
         });
 
         Input.mouse().onDragged(this::plantTile);
         Input.mouse().onClicked(this::plantTile);
+        architect.clearField();// init
     }
 
-    private boolean interesectsWithButton(Point p) {
+    
+
+
+    // TODO: delete with right key
+
+    private boolean intersectsWithButton(Point p) {
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)) {
             return true;
         }
@@ -78,17 +87,20 @@ public class EditorScreen extends Screen {
         return false;
     }
 
+    private boolean bitHigh(int value, int b) {
+        return ((value >>> b) & 1) != 0;
+    }
+
     private void plantTile(MouseEvent c) {
         Point p = c.getPoint();
-        if (interesectsWithButton(p))
+        if (intersectsWithButton(p))
             return;
         Tile t = board.findTile(p);
-        if (t == null) {
-            return;
-        } else {
-            // TODO: apply mask!
-            board.getTerrainMap().updateTerrainAt(t.getCoordinate(), TerrainType.GRASS_HILL);
-            // TODO: sync and update with
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (t != null) 
+                architect.placeImprint(t.getCoordinate(), currentTerrain.getImprint());
+        } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12) ) {
+            architect.deleteImprint(t.getCoordinate(), currentTerrain.getImprint());
         }
     }
 
@@ -102,7 +114,7 @@ public class EditorScreen extends Screen {
     private void initFileOperationButtons() {
         // TODO: maybe clear/save as?
         newField = new Button("New", Main.GUI_FONT_SMALL);
-        newField.onClicked(c -> clearField());
+        newField.onClicked(c -> architect.clearField());
         saveField = new Button("Save", Main.GUI_FONT_SMALL);
         saveField.onClicked(c -> saveField());
         updateButtonPositions();
@@ -116,7 +128,7 @@ public class EditorScreen extends Screen {
             Game.log().info("Save was cancelled.");
         }
         Game.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
-        try(PrintWriter writer = new PrintWriter(new File(chosen))) {
+        try (PrintWriter writer = new PrintWriter(new File(chosen))) {
             writer.println(gson.toJson(board.getTerrainMap().getTerrain().getData()));
         } catch (IOException ex) {
             Game.log().warning(ex.getMessage());
@@ -130,7 +142,8 @@ public class EditorScreen extends Screen {
         saveDialog.setMultipleMode(false);
         saveDialog.setFile(board.getTerrainMap().getTerrain().getName() + ".terrain");
         saveDialog.setVisible(true);
-        return saveDialog.getFile() == null ? null : Paths.get(saveDialog.getDirectory(), saveDialog.getFile()).toAbsolutePath().toString();
+        return saveDialog.getFile() == null ? null
+                : Paths.get(saveDialog.getDirectory(), saveDialog.getFile()).toAbsolutePath().toString();
     }
 
     private void updateButtonPositions() {
@@ -138,20 +151,15 @@ public class EditorScreen extends Screen {
         saveField.setLocation(Main.LEFT_WIN_OFFSET + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
     }
 
-    private void clearField() {
-        TerrainMap terrainData = board.getTerrainMap();
-        for (int y = 0; y < Main.BOARD_HEIGHT; y++) {
-            for (int x = 0; x < Main.BOARD_WIDTH; x++) {
-                terrainData.updateTerrainAt(x, y, TerrainType.EMPTY);
-            }
-        }
-    }
-
     private void initTerrainButtons() {
         terrainButtons = new ArrayList<>();
         TerrainId[] terrains = TerrainId.values();
         for (int i = 0; i < terrains.length; i++) {
             TerrainId terrain = terrains[i];
+            // skip empty as delete with right click
+            if(terrain == TerrainId.T_EMPTY)
+                continue;
+            
             ImageButton imgBt = new ImageButton(310d, 30d, Main.LEFT_WIN_OFFSET, (i + 1) * 45d,
                     terrain.getImprint().getBitMap(), terrain.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);

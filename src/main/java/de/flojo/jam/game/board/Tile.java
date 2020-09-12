@@ -91,7 +91,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(terrainSupplier).append("]");
+        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(getTerrainType()).append("]");
         return builder.toString();
     }
 

@@ -14,18 +14,18 @@ public enum TerrainId {
                     Arrays.asList(TerrainType.WDL_LEFT_WINDOW, null), //
                     Arrays.asList(null, TerrainType.WDL_LEFT), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE), //
+                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE_1), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE))),
+                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE_2))),
             new Point(1, 1)), Color.RED),
     T_WDL_RIGHT("Wand-L-Rechts", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
                     Arrays.asList(null, TerrainType.WDL_RIGHT_WINDOW), //
                     Arrays.asList(TerrainType.WDL_RIGHT, null), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE, null), //
+                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_1, null), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE, null))),
+                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_2, null))),
             new Point(0, 1)), Color.BLUE);
 
     private final TerrainImprint imprint;
