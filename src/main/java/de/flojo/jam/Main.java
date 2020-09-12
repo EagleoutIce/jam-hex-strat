@@ -22,6 +22,12 @@ public class Main {
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
+    public static final double LEFT_WIN_OFFSET = 20d;
+    public static final int BOARD_WIDTH = 24;
+    public static final int BOARD_HEIGHT = 33;
+    // TODO: overwrite mode to allow replacement? probably not.. :D
+
+
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");

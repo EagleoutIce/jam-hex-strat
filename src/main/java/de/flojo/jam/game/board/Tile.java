@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
 import de.flojo.jam.graphics.Hexagon;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -16,14 +17,14 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     public static final int DEFAULT_RADIUS = 30;
     private BoardCoordinate coordinate;
-    private TerrainType terrainType;
+    private transient TerrainTypeSupplier terrainSupplier;
 
     private AtomicBoolean hover = new AtomicBoolean();
 
-    public Tile(BoardCoordinate coordinate, int x, int y, TerrainType type) {
+    public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
         this.coordinate = coordinate;
-        this.terrainType = type;
+        this.terrainSupplier = type;
     }
 
     private static final long serialVersionUID = 9075282633765587910L;
@@ -78,7 +79,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     @Override
     public void renderDecorations(Graphics2D g) {
-        terrainType.render(g, getCenter(), hover.get());
+        terrainSupplier.getTerrainAt(coordinate).render(g, getCenter(), hover.get());
     }
 
     @Override
@@ -90,8 +91,12 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(terrainType).append("]");
+        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(terrainSupplier).append("]");
         return builder.toString();
+    }
+
+    public TerrainType getTerrainType() {
+        return terrainSupplier.getTerrainAt(coordinate);
     }
 
 }

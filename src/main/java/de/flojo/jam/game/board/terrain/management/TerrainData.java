@@ -45,6 +45,20 @@ public class TerrainData extends ArrayList<List<TerrainType>> {
         return tl.get(x);
     }
 
+    public void setTerrainAt(int x, int y, TerrainType newType) {
+        if (isEmpty() || y < 0 || y >= size()) {
+            Game.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[] { x, y, newType });
+            return;
+        }
+        List<TerrainType> tl = get(y);
+        if (tl == null || tl.isEmpty() || x < 0 || x >= tl.size()) {
+            Game.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[] { x, y, newType });
+            return;
+        }
+        TerrainType old = tl.set(x, newType);
+        Game.log().log(Level.INFO, "Set Tile at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
+    }
+
     public int getWidth() {
         if(isEmpty()) 
             return 0;

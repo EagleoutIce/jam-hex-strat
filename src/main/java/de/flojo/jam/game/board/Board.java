@@ -9,6 +9,8 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -28,7 +30,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private final transient BufferedImage background;
 
-    private final TerrainMap terrainMap;
+    private TerrainMap terrainMap;
 
     public static final int PADDING = 0;
 
@@ -43,6 +45,14 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private final Map<BoardCoordinate, Tile> tiles;
 
+    public TerrainMap getTerrainMap() {
+        return terrainMap;
+    }
+
+    public void setTerrainMap(final TerrainMap terrainMap) {
+        this.terrainMap = terrainMap;
+    }
+
     public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
         this.width = w;
         this.height = h;
@@ -55,8 +65,8 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         setupResizeListener();
         initialShifts();
         highlightMask = SimpleHighlighter.get();
-        setupInput();
         Game.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
+        setupInput();
     }
 
     private void initialShifts() {
@@ -67,12 +77,12 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private void setupResizeListener() {
         Game.window().onResolutionChanged(r -> {
             if (Game.window().getHeight() - shiftY >= background.getHeight() - 5) {
-                int offset = getBackgroundOffsetPosY();
+                final int offset = getBackgroundOffsetPosY();
                 move(0, offset - shiftY);
             }
 
             if (Game.window().getWidth() - shiftX >= background.getWidth() - 5) {
-                int offset = getBackgroundOffsetPosX();
+                final int offset = getBackgroundOffsetPosX();
                 move(offset - shiftX, 0);
             }
         });
@@ -98,8 +108,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
                 - (Math.ceil(width / 2d) * Tile.getWidth() + (Math.ceil(width / 2d) - 1) * topWidth);
     }
 
-
-    public synchronized void setHighlightMask(IHighlightMask mask) {
+    public synchronized void setHighlightMask(final IHighlightMask mask) {
         this.highlightMask = mask;
     }
 
@@ -157,13 +166,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         final double rowShift = hexWidth - hexSeg + PADDING;
         final double hexMidWidth = hexWidth - 2 * hexSeg;
         for (int row = 0; row < height; row++) {
-            int colStart = lineToggle(row);
-            for (int col = colStart; col < width - lineToggle(row); col+=2) {
-                int effectiveRow = Math.floorDiv(row, 2);
-                int visualCol = Math.floorDiv(col, 2);
-                final double x = tilesUpperLeft.getX() + visualCol * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
+            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+                final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
-                tiles.put(new BoardCoordinate(col, effectiveRow), new Tile(new BoardCoordinate(col, effectiveRow), (int) x, (int) y, terrainMap.getTerrainAt(col, row)));
+                tiles.put(new BoardCoordinate(col, row),
+                        new Tile(new BoardCoordinate(col, row), (int) x, (int) y, c -> terrainMap.getTerrainAt(c.x, c.y)));
             }
         }
     }
@@ -171,7 +178,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     public void move(final int rx, final int ry) {
         this.shiftX += rx;
         this.shiftY += ry;
-        tiles.forEach((c,t) -> t.move(rx, ry));
+        tiles.forEach((c, t) -> t.move(rx, ry));
+    }
+
+    public Tile findTile(final Point position){
+        return tiles.values().stream().filter(t -> t.contains(position)).findAny().orElse(null);
     }
 
     private Tile findAndClearHovered(final MouseEvent e) {
@@ -186,29 +197,46 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         return foundTile;
     }
 
+
+    // TODO: move to input later
+
+    @Override
+    public void mouseDragged(final MouseEvent e) {
+        mouseUpdate(e);
+    }
+
     @Override
     public void mouseMoved(final MouseEvent e) {
-        Tile hoveredTile = findAndClearHovered(e);
-        if(hoveredTile == null)
-            return;
-        
-        // apply hover mask
-        boolean[][] hl = this.highlightMask.getGrid();
-        Point anchor = this.highlightMask.getAnchor();
-        BoardCoordinate hPoint = hoveredTile.getCoordinate();
+        mouseUpdate(e);
+    }
 
+    private void mouseUpdate(final MouseEvent e) {
+        final Tile hoveredTile = findAndClearHovered(e);
+        if (hoveredTile == null)
+            return;
+
+        // apply hover mask
+        final boolean[][] hl = this.highlightMask.getGrid();
+        final Point anchor = this.highlightMask.getAnchor();
+        updateHighlighting(hoveredTile.getCoordinate(), hl, anchor);
+    }
+
+    private void updateHighlighting(final BoardCoordinate hPoint, final boolean[][] hl, final Point anchor) {
+        final List<Tile> highlightTiles = new LinkedList<>();
         for (int y = 0; y < hl.length; y++) {
             for (int x = 0; x < hl[y].length; x++) {
-                if(hl[y][x]) {
+                if (hl[y][x]) {
                     // transform target in boardCoordinates
-                    BoardCoordinate target = new BoardCoordinate(hPoint.x + x - anchor.x, hPoint.y + y - anchor.y);
-                    Tile targetTile = tiles.get(target);
-                    if(targetTile != null) {
-                        targetTile.setHover();
-                    }
+                    final Tile targetTile = tiles.get(hPoint.translateRelative(x - anchor.x, y - anchor.y));
+                    if (targetTile != null)
+                        highlightTiles.add(targetTile);
+                    else // invalid as too close to border
+                        return;
                 }
             }
         }
+        // no highlight if invalid
+        highlightTiles.forEach(Tile::setHover);
     }
 
     @Override
@@ -217,8 +245,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         for (final Tile tile : tiles.values())
             tile.render(g);
 
-        for (final Tile tile : tiles.values())
-            tile.renderDecorations(g);
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+                tiles.get(new BoardCoordinate(col, row)).renderDecorations(g);
+            }
+        }
     }
 
     @Override
@@ -227,9 +258,5 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         return null;
     }
 
-    @Override
-    public void mouseDragged(final MouseEvent e) {
-        // Do nothing for now
-    }
 
 }

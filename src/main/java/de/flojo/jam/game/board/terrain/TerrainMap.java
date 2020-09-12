@@ -1,9 +1,12 @@
 package de.flojo.jam.game.board.terrain;
 
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.google.gson.Gson;
@@ -24,6 +27,10 @@ public class TerrainMap implements Serializable {
 
     private transient Gson gson = new GsonBuilder().create();
 
+    public TerrainMap(Terrain terrain){
+        this.terrain = terrain;
+    }
+
     public TerrainMap(int w, int h, String terrainPath) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.get(terrainPath)))) {
             terrain = gson.fromJson(reader, Terrain.class);
@@ -31,15 +38,46 @@ public class TerrainMap implements Serializable {
             Game.log().warning(ex.getMessage());
             System.exit(1);
         }
+        if(terrain == null) {
+            Game.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
+            terrain = new Terrain(terrainPath, new TerrainData(h));
+        }
+        final TerrainData data = terrain.getData();
+        // fill up
+        while(data.size() < h) 
+            data.add(new ArrayList<>(w));
+
+        for (int y = 0; y < h; y++) {
+            List<TerrainType> line = data.get(y);
+            int offset = w - line.size();
+            for (int x = 0; x < offset; x++) {
+                line.add(TerrainType.EMPTY);
+            }
+        }
         Game.log().log(Level.INFO, "Loaded: {0}", terrain);
     }
 
     public TerrainType getTerrainAt(int x, int y) {
         TerrainData t = terrain.getData();
         if (t == null) {
+            Game.log().warning("Requested nonexistent terrain.");
             return TerrainType.EMPTY;
         } else {
             return t.getTerrainAt(x, y);
+        }
+    }
+
+    public void updateTerrainAt(Point p, TerrainType newType) {
+        updateTerrainAt(p.x, p.y, newType);
+    }
+
+
+    public void updateTerrainAt(int x, int y, TerrainType newType) {
+        TerrainData t = terrain.getData();
+        if (t == null) {
+            Game.log().warning("Requested nonexistent terrain.");
+        } else {
+            t.setTerrainAt(x, y, newType);
         }
     }
 
