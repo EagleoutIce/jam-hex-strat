@@ -32,7 +32,7 @@ public class CreatureBase implements IRenderable {
 
     @Override
     public void render(Graphics2D g) {
-        // do this later ;)
+        core.render(g);
     }
 
     public Tile getTile() {
@@ -53,6 +53,14 @@ public class CreatureBase implements IRenderable {
 
     public void setLocked(boolean locked) {
         this.locked = locked;
+    }
+
+    protected int getMovementOffsetX() {
+        return movementOffsetX;
+    }
+
+    protected int getMovementOffsetY() {
+        return movementOffsetY;
     }
 
 }

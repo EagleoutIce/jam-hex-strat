@@ -83,7 +83,9 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     @Override
     public void renderDecorations(Graphics2D g) {
-        terrainSupplier.getTerrainAt(coordinate).render(g, getCenter(), hover.get());
+        TerrainType tt = terrainSupplier.getTerrainAt(coordinate);
+        if(tt != null)
+            tt.render(g, getCenter(), hover.get());
     }
 
     @Override

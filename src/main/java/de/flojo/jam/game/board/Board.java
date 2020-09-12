@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,8 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private IHighlightMask highlightMask;
 
     private final Map<BoardCoordinate, Tile> tiles;
+
+    private AtomicBoolean doHover = new AtomicBoolean(true);
 
     public TerrainMap getTerrainMap() {
         return terrainMap;
@@ -98,8 +101,8 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private Point getTilesUpperLeft() {
         final double topWidth = Tile.getWidth() - 2 * Tile.getSegmentWidth(); // ----
-        final double startX = freeSpaceVertical(topWidth) / 2 + Tile.getWidth() / 2; // drawn centered
-        final double startY = background.getHeight() / 2d - height / 4d * Tile.getHeight();
+        final double startX = freeSpaceVertical(topWidth) / 2 + Tile.getWidth() / 2 - 1.33*Tile.getSegmentWidth(); // drawn centered
+        final double startY = background.getHeight() / 2d - height / 4d * Tile.getHeight() + Tile.getHeight()/2.4;
         return new Point((int) startX, (int) startY);
     }
 
@@ -185,20 +188,20 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         return tiles.values().stream().filter(t -> t.contains(position)).findAny().orElse(null);
     }
 
+    public Tile getTile(final int x, final int y) {
+        return getTile(new BoardCoordinate(x, y));
+    }
+
     public Tile getTile(final BoardCoordinate coordinate) {
         return tiles.get(coordinate);
     }
 
-    private Tile findAndClearHovered(final MouseEvent e) {
-        Tile foundTile = null;
+    private Tile findHovered(final MouseEvent e) {
         for (final Tile tile : tiles.values()) {
-            if (foundTile == null && tile.contains(e.getX(), e.getY())) {
-                foundTile = tile;
-            } else {
-                tile.clearHover();// clear all
-            }
+            if (tile.contains(e.getX(), e.getY()))
+                return tile;
         }
-        return foundTile;
+        return null;
     }
 
     // TODO: move to input later
@@ -213,8 +216,24 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         mouseUpdate(e);
     }
 
+    public void doHover(){
+        this.doHover.set(true);
+    }
+
+    public void doNotHover(){
+        this.doHover.set(false);
+    }
+
+    private final Set<Tile> highlightTiles = new HashSet<>();
+
     private void mouseUpdate(final MouseEvent e) {
-        final Tile hoveredTile = findAndClearHovered(e);
+        highlightTiles.forEach(Tile::clearHover);
+        highlightTiles.clear();
+        if(!doHover.get()) {
+            return;
+        }
+
+        final Tile hoveredTile = findHovered(e);
         if (hoveredTile == null)
             return;
 
@@ -225,7 +244,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     }
 
     private void updateHighlighting(final BoardCoordinate hPoint, final boolean[][] hl, final Point anchor) {
-        final Set<Tile> highlightTiles = new HashSet<>();
+        highlightTiles.clear();
         if (updateHighlightingRecursive(hPoint, hl, anchor, highlightTiles)) {
             // no highlight if invalid
             highlightTiles.forEach(Tile::setHover);

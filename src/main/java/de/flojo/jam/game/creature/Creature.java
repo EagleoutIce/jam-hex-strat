@@ -1,10 +1,13 @@
 package de.flojo.jam.game.creature;
 
+import java.awt.Graphics2D;
+
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 // compound of base and core; mostly delegates
-public class Creature {
+public class Creature implements IRenderable {
 
     private final String name;
     private final CreatureBase base;
@@ -41,9 +44,13 @@ public class Creature {
         return name;
     }
 
-
     public void move(Tile target) {
         base.move(target);
+    }
+
+    @Override
+    public void render(Graphics2D g) {
+        this.core.render(g);
     }
     
     

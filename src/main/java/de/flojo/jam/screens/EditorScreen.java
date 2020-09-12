@@ -73,11 +73,20 @@ public class EditorScreen extends Screen {
 
         Input.mouse().onDragged(this::plantTile);
         Input.mouse().onClicked(this::plantTile);
+        Input.mouse().onMoved(this::lockOnMoved);
         architect.clearField();// init
         terrainName.setText("Pain Terrain Name");
     }
 
     // TODO: delete with right key
+
+    private void lockOnMoved(MouseEvent c) {
+        if(intersectsWithButton(c.getPoint())) {
+            board.doNotHover();
+        } else {
+            board.doHover();
+        }
+    }
 
     private boolean intersectsWithButton(Point p) {
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)

@@ -1,6 +1,7 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
@@ -19,8 +20,7 @@ public class CreatureCore implements IRenderable {
 
     private final PlayerId owner;
 
-    
-    public CreatureCore(PlayerId owner, IRenderData mainData, IRenderData dyingData,CreatureAttributes attributes) {
+    public CreatureCore(PlayerId owner, IRenderData mainData, IRenderData dyingData, CreatureAttributes attributes) {
         this.mainData = mainData;
         this.dyingData = dyingData;
         this.attributes = attributes;
@@ -34,6 +34,8 @@ public class CreatureCore implements IRenderable {
     @Override
     public void render(Graphics2D g) {
         IRenderData renderCore = isDying ? dyingData : mainData;
-        renderCore.render(g, base.getTile().getCenter(), base.getTile().isHovered());
+        final Point c = base.getTile().getCenter();
+        renderCore.render(g, new Point(c.x + base.getMovementOffsetX(), c.y + base.getMovementOffsetY()),
+                base.getTile().isHovered());
     }
 }
