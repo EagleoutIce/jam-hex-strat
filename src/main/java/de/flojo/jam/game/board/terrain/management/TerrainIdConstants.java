@@ -11,5 +11,7 @@ public class TerrainIdConstants {
     public static final String T_WDL_LEFT = "T_WDL_LEFT";
     public static final String T_WDL_RIGHT = "T_WDL_RIGHT";
 	public static final String T_DEAD_TREE = "T_DEAD_TREE";
+	public static final String T_CART_LEFT = "T_CART_LEFT";
+	public static final String T_CART_RIGHT = "T_CART_RIGHT";
 
 }

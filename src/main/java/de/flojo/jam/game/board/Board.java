@@ -9,16 +9,16 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 import de.flojo.jam.game.board.highlighting.IHighlightMask;
+import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
+import de.flojo.jam.game.board.terrain.TerrainType;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -169,8 +169,8 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
             for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
                 final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
-                tiles.put(new BoardCoordinate(col, row),
-                        new Tile(new BoardCoordinate(col, row), (int) x, (int) y, c -> terrainMap.getTerrainAt(c.x, c.y)));
+                tiles.put(new BoardCoordinate(col, row), new Tile(new BoardCoordinate(col, row), (int) x, (int) y,
+                        c -> terrainMap.getTerrainAt(c.x, c.y)));
             }
         }
     }
@@ -181,7 +181,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         tiles.forEach((c, t) -> t.move(rx, ry));
     }
 
-    public Tile findTile(final Point position){
+    public Tile findTile(final Point position) {
         return tiles.values().stream().filter(t -> t.contains(position)).findAny().orElse(null);
     }
 
@@ -200,7 +200,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         }
         return foundTile;
     }
-
 
     // TODO: move to input later
 
@@ -226,21 +225,45 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     }
 
     private void updateHighlighting(final BoardCoordinate hPoint, final boolean[][] hl, final Point anchor) {
-        final List<Tile> highlightTiles = new LinkedList<>();
+        final Set<Tile> highlightTiles = new HashSet<>();
+        if (updateHighlightingRecursive(hPoint, hl, anchor, highlightTiles)) {
+            // no highlight if invalid
+            highlightTiles.forEach(Tile::setHover);
+        }
+    }
+
+    // TODO: simplify
+    private boolean updateHighlightingRecursive(final BoardCoordinate hPoint, final boolean[][] hl, final Point anchor,
+            final Set<Tile> highlightTiles) {
         for (int y = 0; y < hl.length; y++) {
             for (int x = 0; x < hl[y].length; x++) {
-                if (hl[y][x]) {
-                    // transform target in boardCoordinates
-                    final Tile targetTile = getTile(hPoint.translateRelative(x - anchor.x, y - anchor.y));
-                    if (targetTile != null)
-                        highlightTiles.add(targetTile);
-                    else // invalid as too close to border
-                        return;
-                }
+                if (!hl[y][x])
+                    continue;
+                if (!processSingleTileHighlight(hPoint, x, y, anchor, highlightTiles))
+                    return false;
             }
         }
-        // no highlight if invalid
-        highlightTiles.forEach(Tile::setHover);
+        return true;
+    }
+
+    private boolean processSingleTileHighlight(BoardCoordinate hPoint, int x, int y, Point anchor,
+        Set<Tile> highlightTiles) {
+        // transform target in boardCoordinates
+        BoardCoordinate effectiveCoordinate = hPoint.translateRelative(x - anchor.x, y - anchor.y);
+        final Tile targetTile = getTile(effectiveCoordinate);
+        TerrainType targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
+
+        if (targetTile != null) {
+            if (highlightTiles.add(targetTile)) {
+                IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
+                if (!updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
+                        targetTerrainType.getNode().getPos(), highlightTiles))
+                    return false;
+            }
+        } else {// invalid as too close to border
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -261,6 +284,5 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         // TODO return tiles
         return null;
     }
-
 
 }

@@ -26,8 +26,22 @@ public enum TerrainId {
                     Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_1, null), //
                     Arrays.asList(null, null), //
                     Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_2, null))),
-            new Point(0, 1)), Color.BLUE),
-    T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainType.DEAD_TREE), Color.YELLOW);
+            new Point(0, 1)), Color.RED.darker()),
+    T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainType.DEAD_TREE), Color.YELLOW),
+    T_CART_LEFT("Karren nach links", new TerrainImprint(new TerrainData(//
+            Arrays.asList(//
+                    Arrays.asList(null, TerrainType.CART_LEFT_GHOST), //
+                    Arrays.asList(TerrainType.CAR_LEFT_HANDLES, null), //
+                    Arrays.asList(null, TerrainType.CART_LEFT) //
+                    )),new Point(1, 2)),
+            Color.ORANGE),
+    T_CART_RIGHT("Karren nach rechts", new TerrainImprint(new TerrainData(//
+            Arrays.asList(//
+                    Arrays.asList(TerrainType.CART_RIGHT_GHOST, null), //
+                    Arrays.asList(null, TerrainType.CAR_RIGHT_HANDLES), //
+                    Arrays.asList(TerrainType.CART_RIGHT, null) //
+                    )),new Point(0, 2)),
+            Color.ORANGE.darker());
 
     private final TerrainImprint imprint;
     private final Color simpleColor;

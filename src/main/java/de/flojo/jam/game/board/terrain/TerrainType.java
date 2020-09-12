@@ -15,11 +15,11 @@ public enum TerrainType {
     EMPTY("Nothing.", new ImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
             Direction.NONE, VoidRenderer.get()), //
     //
-    GRASS_HILL("Ein Grashügel", new ImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, true, false, true,
-            2, Direction.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -79 / 1.33)), //
+    GRASS_HILL("Ein Grashügel", new ImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, true, false, true, 2,
+            Direction.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -79 / 1.33)), //
     //
-    WDL_LEFT("Doppel wand mit L-Knick nach links", new ImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true,
-            true, false, false, -1, Direction.NONE,
+    WDL_LEFT("Doppel wand mit L-Knick nach links", new ImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
+            false, false, -1, Direction.NONE,
             new SimpleImageRenderer("tiles/wand_doppel_l_links.png", -1.65 * 115 / 2d, -242 / 1.84d)), //
     WDL_LEFT_WINDOW("Doppel Wand mit L-Knick nach links:Fenster",
             new ImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 0, 0), true, false, false, false, -1, Direction.NONE,
@@ -40,10 +40,23 @@ public enum TerrainType {
             VoidRenderer.get()),
     WDL_RIGHT_SLAVE_2(WDL_RIGHT_SLAVE_1, new ImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 5)),
     //
-    DEAD_TREE("Toter Baumstumpf", new ImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true,
-        true, false, false, -1, Direction.NONE,
-        new SimpleImageRenderer("tiles/baum_kahl.png", - 89 / 2d, -149 / 1.25d)), //
-    ;
+    DEAD_TREE("Toter Baumstumpf", new ImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true, true, false, false,
+            -1, Direction.NONE, new SimpleImageRenderer("tiles/baum_kahl.png", -89 / 2d, -149 / 1.25d)), //
+    //
+    CART_LEFT("Kaputter Wagen nach links", new ImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 2), true, true, false,
+            false, -1, Direction.NONE, new SimpleImageRenderer("tiles/karren_links.png", -142 / 1.25d, -75 / 1.1d)), //
+    CART_LEFT_GHOST("Kaputter Wagen nach links:Geister", new ImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 0), true,
+            true, false, false, -1, Direction.NONE, VoidRenderer.get()),
+    CAR_LEFT_HANDLES("Kaputter Wagen nach links:Griffe", new ImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 0, 1), true,
+            false, false, false, -1, Direction.NONE, VoidRenderer.get()),
+    //
+    CART_RIGHT("Kaputter Wagen nach rechts", new ImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 2), true, true,
+            false, false, -1, Direction.NONE,
+            new SimpleImageRenderer("tiles/karren_rechts.png", -142 / 4.85d, -75 / 1.1d)), //
+    CART_RIGHT_GHOST("Kaputter Wagen nach rechts:Geister", new ImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 0),
+            true, true, false, false, -1, Direction.NONE, VoidRenderer.get()),
+    CAR_RIGHT_HANDLES("Kaputter Wagen nach rechts:Griffe", new ImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 1, 1),
+            true, false, false, false, -1, Direction.NONE, VoidRenderer.get()),;
 
     private final String displayName;
     private final boolean blocksWalking;
