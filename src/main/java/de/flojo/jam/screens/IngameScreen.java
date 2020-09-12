@@ -2,6 +2,7 @@ package de.flojo.jam.screens;
 
 import java.awt.Graphics2D;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
@@ -21,7 +22,7 @@ public class IngameScreen extends Screen {
     public void prepare() {
         super.prepare();
 
-        board = new Board(24, 33, "Rcihtiges Hexfeld Vorlage 0.1.png", "configs/default.terrain");
+        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/default.terrain");
     }
 
 

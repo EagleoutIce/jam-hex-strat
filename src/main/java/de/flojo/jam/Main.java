@@ -25,6 +25,8 @@ public class Main {
     public static final double LEFT_WIN_OFFSET = 20d;
     public static final int BOARD_WIDTH = 24;
     public static final int BOARD_HEIGHT = 33;
+
+    public static final String FIELD_BACKGROUND = "field-background.png";
     // TODO: overwrite mode to allow replacement? probably not.. :D
 
 

@@ -63,7 +63,7 @@ public class EditorScreen extends Screen {
     public void prepare() {
         super.prepare();
 
-        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, "Rcihtiges Hexfeld Vorlage 0.1.png",
+        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND,
                 "configs/empty.terrain");
         architect = new Architect(board);
 
