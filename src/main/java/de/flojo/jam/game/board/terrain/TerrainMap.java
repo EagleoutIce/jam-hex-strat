@@ -3,6 +3,7 @@ package de.flojo.jam.game.board.terrain;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -32,7 +33,25 @@ public class TerrainMap implements Serializable {
     }
 
     public TerrainMap(int w, int h, String terrainPath) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Resources.get(terrainPath)))) {
+        this(w, h, Resources.get(terrainPath), terrainPath);
+    }
+
+    public TerrainMap(int w, int h, InputStream stream, String terrainPath) {
+        loadMapFrom(w, h, stream, terrainPath);
+        try {
+            stream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void changeName(String name) {
+        terrain.setName(name);
+    }
+
+    private void loadMapFrom(int w, int h, InputStream terrainIs, String terrainPath) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(terrainIs))) {
             terrain = gson.fromJson(reader, Terrain.class);
         } catch (IOException | JsonSyntaxException | JsonIOException ex) {
             Game.log().warning(ex.getMessage());
@@ -54,7 +73,7 @@ public class TerrainMap implements Serializable {
                 line.add(TerrainType.EMPTY);
             }
         }
-        Game.log().log(Level.INFO, "Loaded: {0}", terrain);
+        Game.log().log(Level.INFO, "Loaded TerrainMap: {0}", terrain);
     }
 
     public TerrainType getTerrainAt(int x, int y) {

@@ -6,7 +6,7 @@ public class Terrain implements Serializable {
 
     private static final long serialVersionUID = 8198115689285126822L;
 
-    private final String name;
+    private String name;
     private final TerrainData data;
 
     public String getName() {
@@ -23,6 +23,9 @@ public class Terrain implements Serializable {
         this.data = terrain;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
 
     @Override
     public String toString() {
