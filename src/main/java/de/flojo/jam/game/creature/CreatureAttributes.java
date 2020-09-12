@@ -6,23 +6,26 @@ import de.flojo.jam.game.creature.skills.ICreatureSkill;
 
 public class CreatureAttributes {
 
-    private final int mp;
-    private final int ap;
+    private final int maxMp;
+    private final int maxAp;
+
+    private final int currentMp;
+    private final int currentAp;
 
     private final Set<ICreatureSkill> skills;
 
     public CreatureAttributes(int mp, int ap, Set<ICreatureSkill> skills) {
-        this.mp = mp;
-        this.ap = ap;
+        this.maxMp = this.currentAp = ap;
+        this.maxAp = this.currentMp = ap;
         this.skills = skills;
     }
 
     public int getMp() {
-        return mp;
+        return maxMp;
     }
 
     public int getAp() {
-        return ap;
+        return maxAp;
     }
 
     public Set<ICreatureSkill> getSkills() {

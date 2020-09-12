@@ -13,7 +13,7 @@ public interface ICreatureSkill {
     public boolean doesFriendlyFire();    
 
     // called for every target
-    public IEffectCreature getEffect();
+    public IEffectCreature getEffect(final IProvideEffectContext context);
 
     public String getDescription();
 

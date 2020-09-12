@@ -63,6 +63,10 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         this.hover.set(false);
     }
 
+    public boolean isHovered() {
+        return hover.get();
+    }
+
     public boolean isNeighbour(Tile other) {
         return this.getCenter().distance(other.getCenter()) <= 2.5 * DEFAULT_RADIUS;
     }

@@ -34,11 +34,9 @@ public class BoardCoordinate extends Point {
         return new BoardCoordinate(x + rx, y + ry);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Object#toString()
-     */
+    public BoardCoordinate getShifted(int dx, int dy) {
+        return new BoardCoordinate(x + dx, y + dy);    
+    }
 
     @Override
     public String toString() {

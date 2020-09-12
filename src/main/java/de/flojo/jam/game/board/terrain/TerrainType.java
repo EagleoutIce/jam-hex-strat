@@ -92,11 +92,11 @@ public enum TerrainType {
         return displayName;
     }
 
-    public boolean isBlocksLineOfSight() {
+    public boolean blocksLineOfSight() {
         return blocksLineOfSight;
     }
 
-    public boolean isBlocksFromSky() {
+    public boolean blocksFromSky() {
         return blocksFromSky;
     }
 
@@ -108,7 +108,7 @@ public enum TerrainType {
         return renderer;
     }
 
-    public boolean isBlocksWalking() {
+    public boolean blocksWalking() {
         return blocksWalking;
     }
 
