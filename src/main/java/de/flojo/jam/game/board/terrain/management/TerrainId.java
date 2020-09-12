@@ -26,7 +26,8 @@ public enum TerrainId {
                     Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_1, null), //
                     Arrays.asList(null, null), //
                     Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_2, null))),
-            new Point(0, 1)), Color.BLUE);
+            new Point(0, 1)), Color.BLUE),
+    T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainType.DEAD_TREE), Color.YELLOW);
 
     private final TerrainImprint imprint;
     private final Color simpleColor;

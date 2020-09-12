@@ -2,6 +2,7 @@ package de.flojo.jam;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
 import de.flojo.jam.screens.EditorScreen;
@@ -17,6 +18,9 @@ import de.gurkenlabs.litiengine.resources.Resources;
  * Main
  */
 public class Main {
+
+    public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
+    public static final BufferedImage ICON = Resources.images().get("icon.png");
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
@@ -47,6 +51,9 @@ public class Main {
         GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
         GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
         GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
+
+        Game.window().cursor().set(DEFAULT_CURSOR);
+        Game.window().setIcon(ICON);
 
         Game.screens().add(new MenuScreen());
         Game.screens().add(new IngameScreen());

@@ -38,7 +38,12 @@ public enum TerrainType {
     WDL_RIGHT_SLAVE_1("Doppel Wand mit L-Knick nach rechts:Geister",
             new ImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 3), true, true, false, false, -1, Direction.NONE,
             VoidRenderer.get()),
-    WDL_RIGHT_SLAVE_2(WDL_RIGHT_SLAVE_1, new ImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 5));
+    WDL_RIGHT_SLAVE_2(WDL_RIGHT_SLAVE_1, new ImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 5)),
+    //
+    DEAD_TREE("Toter Baumstumpf", new ImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true,
+        true, false, false, -1, Direction.NONE,
+        new SimpleImageRenderer("tiles/baum_kahl.png", - 89 / 2d, -149 / 1.25d)), //
+    ;
 
     private final String displayName;
     private final boolean blocksWalking;

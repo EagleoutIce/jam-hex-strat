@@ -90,8 +90,7 @@ public class MenuScreen extends Screen {
         if (this.locked)
             return;
 
-        Game.window().cursor().setVisible(false);
-        Game.window().cursor().showDefaultCursor();
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);        
 
         this.locked = true;
         button.setEnabled(false);

@@ -137,6 +137,7 @@ public class EditorScreen extends Screen {
         final String chosen = getSaveFile();
         if (chosen == null) {
             Game.log().info("Save was cancelled.");
+            return;
         }
         Game.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
         try (PrintWriter writer = new PrintWriter(new File(chosen))) {
@@ -150,6 +151,7 @@ public class EditorScreen extends Screen {
         final String chosen = getLoadFile();
         if (chosen == null) {
             Game.log().info("Load was cancelled.");
+            return;
         }
         Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
@@ -198,9 +200,6 @@ public class EditorScreen extends Screen {
         TerrainId[] terrains = TerrainId.values();
         for (int i = 0; i < terrains.length; i++) {
             TerrainId terrain = terrains[i];
-            // skip empty as delete with right click
-            if(terrain == TerrainId.T_EMPTY)
-                continue;
             
             ImageButton imgBt = new ImageButton(310d, 30d, Main.LEFT_WIN_OFFSET, (i + 1) * 45d,
                     terrain.getImprint().getBitMap(), terrain.getName(), Main.TEXT_NORMAL);
@@ -213,11 +212,11 @@ public class EditorScreen extends Screen {
                     Game.window().cursor().set(terrain.getImprint().getBaseResource());
                     // TODO: maybe make more efficient?
                     board.setHighlightMask(new ImprintHighlighter(imprint));
+                    Game.window().cursor().showDefaultCursor();
                 } else {
-                    Game.window().cursor().setVisible(false);
+                    Game.window().cursor().set(Main.DEFAULT_CURSOR);
                     board.setHighlightMask(SimpleHighlighter.get());
                 }
-                Game.window().cursor().showDefaultCursor();
             });
             this.getComponents().add(imgBt);
         }
