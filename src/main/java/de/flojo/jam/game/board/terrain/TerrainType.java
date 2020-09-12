@@ -7,9 +7,9 @@ import de.flojo.jam.game.board.Direction;
 import de.flojo.jam.game.board.terrain.management.ImprintNode;
 import de.flojo.jam.game.board.terrain.management.ImprintNodeMap;
 import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
-import de.flojo.jam.game.board.terrain.renderer.IRenderData;
-import de.flojo.jam.game.board.terrain.renderer.SimpleImageRenderer;
-import de.flojo.jam.game.board.terrain.renderer.VoidRenderer;
+import de.flojo.jam.graphics.renderer.IRenderData;
+import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
+import de.flojo.jam.graphics.renderer.VoidRenderer;
 
 public enum TerrainType {
     EMPTY("Nothing.", new ImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
