@@ -11,6 +11,7 @@ public class CreatureCore implements IRenderable {
 
     private IRenderData mainData;
     private IRenderData dyingData;
+    IRenderData renderCore;
 
     private CreatureBase base;
     private CreatureAttributes attributes;
@@ -23,6 +24,7 @@ public class CreatureCore implements IRenderable {
     public CreatureCore(PlayerId owner, IRenderData mainData, IRenderData dyingData, CreatureAttributes attributes) {
         this.mainData = mainData;
         this.dyingData = dyingData;
+        this.renderCore = this.mainData;
         this.attributes = attributes;
         this.owner = owner;
     }
@@ -36,9 +38,12 @@ public class CreatureCore implements IRenderable {
         return attributes;
     }
 
+    public PlayerId getOwner() {
+        return owner;
+    }
+
     @Override
     public void render(Graphics2D g) {
-        IRenderData renderCore = isDying ? dyingData : mainData;
         final Point c = base.getTile().getCenter();
         renderCore.render(g, new Point(c.x - base.getMovementOffsetX(), c.y - base.getMovementOffsetY()),
                 base.getTile().isHovered());

@@ -22,6 +22,10 @@ public class CreatureCollection implements IRenderable, Serializable {
         collection = new ArrayList<>(DEFAULT_SIZE);
     }
 
+    public Optional<Creature> getHighlighted() {
+        return search(null, (c, ignored) -> c.isHovered());
+    }
+
     public Optional<Creature> get(BoardCoordinate coordinate) {
         return search(coordinate, (c, v) -> c.getCoordinate().equals(v));
     }

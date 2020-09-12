@@ -1,5 +1,6 @@
 package de.flojo.jam.screens;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
@@ -9,6 +10,7 @@ import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
+import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.input.Input;
 
@@ -23,8 +25,6 @@ public class IngameScreen extends Screen {
         super(NAME);
         Game.log().info("Building Ingame Screen");
     }
-
-    boolean set = true;
 
     @Override
     public void prepare() {
@@ -68,6 +68,9 @@ public class IngameScreen extends Screen {
     public void render(final Graphics2D g) {
         board.render(g);
         summoner.render(g);
+        g.setPaint(Color.MAGENTA);
+        g.setFont(Main.GUI_FONT_SMALL);
+        TextRenderer.renderWithLinebreaks(g, "Selection: " + summoner.getSelectedCreature(), Main.LEFT_WIN_OFFSET, 90d, Game.window().getWidth() - 2*Main.LEFT_WIN_OFFSET);
         super.render(g);
     }
 

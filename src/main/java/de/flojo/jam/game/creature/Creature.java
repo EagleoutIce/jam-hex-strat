@@ -68,16 +68,29 @@ public class Creature implements IRenderable {
     public void useSkill(IProvideEffectContext context, SkillId skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
+    
+    public Object moveLock() {
+        return base.getTargetLocationReachedLock();
+    }
+
+    public void clearHover() {
+        this.base.getTile().clearHover();
+    }
+
+    public void setHover() {
+        this.base.getTile().setHover();
+    }
+
+    public boolean isHovered() {
+        return this.base.getTile().isHovered();
+    }
+
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("Creature [").append("name=").append(name)
-                .append(", position=").append(getCoordinate()).append("]");
+                .append(", position=").append(getCoordinate()).append(", owner=").append(this.core.getOwner()).append("]");
         return builder.toString();
-    }
-    
-    public Object moveLock() {
-        return base.getTargetLocationReachedLock();
     }
 }

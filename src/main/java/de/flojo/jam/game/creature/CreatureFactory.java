@@ -1,8 +1,10 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
@@ -10,7 +12,9 @@ import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
+import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
+import de.gurkenlabs.litiengine.input.Input;
 
 public class CreatureFactory implements IRenderable {
     private static final IRenderData PEASANT_P1_NORMAL = new SimpleImageRenderer("creatures/bauer_blau.png", -93d / 2.9,
@@ -22,7 +26,23 @@ public class CreatureFactory implements IRenderable {
 
     public CreatureFactory() {
         creatures = new CreatureCollection();
+        Input.mouse().onClicked(this::setActiveCreature);
     }
+
+    private Creature selectedCreature = null;
+
+    private void setActiveCreature(MouseEvent c) {
+        if(c.getButton() != MouseEvent.BUTTON1) 
+            return;
+
+        this.selectedCreature = creatures.getHighlighted().orElse(null);
+        Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
+    }
+
+    public Creature getSelectedCreature() {
+        return selectedCreature;
+    }
+
 
     public Creature summonPeasant(Tile startBase, PlayerId pId) {
         return summonPeasant(pId + "_BAUER_" + UUID.randomUUID(), startBase, pId);

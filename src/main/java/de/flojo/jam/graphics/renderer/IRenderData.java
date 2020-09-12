@@ -2,6 +2,7 @@ package de.flojo.jam.graphics.renderer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public interface IRenderData {
@@ -10,4 +11,6 @@ public interface IRenderData {
     boolean hasImage();
 
     BufferedImage getImage();
+
+    public Rectangle2D getEffectiveRectangle(Point2D pos);
 }
