@@ -42,6 +42,8 @@ public class SkillsPresenter {
         InputController.get().onMoved(this::lockOnMoved, screenName);
     }
 
+    // TODO: if figure dies remove tooo
+
     public void setPlayerId(PlayerId playerId) {
         this.playerId = playerId;
     }

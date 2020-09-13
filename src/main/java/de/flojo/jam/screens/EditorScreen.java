@@ -160,7 +160,7 @@ public class EditorScreen extends Screen {
                 return true;
             }
         }
-        for (ImageButton button : terrainButtons) {
+        for (ImageButton button : trapButtons) {
             if (button.getBoundingBox().contains(p)) {
                 return true;
             }
