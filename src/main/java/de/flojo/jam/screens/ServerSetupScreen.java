@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 import de.flojo.jam.Main;
@@ -44,6 +45,11 @@ public class ServerSetupScreen extends Screen {
         return serverController == null ? "Not started" : serverController.socketInfo();
     }
 
+
+    private String playerStatus() {
+        return serverController == null ? "" : serverController.playerInfo();
+    }
+
     @Override
     public void render(final Graphics2D g) {
         if (Game.world().environment() != null) {
@@ -62,11 +68,14 @@ public class ServerSetupScreen extends Screen {
         g.setFont(Main.TEXT_STATUS);
         TextRenderer.render(g, "Server status: " + serverStatus(), Main.INNER_MARGIN,
                 15.0 + g.getFontMetrics().getHeight() + largeHeight);
+        TextRenderer.render(g, "Players: " + playerStatus(), Main.INNER_MARGIN,
+                15.0 + 2*g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
                     Game.window().getHeight() - 50d);
 
         super.render(g);
     }
+
 
     @Override
     public void prepare() {
@@ -80,7 +89,7 @@ public class ServerSetupScreen extends Screen {
     private void updatePositions() {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
-        this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 45d);
+        this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
         this.startServer.setLocation(width - this.startServer.getWidth() - 0.5*Main.INNER_MARGIN, height - this.startServer.getHeight());
         this.loadTerrain.setLocation(width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(), height - this.loadTerrain.getHeight());
     }
@@ -92,13 +101,9 @@ public class ServerSetupScreen extends Screen {
         this.startServer = new Button("Start", Main.GUI_FONT_SMALL);
         this.startServer.onClicked(c -> {
             if(serverStarted) {
-                this.startServer.setText("Start");
                 stopServer();
-                serverStarted = false;
             } else {
-                this.startServer.setText("Stopp");
                 startServer();
-                serverStarted = true;
             }});
         this.getComponents().add(startServer);
 
@@ -137,18 +142,38 @@ public class ServerSetupScreen extends Screen {
     // TODO: implement feedback system too to signal if not running?
 
     private void startServer() {
+        this.startServer.setText("Stopp");
         this.portNumber.setEnabled(false);
         this.loadTerrain.setEnabled(false);
-        serverController = new ServerController(new InetSocketAddress(Integer.parseInt(this.portNumber.getText())), board);
+        serverController = new ServerController(new InetSocketAddress(Integer.parseInt(this.portNumber.getText())), board, this::onNetworkUpdate);
         serverController.start();
+        serverStarted = true;
+    }
+
+    private void onNetworkUpdate(String... data){
+        Game.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
+
+        if(data.length == 0)
+            return;
+        
+        switch(data[0]) {
+            case "STOPPED":
+                stopServer();   
+                break;
+
+            default:
+                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+        }
     }
 
 
     private void stopServer() {
+        this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
         this.loadTerrain.setEnabled(true);
         this.serverController.stop();
         this.serverController = null;
+        serverStarted = false;
     }
 
 }

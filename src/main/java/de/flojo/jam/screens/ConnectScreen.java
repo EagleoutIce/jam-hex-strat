@@ -64,7 +64,7 @@ public class ConnectScreen extends Screen {
         TextRenderer.render(g, "Connection Menu", Main.INNER_MARGIN, 7.0 + largeHeight);
 
         g.setFont(Main.TEXT_STATUS);
-        TextRenderer.render(g, "Connection status: TODO:", Main.INNER_MARGIN,
+        TextRenderer.render(g, "Connection status: " + getConnectStatus(), Main.INNER_MARGIN,
                 15.0 + g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
                 (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
@@ -76,6 +76,10 @@ public class ConnectScreen extends Screen {
                 (Game.window().getHeight() + portNumber.getHeight() + 400) / 2);
 
         super.render(g);
+    }
+
+    private String getConnectStatus() {
+        return clientController == null ? "Not connected" : clientController.getConnectedStatus();
     }
 
     @Override

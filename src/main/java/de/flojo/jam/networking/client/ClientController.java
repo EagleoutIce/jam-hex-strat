@@ -38,14 +38,14 @@ public class ClientController implements IClientController {
     public boolean tryConnect() {
         try {
             return tryConnectRun();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | NoConnectionException  e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();
             return false;
         }
     }
 
-    private boolean tryConnectRun() throws InterruptedException {
+    private boolean tryConnectRun() throws InterruptedException, NoConnectionException {
         this.socket.connect();
         synchronized (readyLock) {
             for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
@@ -123,6 +123,10 @@ public class ClientController implements IClientController {
     public ClientContext getContext() {
         return context;
     }
+
+	public String getConnectedStatus() {
+		return socket.getRemoteSocketAddress().toString();
+	}
 
     
 }

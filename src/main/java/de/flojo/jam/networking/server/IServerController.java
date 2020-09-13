@@ -8,4 +8,6 @@ public interface IServerController {
     void handleMessage(WebSocket conn, String message);
 
     void handleOpenFor(WebSocket conn);
+
+	void handleError(WebSocket conn, Exception ex);
 }

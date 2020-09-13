@@ -12,6 +12,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.exceptions.ErrorTypeEnum;
 import de.flojo.jam.networking.exceptions.HandlerException;
@@ -31,11 +32,13 @@ public class ServerController implements IServerController {
     private ServerSocket socket;
     private PlayerController playerController;
     private final MainGameControl mainGameController;
+    private final INeedUpdates<String> networkUpdateTarget;
 
-    public ServerController(InetSocketAddress address, Board board) {
+    public ServerController(InetSocketAddress address, Board board, INeedUpdates<String> networkUpdateTarget) {
         socket = new ServerSocket(address, this);
         playerController = new PlayerController();
         mainGameController = new MainGameControl(this, board);
+        this.networkUpdateTarget = networkUpdateTarget;
     }
 
     @Override
@@ -144,6 +147,10 @@ public class ServerController implements IServerController {
         return socket.socketInfo();
     }
 
+    public String playerInfo() {
+		return playerController.getInfo();
+	}
+
     public void start() {
         socket.start();
     }
@@ -156,5 +163,11 @@ public class ServerController implements IServerController {
             Thread.currentThread().interrupt();
         }
     }
+
+    @Override
+    public void handleError(WebSocket conn, Exception ex) {
+        networkUpdateTarget.call("STOPPED", ex.getMessage());
+    }
+
 
 }

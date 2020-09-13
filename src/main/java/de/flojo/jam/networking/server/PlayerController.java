@@ -81,4 +81,16 @@ public class PlayerController {
         return playerTwo;
     }
 
+    public String playerOneName() {
+        return playerOne == null ? null : playerOne.getClientName();
+    }
+
+    public String playerTwoName() {
+        return playerTwo == null ? null : playerTwo.getClientName();
+    }
+
+	public String getInfo() {
+		return playerTwo == null ? playerOneName() : playerOneName() + ", " + playerTwoName();
+	}
+
 }

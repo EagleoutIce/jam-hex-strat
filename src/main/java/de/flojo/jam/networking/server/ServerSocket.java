@@ -43,6 +43,7 @@ public final class ServerSocket extends WebSocketServer {
     @Override
     public void onError(WebSocket conn, Exception ex) {
         Game.log().severe(ex.getMessage());
+        controller.handleError(conn, ex);
     }
 
     @Override

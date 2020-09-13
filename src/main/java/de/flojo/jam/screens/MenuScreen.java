@@ -59,6 +59,7 @@ public class MenuScreen extends Screen {
         });
 
         // Return to main menu
+        // TODO: regular back buttons with unset? server e.g. continues running
         Input.keyboard().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME, startGame));
     }
 

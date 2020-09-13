@@ -8,7 +8,7 @@ package de.flojo.jam.networking.exceptions;
  * 
  * @since 1.1
  */
-public class GenericNetworkingException extends RuntimeException {
+public class GenericNetworkingException extends Exception {
 
     private static final long serialVersionUID = -7131605913846543735L;
 
