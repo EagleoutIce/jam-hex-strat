@@ -97,7 +97,7 @@ public class EditorScreen extends Screen {
         Game.log().info("Building Editor Screen");
         Game.window().onResolutionChanged(r -> updatePositions());
 
-        Input.mouse().onDragged(this::plantTile);
+        Input.mouse().onDragged(this::plantTileOrOther);
         Input.mouse().onClicked(this::plantTileOrOther);
         Input.mouse().onMoved(this::lockOnMoved);
 

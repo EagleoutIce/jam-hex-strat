@@ -1,6 +1,5 @@
 package de.flojo.jam.game.creature;
 
-import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,10 +9,9 @@ import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import de.flojo.jam.game.board.BoardCoordinate;
-import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 // removed sort as it will be rendered with joint render and this is more effective
-public class CreatureCollection implements IRenderable, Serializable {
+public class CreatureCollection implements Serializable {
 
     private static final long serialVersionUID = -2951185236311104006L;
 
@@ -34,9 +32,11 @@ public class CreatureCollection implements IRenderable, Serializable {
     }
 
     private <T> Optional<Creature> search(T val, BiPredicate<Creature, T> check) {
-        for (Creature creature : collection) {
-            if (check.test(creature, val)) {
-                return Optional.of(creature);
+        synchronized(collection) {
+            for (Creature creature : collection) {
+                if (check.test(creature, val)) {
+                    return Optional.of(creature);
+                }
             }
         }
         return Optional.empty();
@@ -46,43 +46,53 @@ public class CreatureCollection implements IRenderable, Serializable {
         return search(name, (c, v) -> c.getName().equals(v)).orElse(null);
     }
 
-    @Override
-    public void render(Graphics2D g) {
-        // keeping render order
-        for (Creature creature : collection)
-            creature.render(g);
-    }
 
     public boolean add(Creature c) {
-        return collection.add(c);
+        synchronized(collection) {
+            return collection.add(c);
+        }
     }
 
     public void clear() {
-        collection.clear();
+        synchronized(collection) {
+            collection.clear();
+        }
     }
 
     public boolean contains(Object o) {
-        return collection.contains(o);
+        synchronized(collection) {
+            return collection.contains(o);
+        }
     }
 
     public boolean isEmpty() {
-        return collection.isEmpty();
+        synchronized(collection) {
+            return collection.isEmpty();
+        }
     }
 
     public int size() {
-        return collection.size();
+        synchronized(collection) {
+            return collection.size();
+        }
     }
 
     public Creature get(int i) {
-        return collection.get(i);
+        synchronized(collection) {
+            return collection.get(i);
+        }
     }
 
     public boolean removeIf(Predicate<? super Creature> filter) {
-        return collection.removeIf(filter);
+        synchronized(collection) {
+            return collection.removeIf(filter);
+        }
     }
 
     protected boolean remove(Object arg0) {
-        return collection.remove(arg0);
+        synchronized(collection) {
+            return collection.remove(arg0);
+        }
     }
     
 }

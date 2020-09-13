@@ -36,9 +36,11 @@ public class TrapCollection implements Serializable {
     }
 
     private <T> Optional<Trap> search(T val, BiPredicate<Trap, T> check) {
-        for (Trap trap : collection) {
-            if (check.test(trap, val)) {
-                return Optional.of(trap);
+        synchronized(collection) {
+            for (Trap trap : collection) {
+                if (check.test(trap, val)) {
+                    return Optional.of(trap);
+                }
             }
         }
         return Optional.empty();
@@ -49,27 +51,39 @@ public class TrapCollection implements Serializable {
     }
 
     public boolean add(Trap t) {
-        return collection.add(t);
+        synchronized(collection) {
+            return collection.add(t);
+        }
     }
 
     public void clear() {
-        collection.clear();
+        synchronized(collection) {
+            collection.clear();
+        }
     }
 
     public boolean contains(Object o) {
-        return collection.contains(o);
+        synchronized(collection) {
+            return collection.contains(o);
+        }
     }
 
     public boolean isEmpty() {
-        return collection.isEmpty();
+        synchronized(collection) {
+            return collection.isEmpty();
+        }
     }
 
     public int size() {
-        return collection.size();
+        synchronized(collection) {
+            return collection.size();
+        }
     }
 
     public boolean removeIf(Predicate<? super Trap> filter) {
-        return collection.removeIf(filter);
+        synchronized(collection) {
+            return collection.removeIf(filter);
+        }
     }
     
 }
