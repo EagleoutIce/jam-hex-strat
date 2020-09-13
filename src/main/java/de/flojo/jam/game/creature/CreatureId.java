@@ -4,7 +4,9 @@ public enum CreatureId {
     // do not map directly here in case of multiple summons
     NONE("Nichts"),
     PEASANT("Bauer"),
-    GOBLIN("Kobold");
+    GOBLIN("Kobold"),
+    ELF("Elf"),
+    HALFLING("Halbling");
     
     private final String name;
 
