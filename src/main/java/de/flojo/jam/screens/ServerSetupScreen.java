@@ -134,6 +134,8 @@ public class ServerSetupScreen extends Screen {
         }
     }
 
+    // TODO: implement feedback system too to signal if not running?
+
     private void startServer() {
         this.portNumber.setEnabled(false);
         this.loadTerrain.setEnabled(false);

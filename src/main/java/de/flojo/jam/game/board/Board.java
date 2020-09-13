@@ -56,13 +56,13 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         this.terrainMap = terrainMap;
     }
 
-    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
+    public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
         this.width = w;
         this.height = h;
         this.backgroundPath = backgroundPath;
         this.background = Resources.images().get(backgroundPath);
         this.tiles = new HashMap<>(w * h);
-        this.terrainMap = new TerrainMap(w, h, terrainPath);
+        this.terrainMap =terrainMap;
         tilesUpperLeft = getTilesUpperLeft();
         setupTiles();
         setupResizeListener();
@@ -70,6 +70,10 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         highlightMask = SimpleHighlighter.get();
         Game.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
         setupInput();
+    }
+
+    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
+        this(w,h, backgroundPath, new TerrainMap(w, h, terrainPath));
     }
 
     private void initialShifts() {

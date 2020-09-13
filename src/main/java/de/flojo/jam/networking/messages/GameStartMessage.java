@@ -68,4 +68,21 @@ public class GameStartMessage extends MessageContainer {
     }
 
 
+    public UUID getP1Id() {
+        return p1Id;
+    }
+
+    public UUID getP2Id() {
+        return p2Id;
+    }
+
+    public String getP1Name() {
+        return p1Name;
+    }
+
+    public String getP2Name() {
+        return p2Name;
+    }
+
+
 }

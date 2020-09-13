@@ -95,7 +95,10 @@ public class ClientController implements IClientController {
             case HELLO_REPLY:
                 context.handleHelloReply(NetworkGson.getMessage(message));
                 break;
-
+            case GAME_START:
+                context.handleGameStart(NetworkGson.getMessage(message));
+                onConnectionStateUpdate.call("START");
+                break;
             default:
                 Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[] {type, message});
         }

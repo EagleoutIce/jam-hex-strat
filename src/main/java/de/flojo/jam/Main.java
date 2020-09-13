@@ -59,7 +59,7 @@ public class Main {
         Game.window().setIcon(ICON);
 
         Game.screens().add(new MenuScreen());
-        Game.screens().add(new IngameScreen());
+        Game.screens().add(IngameScreen.get());
         Game.screens().add(new EditorScreen());
         Game.screens().add(ConnectScreen.get());
         Game.screens().add(new ServerSetupScreen());

@@ -5,7 +5,8 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Objects;
+import java.util.Arrays;
+import java.util.logging.Level;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
@@ -27,10 +28,10 @@ public class ConnectScreen extends Screen {
 
     private boolean locked;
 
-    private static ClientController clientController;
+    private ClientController clientController;
     public static final String NAME = "Game-Connect";
 
-    private static TextFieldComponent nameField;
+    private TextFieldComponent nameField;
     private TextFieldComponent portNumber;
     private TextFieldComponent adress;
     private Button connect;
@@ -145,11 +146,22 @@ public class ConnectScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
+        Game.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
+
         if(data.length == 0)
             return;
-        if(Objects.equals(data[0], "CLOSED")) {
-            System.out.println("GOT NOTIFIED");
-            disconnect();   
+        
+        switch(data[0]) {
+            case "CLOSED":
+                disconnect();   
+                break;
+            case "START":
+                // prepare correct Data :D
+                IngameScreen.get().setup();
+                changeScreen(IngameScreen.NAME);
+                break;
+            default:
+                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
@@ -161,28 +173,26 @@ public class ConnectScreen extends Screen {
         clientController.close();
         clientController = null;
     }
-    private void changeScreen(final String name, final Button button) {
+    private void changeScreen(final String name) {
         if (this.locked)
             return;
 
         Game.window().cursor().set(Main.DEFAULT_CURSOR);        
 
         this.locked = true;
-        button.setEnabled(false);
         Game.window().getRenderComponent().fadeOut(650);
         Game.loop().perform(950, () -> {
             Game.screens().display(name);
             Game.window().getRenderComponent().fadeIn(650);
             this.locked = false;
-            button.setEnabled(true);
         });
     }
 
-    public static ClientController getClientController() {
+    public ClientController getClientController() {
         return clientController;
     }
 
-    public static String getChosenPlayerName() {
+    public String getChosenPlayerName() {
         return nameField.getText();
     }
 }
