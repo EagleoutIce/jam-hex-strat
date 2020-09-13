@@ -209,7 +209,7 @@ public class EditorScreen extends Screen {
         for (int i = 0; i < terrains.length; i++) {
             TerrainId terrain = terrains[i];
             
-            ImageButton imgBt = new ImageButton(310d, 30d, Main.INNER_MARGIN, (i + 1) * 45d,
+            ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d,
                     terrain.getImprint().getBitMap(), terrain.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {

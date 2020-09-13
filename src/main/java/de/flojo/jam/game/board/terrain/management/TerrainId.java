@@ -6,6 +6,8 @@ import java.util.Arrays;
 
 import de.flojo.jam.game.board.terrain.TerrainType;
 
+
+// colors probably useless?
 public enum TerrainId {
     T_EMPTY("Leer", TerrainImprint.getSingle(TerrainType.EMPTY), Color.WHITE),
     T_GRASS_HILL("Grashügel", TerrainImprint.getSingle(TerrainType.GRASS_HILL), Color.GREEN),
@@ -28,6 +30,7 @@ public enum TerrainId {
                     Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_2, null))),
             new Point(0, 1)), Color.RED.darker()),
     T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainType.DEAD_TREE), Color.YELLOW),
+    T_DEAD_TREE_B("Kahler Baum, B", TerrainImprint.getSingle(TerrainType.DEAD_TREE_B), Color.YELLOW.darker()),
     T_CART_LEFT("Karren nach links", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
                     Arrays.asList(null, TerrainType.CART_LEFT_GHOST), //
