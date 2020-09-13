@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 import de.flojo.jam.networking.exceptions.NoConnectionException;
 import de.flojo.jam.networking.messages.HelloMessage;
+import de.flojo.jam.networking.messages.MessageContainer;
 import de.gurkenlabs.litiengine.Game;
 
 public class ClientController implements IClientController {
@@ -39,7 +40,7 @@ public class ClientController implements IClientController {
         synchronized (readyLock) {
             for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
                 Game.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})", new Object[] {attempts, MAX_WAIT_INTERVAL});
-                readyLock.wait(1000); // wait for it to be ready
+                readyLock.wait(500); // wait for it to be ready
             }
             if (!isReady) {
                 throw new NoConnectionException(MAX_WAIT_INTERVAL);
@@ -77,6 +78,11 @@ public class ClientController implements IClientController {
 
     public void close() {
         socket.close();
+    }
+
+    @Override
+    public void send(MessageContainer message) {
+        socket.send(message.toJson());
     }
 
     

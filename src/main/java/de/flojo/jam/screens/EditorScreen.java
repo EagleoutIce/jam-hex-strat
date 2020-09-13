@@ -141,6 +141,7 @@ public class EditorScreen extends Screen {
         this.getComponents().add(loadField);
     }
 
+    // TODO: SAVES TO MUCH!!!!!!!! (FIELD TO LONG?)
     private void saveField() {
         board.getTerrainMap().changeName(terrainName.getText());
         final String chosen = getSaveFile();

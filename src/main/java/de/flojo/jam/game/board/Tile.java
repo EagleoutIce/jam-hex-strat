@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
 import de.flojo.jam.graphics.Hexagon;
@@ -78,8 +79,9 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         }
         this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
         g.setColor(Color.RED);
-        final String cord = coordinate.getX() + "/" + coordinate.getY();
-        TextRenderer.render(g, cord, getCenter().x - TextRenderer.getWidth(g, cord) / 2, getCenter().y);
+        g.setFont(Main.TEXT_NORMAL.deriveFont(20f));
+        final String cord = coordinate.x + "/"+ coordinate.y;
+        TextRenderer.render(g, cord, getCenter().x - TextRenderer.getWidth(g, cord) / 2, getCenter().y + TextRenderer.getHeight(g, cord)*0.15);
     }
 
     @Override

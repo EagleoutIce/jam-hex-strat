@@ -61,7 +61,7 @@ public class Main {
         Game.screens().add(new MenuScreen());
         Game.screens().add(new IngameScreen());
         Game.screens().add(new EditorScreen());
-        Game.screens().add(new ConnectScreen());
+        Game.screens().add(ConnectScreen.get());
         Game.screens().add(new ServerSetupScreen());
         
         Game.addGameListener(new GameListener() {

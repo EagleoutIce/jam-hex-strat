@@ -1,6 +1,7 @@
-
 # Created by https://www.toptal.com/developers/gitignore/api/windows,linux,visualstudiocode,intellij+all,git,java,maven,eclipse
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,linux,visualstudiocode,intellij+all,git,java,maven,eclipse
+
+game.log*
 
 ### Eclipse ###
 .metadata
