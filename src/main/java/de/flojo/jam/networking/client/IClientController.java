@@ -12,4 +12,7 @@ public interface IClientController {
 
     // TODO: split to sender?
     void send(MessageContainer message);
+
+
+    ClientContext getContext();
 }

@@ -3,7 +3,6 @@ package de.flojo.jam.networking.messages;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.util.IAmJson;
 
 public class MessageContainer implements IAmJson {
@@ -47,17 +46,10 @@ public class MessageContainer implements IAmJson {
         return debugMessage;
     }
 
-
-    public static MessageContainer getContainer(String json) {
-        return NetworkGson.getContainer(json);
+    public void setClientId(UUID clientId) {
+        this.clientId = clientId;
     }
 
-
-    @SuppressWarnings("unchecked")
-    public static <T extends MessageContainer> T getMessage(String json) {
-        final MessageContainer container = Objects.requireNonNull(getContainer(json), "The container wasn't valid");
-        return (T) NetworkGson.gson().fromJson(json, container.getType().getTargetClass());
-    }
 
     @Override
     public int hashCode() {

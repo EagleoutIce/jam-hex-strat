@@ -137,7 +137,7 @@ public class ServerSetupScreen extends Screen {
     private void startServer() {
         this.portNumber.setEnabled(false);
         this.loadTerrain.setEnabled(false);
-        serverController = new ServerController(new InetSocketAddress(Integer.parseInt(this.portNumber.getText())));
+        serverController = new ServerController(new InetSocketAddress(Integer.parseInt(this.portNumber.getText())), board);
         serverController.start();
     }
 

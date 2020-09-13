@@ -3,7 +3,8 @@ package de.flojo.jam.networking.messages;
 public enum MessageTypeEnum {
     HELLO(HelloMessage.class),
     HELLO_REPLY(HelloReplyMessage.class),
-    START_GAME(StartGameMessage.class);
+    ERROR(ErrorMessage.class),
+    GAME_START(GameStartMessage.class);
     private final Class<? extends MessageContainer> targetClass;
 
     MessageTypeEnum(Class<? extends MessageContainer> targetClass) {

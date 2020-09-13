@@ -5,28 +5,23 @@ import java.util.UUID;
 
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.networking.server.ClientServerConnection;
 
 public class HelloReplyMessage extends MessageContainer {
 
     private static final long serialVersionUID = 7630983891460330082L;
 
-    private UUID sessionId;
     private Terrain terrain;
     private PlayerId role;
 
-    public HelloReplyMessage(UUID clientId, UUID sessionId, Terrain terrain, PlayerId role) {
-        this(clientId, sessionId, terrain, role, "");
+    public HelloReplyMessage(ClientServerConnection connection, Terrain terrain) {
+        this(connection.getClientId(), terrain, connection.getRole(), "");
     }
 
-    public HelloReplyMessage(UUID clientId, UUID sessionId, Terrain terrain, PlayerId role, String debugMessage) {
-        super(MessageTypeEnum.HELLO, clientId, debugMessage);
-        this.sessionId = sessionId;
+    public HelloReplyMessage(UUID clientId, Terrain terrain, PlayerId role, String debugMessage) {
+        super(MessageTypeEnum.HELLO_REPLY, clientId, debugMessage);
         this.terrain = terrain;
         this.role = role;
-    }
-
-    public UUID getSessionId() {
-        return sessionId;
     }
 
     public Terrain getTerrain() {
@@ -43,7 +38,7 @@ public class HelloReplyMessage extends MessageContainer {
     public int hashCode() {
         final int prime = 31;
         int result = super.hashCode();
-        result = prime * result + Objects.hash(sessionId, terrain, role);
+        result = prime * result + Objects.hash(terrain, role);
         return result;
     }
 
@@ -59,8 +54,7 @@ public class HelloReplyMessage extends MessageContainer {
             return false;
 
         HelloReplyMessage other = (HelloReplyMessage) obj;
-        return Objects.equals(sessionId, other.sessionId) && Objects.equals(terrain, other.terrain)
-                && role == other.role && super.equals(obj);
+        return Objects.equals(terrain, other.terrain) && role == other.role && super.equals(obj);
     }
 
 }

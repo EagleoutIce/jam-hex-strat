@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
@@ -88,7 +89,7 @@ public class ConnectScreen extends Screen {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 200) / 2 - 26);
-        this.nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
+        nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
         this.adress.setLocation(Main.INNER_MARGIN + 45d, (height + adress.getHeight()) / 2 - 26);
         this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
                 height - this.connect.getHeight());
@@ -107,9 +108,10 @@ public class ConnectScreen extends Screen {
 
             if (!connected)
                 disconnect();
-            else {
-                changeScreen(IngameScreen.NAME, this.connect);
-            }
+            else
+                clientController.getSender().sendHello(nameField.getText());
+                
+
         });
         this.getComponents().add(connect);
 
@@ -132,7 +134,7 @@ public class ConnectScreen extends Screen {
         nameField.setEnabled(false);
         this.connect.setText("Trenne");
         try {
-            clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText() ));
+            clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText() ), this::onNetworkUpdate);
             return clientController.tryConnect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -142,10 +144,19 @@ public class ConnectScreen extends Screen {
         return false;
     }
 
+    void onNetworkUpdate(String... data) {
+        if(data.length == 0)
+            return;
+        if(Objects.equals(data[0], "CLOSED")) {
+            System.out.println("GOT NOTIFIED");
+            disconnect();   
+        }
+    }
+
     private void disconnect() {
         this.portNumber.setEnabled(true);
         this.adress.setEnabled(true);
-        this.nameField.setEnabled(true);
+        nameField.setEnabled(true);
         this.connect.setText("Verbinde");
         clientController.close();
         clientController = null;

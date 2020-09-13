@@ -32,7 +32,6 @@ public class ClientSocket extends WebSocketClient {
     @Override
     public void onClose(int code, String reason, boolean remote) {
         controller.handleClose(code, reason, remote);
-
     }
 
     @Override
