@@ -21,6 +21,8 @@ import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.util.InputController;
+import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -30,11 +32,11 @@ import de.gurkenlabs.litiengine.resources.Resources;
 public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, MouseMotionListener {
     private static final long serialVersionUID = 6531704891590315776L;
 
+    public static final int PADDING = 0;
+
     private final transient BufferedImage background;
 
     private TerrainMap terrainMap;
-
-    public static final int PADDING = 0;
 
     private final int width;
     private final int height;
@@ -44,18 +46,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private final Point tilesUpperLeft;
 
     private IHighlightMask highlightMask;
-
     private final Map<BoardCoordinate, Tile> tiles;
-
     private AtomicBoolean doHover = new AtomicBoolean(true);
 
-    public TerrainMap getTerrainMap() {
-        return terrainMap;
-    }
-
-    public void setTerrainMap(final TerrainMap terrainMap) {
-        this.terrainMap = terrainMap;
-    }
+    private KeyInputGroup bInputGroupVert = new KeyInputGroup();
+    private KeyInputGroup bInputGroupHor = new KeyInputGroup();
 
     public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
         this.width = w;
@@ -63,7 +58,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         this.backgroundPath = backgroundPath;
         this.background = Resources.images().get(backgroundPath);
         this.tiles = new HashMap<>(w * h);
-        this.terrainMap =terrainMap;
+        this.terrainMap = terrainMap;
         tilesUpperLeft = getTilesUpperLeft();
         setupTiles();
         setupResizeListener();
@@ -73,8 +68,16 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         setupInput();
     }
 
+    public TerrainMap getTerrainMap() {
+        return terrainMap;
+    }
+
+    public void setTerrainMap(final TerrainMap terrainMap) {
+        this.terrainMap = terrainMap;
+    }
+
     public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
-        this(w,h, backgroundPath, new TerrainMap(w, h, terrainPath));
+        this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
     }
 
     private void initialShifts() {
@@ -106,8 +109,9 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private Point getTilesUpperLeft() {
         final double topWidth = Tile.getWidth() - 2 * Tile.getSegmentWidth(); // ----
-        final double startX = freeSpaceVertical(topWidth) / 2 + Tile.getWidth() / 2 - 1.33*Tile.getSegmentWidth(); // drawn centered
-        final double startY = background.getHeight() / 2d - height / 4d * Tile.getHeight() + Tile.getHeight()/2.4;
+        final double startX = freeSpaceVertical(topWidth) / 2 + Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth(); // drawn
+                                                                                                                     // centered
+        final double startY = background.getHeight() / 2d - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4;
         return new Point((int) startX, (int) startY);
     }
 
@@ -123,30 +127,43 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private void setupInput() {
         Input.mouse().addMouseMotionListener(this);
         // TODO: Input controller only one key at a time
-        Input.keyboard().onKeyPressed(KeyEvent.VK_W, e -> {
-            if (shiftY <= -5) {
-                shiftY += 5;
-                tiles.forEach((c, h) -> h.move(0, 5));
-            }
-        });
-        Input.keyboard().onKeyPressed(KeyEvent.VK_A, e -> {
-            if (shiftX <= -5) {
-                tiles.forEach((c, h) -> h.move(5, 0));
-                shiftX += 5;
-            }
-        });
-        Input.keyboard().onKeyPressed(KeyEvent.VK_S, e -> {
-            if (Game.window().getHeight() - shiftY < background.getHeight() - 5) {
-                tiles.forEach((c, h) -> h.move(0, -5));
-                shiftY -= 5;
-            }
-        });
-        Input.keyboard().onKeyPressed(KeyEvent.VK_D, e -> {
-            if (Game.window().getWidth() - shiftX < background.getWidth() - 5) {
-                tiles.forEach((c, h) -> h.move(-5, 0));
-                shiftX -= 5;
-            }
-        });
+
+        InputController.get().onKeyPressed(KeyEvent.VK_W, e -> cameraPanUp(),
+                Set.of(Game.screens().current().getName()), bInputGroupVert);
+        InputController.get().onKeyPressed(KeyEvent.VK_A, e -> cameraPanLeft(),
+                Set.of(Game.screens().current().getName()), bInputGroupHor);
+        InputController.get().onKeyPressed(KeyEvent.VK_S, e -> cameraPanDown(),
+                Set.of(Game.screens().current().getName()), bInputGroupVert);
+        InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(),
+                Set.of(Game.screens().current().getName()), bInputGroupHor);
+    }
+
+    private void cameraPanRight() {
+        if (Game.window().getWidth() - shiftX < background.getWidth() - 5) {
+            tiles.forEach((c, h) -> h.move(-5, 0));
+            shiftX -= 5;
+        }
+    }
+
+    private void cameraPanDown() {
+        if (Game.window().getHeight() - shiftY < background.getHeight() - 5) {
+            tiles.forEach((c, h) -> h.move(0, -5));
+            shiftY -= 5;
+        }
+    }
+
+    private void cameraPanLeft() {
+        if (shiftX <= -5) {
+            tiles.forEach((c, h) -> h.move(5, 0));
+            shiftX += 5;
+        }
+    }
+
+    private void cameraPanUp() {
+        if (shiftY <= -5) {
+            shiftY += 5;
+            tiles.forEach((c, h) -> h.move(0, 5));
+        }
     }
 
     private int lineToggle(final int row) {
@@ -221,11 +238,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         mouseUpdate(e);
     }
 
-    public void doHover(){
+    public void doHover() {
         this.doHover.set(true);
     }
 
-    public void doNotHover(){
+    public void doNotHover() {
         this.doHover.set(false);
     }
 
@@ -234,7 +251,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     private void mouseUpdate(final MouseEvent e) {
         highlightTiles.forEach(Tile::clearHover);
         highlightTiles.clear();
-        if(!doHover.get()) {
+        if (!doHover.get()) {
             return;
         }
 
@@ -271,7 +288,7 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
     }
 
     private boolean processSingleTileHighlight(BoardCoordinate hPoint, int x, int y, Point anchor,
-        Set<Tile> highlightTiles) {
+            Set<Tile> highlightTiles) {
         // transform target in boardCoordinates
         BoardCoordinate effectiveCoordinate = hPoint.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = getTile(effectiveCoordinate);
@@ -305,11 +322,11 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     public void jointRender(final Graphics2D g, CreatureFactory factory) {
         // if no factory do default :D
-        if(factory == null) {
+        if (factory == null) {
             render(g);
             return;
         }
-            
+
         ImageRenderer.render(g, background, shiftX, shiftY);
         for (final Tile tile : tiles.values())
             tile.render(g);
