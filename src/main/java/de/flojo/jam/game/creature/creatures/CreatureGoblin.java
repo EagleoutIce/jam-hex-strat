@@ -27,7 +27,7 @@ public class CreatureGoblin extends Creature {
     
     private static CreatureAttributes createGoblinAttributes() {
         Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
+        skills.add(new SimplePunch(1, 1, 1, "Punch (1)", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
         // TODO: flying
         return new CreatureAttributes(1, 1, skills);
     }

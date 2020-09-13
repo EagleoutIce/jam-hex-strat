@@ -27,7 +27,7 @@ public class CreaturePeasant extends Creature {
     
     private static CreatureAttributes createPeasantAttributes() {
         Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(3, 1, 1, "Einfacher Harkenhieb", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
+        skills.add(new SimplePunch(3, 1, 1, "Punch (3)", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
         return new CreatureAttributes(1, 1, skills);
     }
 

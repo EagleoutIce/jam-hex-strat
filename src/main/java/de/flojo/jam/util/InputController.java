@@ -5,6 +5,7 @@ import java.util.Set;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.input.IKeyboard.KeyPressedListener;
 import de.gurkenlabs.litiengine.input.IMouse.MouseClickedListener;
+import de.gurkenlabs.litiengine.input.IMouse.MouseMovedListener;
 import de.gurkenlabs.litiengine.input.Input;
 
 public class InputController {
@@ -57,4 +58,15 @@ public class InputController {
         });
     }
 
+    public void onMoved(MouseMovedListener eventHandler, String screen) {
+        onMoved(eventHandler, Set.of(screen));
+    }
+
+    public void onMoved(MouseMovedListener eventHandler, Set<String> screens) {
+        Input.mouse().onMoved(mm -> {
+            if(!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
+                return;
+            eventHandler.mouseMoved(mm);
+        });
+    }
 }

@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
@@ -54,6 +55,7 @@ public class CreatureFactory {
                 Creature.DIE_DURATION / 25, -128 / 2d, -128 / 1.325d);
     }
 
+    private Consumer<Creature> onSelectionChanged = null;
     private CreatureCollection creatures;
     private TrapCollection traps;
 
@@ -61,6 +63,11 @@ public class CreatureFactory {
         creatures = new CreatureCollection();
         this.traps = traps;
         InputController.get().onClicked(this::setActiveCreature, screen);
+    }
+
+    // maybe allow more?
+    public void setOnSelectionChanged(Consumer<Creature> onSelectionChanged) {
+        this.onSelectionChanged = onSelectionChanged;
     }
 
     private Creature selectedCreature = null;
@@ -71,8 +78,12 @@ public class CreatureFactory {
 
         Creature oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
-        if (oldCreature != selectedCreature)
+        if (oldCreature != selectedCreature) {
             Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
+            if(onSelectionChanged != null) {
+                onSelectionChanged.accept(selectedCreature);
+            }
+        }
     }
 
     public Creature getSelectedCreature() {

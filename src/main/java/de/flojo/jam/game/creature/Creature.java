@@ -9,6 +9,7 @@ import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.skills.DefaultEffectContext;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillId;
+import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
@@ -31,6 +32,10 @@ public class Creature implements IRenderable {
         this.cCollection.add(this);
         this.tCollection = traps;
         this.base.assignCreature(core);
+    }
+
+    public PlayerId getOwner() {
+        return core.getOwner();
     }
 
     public CreatureBase getBase() {
@@ -97,6 +102,9 @@ public class Creature implements IRenderable {
         return this.base.getTile().isHovered();
     }
 
+    public CreatureAttributes getAttributes() {
+        return this.core.getAttributes();
+    }
 
     public void die() {
         core.die();

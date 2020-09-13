@@ -36,6 +36,7 @@ import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.ISummonCreature;
+import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
@@ -54,6 +55,7 @@ public class EditorScreen extends Screen {
     private Board board;
     private CreatureFactory creatureFactory;
     private TrapSpawner trapSpawner;
+    private SkillsPresenter presenter;
 
     private boolean showP1 = true;
     private boolean showP2 = true;
@@ -110,6 +112,8 @@ public class EditorScreen extends Screen {
                 creatureFactory.getSelectedCreature().die();
             }
         }, EditorScreen.NAME);
+        presenter = new SkillsPresenter(this, board, creatureFactory, getFakeId(), EditorScreen.NAME);
+        presenter.enable();
     }
 
     @Override
@@ -138,6 +142,7 @@ public class EditorScreen extends Screen {
         }
     }
 
+    // TODO: simplify
     private boolean intersectsWithButton(Point p) {
         // this did escalate... maybe with list?
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)
@@ -151,6 +156,11 @@ public class EditorScreen extends Screen {
             }
         }
         for (Button button : creatureButtons) {
+            if (button.getBoundingBox().contains(p)) {
+                return true;
+            }
+        }
+        for (ImageButton button : terrainButtons) {
             if (button.getBoundingBox().contains(p)) {
                 return true;
             }
@@ -213,7 +223,8 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty() && creatureFactory.get(t.getCoordinate()).isEmpty()) {
+            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty()
+                    && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -263,6 +274,7 @@ public class EditorScreen extends Screen {
         p1.onClicked(c -> {//
             showP1 = true;
             showP2 = false;
+            presenter.setPlayerId(PlayerId.ONE);
             p1.setColors(Color.GREEN, Color.GREEN.brighter());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.WHITE, Color.WHITE.darker());
@@ -271,6 +283,7 @@ public class EditorScreen extends Screen {
         p2.onClicked(c -> {//
             showP1 = false;
             showP2 = true;
+            presenter.setPlayerId(PlayerId.TWO);
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.GREEN, Color.GREEN.brighter());
             both.setColors(Color.WHITE, Color.WHITE.darker());
@@ -279,6 +292,7 @@ public class EditorScreen extends Screen {
         both.onClicked(c -> {//
             showP1 = true;
             showP2 = true;
+            presenter.setPlayerId(null);
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.GREEN, Color.GREEN.brighter());

@@ -14,23 +14,43 @@ public class CreatureAttributes {
     private final int maxMp;
     private final int maxAp;
 
-    private final int currentMp;
-    private final int currentAp;
+    private int currentMp;
+    private int currentAp;
 
     private final Set<ICreatureSkill> skills;
 
     public CreatureAttributes(int mp, int ap, Set<ICreatureSkill> skills) {
-        this.maxMp = this.currentAp = ap;
-        this.maxAp = this.currentMp = ap;
+        this.maxMp = this.currentMp = mp;
+        this.maxAp = this.currentAp = ap;
         this.skills = skills;
     }
 
-    public int getMp() {
-        return maxMp;
+    public void reset() {
+        this.currentAp = maxAp;
+        this.currentMp = maxMp;
     }
 
-    public int getAp() {
-        return maxAp;
+    
+    public int getMpLeft() {
+        return currentMp;
+    }
+
+    public int getApLeft() {
+        return currentAp;
+    }
+
+    public boolean useAp() {
+        if(this.currentAp <= 0)
+            return false;
+        this.currentAp -= 1;
+        return true;
+    }
+
+    public boolean useMp() {
+        if(this.currentMp <= 0)
+            return false;
+        this.currentMp -= 1;
+        return true;
     }
 
     public Set<ICreatureSkill> getSkills() {
@@ -49,6 +69,15 @@ public class CreatureAttributes {
     public void useSkill(IProvideEffectContext context, SkillId wantedSkill, Creature attacker, Creature target) {
         getSkill(wantedSkill).ifPresentOrElse(s -> s.getEffect(context).effect(target, attacker), //
                 () -> Game.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CreatureAttributes [currentAp=").append(currentAp).append(", currentMp=").append(currentMp)
+                .append(", maxAp=").append(maxAp).append(", maxMp=").append(maxMp).append(", skills=").append(skills)
+                .append("]");
+        return builder.toString();
     }
 
 }
