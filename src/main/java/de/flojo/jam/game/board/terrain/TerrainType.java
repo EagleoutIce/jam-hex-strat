@@ -71,7 +71,6 @@ public enum TerrainType {
     private final IRenderData renderer;
     private final ImprintNode node;
 
-    // TODO: pattern if multiple; offset data etc.
     @SuppressWarnings("java:S107")
     private TerrainType(String displayName, ImprintNode node, boolean blocksWalking, boolean blocksLineOfSight,
             boolean blocksFromSky, boolean raised, int cost, Direction pushDirection, final IRenderData renderer) {

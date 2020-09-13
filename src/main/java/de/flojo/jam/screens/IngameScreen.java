@@ -30,7 +30,7 @@ public class IngameScreen extends Screen {
 
 
     public void setup() {
-        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, new TerrainMap(ConnectScreen.get().getClientController().getContext().getTerrain()));
+        board = new Board(new TerrainMap(ConnectScreen.get().getClientController().getContext().getTerrain()));
     }
 
     @Override

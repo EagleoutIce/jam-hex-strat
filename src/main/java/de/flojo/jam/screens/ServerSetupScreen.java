@@ -14,6 +14,7 @@ import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.server.ServerController;
+import de.flojo.jam.util.FileHelper;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
@@ -38,7 +39,6 @@ public class ServerSetupScreen extends Screen {
     public ServerSetupScreen() {
         super(NAME);
         Game.log().info("Building server Screen");
-        updatePositions();
     }
 
     private String serverStatus() {
@@ -80,10 +80,10 @@ public class ServerSetupScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
-        Game.window().onResolutionChanged(r -> {
-            updatePositions();
-        });
-        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
+        Game.window().onResolutionChanged(r -> updatePositions());
+        Game.loop().perform(100, this::updatePositions);
+
+        board = new Board("configs/empty.terrain");
     }
 
     private void updatePositions() {
@@ -122,7 +122,7 @@ public class ServerSetupScreen extends Screen {
     }
 
     private void loadTerrain() {
-        String chosen = EditorScreen.loadTerrain();
+        String chosen = FileHelper.askForTerrainPathLoad();
         if (chosen == null) {
             Game.log().info("Load was cancelled.");
             return;

@@ -85,9 +85,8 @@ public class ConnectScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
-        Game.window().onResolutionChanged(r -> {
-            updatePositions();
-        });
+        Game.window().onResolutionChanged(r -> updatePositions());
+        Game.loop().perform(100, this::updatePositions);
     }
 
     private void updatePositions() {

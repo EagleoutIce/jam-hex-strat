@@ -1,7 +1,5 @@
 package de.flojo.jam.screens;
 
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.InputEvent;
@@ -12,7 +10,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +34,7 @@ import de.flojo.jam.game.creature.ISummonCreature;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
+import de.flojo.jam.util.FileHelper;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
@@ -52,7 +50,6 @@ public class EditorScreen extends Screen {
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
     public static final String NAME = "EDITOR";
-    private static final String TERRAIN_SUFFIX = ".terrain";
 
     private TerrainId currentTerrain = TerrainId.T_EMPTY;
     private ISummonCreature currentCreature = null;
@@ -78,9 +75,8 @@ public class EditorScreen extends Screen {
         board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
         architect = new Architect(board, this.creatureFactory);
 
-        Game.window().onResolutionChanged(r -> {
-            updateButtonPositions();
-        });
+        Game.window().onResolutionChanged(r -> updatePositions());
+        Game.loop().perform(100, this::updatePositions);
 
         Input.mouse().onDragged(this::plantTile);
         Input.mouse().onClicked(this::plantTileOrCreature);
@@ -181,7 +177,7 @@ public class EditorScreen extends Screen {
         saveField.onClicked(c -> saveField());
         loadField = new Button("Load", Main.GUI_FONT_SMALL);
         loadField.onClicked(c -> loadField());
-        updateButtonPositions();
+        updatePositions();
         this.getComponents().add(newField);
         this.getComponents().add(saveField);
         this.getComponents().add(loadField);
@@ -190,7 +186,7 @@ public class EditorScreen extends Screen {
     // TODO: SAVES TO MUCH!!!!!!!! (FIELD TO LONG?)
     private void saveField() {
         board.getTerrainMap().changeName(terrainName.getText());
-        final String chosen = getSaveFile();
+        final String chosen = FileHelper.askForTerrainPathSave(board.getTerrainMap().getTerrain().getName());
         if (chosen == null) {
             Game.log().info("Save was cancelled.");
             return;
@@ -204,7 +200,7 @@ public class EditorScreen extends Screen {
     }
 
     private void loadField() {
-        final String chosen = loadTerrain();
+        final String chosen = FileHelper.askForTerrainPathLoad();
         if (chosen == null) {
             Game.log().info("Load was cancelled.");
             return;
@@ -221,28 +217,7 @@ public class EditorScreen extends Screen {
         terrainName.setText(board.getTerrainMap().getTerrain().getName());
     }
 
-    public static String loadTerrain() {
-        final FileDialog loadDialog = new FileDialog(new Frame(), "Save Map", FileDialog.LOAD);
-        loadDialog.setFilenameFilter((dir, name) -> name.endsWith(TERRAIN_SUFFIX));
-        loadDialog.setAlwaysOnTop(true);
-        loadDialog.setMultipleMode(false);
-        loadDialog.setVisible(true);
-        return loadDialog.getFile() == null ? null
-                : Paths.get(loadDialog.getDirectory(), loadDialog.getFile()).toAbsolutePath().toString();
-    }
-
-    private String getSaveFile() {
-        final FileDialog saveDialog = new FileDialog(new Frame(), "Save Map", FileDialog.SAVE);
-        saveDialog.setFilenameFilter((dir, name) -> name.endsWith(TERRAIN_SUFFIX));
-        saveDialog.setAlwaysOnTop(true);
-        saveDialog.setMultipleMode(false);
-        saveDialog.setFile(board.getTerrainMap().getTerrain().getName() + TERRAIN_SUFFIX);
-        saveDialog.setVisible(true);
-        return saveDialog.getFile() == null ? null
-                : Paths.get(saveDialog.getDirectory(), saveDialog.getFile()).toAbsolutePath().toString();
-    }
-
-    private void updateButtonPositions() {
+    private void updatePositions() {
         newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 90d);
         saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
@@ -292,20 +267,20 @@ public class EditorScreen extends Screen {
         terrainButtons = new ArrayList<>();
         TerrainId[] terrains = TerrainId.values();
         for (int i = 0; i < terrains.length; i++) {
-            TerrainId terrain = terrains[i];
+            TerrainId t = terrains[i];
 
             ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d,
-                    terrain.getImprint().getBitMap(), terrain.getName(), Main.TEXT_NORMAL);
+                    t.getImprint().getBitMap(), t.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
-                this.currentTerrain = terrain;
+                this.currentTerrain = t;
                 this.terrain = true;
 
-                TerrainImprint imprint = terrain.getImprint();
+                TerrainImprint imprint = t.getImprint();
                 if (imprint.hasBaseResource()) {
                     Game.window().cursor().setVisible(true);
-                    Game.window().cursor().set(terrain.getImprint().getBaseResource());
+                    Game.window().cursor().set(t.getImprint().getBaseResource());
                     // TODO: maybe make more efficient?
                     board.setHighlightMask(new ImprintHighlighter(imprint));
                     Game.window().cursor().showDefaultCursor();

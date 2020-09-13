@@ -15,6 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.highlighting.IHighlightMask;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
@@ -29,7 +30,7 @@ import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, MouseMotionListener {
+public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotionListener {
     private static final long serialVersionUID = 6531704891590315776L;
 
     public static final int PADDING = 0;
@@ -51,6 +52,19 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private KeyInputGroup bInputGroupVert = new KeyInputGroup();
     private KeyInputGroup bInputGroupHor = new KeyInputGroup();
+
+    public Board(final String terrainPath) {
+        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainPath);
+    }
+
+    public Board(final TerrainMap terrainMap) {
+        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainMap);
+    }
+
+    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
+        this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
+    }
+
 
     public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
         this.width = w;
@@ -74,10 +88,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     public void setTerrainMap(final TerrainMap terrainMap) {
         this.terrainMap = terrainMap;
-    }
-
-    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
-        this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
     }
 
     private void initialShifts() {
@@ -126,7 +136,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
 
     private void setupInput() {
         Input.mouse().addMouseMotionListener(this);
-        // TODO: Input controller only one key at a time
 
         InputController.get().onKeyPressed(KeyEvent.VK_W, e -> cameraPanUp(),
                 Set.of(Game.screens().current().getName()), bInputGroupVert);
@@ -225,8 +234,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         }
         return null;
     }
-
-    // TODO: move to input later
 
     @Override
     public void mouseDragged(final MouseEvent e) {
@@ -338,12 +345,6 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
                 factory.get(coordinate).ifPresent(c -> c.render(g));
             }
         }
-    }
-
-    @Override
-    public IAmNode getChildren() {
-        // TODO return tiles
-        return null;
     }
 
 }

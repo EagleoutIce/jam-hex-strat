@@ -37,7 +37,6 @@ public class PunchEffect implements IEffectCreature {
 
         int dX = normalizeDistDelta(t.x, a.x);
         int dY = normalizeDistDelta(t.y, a.y);
-        // TODO: guard if not 1?
         int mX = Math.floorMod(t.x, 2);
         int mY = Math.floorMod(t.y, 2);
 

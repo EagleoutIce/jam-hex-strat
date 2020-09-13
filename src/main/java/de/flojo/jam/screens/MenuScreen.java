@@ -54,16 +54,15 @@ public class MenuScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
-        Game.window().onResolutionChanged(r -> {
-            updateButtonPositions();
-        });
+        Game.window().onResolutionChanged(r -> updatePositions());
+        Game.loop().perform(100, this::updatePositions);
 
         // Return to main menu
         // TODO: regular back buttons with unset? server e.g. continues running
         Input.keyboard().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME, startGame));
     }
 
-    private void updateButtonPositions() {
+    private void updatePositions() {
         final double x = Game.window().getCenter().getX();
         final double height = Game.window().getResolution().getHeight();
         this.startGame.setLocation(x - this.startGame.getWidth() / 2, height - this.startGame.getHeight() - 10);
@@ -91,7 +90,7 @@ public class MenuScreen extends Screen {
         this.showServer.onClicked(e -> changeScreen(ServerSetupScreen.NAME, this.showServer));
         this.getComponents().add(this.showServer);
 
-        updateButtonPositions();
+        updatePositions();
     }
 
     private void changeScreen(final String name, final Button button) {

@@ -12,9 +12,7 @@ import de.flojo.jam.graphics.Hexagon;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
-public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmMoveable, IAmNode {
-
-    // TODO: decorations
+public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmMoveable {
 
     public static final int DEFAULT_RADIUS = 30;
     private BoardCoordinate coordinate;
