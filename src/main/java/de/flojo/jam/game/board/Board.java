@@ -22,6 +22,7 @@ import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
@@ -127,7 +128,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private double freeSpaceVertical(final double topWidth) {
         return background.getWidth()
-                - (Math.ceil(width / 2d) * Tile.getWidth() + (Math.ceil(width / 2d) - 1) * topWidth);
+                - (HexMaths.effectiveWidth(width) * Tile.getWidth() + (HexMaths.effectiveWidth(width) - 1) * topWidth);
     }
 
     public synchronized void setHighlightMask(final IHighlightMask mask) {
@@ -200,7 +201,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final double rowShift = hexWidth - hexSeg + PADDING;
         final double hexMidWidth = hexWidth - 2 * hexSeg;
         for (int row = 0; row < height; row++) {
-            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
                 tiles.put(new BoardCoordinate(col, row), new Tile(new BoardCoordinate(col, row), (int) x, (int) y,
@@ -321,7 +322,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             tile.render(g);
 
         for (int row = 0; row < height; row++) {
-            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 tiles.get(new BoardCoordinate(col, row)).renderDecorations(g);
             }
         }
@@ -339,7 +340,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             tile.render(g);
 
         for (int row = 0; row < height; row++) {
-            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 BoardCoordinate coordinate = new BoardCoordinate(col, row);
                 tiles.get(coordinate).renderDecorations(g);
                 factory.get(coordinate).ifPresent(c -> c.render(g));

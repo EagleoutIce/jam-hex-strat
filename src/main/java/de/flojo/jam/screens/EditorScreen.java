@@ -170,7 +170,6 @@ public class EditorScreen extends Screen {
     }
 
     private void initFileOperationButtons() {
-        // TODO: maybe clear/save as?
         newField = new Button("New", Main.GUI_FONT_SMALL);
         newField.onClicked(c -> architect.clearField());
         saveField = new Button("Save", Main.GUI_FONT_SMALL);
