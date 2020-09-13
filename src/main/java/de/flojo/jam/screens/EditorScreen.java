@@ -49,8 +49,10 @@ import de.gurkenlabs.litiengine.input.Input;
 
 public class EditorScreen extends Screen {
 
+    public static final String NAME = "EDITOR";
+
     private Board board;
-    private CreatureFactory creatureFactory = new CreatureFactory();
+    private CreatureFactory creatureFactory = new CreatureFactory(EditorScreen.NAME);
     private TrapSpawner trapSpawner;
 
     private boolean showP1 = true;
@@ -59,8 +61,6 @@ public class EditorScreen extends Screen {
     private Architect architect;
 
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-    public static final String NAME = "EDITOR";
 
     private TerrainId currentTerrain = TerrainId.T_EMPTY;
     private ISummonCreature currentCreature = null;
@@ -87,30 +87,39 @@ public class EditorScreen extends Screen {
     public EditorScreen() {
         super(NAME);
         Game.log().info("Building Editor Screen");
-    }
-
-    @Override
-    public void prepare() {
-        super.prepare();
-
-        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
-        architect = new Architect(board, this.creatureFactory);
-        trapSpawner = new TrapSpawner(board);
-
         Game.window().onResolutionChanged(r -> updatePositions());
-        Game.loop().perform(100, this::updatePositions);
 
         Input.mouse().onDragged(this::plantTile);
         Input.mouse().onClicked(this::plantTileOrOther);
         Input.mouse().onMoved(this::lockOnMoved);
 
-        InputController.get().onKeyPressed(KeyEvent.VK_T, (c) -> {
+        InputController.get().onKeyPressed(KeyEvent.VK_T, c -> {
             if(trapSpawner.getSelectedTrap() != null){
                 trapSpawner.getSelectedTrap().trigger();
             }
         }, EditorScreen.NAME);
+    }
 
+    @Override
+    public void prepare() {
+        super.prepare();
+        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
+        if(trapSpawner == null)
+            trapSpawner = new TrapSpawner(board, EditorScreen.NAME);
+        if(architect == null)
+            architect = new Architect(board, this.creatureFactory, this.trapSpawner);
+
+        // TODO: maybe group reset?
+
+        trapSpawner.removeAll();
+        creatureFactory.removeAll();
         architect.clearField();// init
+
+        this.selectionMode = EditorSelectionMode.TERRAIN;
+        this.currentTerrain = TerrainId.T_EMPTY;
+
+        Game.loop().perform(100, this::updatePositions);
+
         terrainName.setText("Pain Terrain Name");
     }
 
@@ -147,9 +156,13 @@ public class EditorScreen extends Screen {
     }
 
     private void plantTile(MouseEvent c) {
-        if (this.selectionMode != EditorSelectionMode.TERRAIN || currentTerrain == null || architect == null) {
+        if (this.selectionMode != EditorSelectionMode.TERRAIN || architect == null) {
             return;
         }
+
+        if(currentTerrain == null || currentTerrain == TerrainId.T_EMPTY)
+            return;
+
         Point p = c.getPoint();
         if (intersectsWithButton(p))
             return;
@@ -163,7 +176,7 @@ public class EditorScreen extends Screen {
             architect.deleteImprint(t.getCoordinate(), currentTerrain.getImprint());
     }
 
-    private void createTrap(MouseEvent c) {
+    private void spawnTrap(MouseEvent c) {
         if (this.selectionMode != EditorSelectionMode.TRAP) {
             return;
         }
@@ -174,9 +187,8 @@ public class EditorScreen extends Screen {
         if(t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY) {
+            if (t.getTerrainType() == TerrainType.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
-                Game.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[] {currentTrapId, t, getFakeId()});
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
             trapSpawner.removeTrap(t);
@@ -194,7 +206,7 @@ public class EditorScreen extends Screen {
         if(t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY) {
+            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -211,7 +223,7 @@ public class EditorScreen extends Screen {
                 plantTile(e);
                 break;
             case TRAP:
-                createTrap(e);
+                spawnTrap(e);
                 break;
             default:
                 break;

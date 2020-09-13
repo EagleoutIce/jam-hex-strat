@@ -65,7 +65,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
         this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
     }
-s
+
     public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
         this.width = w;
         this.height = h;

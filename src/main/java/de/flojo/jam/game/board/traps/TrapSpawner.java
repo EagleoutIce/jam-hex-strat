@@ -9,8 +9,8 @@ import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
-import de.gurkenlabs.litiengine.input.Input;
 
 public class TrapSpawner {
     
@@ -20,24 +20,30 @@ public class TrapSpawner {
 
     private Trap selectedTrap;
 
-    public TrapSpawner(final Board board){
+    public TrapSpawner(final Board board, final String screen){
         this.board = board; 
         this.traps = new TrapCollection();
-        Input.mouse().onClicked(this::setActiveTrap);
+        InputController.get().onClicked(this::setActiveTrap, screen);
     }
 
     private void setActiveTrap(MouseEvent c) {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
 
+
+        Trap oldTrap = selectedTrap;
         this.selectedTrap = traps.getHighlighted().orElse(null);
-        Game.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
+        if(oldTrap != selectedTrap) 
+            Game.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
     }
 
 
     public Trap spawnTrap(TrapId id, PlayerId owner, Tile tile) {
+        if(traps.get(tile.getCoordinate()).isPresent())
+            return null;
         Trap trap =  new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"), tile);
         traps.add(trap);
+        Game.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[] {id, tile, owner});
         return trap;
     }
 

@@ -4,8 +4,8 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 
 public enum TrapTile {
-    SPIKE("Stachelfalle", new SimpleImageRenderer("tiles/traps/stachelfalle.png", -69 / 2d, -43 / 1.5),
-            new SimpleImageRenderer("tiles/traps/stachelfalle_aktiv.png", -59 / 2d, -50 / 1.5),
+    SPIKE("Stachelfalle", new SimpleImageRenderer("tiles/traps/stachelfalle.png", -69 / 2.1d, -51 / 1.4),
+            new SimpleImageRenderer("tiles/traps/stachelfalle_aktiv.png", -69 / 2.1d, -51 / 1.4),
             new TrapImprintNodeMap(TrapIdConstants.T_SPIKE, 0, 0));
 
     private final String displayName;

@@ -43,8 +43,8 @@ public class IngameScreen extends Screen {
     public void prepare() {
         super.prepare();
 
-        creatureFactory = new CreatureFactory();
-        trapSpawner = new TrapSpawner(board);
+        creatureFactory = new CreatureFactory(IngameScreen.NAME);
+        trapSpawner = new TrapSpawner(board, IngameScreen.NAME);
     }
 
     @Override

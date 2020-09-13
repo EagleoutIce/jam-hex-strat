@@ -4,6 +4,7 @@ import java.util.Set;
 
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.input.IKeyboard.KeyPressedListener;
+import de.gurkenlabs.litiengine.input.IMouse.MouseClickedListener;
 import de.gurkenlabs.litiengine.input.Input;
 
 public class InputController {
@@ -41,6 +42,18 @@ public class InputController {
             if(!group.tryLock(keyCode))
                 return;
             eventHandler.keyPressed(ke);
+        });
+    }
+
+    public void onClicked(MouseClickedListener eventHandler, String screen) {
+        onClicked(eventHandler, Set.of(screen));
+    }
+
+    public void onClicked(MouseClickedListener eventHandler, Set<String> screens) {
+        Input.mouse().onClicked(mc -> {
+            if(!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
+                return;
+            eventHandler.mouseClicked(mc);
         });
     }
 

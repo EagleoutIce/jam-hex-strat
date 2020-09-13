@@ -1,11 +1,11 @@
 package de.flojo.jam.game.board.traps;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -17,10 +17,10 @@ public class TrapCollection implements Serializable {
 
     private static final int DEFAULT_SIZE = 32;
 
-    private final transient List<Trap> collection;
+    private final transient Set<Trap> collection;
 
     public TrapCollection() {
-        collection = Collections.synchronizedList(new ArrayList<>(DEFAULT_SIZE));
+        collection = Collections.synchronizedSet(new HashSet<>(DEFAULT_SIZE));
     }
 
     public Optional<Trap> getHighlighted() {
@@ -66,10 +66,6 @@ public class TrapCollection implements Serializable {
 
     public int size() {
         return collection.size();
-    }
-
-    public Trap get(int i) {
-        return collection.get(i);
     }
 
     public boolean removeIf(Predicate<? super Trap> filter) {

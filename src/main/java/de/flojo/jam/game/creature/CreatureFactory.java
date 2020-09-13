@@ -15,8 +15,8 @@ import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
+import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
-import de.gurkenlabs.litiengine.input.Input;
 
 public class CreatureFactory {
     private static final IRenderData PEASANT_P1_NORMAL = new SimpleImageRenderer("creatures/bauer_blau.png", -93d / 2.9,
@@ -41,9 +41,9 @@ public class CreatureFactory {
 
     private CreatureCollection creatures;
 
-    public CreatureFactory() {
+    public CreatureFactory(final String screen) {
         creatures = new CreatureCollection();
-        Input.mouse().onClicked(this::setActiveCreature);
+        InputController.get().onClicked(this::setActiveCreature, screen);
     }
 
     private Creature selectedCreature = null;
@@ -52,8 +52,10 @@ public class CreatureFactory {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
 
+        Creature oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
-        Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
+        if(oldCreature != selectedCreature) 
+            Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
     }
 
     public Creature getSelectedCreature() {

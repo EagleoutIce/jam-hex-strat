@@ -13,6 +13,7 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.management.TerrainData;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
+import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.gurkenlabs.litiengine.Game;
 
@@ -21,10 +22,12 @@ public class Architect {
 
     private final Board board;
     private final CreatureFactory factory;
+    private final TrapSpawner spawner;
 
-    public Architect(Board board, CreatureFactory factory) {
+    public Architect(Board board, CreatureFactory factory, TrapSpawner spawner) {
         this.board = board;
         this.factory = factory;
+        this.spawner = spawner;
     }
 
     public void placeImprint(BoardCoordinate at, TerrainImprint imprint) {
@@ -50,7 +53,7 @@ public class Architect {
                 y - imprint.getAnchor().y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
         final TerrainType targetTileType = targetTile == null ? null : targetTile.getTerrainType();
-        if (targetTile != null && targetTileType.equals(TerrainType.EMPTY) && notAgainstFactoryPlacements(targetTile)) {
+        if (targetTile != null && targetTileType.equals(TerrainType.EMPTY) && notAgainstOtherPlacements(targetTile)) {
             targetTiles.put(targetTile, type);
         } else {// invalid as too close to border
             Game.log().log(Level.WARNING, "Tried to place {0} on field {1} for {2} but was: {3}",
@@ -60,8 +63,8 @@ public class Architect {
         return true;
     }
 
-    private boolean notAgainstFactoryPlacements(Tile tile) {
-        return factory.get(tile.getCoordinate()).isEmpty();
+    private boolean notAgainstOtherPlacements(Tile tile) {
+        return factory.get(tile.getCoordinate()).isEmpty() && spawner.get(tile.getCoordinate()).isEmpty();
     }
 
     public void deleteImprint(BoardCoordinate at, TerrainImprint imprint) {
