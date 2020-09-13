@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureBase;
@@ -15,8 +16,8 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureElf extends Creature {
 
-    public CreatureElf(String name, Tile startBase, PlayerId playerId, CreatureCollection collection, IRenderData normal, IRenderData dying) {
-        super(name, collection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
+    public CreatureElf(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
     }
 
     private static CreatureCore createElfCore(PlayerId playerId, IRenderData normal, IRenderData dying) {

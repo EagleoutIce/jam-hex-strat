@@ -35,7 +35,9 @@ public class IngameScreen extends Screen {
 
 
     public void setup(PlayerId ourId) {
-        board = new Board(new TerrainMap(ConnectScreen.get().getClientController().getContext().getTerrain()));
+        board = new Board(new TerrainMap(ConnectScreen.get().getClientController().getContext().getTerrain()), IngameScreen.NAME);
+        trapSpawner = new TrapSpawner(board, IngameScreen.NAME);
+        creatureFactory = new CreatureFactory(IngameScreen.NAME, trapSpawner.getTraps());
         this.ourId = ourId;
     }
 
@@ -43,8 +45,6 @@ public class IngameScreen extends Screen {
     public void prepare() {
         super.prepare();
 
-        creatureFactory = new CreatureFactory(IngameScreen.NAME);
-        trapSpawner = new TrapSpawner(board, IngameScreen.NAME);
     }
 
     @Override

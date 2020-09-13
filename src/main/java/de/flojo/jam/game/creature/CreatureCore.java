@@ -11,13 +11,17 @@ public class CreatureCore implements IRenderable {
 
     private IRenderData mainData;
     private IRenderData dyingData;
+    
     IRenderData renderCore;
 
     private CreatureBase base;
     private CreatureAttributes attributes;
 
     private boolean isFlying = false;
+
+    private boolean isDead = false;
     private boolean isDying = false;
+    private boolean dieAnimationCompleted = false;
 
     private final PlayerId owner;
 
@@ -40,6 +44,15 @@ public class CreatureCore implements IRenderable {
 
     public PlayerId getOwner() {
         return owner;
+    }
+
+    public boolean isDead() {
+        return isDead;
+    }
+
+    public void die() {
+        isDead = isDying = true;
+        renderCore = dyingData;
     }
 
     @Override

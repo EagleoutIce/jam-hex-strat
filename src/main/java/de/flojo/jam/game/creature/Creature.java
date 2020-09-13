@@ -5,9 +5,11 @@ import java.awt.Graphics2D;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.skills.DefaultEffectContext;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillId;
+import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 // compound of base and core; mostly delegates
@@ -16,14 +18,18 @@ public class Creature implements IRenderable {
     private final String name;
     private final CreatureBase base;
     private final CreatureCore core;
-    private final CreatureCollection collection;
+    private final CreatureCollection cCollection;
+    private final TrapCollection tCollection;
 
-    public Creature(final String name,final CreatureCollection collection, CreatureBase base, CreatureCore core) {
+    protected static final int DIE_DURATION = 800;
+
+    public Creature(final String name,final CreatureCollection collection, final TrapCollection traps, CreatureBase base, CreatureCore core) {
         this.base = base;
         this.core = core;
         this.name = name;
-        this.collection = collection;
-        this.collection.add(this);
+        this.cCollection = collection;
+        this.cCollection.add(this);
+        this.tCollection = traps;
         this.base.assignCreature(core);
     }
 
@@ -52,7 +58,14 @@ public class Creature implements IRenderable {
     }
 
     public void move(Tile target) {
+        if(!dead()) {
+            return;
+        }
         base.move(target);
+    }
+
+    public boolean dead() {
+        return core.isDead();
     }
 
     @Override
@@ -61,7 +74,7 @@ public class Creature implements IRenderable {
     }
     
     public void useSkill(Board board, SkillId skill, Creature target) {
-        this.core.getAttributes().useSkill(new DefaultEffectContext(board, collection), skill, this, target);
+        this.core.getAttributes().useSkill(new DefaultEffectContext(board, cCollection, tCollection), skill, this, target);
     }
 
     public void useSkill(IProvideEffectContext context, SkillId skill, Creature target) {
@@ -84,6 +97,11 @@ public class Creature implements IRenderable {
         return this.base.getTile().isHovered();
     }
 
+
+    public void die() {
+        core.die();
+        Game.loop().perform(DIE_DURATION, () -> cCollection.remove(this));
+    }
 
     @Override
     public String toString() {

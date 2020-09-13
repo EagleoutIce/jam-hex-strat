@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureBase;
@@ -15,8 +16,8 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureHalfling extends Creature {
 
-    public CreatureHalfling(String name, Tile startBase, PlayerId playerId, CreatureCollection collection, IRenderData normal, IRenderData dying) {
-        super(name, collection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying));
+    public CreatureHalfling(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying));
     }
 
     private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying) {

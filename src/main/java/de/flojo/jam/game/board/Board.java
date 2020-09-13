@@ -42,6 +42,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private TerrainMap terrainMap;
 
+    private final String screenName;
+
     private final int width;
     private final int height;
     private final String backgroundPath;
@@ -56,20 +58,21 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private KeyInputGroup bInputGroupVert = new KeyInputGroup();
     private KeyInputGroup bInputGroupHor = new KeyInputGroup();
 
-    public Board(final String terrainPath) {
-        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainPath);
+    public Board(final String terrainPath, final String screenName) {
+        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainPath, screenName);
     }
-    public Board(final TerrainMap terrainMap) {
-        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainMap);
+    public Board(final TerrainMap terrainMap, final String screenName) {
+        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainMap, screenName);
     }
-    public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
-        this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
+    public Board(final int w, final int h, final String backgroundPath, final String terrainPath, final String screenName) {
+        this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath), screenName);
     }
 
-    public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
+    public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap, final String screenName) {
         this.width = w;
         this.height = h;
         this.backgroundPath = backgroundPath;
+        this.screenName = screenName;
         this.background = Resources.images().get(backgroundPath);
         this.tiles = new HashMap<>(w * h);
         this.terrainMap = terrainMap;
@@ -138,13 +141,13 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         Input.mouse().addMouseMotionListener(this);
 
         InputController.get().onKeyPressed(KeyEvent.VK_W, e -> cameraPanUp(),
-                Set.of(Game.screens().current().getName()), bInputGroupVert);
+                Set.of(screenName), bInputGroupVert);
         InputController.get().onKeyPressed(KeyEvent.VK_A, e -> cameraPanLeft(),
-                Set.of(Game.screens().current().getName()), bInputGroupHor);
+                Set.of(screenName), bInputGroupHor);
         InputController.get().onKeyPressed(KeyEvent.VK_S, e -> cameraPanDown(),
-                Set.of(Game.screens().current().getName()), bInputGroupVert);
+                Set.of(screenName), bInputGroupVert);
         InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(),
-                Set.of(Game.screens().current().getName()), bInputGroupHor);
+                Set.of(screenName), bInputGroupHor);
     }
 
     private void cameraPanRight() {

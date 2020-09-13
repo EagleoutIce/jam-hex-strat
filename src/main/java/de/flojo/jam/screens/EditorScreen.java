@@ -52,7 +52,7 @@ public class EditorScreen extends Screen {
     public static final String NAME = "EDITOR";
 
     private Board board;
-    private CreatureFactory creatureFactory = new CreatureFactory(EditorScreen.NAME);
+    private CreatureFactory creatureFactory;
     private TrapSpawner trapSpawner;
 
     private boolean showP1 = true;
@@ -86,6 +86,12 @@ public class EditorScreen extends Screen {
 
     public EditorScreen() {
         super(NAME);
+
+        board = new Board("configs/empty.terrain", EditorScreen.NAME);
+        trapSpawner = new TrapSpawner(board, EditorScreen.NAME);
+        creatureFactory = new CreatureFactory(EditorScreen.NAME, trapSpawner.getTraps());
+        architect = new Architect(board, this.creatureFactory, this.trapSpawner);
+
         Game.log().info("Building Editor Screen");
         Game.window().onResolutionChanged(r -> updatePositions());
 
@@ -94,8 +100,14 @@ public class EditorScreen extends Screen {
         Input.mouse().onMoved(this::lockOnMoved);
 
         InputController.get().onKeyPressed(KeyEvent.VK_T, c -> {
-            if(trapSpawner.getSelectedTrap() != null){
+            if (trapSpawner.getSelectedTrap() != null) {
                 trapSpawner.getSelectedTrap().trigger();
+            }
+        }, EditorScreen.NAME);
+
+        InputController.get().onKeyPressed(KeyEvent.VK_K, c -> {
+            if (creatureFactory.getSelectedCreature() != null) {
+                creatureFactory.getSelectedCreature().die();
             }
         }, EditorScreen.NAME);
     }
@@ -103,11 +115,6 @@ public class EditorScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
-        board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
-        if(trapSpawner == null)
-            trapSpawner = new TrapSpawner(board, EditorScreen.NAME);
-        if(architect == null)
-            architect = new Architect(board, this.creatureFactory, this.trapSpawner);
 
         // TODO: maybe group reset?
 
@@ -160,7 +167,7 @@ public class EditorScreen extends Screen {
             return;
         }
 
-        if(currentTerrain == null || currentTerrain == TerrainId.T_EMPTY)
+        if (currentTerrain == null || currentTerrain == TerrainId.T_EMPTY)
             return;
 
         Point p = c.getPoint();
@@ -184,7 +191,7 @@ public class EditorScreen extends Screen {
         if (intersectsWithButton(p))
             return;
         Tile t = board.findTile(p);
-        if(t == null)
+        if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
             if (t.getTerrainType() == TerrainType.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()) {
@@ -198,15 +205,15 @@ public class EditorScreen extends Screen {
     private void summonCreature(MouseEvent c) {
         if (this.selectionMode != EditorSelectionMode.CREATURE)
             return;
-        
+
         Point p = c.getPoint();
         if (intersectsWithButton(p))
             return;
         Tile t = board.findTile(p);
-        if(t == null)
+        if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty()) {
+            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty() && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -215,7 +222,7 @@ public class EditorScreen extends Screen {
     }
 
     void plantTileOrOther(MouseEvent e) {
-        switch(selectionMode) {
+        switch (selectionMode) {
             case CREATURE:
                 summonCreature(e);
                 break;
@@ -254,21 +261,24 @@ public class EditorScreen extends Screen {
         loadField.onClicked(c -> loadField());
         p1 = new Button("P1", Main.GUI_FONT_SMALL);
         p1.onClicked(c -> {//
-            showP1 = true; showP2 = false;
+            showP1 = true;
+            showP2 = false;
             p1.setColors(Color.GREEN, Color.GREEN.brighter());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.WHITE, Color.WHITE.darker());
         });
         p2 = new Button("P2", Main.GUI_FONT_SMALL);
         p2.onClicked(c -> {//
-            showP1 = false; showP2 = true;
+            showP1 = false;
+            showP2 = true;
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.GREEN, Color.GREEN.brighter());
             both.setColors(Color.WHITE, Color.WHITE.darker());
         });
         both = new Button("Both", Main.GUI_FONT_SMALL);
         both.onClicked(c -> {//
-            showP1 = true; showP2 = true;
+            showP1 = true;
+            showP2 = true;
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.GREEN, Color.GREEN.brighter());
@@ -375,6 +385,7 @@ public class EditorScreen extends Screen {
         Game.window().cursor().set(Main.DEFAULT_CURSOR);
         board.setHighlightMask(SimpleHighlighter.get());
     }
+
     private void initTrapButtons() {
         trapButtons = new ArrayList<>();
         TrapId[] traps = TrapId.values();
@@ -401,7 +412,6 @@ public class EditorScreen extends Screen {
             this.getComponents().add(imgBt);
         }
     }
-
 
     private void initTerrainButtons() {
         terrainButtons = new ArrayList<>();
@@ -433,7 +443,7 @@ public class EditorScreen extends Screen {
     }
 
     private PlayerId getFakeId() {
-        if(showP1 && showP2)
+        if (showP1 && showP2)
             return null;
         return showP1 ? PlayerId.ONE : PlayerId.TWO;
     }

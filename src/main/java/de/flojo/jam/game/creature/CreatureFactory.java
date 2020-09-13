@@ -8,15 +8,19 @@ import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.creatures.CreatureElf;
 import de.flojo.jam.game.creature.creatures.CreatureGoblin;
 import de.flojo.jam.game.creature.creatures.CreatureHalfling;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.graphics.renderer.AnimationRenderer;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
+import de.gurkenlabs.litiengine.graphics.Spritesheet;
+import de.gurkenlabs.litiengine.resources.Resources;
 
 public class CreatureFactory {
     private static final IRenderData PEASANT_P1_NORMAL = new SimpleImageRenderer("creatures/bauer_blau.png", -93d / 2.9,
@@ -34,15 +38,28 @@ public class CreatureFactory {
     private static final IRenderData ELF_P2_NORMAL = new SimpleImageRenderer("creatures/elf_lila.png", -76 / 1.78d,
             -92 / 1.27d);
 
-    private static final IRenderData HALFLING_P1_NORMAL = new SimpleImageRenderer("creatures/halbling_blau.png", -73 / 2.3d,
-            -102 / 1.24d);
-    private static final IRenderData HALFLING_P2_NORMAL = new SimpleImageRenderer("creatures/halbling_lila.png", -73 / 1.65d,
-            -102 / 1.29d);
+    private static final IRenderData HALFLING_P1_NORMAL = new SimpleImageRenderer("creatures/halbling_blau.png",
+            -73 / 2.3d, -102 / 1.24d);
+    private static final IRenderData HALFLING_P2_NORMAL = new SimpleImageRenderer("creatures/halbling_lila.png",
+            -73 / 1.65d, -102 / 1.29d);
+
+    private static final Spritesheet S_CREATURE_P1_DIEING = Resources.spritesheets()
+            .load("creatures/animations/creature_die_p1.png", 128, 128);
+    private static final Spritesheet S_CREATURE_P2_DIEING = Resources.spritesheets()
+            .load("creatures/animations/creature_die_p2.png", 128, 128);
+
+    // new one for each
+    private IRenderData getDieAnimation(PlayerId playerId) {
+        return new AnimationRenderer(playerId.ifOne(S_CREATURE_P1_DIEING, S_CREATURE_P2_DIEING),
+                Creature.DIE_DURATION / 25, -128 / 2d, -128 / 1.325d);
+    }
 
     private CreatureCollection creatures;
+    private TrapCollection traps;
 
-    public CreatureFactory(final String screen) {
+    public CreatureFactory(final String screen, TrapCollection traps) {
         creatures = new CreatureCollection();
+        this.traps = traps;
         InputController.get().onClicked(this::setActiveCreature, screen);
     }
 
@@ -54,7 +71,7 @@ public class CreatureFactory {
 
         Creature oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
-        if(oldCreature != selectedCreature) 
+        if (oldCreature != selectedCreature)
             Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
     }
 
@@ -95,23 +112,23 @@ public class CreatureFactory {
     }
 
     public Creature summonPeasant(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreaturePeasant(uniqueName, startBase, pId, creatures,
-                pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL), pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL));
+        return new CreaturePeasant(uniqueName, startBase, pId, creatures, traps,
+                pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL), getDieAnimation(pId));
     }
 
     public Creature summonGoblin(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureGoblin(uniqueName, startBase, pId, creatures, pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL),
-                pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL));
+        return new CreatureGoblin(uniqueName, startBase, pId, creatures, traps,
+                pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL), getDieAnimation(pId));
     }
 
     public Creature summonElf(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureElf(uniqueName, startBase, pId, creatures, pId.ifOne(ELF_P1_NORMAL, ELF_P2_NORMAL),
-                pId.ifOne(ELF_P1_NORMAL, ELF_P2_NORMAL));
+        return new CreatureElf(uniqueName, startBase, pId, creatures, traps, pId.ifOne(ELF_P1_NORMAL, ELF_P2_NORMAL),
+                getDieAnimation(pId));
     }
 
     public Creature summonHalfling(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureHalfling(uniqueName, startBase, pId, creatures, pId.ifOne(HALFLING_P1_NORMAL, HALFLING_P2_NORMAL),
-                pId.ifOne(HALFLING_P1_NORMAL, HALFLING_P2_NORMAL));
+        return new CreatureHalfling(uniqueName, startBase, pId, creatures, traps,
+                pId.ifOne(HALFLING_P1_NORMAL, HALFLING_P2_NORMAL), getDieAnimation(pId));
     }
 
     public void removeCreature(Tile onBase) {
@@ -138,8 +155,8 @@ public class CreatureFactory {
         return creatures.size();
     }
 
-	public void removeAll() {
+    public void removeAll() {
         this.creatures.clear();
-	}
+    }
 
 }

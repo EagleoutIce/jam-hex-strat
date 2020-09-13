@@ -5,6 +5,7 @@ import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.IEffectCreature;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
@@ -90,6 +91,18 @@ public class PunchEffect implements IEffectCreature {
         if (punchTarget.getTerrainType().blocksWalking()) {
             Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks walking.",
                     new Object[] { deltaX, deltaY, target.getName(), punchTarget });
+            return;
+        }
+
+
+        Optional<Trap> mayTrap = context.getTraps().get(punchTargetCoordinate);
+
+        if(mayTrap.isPresent()) {
+            Trap trap = mayTrap.get();
+            target.move(punchTarget);
+            awaitMovementComplete(target);
+            trap.trigger();
+            target.die();
             return;
         }
 

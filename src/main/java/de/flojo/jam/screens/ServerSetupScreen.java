@@ -83,7 +83,7 @@ public class ServerSetupScreen extends Screen {
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
 
-        board = new Board("configs/empty.terrain");
+        board = new Board("configs/empty.terrain", ServerSetupScreen.NAME);
     }
 
     private void updatePositions() {
