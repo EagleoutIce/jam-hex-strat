@@ -1,8 +1,10 @@
-package de.flojo.jam.game.board.traps;
+package de.flojo.jam.game.board.traps.management;
 
 import java.awt.Point;
 
 import de.flojo.jam.game.board.imprints.ImprintNodeMap;
+import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.board.traps.TrapImprint;
 
 public class TrapImprintNodeMap extends ImprintNodeMap<TrapTile> {
     public TrapImprintNodeMap(String supplierName, int x, int y) {

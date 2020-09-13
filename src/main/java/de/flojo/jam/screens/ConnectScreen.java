@@ -160,7 +160,7 @@ public class ConnectScreen extends Screen {
                 break;
             case "START":
                 // prepare correct Data :D
-                IngameScreen.get().setup();
+                IngameScreen.get().setup(clientController.getContext().getMyPlayerId());
                 changeScreen(IngameScreen.NAME);
                 break;
             default:

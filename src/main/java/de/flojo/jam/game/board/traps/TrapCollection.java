@@ -1,0 +1,79 @@
+package de.flojo.jam.game.board.traps;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
+
+import de.flojo.jam.game.board.BoardCoordinate;
+
+public class TrapCollection implements Serializable {
+
+    private static final long serialVersionUID = -8494961631864802815L;
+
+    private static final int DEFAULT_SIZE = 32;
+
+    private final transient List<Trap> collection;
+
+    public TrapCollection() {
+        collection = Collections.synchronizedList(new ArrayList<>(DEFAULT_SIZE));
+    }
+
+    public Optional<Trap> getHighlighted() {
+        return search(null, (t, ignored) -> t.isHovered());
+    }
+
+    public Optional<Trap> get(BoardCoordinate coordinate) {
+        return search(coordinate, (t, v) -> t.coversTile(v));
+    }
+
+    public Optional<Trap> getRoot(BoardCoordinate coordinate) {
+        return search(coordinate, (t, v) -> Objects.equals(t.getCoordinate(),v));
+    }
+
+    private <T> Optional<Trap> search(T val, BiPredicate<Trap, T> check) {
+        for (Trap trap : collection) {
+            if (check.test(trap, val)) {
+                return Optional.of(trap);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public Trap get(String name) {
+        return search(name, (t, v) -> t.getName().equals(v)).orElse(null);
+    }
+
+    public boolean add(Trap t) {
+        return collection.add(t);
+    }
+
+    public void clear() {
+        collection.clear();
+    }
+
+    public boolean contains(Object o) {
+        return collection.contains(o);
+    }
+
+    public boolean isEmpty() {
+        return collection.isEmpty();
+    }
+
+    public int size() {
+        return collection.size();
+    }
+
+    public Trap get(int i) {
+        return collection.get(i);
+    }
+
+    public boolean removeIf(Predicate<? super Trap> filter) {
+        return collection.removeIf(filter);
+    }
+    
+}

@@ -1,6 +1,5 @@
 package de.flojo.jam.game.creature;
 
-import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
@@ -17,10 +16,9 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.gurkenlabs.litiengine.Game;
-import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.input.Input;
 
-public class CreatureFactory implements IRenderable {
+public class CreatureFactory {
     private static final IRenderData PEASANT_P1_NORMAL = new SimpleImageRenderer("creatures/bauer_blau.png", -93d / 2.9,
             -99 / 1.27d);
     private static final IRenderData PEASANT_P2_NORMAL = new SimpleImageRenderer("creatures/bauer_lila.png",
@@ -136,15 +134,6 @@ public class CreatureFactory implements IRenderable {
 
     public int size() {
         return creatures.size();
-    }
-
-    public Creature get(int i) {
-        return creatures.get(i);
-    }
-
-    @Override
-    public void render(Graphics2D g) {
-        creatures.render(g);
     }
 
 	public void removeAll() {

@@ -1,4 +1,4 @@
-package de.flojo.jam.game.board.traps;
+package de.flojo.jam.game.board.traps.management;
 
 public class TrapIdConstants {
     private TrapIdConstants() {

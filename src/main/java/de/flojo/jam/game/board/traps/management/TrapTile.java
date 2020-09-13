@@ -1,4 +1,4 @@
-package de.flojo.jam.game.board.traps;
+package de.flojo.jam.game.board.traps.management;
 
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;

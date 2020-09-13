@@ -80,7 +80,5 @@ public class CreatureCollection implements IRenderable, Serializable {
     public boolean removeIf(Predicate<? super Creature> filter) {
         return collection.removeIf(filter);
     }
-
-    
     
 }

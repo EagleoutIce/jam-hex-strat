@@ -1,8 +1,10 @@
 package de.flojo.jam.screens;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -28,6 +30,9 @@ import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
+import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.board.traps.TrapImprint;
+import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.ISummonCreature;
@@ -35,6 +40,8 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
 import de.flojo.jam.util.FileHelper;
+import de.flojo.jam.util.InputController;
+import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
@@ -44,6 +51,10 @@ public class EditorScreen extends Screen {
 
     private Board board;
     private CreatureFactory creatureFactory = new CreatureFactory();
+    private TrapSpawner trapSpawner;
+
+    private boolean showP1 = true;
+    private boolean showP2 = true;
 
     private Architect architect;
 
@@ -53,14 +64,24 @@ public class EditorScreen extends Screen {
 
     private TerrainId currentTerrain = TerrainId.T_EMPTY;
     private ISummonCreature currentCreature = null;
-    private boolean terrain = true;
+    private TrapId currentTrapId = null;
+
+    private enum EditorSelectionMode {
+        TERRAIN, CREATURE, TRAP
+    }
+
+    private EditorSelectionMode selectionMode = EditorSelectionMode.TERRAIN;
 
     private Button newField;
     private Button saveField;
     private Button loadField;
+    private Button p1;
+    private Button p2;
+    private Button both;
     private TextFieldComponent terrainName;
 
     private List<ImageButton> terrainButtons;
+    private List<ImageButton> trapButtons;
     private List<Button> creatureButtons;
 
     public EditorScreen() {
@@ -74,13 +95,21 @@ public class EditorScreen extends Screen {
 
         board = new Board(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, "configs/empty.terrain");
         architect = new Architect(board, this.creatureFactory);
+        trapSpawner = new TrapSpawner(board);
 
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
 
         Input.mouse().onDragged(this::plantTile);
-        Input.mouse().onClicked(this::plantTileOrCreature);
+        Input.mouse().onClicked(this::plantTileOrOther);
         Input.mouse().onMoved(this::lockOnMoved);
+
+        InputController.get().onKeyPressed(KeyEvent.VK_T, (c) -> {
+            if(trapSpawner.getSelectedTrap() != null){
+                trapSpawner.getSelectedTrap().trigger();
+            }
+        }, EditorScreen.NAME);
+
         architect.clearField();// init
         terrainName.setText("Pain Terrain Name");
     }
@@ -94,8 +123,10 @@ public class EditorScreen extends Screen {
     }
 
     private boolean intersectsWithButton(Point p) {
+        // this did escalate... maybe with list?
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)
-                || loadField.getBoundingBox().contains(p)) {
+                || loadField.getBoundingBox().contains(p) || p1.getBoundingBox().contains(p)
+                || p2.getBoundingBox().contains(p) || both.getBoundingBox().contains(p)) {
             return true;
         }
         for (ImageButton imageButton : terrainButtons) {
@@ -116,7 +147,7 @@ public class EditorScreen extends Screen {
     }
 
     private void plantTile(MouseEvent c) {
-        if (!this.terrain || currentTerrain == null || architect == null) {
+        if (this.selectionMode != EditorSelectionMode.TERRAIN || currentTerrain == null || architect == null) {
             return;
         }
         Point p = c.getPoint();
@@ -132,16 +163,38 @@ public class EditorScreen extends Screen {
             architect.deleteImprint(t.getCoordinate(), currentTerrain.getImprint());
     }
 
-    private void summonCreature(MouseEvent c) {
-        if (this.terrain) {
+    private void createTrap(MouseEvent c) {
+        if (this.selectionMode != EditorSelectionMode.TRAP) {
             return;
         }
         Point p = c.getPoint();
         if (intersectsWithButton(p))
             return;
         Tile t = board.findTile(p);
+        if(t == null)
+            return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t != null && t.getTerrainType() == TerrainType.EMPTY) {
+            if (t.getTerrainType() == TerrainType.EMPTY) {
+                trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
+                Game.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[] {currentTrapId, t, getFakeId()});
+            }
+        } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
+            trapSpawner.removeTrap(t);
+        }
+    }
+
+    private void summonCreature(MouseEvent c) {
+        if (this.selectionMode != EditorSelectionMode.CREATURE)
+            return;
+        
+        Point p = c.getPoint();
+        if (intersectsWithButton(p))
+            return;
+        Tile t = board.findTile(p);
+        if(t == null)
+            return;
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (t.getTerrainType() == TerrainType.EMPTY) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -149,11 +202,19 @@ public class EditorScreen extends Screen {
         }
     }
 
-    void plantTileOrCreature(MouseEvent e) {
-        if (terrain) {
-            plantTile(e);
-        } else {
-            summonCreature(e);
+    void plantTileOrOther(MouseEvent e) {
+        switch(selectionMode) {
+            case CREATURE:
+                summonCreature(e);
+                break;
+            case TERRAIN:
+                plantTile(e);
+                break;
+            case TRAP:
+                createTrap(e);
+                break;
+            default:
+                break;
         }
     }
 
@@ -161,6 +222,7 @@ public class EditorScreen extends Screen {
     protected void initializeComponents() {
         super.initializeComponents();
         initTerrainButtons();
+        initTrapButtons();
         initCreatureButtons();
         initFileOperationButtons();
         terrainName = new TextFieldComponent(0, 0, 200d, 40d, "Pain Terrain Name");
@@ -169,15 +231,45 @@ public class EditorScreen extends Screen {
 
     private void initFileOperationButtons() {
         newField = new Button("New", Main.GUI_FONT_SMALL);
-        newField.onClicked(c -> {architect.clearField(); creatureFactory.removeAll();});
+        newField.onClicked(c -> {
+            architect.clearField();
+            creatureFactory.removeAll();
+            trapSpawner.removeAll();
+        });
         saveField = new Button("Save", Main.GUI_FONT_SMALL);
         saveField.onClicked(c -> saveField());
         loadField = new Button("Load", Main.GUI_FONT_SMALL);
         loadField.onClicked(c -> loadField());
+        p1 = new Button("P1", Main.GUI_FONT_SMALL);
+        p1.onClicked(c -> {//
+            showP1 = true; showP2 = false;
+            p1.setColors(Color.GREEN, Color.GREEN.brighter());
+            p2.setColors(Color.WHITE, Color.WHITE.darker());
+            both.setColors(Color.WHITE, Color.WHITE.darker());
+        });
+        p2 = new Button("P2", Main.GUI_FONT_SMALL);
+        p2.onClicked(c -> {//
+            showP1 = false; showP2 = true;
+            p1.setColors(Color.WHITE, Color.WHITE.darker());
+            p2.setColors(Color.GREEN, Color.GREEN.brighter());
+            both.setColors(Color.WHITE, Color.WHITE.darker());
+        });
+        both = new Button("Both", Main.GUI_FONT_SMALL);
+        both.onClicked(c -> {//
+            showP1 = true; showP2 = true;
+            p1.setColors(Color.WHITE, Color.WHITE.darker());
+            p2.setColors(Color.WHITE, Color.WHITE.darker());
+            both.setColors(Color.GREEN, Color.GREEN.brighter());
+        });
+        both.setColors(Color.GREEN, Color.GREEN.brighter());
+
         updatePositions();
         this.getComponents().add(newField);
         this.getComponents().add(saveField);
         this.getComponents().add(loadField);
+        this.getComponents().add(p1);
+        this.getComponents().add(p2);
+        this.getComponents().add(both);
     }
 
     private void saveField() {
@@ -214,6 +306,7 @@ public class EditorScreen extends Screen {
         terrainName.setText(board.getTerrainMap().getTerrain().getName());
         // after load overlay :D
         creatureFactory.removeAll();
+        trapSpawner.removeAll();
     }
 
     private void updatePositions() {
@@ -221,6 +314,13 @@ public class EditorScreen extends Screen {
         saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
                 Game.window().getHeight() - 90d);
+        int width = Game.window().getWidth();
+        p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 30d, 18d);
+        p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 20d, 18d);
+        both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 18d);
+        for (int i = 0; i < trapButtons.size(); i++) {
+            trapButtons.get(i).setLocation(width - 260d, (i + 3) * 45d);
+        }
     }
 
     private void initCreatureButtons() {
@@ -241,7 +341,9 @@ public class EditorScreen extends Screen {
         creatureButtons.add(bt);
         bt.onClicked(c -> {
             this.currentTerrain = null;
-            this.terrain = false;
+            this.selectionMode = EditorSelectionMode.CREATURE;
+            this.currentTrapId = null;
+
             this.currentCreature = (n, t) -> creatureFactory.getSpell(creatureId).summon(creatureId + "_" + n, t,
                     p1 ? PlayerId.ONE : PlayerId.TWO);
             BufferedImage img = creatureFactory.getBufferedImage(creatureId, p1);
@@ -261,6 +363,33 @@ public class EditorScreen extends Screen {
         Game.window().cursor().set(Main.DEFAULT_CURSOR);
         board.setHighlightMask(SimpleHighlighter.get());
     }
+    private void initTrapButtons() {
+        trapButtons = new ArrayList<>();
+        TrapId[] traps = TrapId.values();
+        final int width = Game.window().getWidth();
+        for (int i = 0; i < traps.length; i++) {
+            TrapId t = traps[i];
+
+            ImageButton imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
+                    t.getName(), Main.TEXT_NORMAL);
+            imgBt.setTextAlign(Align.RIGHT);
+            trapButtons.add(imgBt);
+            imgBt.onClicked(c -> {
+                this.currentCreature = null;
+                this.currentTrapId = t;
+                this.selectionMode = EditorSelectionMode.TRAP;
+
+                TrapImprint imprint = t.getImprint();
+                Game.window().cursor().setVisible(true);
+                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImage());
+                // TODO: maybe make more efficient?
+                board.setHighlightMask(new ImprintHighlighter(imprint));
+                Game.window().cursor().showDefaultCursor();
+            });
+            this.getComponents().add(imgBt);
+        }
+    }
+
 
     private void initTerrainButtons() {
         terrainButtons = new ArrayList<>();
@@ -274,7 +403,7 @@ public class EditorScreen extends Screen {
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
                 this.currentTerrain = t;
-                this.terrain = true;
+                this.selectionMode = EditorSelectionMode.TERRAIN;
 
                 TerrainImprint imprint = t.getImprint();
                 if (imprint.hasBaseResource()) {
@@ -291,9 +420,15 @@ public class EditorScreen extends Screen {
         }
     }
 
+    private PlayerId getFakeId() {
+        if(showP1 && showP2)
+            return null;
+        return showP1 ? PlayerId.ONE : PlayerId.TWO;
+    }
+
     @Override
     public void render(final Graphics2D g) {
-        board.jointRender(g, creatureFactory);
+        board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
     }
 

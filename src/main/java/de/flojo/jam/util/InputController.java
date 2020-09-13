@@ -22,6 +22,10 @@ public class InputController {
     }
 
 
+    public void onKeyPressed(int keyCode, KeyPressedListener eventHandler, String screen) {
+        onKeyPressed(keyCode, eventHandler, Set.of(screen));
+    }
+
     public void onKeyPressed(int keyCode, KeyPressedListener eventHandler, Set<String> screens) {
         Input.keyboard().onKeyPressed(keyCode, ke -> {
             if(!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))

@@ -21,7 +21,9 @@ import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
@@ -57,16 +59,13 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public Board(final String terrainPath) {
         this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainPath);
     }
-
     public Board(final TerrainMap terrainMap) {
         this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainMap);
     }
-
     public Board(final int w, final int h, final String backgroundPath, final String terrainPath) {
         this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath));
     }
-
-
+s
     public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap) {
         this.width = w;
         this.height = h;
@@ -329,13 +328,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         }
     }
 
-    public void jointRender(final Graphics2D g, CreatureFactory factory) {
-        // if no factory do default :D
-        if (factory == null) {
-            render(g);
-            return;
-        }
-
+    public void jointRender(final Graphics2D g, PlayerId renderOwner,  CreatureFactory factory, TrapSpawner traps) {
         ImageRenderer.render(g, background, shiftX, shiftY);
         for (final Tile tile : tiles.values())
             tile.render(g);
@@ -344,7 +337,9 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 BoardCoordinate coordinate = new BoardCoordinate(col, row);
                 tiles.get(coordinate).renderDecorations(g);
+                traps.getRoot(coordinate).ifPresent(t -> t.renderBaseFor(g, renderOwner));
                 factory.get(coordinate).ifPresent(c -> c.render(g));
+                traps.getRoot(coordinate).ifPresent(t -> t.renderTriggerFor(g, renderOwner));
             }
         }
     }

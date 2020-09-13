@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 
-import de.flojo.jam.game.board.terrain.management.TerrainImprint;
+import de.flojo.jam.game.board.imprints.Imprint;
 
 public class ImprintHighlighter implements IHighlightMask {
 
     private static final long serialVersionUID = -3444826491775345869L;
 
-    private final TerrainImprint imprint;
+    private final Imprint<?> imprint;
 
     private boolean[][] grid;
 
-    public ImprintHighlighter(TerrainImprint imprint) {
+    public ImprintHighlighter(Imprint<?> imprint) {
         this.imprint = imprint;
         setupGrid();
     }

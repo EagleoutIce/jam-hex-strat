@@ -1,9 +1,11 @@
 package de.flojo.jam.game.board.traps;
 
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 
 import de.flojo.jam.game.board.imprints.Imprint;
+import de.flojo.jam.game.board.traps.management.TrapData;
+import de.flojo.jam.game.board.traps.management.TrapTile;
+import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class TrapImprint extends Imprint<TrapTile> {
 
@@ -11,7 +13,6 @@ public class TrapImprint extends Imprint<TrapTile> {
 
     private final TrapData data;
     private final TrapTile baseTile;
-
 
     public TrapImprint(TrapData data, final Point anchor) {
         super(data, anchor);
@@ -23,15 +24,16 @@ public class TrapImprint extends Imprint<TrapTile> {
         return data;
     }
 
-    public BufferedImage getNormalImage() {
-        return baseTile.getNormalRenderer().getImage();
+    public IRenderData getNormalRenderer() {
+        return baseTile.getNormalRenderer();
     }
 
-    public BufferedImage getTriggeredImage() {
-        return baseTile.getTriggeredRenderer().getImage();
+    public IRenderData getTriggeredRenderer() {
+        return baseTile.getTriggeredRenderer();
     }
 
-
-    public static final TrapImprint getSingle(TrapTile type) { return new TrapImprint(new TrapData(type), new Point(0,0)); }
+    public static final TrapImprint getSingle(TrapTile type) {
+        return new TrapImprint(new TrapData(type), new Point(0, 0));
+    }
 
 }

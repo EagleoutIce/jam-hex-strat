@@ -2,6 +2,8 @@ package de.flojo.jam.game.board.traps;
 
 import java.awt.Color;
 
+import de.flojo.jam.game.board.traps.management.TrapTile;
+
 public enum TrapId {
     T_SPIKE("SpikeTrap", TrapImprint.getSingle(TrapTile.SPIKE), Color.MAGENTA);
     

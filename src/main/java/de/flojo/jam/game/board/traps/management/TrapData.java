@@ -1,4 +1,4 @@
-package de.flojo.jam.game.board.traps;
+package de.flojo.jam.game.board.traps.management;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +29,7 @@ public class TrapData extends ArrayList<List<TrapTile>> {
     public TrapData(int initialCapacity) {
         super(initialCapacity);
     }
-    
+
     public Optional<TrapTile> getTrapTileAt(int x, int y) {
         if (isEmpty() || y < 0 || y >= size()) {
             Game.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[] { x, y });
@@ -40,7 +40,7 @@ public class TrapData extends ArrayList<List<TrapTile>> {
             Game.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[] { x, y });
             return Optional.empty();
         }
-        return Optional.of(tl.get(x));
+        return Optional.ofNullable(tl.get(x));
     }
 
     public void setTrapTileAt(int x, int y, TrapTile newType) {
