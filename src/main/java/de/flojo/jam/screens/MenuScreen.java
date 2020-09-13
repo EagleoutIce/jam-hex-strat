@@ -77,7 +77,7 @@ public class MenuScreen extends Screen {
         super.initializeComponents();
         this.startGame = new Button("PLAY GAME", Main.GUI_FONT_SMALL);
         this.startGame.setColors(new Color(185, 45, 131), new Color(199, 104, 153));
-        this.startGame.onClicked(e -> changeScreen(IngameScreen.NAME, this.startGame));
+        this.startGame.onClicked(e -> changeScreen(ConnectScreen.NAME, this.startGame));
         this.getComponents().add(this.startGame);
 
         this.showEditor = new Button("Editor", Main.GUI_FONT_SMALL.deriveFont(28f));

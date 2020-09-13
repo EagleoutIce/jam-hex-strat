@@ -26,7 +26,7 @@ public class ServerController implements IServerController {
     }
 
     @Override
-    public void handleCallFor(WebSocket conn, String message) {
+    public void handleMessage(WebSocket conn, String message) {
         Game.log().log(Level.INFO, "Got Message: \"{0}\" from {1}", new Object[] { message, conn });
     }
 

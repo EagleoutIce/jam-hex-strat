@@ -47,7 +47,7 @@ public final class ServerSocket extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket conn, String message) {
-        controller.handleCallFor(conn, message);
+        controller.handleMessage(conn, message);
     }
 
     @Override

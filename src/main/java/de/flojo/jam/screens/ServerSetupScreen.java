@@ -22,6 +22,8 @@ public class ServerSetupScreen extends Screen {
     private ServerController serverController;
     public static final String NAME = "Server-Setup";
 
+    public static final String DEFAULT_PORT = "1096";
+
     private TextFieldComponent portNumber;
     private Button startServer;
     private Button loadTerrain;
@@ -108,7 +110,7 @@ public class ServerSetupScreen extends Screen {
         this.getComponents().add(loadTerrain);
 
         // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 40, "1096");
+        this.portNumber = new TextFieldComponent(0, 0, 100, 40, DEFAULT_PORT);
         this.portNumber.setFormat("[0-9]{1,4}");
         this.getComponents().add(portNumber);
         updatePositions();

@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
+import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.IngameScreen;
 import de.flojo.jam.screens.MenuScreen;
@@ -60,6 +61,7 @@ public class Main {
         Game.screens().add(new MenuScreen());
         Game.screens().add(new IngameScreen());
         Game.screens().add(new EditorScreen());
+        Game.screens().add(new ConnectScreen());
         Game.screens().add(new ServerSetupScreen());
         
         Game.addGameListener(new GameListener() {
