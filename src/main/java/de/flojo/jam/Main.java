@@ -8,6 +8,7 @@ import java.util.logging.Level;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.IngameScreen;
 import de.flojo.jam.screens.MenuScreen;
+import de.flojo.jam.screens.ServerSetupScreen;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
@@ -24,9 +25,10 @@ public class Main {
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
+    public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
-    public static final double LEFT_WIN_OFFSET = 20d;
+    public static final double INNER_MARGIN = 20d;
     public static final int BOARD_WIDTH = 24;
     public static final int BOARD_HEIGHT = 33;
 
@@ -58,6 +60,7 @@ public class Main {
         Game.screens().add(new MenuScreen());
         Game.screens().add(new IngameScreen());
         Game.screens().add(new EditorScreen());
+        Game.screens().add(new ServerSetupScreen());
         
         Game.addGameListener(new GameListener() {
             @Override

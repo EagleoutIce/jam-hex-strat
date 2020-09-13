@@ -70,7 +70,7 @@ public class IngameScreen extends Screen {
         summoner.render(g);
         g.setPaint(Color.MAGENTA);
         g.setFont(Main.GUI_FONT_SMALL);
-        TextRenderer.renderWithLinebreaks(g, "Selection: " + summoner.getSelectedCreature(), Main.LEFT_WIN_OFFSET, 90d, Game.window().getWidth() - 2*Main.LEFT_WIN_OFFSET);
+        TextRenderer.renderWithLinebreaks(g, "Selection: " + summoner.getSelectedCreature(), Main.INNER_MARGIN, 90d, Game.window().getWidth() - 2*Main.INNER_MARGIN);
         super.render(g);
     }
 

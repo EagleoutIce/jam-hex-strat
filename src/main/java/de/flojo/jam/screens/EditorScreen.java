@@ -157,7 +157,7 @@ public class EditorScreen extends Screen {
     }
 
     private void loadField() {
-        final String chosen = getLoadFile();
+        final String chosen = loadTerrain();
         if (chosen == null) {
             Game.log().info("Load was cancelled.");
             return;
@@ -170,12 +170,11 @@ public class EditorScreen extends Screen {
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            
         }
         terrainName.setText(board.getTerrainMap().getTerrain().getName());
     }
 
-    private String getLoadFile() {
+    public static String loadTerrain() {
         final FileDialog loadDialog = new FileDialog(new Frame(), "Save Map", FileDialog.LOAD);
         loadDialog.setFilenameFilter((dir, name) -> name.endsWith(TERRAIN_SUFFIX));
         loadDialog.setAlwaysOnTop(true);
@@ -199,9 +198,9 @@ public class EditorScreen extends Screen {
     }
 
     private void updateButtonPositions() {
-        newField.setLocation(Main.LEFT_WIN_OFFSET, Game.window().getHeight() - 90d);
-        saveField.setLocation(Main.LEFT_WIN_OFFSET + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
-        loadField.setLocation(Main.LEFT_WIN_OFFSET + newField.getWidth() + saveField.getWidth() + 20d, Game.window().getHeight() - 90d);
+        newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 90d);
+        saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
+        loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d, Game.window().getHeight() - 90d);
     }
 
     private void initTerrainButtons() {
@@ -210,7 +209,7 @@ public class EditorScreen extends Screen {
         for (int i = 0; i < terrains.length; i++) {
             TerrainId terrain = terrains[i];
             
-            ImageButton imgBt = new ImageButton(310d, 30d, Main.LEFT_WIN_OFFSET, (i + 1) * 45d,
+            ImageButton imgBt = new ImageButton(310d, 30d, Main.INNER_MARGIN, (i + 1) * 45d,
                     terrain.getImprint().getBitMap(), terrain.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {

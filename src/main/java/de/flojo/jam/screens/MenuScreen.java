@@ -18,6 +18,7 @@ public class MenuScreen extends Screen {
     private static final BufferedImage background = Resources.images().get("painted03.jpeg");
     private Button startGame;
     private Button showEditor;
+    private Button showServer;
 
     public static final String NAME = "MENU";
     private boolean locked;
@@ -65,8 +66,10 @@ public class MenuScreen extends Screen {
         final double x = Game.window().getCenter().getX();
         final double height = Game.window().getResolution().getHeight();
         this.startGame.setLocation(x - this.startGame.getWidth() / 2, height - this.startGame.getHeight() - 10);
-        this.showEditor.setLocation(x - this.showEditor.getWidth() / 2d,
+        this.showEditor.setLocation(x - this.showEditor.getWidth() / 2d - 75d,
                 height - this.startGame.getHeight() - this.showEditor.getHeight() - 20);
+        this.showServer.setLocation(x - this.showServer.getWidth() / 2d + 75d,
+                height - this.startGame.getHeight() - this.showServer.getHeight() - 20);
     }
 
     @Override
@@ -80,8 +83,12 @@ public class MenuScreen extends Screen {
         this.showEditor = new Button("Editor", Main.GUI_FONT_SMALL.deriveFont(28f));
         this.showEditor.setColors(new Color(214, 65, 5), new Color(241, 138, 124));
         this.showEditor.onClicked(e -> changeScreen(EditorScreen.NAME, this.showEditor));
-
         this.getComponents().add(this.showEditor);
+
+        this.showServer = new Button("Server", Main.GUI_FONT_SMALL.deriveFont(28f));
+        this.showServer.setColors(new Color(214, 65, 5), new Color(241, 138, 124));
+        this.showServer.onClicked(e -> changeScreen(ServerSetupScreen.NAME, this.showServer));
+        this.getComponents().add(this.showServer);
 
         updateButtonPositions();
     }

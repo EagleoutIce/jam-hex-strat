@@ -1,6 +1,7 @@
 package de.flojo.jam.game.board.terrain.management;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Terrain implements Serializable {
 
@@ -12,7 +13,6 @@ public class Terrain implements Serializable {
     public String getName() {
         return name;
     }
-
 
     public TerrainData getData() {
         return data;
@@ -32,6 +32,29 @@ public class Terrain implements Serializable {
         StringBuilder builder = new StringBuilder();
         builder.append("Terrain [data=").append(data).append(", name=").append(name).append("]");
         return builder.toString();
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see java.lang.Object#hashCode()
+     */
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, name);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Terrain)) {
+            return false;
+        }
+        Terrain other = (Terrain) obj;
+        return Objects.equals(data, other.data) && Objects.equals(name, other.name);
     }
 
 }
