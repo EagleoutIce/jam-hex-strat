@@ -11,16 +11,22 @@ import de.gurkenlabs.litiengine.gui.GuiComponent;
 public class Button extends GuiComponent {
 
     private final Font font;
+    private int margin = 0;
 
     public Button(final String text, Font font) {
-        this(0, 0, text, font);
+        this(0, 0, text, font, 0);
     }
 
-    public Button(double x, double y, final String text, Font font) {
+    public Button(final String text, Font font, int margin) {
+        this(0, 0, text, font, margin);
+    }
+
+    public Button(double x, double y, final String text, Font font, int margin) {
         super(x, y);
         setText(text);
         this.setFont(font);
         this.font = font;
+        this.margin = margin;
         updateDimensions();
     }
 
@@ -29,7 +35,7 @@ public class Button extends GuiComponent {
             return;
         FontRenderContext context = new FontRenderContext(new AffineTransform(), true, true);
         Rectangle2D dimRect = this.font.getStringBounds(this.getText(), context);
-        this.setDimension(dimRect.getWidth() * 1.15f, dimRect.getHeight());
+        this.setDimension(dimRect.getWidth() * 1.15f + margin, dimRect.getHeight() + margin);
     }
 
     public void setColors(Color normal, Color hovered) {

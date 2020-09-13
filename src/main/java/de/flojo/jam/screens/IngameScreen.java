@@ -14,7 +14,7 @@ import de.gurkenlabs.litiengine.gui.screens.Screen;
 public class IngameScreen extends Screen {
 
     private Board board;
-    private CreatureFactory summoner;
+    private CreatureFactory creatureFactory;
 
     public static final String NAME = "INGAME";
 
@@ -38,17 +38,16 @@ public class IngameScreen extends Screen {
         super.prepare();
 
         // TODO: make more beautiful?
-        summoner = new CreatureFactory();
+        creatureFactory = new CreatureFactory();
     }
 
     @Override
     public void render(final Graphics2D g) {
         if(board != null)
-            board.render(g);
-        summoner.render(g);
+            board.jointRender(g, creatureFactory);
         g.setPaint(Color.MAGENTA);
         g.setFont(Main.GUI_FONT_SMALL);
-        TextRenderer.renderWithLinebreaks(g, "Selection: " + summoner.getSelectedCreature(), Main.INNER_MARGIN, 90d, Game.window().getWidth() - 2*Main.INNER_MARGIN);
+        TextRenderer.renderWithLinebreaks(g, "Selection: " + creatureFactory.getSelectedCreature(), Main.INNER_MARGIN, 90d, Game.window().getWidth() - 2*Main.INNER_MARGIN);
         super.render(g);
     }
 

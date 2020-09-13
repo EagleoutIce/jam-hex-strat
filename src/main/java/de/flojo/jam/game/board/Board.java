@@ -20,6 +20,7 @@ import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.creature.CreatureFactory;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -298,6 +299,26 @@ public class Board implements IRenderable, IAmMoveable, IAmNode, Serializable, M
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
                 tiles.get(new BoardCoordinate(col, row)).renderDecorations(g);
+            }
+        }
+    }
+
+    public void jointRender(final Graphics2D g, CreatureFactory factory) {
+        // if no factory do default :D
+        if(factory == null) {
+            render(g);
+            return;
+        }
+            
+        ImageRenderer.render(g, background, shiftX, shiftY);
+        for (final Tile tile : tiles.values())
+            tile.render(g);
+
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < Math.ceil(width / 2d) - lineToggle(row); col++) {
+                BoardCoordinate coordinate = new BoardCoordinate(col, row);
+                tiles.get(coordinate).renderDecorations(g);
+                factory.get(coordinate).ifPresent(c -> c.render(g));
             }
         }
     }

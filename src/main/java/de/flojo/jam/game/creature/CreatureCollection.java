@@ -3,9 +3,11 @@ package de.flojo.jam.game.creature;
 import java.awt.Graphics2D;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
@@ -15,11 +17,11 @@ public class CreatureCollection implements IRenderable, Serializable {
     private static final long serialVersionUID = -2951185236311104006L;
 
     private static int DEFAULT_SIZE = 32;
-    
+
     private final transient List<Creature> collection;
-    
+
     public CreatureCollection() {
-        collection = new ArrayList<>(DEFAULT_SIZE);
+        collection = Collections.synchronizedList(new ArrayList<>(DEFAULT_SIZE));
     }
 
     public Optional<Creature> getHighlighted() {
@@ -52,7 +54,7 @@ public class CreatureCollection implements IRenderable, Serializable {
 
     public void sort() {
         this.collection.sort((c1, c2) -> {
-            if(c1.getCoordinate().y == c2.getCoordinate().y)
+            if (c1.getCoordinate().y == c2.getCoordinate().y)
                 return Integer.compare(c1.getCoordinate().x, c2.getCoordinate().x);
             else
                 return Integer.compare(c1.getCoordinate().y, c2.getCoordinate().y);
@@ -83,6 +85,12 @@ public class CreatureCollection implements IRenderable, Serializable {
 
     public Creature get(int i) {
         return collection.get(i);
+    }
+
+    public boolean removeIf(Predicate<? super Creature> filter) {
+        boolean feedback = collection.removeIf(filter);
+        sort();
+        return feedback;
     }
 
     

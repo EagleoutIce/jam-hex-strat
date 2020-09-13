@@ -2,12 +2,14 @@ package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.creature.creatures.CreatureGoblin;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
@@ -21,6 +23,12 @@ public class CreatureFactory implements IRenderable {
             -99 / 1.27d);
     private static final IRenderData PEASANT_P2_NORMAL = new SimpleImageRenderer("creatures/bauer_lila.png",
             -93d / 1.53, -99 / 1.27d);
+
+    private static final IRenderData GOBLIN_P1_NORMAL = new SimpleImageRenderer("creatures/kobold_blau.png", -69 / 1.83d,
+            -95 / 1.31d);
+    private static final IRenderData GOBLIN_P2_NORMAL = new SimpleImageRenderer("creatures/kobold_lila.png",
+            -69 / 2.22d, -95 / 1.31d);
+
 
     private CreatureCollection creatures;
 
@@ -43,14 +51,45 @@ public class CreatureFactory implements IRenderable {
         return selectedCreature;
     }
 
-
-    public Creature summonPeasant(Tile startBase, PlayerId pId) {
-        return summonPeasant(pId + "_BAUER_" + UUID.randomUUID(), startBase, pId);
+    public ISummonPlayerCreature getSpell(CreatureId id) {
+        switch(id) {
+            case PEASANT:
+                return this::summonPeasant;
+            case GOBLIN:
+                return this::summonGoblin;
+            default:
+            case NONE:
+                return null;
+        }
     }
+
+
+    public BufferedImage getBufferedImage(CreatureId id, boolean p1) {
+        switch(id) {
+            case PEASANT:
+                return p1 ? PEASANT_P1_NORMAL.getImage() : PEASANT_P2_NORMAL.getImage();
+            case GOBLIN:
+                return p1 ? GOBLIN_P1_NORMAL.getImage() : GOBLIN_P2_NORMAL.getImage();
+                default:
+            case NONE:
+                return null;
+        }
+    }
+
 
     public Creature summonPeasant(String uniqueName, Tile startBase, PlayerId pId) {
         return new CreaturePeasant(uniqueName, startBase, pId, creatures,
                 pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL), pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL));
+    }
+
+
+    public Creature summonGoblin(String uniqueName, Tile startBase, PlayerId pId) {
+        return new CreatureGoblin(uniqueName, startBase, pId, creatures,
+                pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL), pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL));
+    }
+
+    public void removeCreature(Tile onBase) {
+        creatures.removeIf(c -> Objects.equals(c.getCoordinate(), onBase.getCoordinate()));
     }
 
     public CreatureCollection getCreatures() {
