@@ -21,7 +21,7 @@ public class SimpleImageRenderer implements IRenderData {
         this.offsetY = offsetY;
         this.image = Resources.images().get(path);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        RescaleOp lighterOperation = new RescaleOp(new float[] { 1.31f, 1.31f, 1.31f, 1 }, new float[4], null);
+        RescaleOp lighterOperation = new RescaleOp(new float[] { 1.36f, 1.36f, 1.36f, 1 }, new float[4], null);
         lighterOperation.filter(image, highlightImage);
 
     }

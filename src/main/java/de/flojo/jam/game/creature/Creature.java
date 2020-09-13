@@ -53,7 +53,6 @@ public class Creature implements IRenderable {
 
     public void move(Tile target) {
         base.move(target);
-        collection.sort();
     }
 
     @Override

@@ -12,11 +12,12 @@ import java.util.function.Predicate;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
+// removed sort as it will be rendered with joint render and this is more effective
 public class CreatureCollection implements IRenderable, Serializable {
 
     private static final long serialVersionUID = -2951185236311104006L;
 
-    private static int DEFAULT_SIZE = 32;
+    private static final int DEFAULT_SIZE = 32;
 
     private final transient List<Creature> collection;
 
@@ -52,19 +53,8 @@ public class CreatureCollection implements IRenderable, Serializable {
             creature.render(g);
     }
 
-    public void sort() {
-        this.collection.sort((c1, c2) -> {
-            if (c1.getCoordinate().y == c2.getCoordinate().y)
-                return Integer.compare(c1.getCoordinate().x, c2.getCoordinate().x);
-            else
-                return Integer.compare(c1.getCoordinate().y, c2.getCoordinate().y);
-        });
-    }
-
     public boolean add(Creature c) {
-        boolean feedback = collection.add(c);
-        sort();
-        return feedback;
+        return collection.add(c);
     }
 
     public void clear() {
@@ -88,9 +78,7 @@ public class CreatureCollection implements IRenderable, Serializable {
     }
 
     public boolean removeIf(Predicate<? super Creature> filter) {
-        boolean feedback = collection.removeIf(filter);
-        sort();
-        return feedback;
+        return collection.removeIf(filter);
     }
 
     

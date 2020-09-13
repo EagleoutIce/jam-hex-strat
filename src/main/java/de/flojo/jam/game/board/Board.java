@@ -302,16 +302,17 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final Tile targetTile = getTile(effectiveCoordinate);
         TerrainType targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
 
-        if (targetTile != null) {
-            if (highlightTiles.add(targetTile)) {
-                IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
-                if (!updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
-                        targetTerrainType.getNode().getPos(), highlightTiles))
-                    return false;
-            }
-        } else {// invalid as too close to border
+        // invalid as too close to border
+        if (targetTile == null) 
             return false;
+
+        if (highlightTiles.add(targetTile)) {
+            IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
+            if (!updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
+                    targetTerrainType.getNode().getPos(), highlightTiles))
+                return false;
         }
+
         return true;
     }
 

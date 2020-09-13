@@ -17,6 +17,7 @@ import com.google.gson.JsonSyntaxException;
 
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainData;
+import de.flojo.jam.util.HexMaths;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 
@@ -64,11 +65,11 @@ public class TerrainMap implements Serializable {
         final TerrainData data = terrain.getData();
         // fill up
         while(data.size() < h) 
-            data.add(new ArrayList<>(w));
+            data.add(new ArrayList<>(HexMaths.effectiveWidth(w)));
 
         for (int y = 0; y < h; y++) {
             List<TerrainType> line = data.get(y);
-            int offset = w - line.size();
+            int offset = HexMaths.effectiveWidth(w) - line.size();
             for (int x = 0; x < offset; x++) {
                 line.add(TerrainType.EMPTY);
             }

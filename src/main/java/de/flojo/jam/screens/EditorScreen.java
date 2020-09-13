@@ -85,8 +85,6 @@ public class EditorScreen extends Screen {
         terrainName.setText("Pain Terrain Name");
     }
 
-    // TODO: delete with right key
-
     private void lockOnMoved(MouseEvent c) {
         if (intersectsWithButton(c.getPoint())) {
             board.doNotHover();
@@ -118,23 +116,24 @@ public class EditorScreen extends Screen {
     }
 
     private void plantTile(MouseEvent c) {
-        if(!this.terrain) {
+        if (!this.terrain || currentTerrain == null || architect == null) {
             return;
         }
         Point p = c.getPoint();
         if (intersectsWithButton(p))
             return;
         Tile t = board.findTile(p);
-        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t != null)
-                architect.placeImprint(t.getCoordinate(), currentTerrain.getImprint());
-        } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
+        if (t == null)
+            return;
+
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK)
+            architect.placeImprint(t.getCoordinate(), currentTerrain.getImprint());
+        else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12))
             architect.deleteImprint(t.getCoordinate(), currentTerrain.getImprint());
-        }
     }
 
     private void summonCreature(MouseEvent c) {
-        if(this.terrain) {
+        if (this.terrain) {
             return;
         }
         Point p = c.getPoint();
@@ -150,10 +149,9 @@ public class EditorScreen extends Screen {
         }
     }
 
-
     void plantTileOrCreature(MouseEvent e) {
-        if(terrain) {
-            plantTile(e); 
+        if (terrain) {
+            plantTile(e);
         } else {
             summonCreature(e);
         }
@@ -171,7 +169,7 @@ public class EditorScreen extends Screen {
 
     private void initFileOperationButtons() {
         newField = new Button("New", Main.GUI_FONT_SMALL);
-        newField.onClicked(c -> architect.clearField());
+        newField.onClicked(c -> {architect.clearField(); creatureFactory.removeAll();});
         saveField = new Button("Save", Main.GUI_FONT_SMALL);
         saveField.onClicked(c -> saveField());
         loadField = new Button("Load", Main.GUI_FONT_SMALL);
@@ -182,7 +180,6 @@ public class EditorScreen extends Screen {
         this.getComponents().add(loadField);
     }
 
-    // TODO: SAVES TO MUCH!!!!!!!! (FIELD TO LONG?)
     private void saveField() {
         board.getTerrainMap().changeName(terrainName.getText());
         final String chosen = FileHelper.askForTerrainPathSave(board.getTerrainMap().getTerrain().getName());
@@ -212,8 +209,11 @@ public class EditorScreen extends Screen {
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+            return;
         }
         terrainName.setText(board.getTerrainMap().getTerrain().getName());
+        // after load overlay :D
+        creatureFactory.removeAll();
     }
 
     private void updatePositions() {
@@ -228,7 +228,7 @@ public class EditorScreen extends Screen {
         CreatureId[] creatures = CreatureId.values();
         for (int i = 0; i < creatures.length; i++) {
             CreatureId creatureId = creatures[i];
-            if(creatureId == CreatureId.NONE)
+            if (creatureId == CreatureId.NONE)
                 continue;
             instantiateButton(creatureId, true, i);
             instantiateButton(creatureId, false, i);
@@ -268,8 +268,8 @@ public class EditorScreen extends Screen {
         for (int i = 0; i < terrains.length; i++) {
             TerrainId t = terrains[i];
 
-            ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d,
-                    t.getImprint().getBitMap(), t.getName(), Main.TEXT_NORMAL);
+            ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
+                    t.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;

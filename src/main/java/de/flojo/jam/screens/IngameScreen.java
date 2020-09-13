@@ -37,7 +37,6 @@ public class IngameScreen extends Screen {
     public void prepare() {
         super.prepare();
 
-        // TODO: make more beautiful?
         creatureFactory = new CreatureFactory();
     }
 

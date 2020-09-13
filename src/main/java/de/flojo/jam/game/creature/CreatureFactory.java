@@ -147,4 +147,8 @@ public class CreatureFactory implements IRenderable {
         creatures.render(g);
     }
 
+	public void removeAll() {
+        this.creatures.clear();
+	}
+
 }
