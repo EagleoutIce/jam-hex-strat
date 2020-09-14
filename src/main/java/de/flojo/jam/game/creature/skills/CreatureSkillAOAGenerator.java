@@ -16,9 +16,14 @@ public class CreatureSkillAOAGenerator {
     }
 
     public static Set<Tile> getAOA(ICreatureSkill skill, Tile start, Board board, CreatureCollection creatures) {
+        int maxRange = skill.getMaxRange();
+        if(start.getTerrainType().isRaised()) {
+            maxRange += skill.bonusOnRaised();
+        }
+
         switch(skill.getAOA()) {
             case LINE:
-                return getAOALine(start, board, creatures, skill.getMinRange(), skill.getMaxRange());
+                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange);
             default:
             case SINGLE:
                 return Set.of(start);

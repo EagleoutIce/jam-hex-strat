@@ -74,4 +74,9 @@ public class SimplePunch implements ICreatureSkill {
         return false;
     }
 
+    @Override
+    public int bonusOnRaised() {
+        return 1;
+    }
+
 }

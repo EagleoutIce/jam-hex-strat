@@ -30,7 +30,4 @@ public class CreaturePeasant extends Creature {
         skills.add(new SimplePunch(3, 0, 1, "Punch (3)", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
         return new CreatureAttributes(4, 1, skills);
     }
-
-
-
 }

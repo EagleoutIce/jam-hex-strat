@@ -65,8 +65,10 @@ public class CreatureCore {
     }
 
     private RenderHint getRenderHint() {
-        if (base.getTile().isHovered() || highlight.get()) {
+        if (base.getTile().isHovered()) {
             return attributes.canDoSomething() ? RenderHint.HOVER : RenderHint.DARK_HOVER;
+        } else if(base.getTile().isMarked() || highlight.get()) {
+            return RenderHint.GLOW;
         } else {
             return attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK;
         }

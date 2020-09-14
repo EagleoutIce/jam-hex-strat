@@ -21,6 +21,7 @@ public interface ICreatureSkill {
 
     public SkillId getSkillId();
 
+    public int bonusOnRaised();
 
     // will traverse line until hit
     public boolean isRanged();
