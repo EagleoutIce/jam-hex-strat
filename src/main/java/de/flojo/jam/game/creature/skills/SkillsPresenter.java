@@ -36,7 +36,7 @@ public class SkillsPresenter {
 
     private AtomicBoolean enabled = new AtomicBoolean();
 
-    private final CreatureActionController movementController;
+    private final CreatureActionController actionController;
 
     Button moveButton;
     private List<Button> skillButtons;
@@ -50,7 +50,7 @@ public class SkillsPresenter {
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
         skillButtons = new LinkedList<>();
-        movementController = new CreatureActionController(
+        actionController = new CreatureActionController(
                 new DefaultEffectContext(board, factory.getCreatures(), traps.getTraps()), screenName);
         Game.window().onResolutionChanged(r -> updatePositions());
         InputController.get().onMoved(this::lockOnMoved, screenName);
@@ -81,7 +81,8 @@ public class SkillsPresenter {
         CreatureAttributes attributes = c.getAttributes();
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
-            if(movementController.requestMoveFor(currentCreature, p -> moveOperationEnded(attributes, p))) {
+            actionController.cancelCurrentOperation();
+            if(actionController.requestMoveFor(currentCreature, p -> moveOperationEnded(attributes, p))) {
                 Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
             }
@@ -92,7 +93,8 @@ public class SkillsPresenter {
             Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
             bt.setEnabled(attributes.getMpLeft() > 0);
             bt.onClicked(me -> {
-                if(movementController.requestSkillFor(currentCreature, skill.getSkillId(),  p -> skillOperationEnded(attributes, bt, p) )) {
+                actionController.cancelCurrentOperation();
+                if(actionController.requestSkillFor(currentCreature, skill.getSkillId(),  p -> skillOperationEnded(attributes, bt, p) )) {
                     Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                     bt.setEnabled(false);
                 }
@@ -201,5 +203,9 @@ public class SkillsPresenter {
     public Screen getTarget() {
         return target;
     }
+
+	public void update() {
+        updatePositions();
+	}
 
 }

@@ -71,8 +71,12 @@ public class CreatureAttributes {
     }
 
     public void useSkill(IProvideEffectContext context, SkillId wantedSkill, Creature attacker, Creature target) {
-        getSkill(wantedSkill).ifPresentOrElse(s -> s.getEffect(context).effect(target, attacker), //
+        getSkill(wantedSkill).ifPresentOrElse(s -> useSkill(context, s, attacker, target), //
                 () -> Game.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
+    }
+
+    public void useSkill(IProvideEffectContext context, ICreatureSkill skill, Creature attacker, Creature target) {
+        skill.getEffect(context).effect(target, attacker);
     }
 
     @Override

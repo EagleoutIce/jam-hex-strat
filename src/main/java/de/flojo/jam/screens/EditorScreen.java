@@ -302,7 +302,10 @@ public class EditorScreen extends Screen {
 
         // TODO: show round counter
         nextRound = new Button("Next Round", Main.TEXT_STATUS);
-        nextRound.onClicked(c -> creatureFactory.resetAll());
+        nextRound.onClicked(c -> {
+            creatureFactory.resetAll();
+            presenter.update();
+        });
 
         updatePositions();
         this.getComponents().add(newField);

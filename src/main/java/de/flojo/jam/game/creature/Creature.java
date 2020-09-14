@@ -24,7 +24,7 @@ public class Creature implements IRenderable {
     private final CreatureCollection cCollection;
     private final TrapCollection tCollection;
 
-    protected static final int DIE_DURATION = 800;
+    protected static final int DIE_DURATION = 1200;
 
     private Runnable onDead;
 
@@ -86,11 +86,15 @@ public class Creature implements IRenderable {
         this.base.render(g);
     }
     
-    public void useSkill(Board board, SkillId skill, Creature target) {
-        this.core.getAttributes().useSkill(new DefaultEffectContext(board, cCollection, tCollection), skill, this, target);
+    public void useSkill(Board board, SkillId wantedSkill, Creature target) {
+        useSkill(new DefaultEffectContext(board, cCollection, tCollection), wantedSkill, target);
     }
 
-    public void useSkill(IProvideEffectContext context, SkillId skill, Creature target) {
+    public void useSkill(IProvideEffectContext context, SkillId wantedSkill, Creature target) {
+        this.core.getAttributes().useSkill(context, wantedSkill, this, target);
+    }
+
+    public void useSkill(IProvideEffectContext context, ICreatureSkill skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
     

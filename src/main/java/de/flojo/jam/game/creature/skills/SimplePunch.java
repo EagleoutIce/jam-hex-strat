@@ -69,4 +69,9 @@ public class SimplePunch implements ICreatureSkill {
         return SkillId.SIMPLE_PUNCH;
     }
 
+    @Override
+    public boolean isRanged() {
+        return false;
+    }
+
 }

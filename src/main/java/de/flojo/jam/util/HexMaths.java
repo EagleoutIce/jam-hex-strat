@@ -16,8 +16,6 @@ public class HexMaths {
         return (int)(Math.ceil(w / 2d));
     }
 
-    
-
     private static int normalizeDistDelta(int a, int b) {
         if (a == b)
             return 0;

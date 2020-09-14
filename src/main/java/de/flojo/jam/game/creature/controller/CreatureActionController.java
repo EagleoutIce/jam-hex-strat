@@ -29,14 +29,15 @@ public class CreatureActionController {
 
     private Object selectionLock = new Object();
 
-    private Creature activeCreature;
+    private Creature activeCreature = null;
     private Set<Tile> possibleTargets;
-    private boolean completed;
-    private boolean performed;
-    private Consumer<Boolean> onCompleted;
+    private boolean completed = false;
+    private boolean performed = false;
+    private Consumer<Boolean> onCompleted = null;
+    private ICreatureSkill currentSkill = null;
 
     private enum CurrentActionType {
-        MOVEMENT, SKILL
+        MOVEMENT, SKILL, NONE
     }
 
     private CurrentActionType currentActionType = CurrentActionType.MOVEMENT;
@@ -45,6 +46,7 @@ public class CreatureActionController {
         this.context = context;
         this.screenName = screenName;
         this.possibleTargets = new HashSet<>();
+        InputController.get().onClicked(this::onClickPerform, screenName);
     }
 
     private boolean isWalkable(Tile t) {
@@ -67,7 +69,7 @@ public class CreatureActionController {
             Game.log().log(Level.WARNING, "Creature {0} does not posess skill {1}", new Object[] {creature, skillId});
             return false;
         }
-        ICreatureSkill skill = mayBeSkill.get();
+        currentSkill = mayBeSkill.get();
 
         completed = false;
         performed = false;
@@ -77,10 +79,9 @@ public class CreatureActionController {
         possibleTargets.clear();
 
         Tile start = creature.getBase().getTile();
-        possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(skill, start, context.getBoard(), context.getCreatures()));
+        possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
         possibleTargets.forEach(t -> t.setBackgroundFill(MOVEMENT_COLOR));
 
-        InputController.get().onClicked(this::onClickPerform, screenName);
         return true;
     }
 
@@ -96,8 +97,6 @@ public class CreatureActionController {
         if (creature.getAttributes().getMpLeft() <= 0)
             return false;
 
-        completed = false;
-        performed = false;
         this.onCompleted = onCompleted;
 
         activeCreature = creature;
@@ -112,7 +111,6 @@ public class CreatureActionController {
             }
         }
 
-        InputController.get().onClicked(this::onClickPerform, screenName);
         return true;
     }
 
@@ -121,7 +119,7 @@ public class CreatureActionController {
             return;
 
         if (me.getButton() == MouseEvent.BUTTON3) {
-            completed(true);
+            completed(false);
             return;
         }
 
@@ -129,17 +127,65 @@ public class CreatureActionController {
             return;
 
         Point target = me.getPoint();
-        for (Tile tile : possibleTargets) {
-            if (tile.contains(target)) {
-                // found Tile
-                Game.log().log(Level.INFO, "Moving on: {0} with ({1})", new Object[] { tile, activeCreature });
-                boolean dies = processMovement(context.getTraps(), activeCreature, tile);
-                performed = true;
-                completed(dies);
+        Optional<Tile> mayTile = identifyClickedTileOnValid(target);
+        if(mayTile.isEmpty())
+            return;
+
+        Tile tile = mayTile.get();
+
+        switch(currentActionType) {
+            case MOVEMENT:
+                performOnClickMovementOn(tile);
+                return;
+            case SKILL:
+                performOnClickSkillOn(tile);
+                return;
+            default:
+                errorOnClickOnUnknownActionType(tile);
+        }
+    }
+
+    private void errorOnClickOnUnknownActionType(Tile tile) {
+        Game.log().log(Level.INFO, "Clicked on: {0} with ({1}). But the current Action type ({2}) has no performer attached.", new Object[] { tile, activeCreature, currentActionType});
+        performed = false;
+        completed(false);
+    }
+
+
+    private void performOnClickSkillOn(final Tile tile) {
+        Optional<Creature> mayTargetCreature = context.getCreatures().get(tile.getCoordinate());
+        Creature targetCreature;
+        if(mayTargetCreature.isEmpty()) {
+            if(currentSkill.isRanged()) {
+                // TODO: update creature in direction of aoa
+                targetCreature = null;
+            } else {
+                // no creature no valid click
                 return;
             }
-
+        } else {
+            targetCreature = mayTargetCreature.get();
         }
+        
+        Game.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[] { tile, activeCreature, currentSkill });
+        activeCreature.useSkill(context, currentSkill, targetCreature);
+        performed = true;
+        completed(false);
+    }
+
+    private void performOnClickMovementOn(Tile tile) {
+        Game.log().log(Level.INFO, "Moving on: {0} with ({1})", new Object[] { tile, activeCreature });
+        boolean dies = processMovement(context.getTraps(), activeCreature, tile);
+        performed = true;
+        completed(!dies);
+    }
+
+    private Optional<Tile> identifyClickedTileOnValid(Point target) {
+        for (Tile tile : possibleTargets) {
+            if (tile.contains(target))
+                return Optional.of(tile);
+        }
+        return Optional.empty();
     }
 
     public static void awaitMovementCompleteAsync(Creature target, Runnable onCompleted) {
@@ -187,19 +233,25 @@ public class CreatureActionController {
         }
     }
 
-    private void completed(boolean dies) {
+    public void cancelCurrentOperation() {
+        performed = false;
+        completed(false);
+    }
+
+    private void completed(boolean allowRedoMovement) {
         completed = true;
         synchronized (selectionLock) {
             selectionLock.notifyAll();
         }
-        onCompleted.accept(performed);
+        if(onCompleted != null)
+            onCompleted.accept(performed);
         // want to move again?
         Creature storedCreature = activeCreature;
         Consumer<Boolean> storeOnComplete = onCompleted;
         boolean didPerform = performed;
         reset();
         // redo movement request if mp left
-        if(didPerform && !dies && !requestMoveFor(storedCreature, storeOnComplete))
+        if(didPerform && allowRedoMovement && storedCreature != null && !requestMoveFor(storedCreature, storeOnComplete))
             storedCreature.unsetHighlight(); // just to be sure
     }
 
@@ -208,6 +260,9 @@ public class CreatureActionController {
         this.possibleTargets.forEach(t -> t.setBackgroundFill(null));
         this.possibleTargets.clear();
         this.onCompleted = null;
+        this.completed = false;
+        this.performed = false;
+        this.currentActionType = CurrentActionType.NONE;
     }
 
 }
