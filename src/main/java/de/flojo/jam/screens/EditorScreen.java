@@ -204,7 +204,7 @@ public class EditorScreen extends Screen {
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
             if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()
-                    && !trapSpawner.doesCollide(creatureFactory, currentTrapId, t, board)) {
+                    && trapSpawner.canBePlaced(creatureFactory, currentTrapId, t, getFakeId(), board)) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -223,7 +223,7 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (!t.getTerrainType().blocksWalking() && trapSpawner.get(t.getCoordinate()).isEmpty()
+            if (!t.getTerrainType().blocksWalking() && (getFakeId() == null || getFakeId() == t.getPlacementOwner()) && trapSpawner.get(t.getCoordinate()).isEmpty()
                     && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }

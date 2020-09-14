@@ -13,10 +13,9 @@ import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Hexagon;
 import de.flojo.jam.graphics.renderer.RenderHint;
-import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
-public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmMoveable {
+public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     public static final int DEFAULT_RADIUS = 30;
     private BoardCoordinate coordinate;
@@ -25,18 +24,25 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
     private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
-    private static final Color NUMBER_COLOR = new Color(154, 215, 45);
+    private static final Color NONE_COLOR = new Color(154, 215, 45);
+    private static final Color P1_COLOR = new Color(45, 173, 215);
+    private static final Color P2_COLOR = new Color(141, 45, 215);
 
     private AtomicBoolean hover = new AtomicBoolean();
     private AtomicBoolean mark = new AtomicBoolean();
     private final String tileLabel;
     private final PlayerId placementOwner;
+    private final Color ownerColor;
 
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
         this.coordinate = coordinate;
         this.terrainSupplier = type;
         this.placementOwner = DefaultBoardMask.get().getOwner(coordinate);
+        if(this.placementOwner == null)
+            ownerColor = NONE_COLOR;
+        else
+            ownerColor = this.placementOwner.ifOne(P1_COLOR, P2_COLOR);
         tileLabel = coordinate.x + "/"+ coordinate.y;
     }
 
@@ -96,8 +102,9 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         return placementOwner;
     }
 
-    @Override
-    public void render(Graphics2D g) {
+    public void render(Graphics2D g, boolean showCordData) {
+        if(showCordData)
+            this.draw(g, 0, ownerColor, true);
         if (hover.get()) 
             this.draw(g, 0, HIGHLIGHT_COLOR, true);
 
@@ -105,9 +112,11 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
             this.draw(g, 5, MARK_COLOR, true);
 
         this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
-        g.setColor(NUMBER_COLOR);
-        g.setFont(NUMBER_FONT);
-        TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2, getCenter().y + TextRenderer.getHeight(g, tileLabel)*0.15);
+        if(showCordData) {
+            g.setColor(Color.WHITE);
+            g.setFont(NUMBER_FONT);
+            TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2, getCenter().y + TextRenderer.getHeight(g, tileLabel)*0.15);
+        }
     }
 
     @Override

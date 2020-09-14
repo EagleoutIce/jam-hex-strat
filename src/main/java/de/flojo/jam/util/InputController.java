@@ -4,6 +4,7 @@ import java.util.Set;
 
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.input.IKeyboard.KeyPressedListener;
+import de.gurkenlabs.litiengine.input.IKeyboard.KeyTypedListener;
 import de.gurkenlabs.litiengine.input.IMouse.MouseClickedListener;
 import de.gurkenlabs.litiengine.input.IMouse.MouseMovedListener;
 import de.gurkenlabs.litiengine.input.Input;
@@ -69,4 +70,28 @@ public class InputController {
             eventHandler.mouseMoved(mm);
         });
     }
+
+
+    public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, String screen) {
+        onKeyTyped(keyCode, eventHandler, Set.of(screen));
+    }
+
+    public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, Set<String> screens) {
+        Input.keyboard().onKeyTyped(keyCode, ke -> {
+            if(!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
+                return;
+            eventHandler.keyTyped(ke);
+        });
+    }
+
+    public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, Set<String> screens, InputGroup<Integer> group) {
+        Input.keyboard().onKeyTyped(keyCode, ke -> {
+            if(!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
+                return;
+            if(!group.tryLock(keyCode))
+                return;
+            eventHandler.keyTyped(ke);
+        });
+    }
+
 }

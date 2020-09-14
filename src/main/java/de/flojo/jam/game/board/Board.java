@@ -54,6 +54,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private IHighlightMask highlightMask;
     private final Map<BoardCoordinate, Tile> tiles;
     private AtomicBoolean doHover = new AtomicBoolean(true);
+    private AtomicBoolean showMapDetails = new AtomicBoolean(false);
 
     private KeyInputGroup bInputGroupVert = new KeyInputGroup();
     private KeyInputGroup bInputGroupHor = new KeyInputGroup();
@@ -148,6 +149,12 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
                 Set.of(screenName), bInputGroupVert);
         InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(),
                 Set.of(screenName), bInputGroupHor);
+        InputController.get().onKeyTyped(KeyEvent.VK_M, e -> toggleDataView(),
+                Set.of(screenName), bInputGroupHor);
+    }
+
+    private void toggleDataView() {
+        showMapDetails.set(!showMapDetails.get());
     }
 
     private void cameraPanRight() {
@@ -326,7 +333,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public void render(final Graphics2D g) {
         ImageRenderer.render(g, background, shiftX, shiftY);
         for (final Tile tile : tiles.values())
-            tile.render(g);
+            tile.render(g, showMapDetails.get());
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
@@ -338,7 +345,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public void jointRender(final Graphics2D g, PlayerId renderOwner,  CreatureFactory factory, TrapSpawner traps) {
         ImageRenderer.render(g, background, shiftX, shiftY);
         for (final Tile tile : tiles.values())
-            tile.render(g);
+            tile.render(g, showMapDetails.get());
 
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {

@@ -63,13 +63,13 @@ public class TrapSpawner {
 
 
 
-    public boolean doesCollide(CreatureFactory creatures, TrapId id, Tile pos, Board board) {
+    public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
-        if(traps.getCollision(tiles).isPresent()) {
-            return true;
+        for (Tile tile : tiles) {
+            if(playerId != null && tile.getPlacementOwner() != playerId)
+                return false;
         }
-
-        return creatures.get(tiles).isPresent();
+        return traps.getCollision(tiles).isEmpty() && creatures.get(tiles).isEmpty();
     }
 
 
