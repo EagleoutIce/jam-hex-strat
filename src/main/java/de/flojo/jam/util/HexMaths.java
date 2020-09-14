@@ -39,10 +39,7 @@ public class HexMaths {
         int mY = Math.floorMod(t.y, 2);
 
         if (dX == 0) {
-            if(mY == Math.floorMod(a.y, 2)) { // vertical!!
-                return new BoardCoordinate(0, a.y > t.y ? -2 : 2);
-            }
-            return getDeltaForNoX(dY, mY, mX);
+            return getDeltaForNoX(a, t, dY, mX, mY);
         } else if (dX > 0) {
             if (dY < 0) {
                 return new BoardCoordinate(dX, -1);
@@ -50,15 +47,22 @@ public class HexMaths {
                 Game.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0}  to b {1}", new Object[] { a, t });
             }
         } else if (dY == 0) {
-            Game.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0}  to b {1}", new Object[] { a, t });
+            Game.log().log(Level.SEVERE, "dX < 0 && dY == 0 steppe from a {0}  to b {1}", new Object[] { a, t });
         } else if (dY < 0) {
             return new BoardCoordinate(mY == 0? -1 : 1, dY);
         }
         return new BoardCoordinate(dX, dY);
     }
 
+    private static BoardCoordinate getDeltaForNoX(BoardCoordinate a, BoardCoordinate t, int dY, int mX, int mY) {
+        if(mY == Math.floorMod(a.y, 2)) { // vertical!!
+            return new BoardCoordinate(0, a.y > t.y ? -2 : 2);
+        }
+        return getDeltaForNoXDiagonal(dY, mY, mX);
+    }
 
-    private static BoardCoordinate getDeltaForNoX(int dY, int mY, int mX) {
+
+    private static BoardCoordinate getDeltaForNoXDiagonal(int dY, int mY, int mX) {
         if (dY < 0)
             return new BoardCoordinate(((mX == 0 && mY == 1) || (mX == 1 && mY == 1) )? -1 : 1, dY);
         else
