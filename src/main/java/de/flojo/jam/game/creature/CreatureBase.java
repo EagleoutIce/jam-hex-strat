@@ -23,6 +23,7 @@ public class CreatureBase implements IRenderable {
 
     public CreatureBase(Tile position) {
         this.position = position;
+        updateTerrainOffset(position);
     }
 
 

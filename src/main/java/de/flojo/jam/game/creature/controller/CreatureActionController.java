@@ -1,6 +1,5 @@
 package de.flojo.jam.game.creature.controller;
 
-import java.awt.Color;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
@@ -21,8 +20,6 @@ import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 
 public class CreatureActionController {
-
-    private static final Color MOVEMENT_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
 
     private final IProvideEffectContext context;
     private final String screenName;
@@ -80,7 +77,7 @@ public class CreatureActionController {
 
         Tile start = creature.getBase().getTile();
         possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
-        possibleTargets.forEach(t -> t.setBackgroundFill(MOVEMENT_COLOR));
+        possibleTargets.forEach(t -> t.mark(true));
 
         return true;
     }
@@ -107,7 +104,7 @@ public class CreatureActionController {
         for (Tile tile : neighbours) {
             if (isWalkable(tile)) {
                 possibleTargets.add(tile);
-                tile.setBackgroundFill(MOVEMENT_COLOR);
+                tile.mark(true);
             }
         }
 
@@ -257,7 +254,7 @@ public class CreatureActionController {
 
     void reset() {
         this.activeCreature = null;
-        this.possibleTargets.forEach(t -> t.setBackgroundFill(null));
+        this.possibleTargets.forEach(t -> t.mark(false));
         this.possibleTargets.clear();
         this.onCompleted = null;
         this.completed = false;

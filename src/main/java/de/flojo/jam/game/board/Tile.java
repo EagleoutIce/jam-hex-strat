@@ -10,6 +10,7 @@ import de.flojo.jam.Main;
 import de.flojo.jam.game.board.terrain.TerrainType;
 import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
 import de.flojo.jam.graphics.Hexagon;
+import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
@@ -21,9 +22,10 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
     private static final Font NUMBER_FONT = Main.TEXT_NORMAL.deriveFont(20f);
 
     private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
-    private Color backgroundFill = null;
+    private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
 
     private AtomicBoolean hover = new AtomicBoolean();
+    private AtomicBoolean mark = new AtomicBoolean();
     private final String tileLabel;
 
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
@@ -77,8 +79,12 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         return this.getCenter().distance(other.getCenter()) <= 2.5 * DEFAULT_RADIUS;
     }
 
-    public void setBackgroundFill(Color backgroundFill) {
-        this.backgroundFill = backgroundFill;
+    public void mark(boolean doMark) {
+        this.mark.set(doMark);
+    }
+
+    public boolean isMarked() {
+        return this.mark.get();
     }
 
     @Override
@@ -86,8 +92,8 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         if (hover.get()) 
             this.draw(g, 0, HIGHLIGHT_COLOR, true);
 
-        if(backgroundFill != null) 
-            this.draw(g, 5, backgroundFill, true);
+        if(mark.get()) 
+            this.draw(g, 5, MARK_COLOR, true);
 
         this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
         g.setColor(Color.RED);
@@ -99,7 +105,13 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
     public void renderDecorations(Graphics2D g) {
         TerrainType tt = terrainSupplier.getTerrainAt(coordinate);
         if(tt != null)
-            tt.render(g, getCenter(), hover.get());
+            tt.render(g, getCenter(), getHint());
+    }
+
+    private RenderHint getHint() {
+        if(hover.get())
+            return RenderHint.HOVER;
+        return mark.get() ? RenderHint.MARKED : RenderHint.NORMAL;
     }
 
     @Override

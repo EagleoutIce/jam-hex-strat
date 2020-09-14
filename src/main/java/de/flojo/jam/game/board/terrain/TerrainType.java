@@ -7,14 +7,15 @@ import de.flojo.jam.game.board.PushDirection;
 import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
 import de.flojo.jam.game.board.terrain.management.TerrainImprintNodeMap;
 import de.flojo.jam.graphics.renderer.IRenderData;
+import de.flojo.jam.graphics.renderer.RenderHint;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.flojo.jam.graphics.renderer.VoidRenderer;
 
 public enum TerrainType {
     EMPTY("Nothing.", new TerrainImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
             PushDirection.NONE, VoidRenderer.get()), //
-    //
-    GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, true, true, true, 2,
+    // dos not blick los or punch as it raised and we include a raised switch
+    GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false, true, 2,
             PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -79 / 1.33)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
@@ -121,8 +122,8 @@ public enum TerrainType {
         return movementCost;
     }
 
-    public void render(Graphics2D g, Point2D pos, boolean highlight) {
-        renderer.render(g, pos, highlight);
+    public void render(Graphics2D g, Point2D pos, RenderHint hint) {
+        renderer.render(g, pos, hint);
     }
 
     public TerrainImprintNodeMap getNode() {

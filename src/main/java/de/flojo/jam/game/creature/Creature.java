@@ -141,4 +141,8 @@ public class Creature implements IRenderable {
 	public boolean isFlying() {
 		return core.isFlying();
 	}
+
+	public boolean isRaised() {
+		return base.getTile().getTerrainType().isRaised();
+	}
 }

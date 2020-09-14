@@ -21,6 +21,7 @@ public class PunchEffect implements IEffectCreature {
     private boolean deltaSet = false;
     private int deltaX;
     private int deltaY;
+    private boolean effectHitGround = false;
 
     public PunchEffect(IProvideEffectContext context, int totalPower) {
         this.powerLeft = totalPower;
@@ -40,6 +41,7 @@ public class PunchEffect implements IEffectCreature {
             deltaX = delta.x;
             deltaY = delta.y;
             deltaSet = true;
+            effectHitGround = !attacker.isRaised() && !target.isRaised();
         }
 
         // Peek next tile
@@ -50,7 +52,7 @@ public class PunchEffect implements IEffectCreature {
         if (punchTarget == null)
             return;
 
-        if (punchTarget.getTerrainType().blocksPunching()) {
+        if (terrainBlocksPunch(punchTarget)) {
             Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
                     new Object[] { deltaX, deltaY, target.getName(), punchTarget });
             return;
@@ -84,6 +86,20 @@ public class PunchEffect implements IEffectCreature {
             powerLeft -= 1;
             effect(target, attacker);
         }
+    }
+
+
+
+    private boolean terrainBlocksPunch(Tile punchTarget) {
+        // allows to punch down, but not uphills.
+        boolean blocksPunch = punchTarget.getTerrainType().blocksPunching();
+        if(!effectHitGround) {
+            if(!punchTarget.getTerrainType().isRaised()) {
+                effectHitGround = true;
+            }
+            return blocksPunch;
+        }
+        return blocksPunch || punchTarget.getTerrainType().isRaised();
     }
 
 }

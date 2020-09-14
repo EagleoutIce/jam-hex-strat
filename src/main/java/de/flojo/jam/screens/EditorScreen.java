@@ -224,7 +224,7 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY && trapSpawner.get(t.getCoordinate()).isEmpty()
+            if (!t.getTerrainType().blocksWalking() && trapSpawner.get(t.getCoordinate()).isEmpty()
                     && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }

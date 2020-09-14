@@ -17,6 +17,7 @@ public class SimpleImageRenderer implements IRenderData {
     BufferedImage highlightImage;
     BufferedImage darkerImage;
     BufferedImage darkerHighlightImage;
+    BufferedImage markImage;
 
 
     public SimpleImageRenderer(final String path, final double offsetX, final double offsetY) {
@@ -24,25 +25,35 @@ public class SimpleImageRenderer implements IRenderData {
         this.offsetY = offsetY;
         this.image = Resources.images().get(path);
         darkerImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        RescaleOp darkerOperation = new RescaleOp(new float[] { 0.6f, 0.6f, 0.6f, 1 }, new float[4], null);
-        darkerOperation.filter(image, darkerImage);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        RescaleOp lighterOperation = new RescaleOp(new float[] { 1.32f, 1.32f, 1.32f, 1 }, new float[4], null);
-        lighterOperation.filter(image, highlightImage);
         darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        RescaleOp darkerHighlightOperation = new RescaleOp(new float[] { 0.8f, 0.8f, 0.8f, 1 }, new float[4], null);
-        darkerHighlightOperation.filter(image, darkerHighlightImage);
+        markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        generateImageVariants();
+    }
+
+    private static RescaleOp modifyRGBA(float r, float g, float b, float a) {
+        return new RescaleOp(new float[] { r, g, b, a }, new float[4], null);
+    }
+
+    private void generateImageVariants() {
+        modifyRGBA(0.6f, 0.6f, 0.6f, 1).filter(image, darkerImage);
+        modifyRGBA(1.32f, 1.32f, 1.32f, 1).filter(image, highlightImage);
+        modifyRGBA(0.8f, 0.8f, 0.8f, 1).filter(image, darkerHighlightImage);
+        modifyRGBA(1.15f, 1.45f, 1.45f, 1).filter(image, markImage);
     }
 
     @Override
     public void render(final Graphics2D g, final Point2D pos, RenderHint hint) {
         final BufferedImage renderImage;
         switch(hint) {
-            case HIGHLIGHT:
+            case HOVER:
                 renderImage = highlightImage;
                 break;
             case DARK:
                 renderImage = darkerImage;
+                break;
+            case MARKED:
+                renderImage = markImage;
                 break;
             default:
             case NORMAL:

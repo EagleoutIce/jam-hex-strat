@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 public interface IRenderData {
 
     default void render(Graphics2D g, Point2D pos, boolean doHighlight) {
-        render(g, pos, doHighlight ? RenderHint.HIGHLIGHT : RenderHint.NORMAL);
+        render(g, pos, doHighlight ? RenderHint.HOVER : RenderHint.NORMAL);
     }
     void render(Graphics2D g, Point2D pos, RenderHint hint);
 
