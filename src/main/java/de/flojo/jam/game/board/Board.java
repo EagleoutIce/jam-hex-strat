@@ -252,6 +252,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         this.doHover.set(true);
     }
 
+    public boolean doesHover() {
+        return this.doHover.get();
+    }
+
     public void doNotHover() {
         this.doHover.set(false);
     }

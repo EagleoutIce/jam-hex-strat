@@ -6,7 +6,7 @@ public interface ICreatureSkill {
     public int getMaxRange();
 
     public int getRadius();
-    public CreatureSkillAOE getAOE();
+    public CreatureSkillAOA getAOA();
 
     public int getCost();
 

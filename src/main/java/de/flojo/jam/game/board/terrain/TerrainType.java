@@ -14,56 +14,56 @@ public enum TerrainType {
     EMPTY("Nothing.", new TerrainImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
             Direction.NONE, VoidRenderer.get()), //
     //
-    GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, true, false, true, 2,
+    GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, true, true, true, 2,
             Direction.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -79 / 1.33)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
-            false, false, -1, Direction.NONE,
+            true, false, -1, Direction.NONE,
             new SimpleImageRenderer("tiles/wand_doppel_l_links.png", -1.65 * 115 / 2d, -242 / 1.84d)), //
     WDL_LEFT_WINDOW("Doppel Wand mit L-Knick nach links:Fenster",
-            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 0, 0), true, false, false, false, -1, Direction.NONE,
+            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 0, 0), true, false, true, false, -1, Direction.NONE,
             VoidRenderer.get()),
     WDL_LEFT_SLAVE_1("Doppel Wand mit L-Knick nach links:Geister",
-            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 3), true, true, false, false, -1, Direction.NONE,
+            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 3), true, true, true, false, -1, Direction.NONE,
             VoidRenderer.get()),
     WDL_LEFT_SLAVE_2(WDL_LEFT_SLAVE_1, new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 5)),
     //
     WDL_RIGHT("Doppel wand mit L-Knick nach rechts", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 1), true,
-            true, false, false, -1, Direction.NONE,
+            true, true, false, -1, Direction.NONE,
             new SimpleImageRenderer("tiles/wand_doppel_l_rechts.png", -115 / 6d, -242 / 1.84d)), //
     WDL_RIGHT_WINDOW("Doppel Wand mit L-Knick nach rechts:Fenster",
-            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 1, 0), true, false, false, false, -1, Direction.NONE,
+            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 1, 0), true, false, true, false, -1, Direction.NONE,
             VoidRenderer.get()),
     WDL_RIGHT_SLAVE_1("Doppel Wand mit L-Knick nach rechts:Geister",
-            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 3), true, true, false, false, -1, Direction.NONE,
+            new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 3), true, true, true, false, -1, Direction.NONE,
             VoidRenderer.get()),
     WDL_RIGHT_SLAVE_2(WDL_RIGHT_SLAVE_1, new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_RIGHT, 0, 5)),
     //
-    DEAD_TREE("Toter Baumstumpf", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true, true, false, false,
+    DEAD_TREE("Toter Baumstumpf", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true, true, true, false,
             -1, Direction.NONE, new SimpleImageRenderer("tiles/baum_kahl.png", -89 / 2d, -149 / 1.25d)), //
     //
-    DEAD_TREE_B("Toter Baumstumpf, Variante B", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE_B, 0, 0), true, true, false, false,
+    DEAD_TREE_B("Toter Baumstumpf, Variante B", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE_B, 0, 0), true, true, true, false,
     -1, Direction.NONE, new SimpleImageRenderer("tiles/baum_kahl_variante_b.png", -89 / 2d, -149 / 1.55d)), //
     //
-    CART_LEFT("Kaputter Wagen nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 2), true, true, false,
+    CART_LEFT("Kaputter Wagen nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 2), true, true, true,
             false, -1, Direction.NONE, new SimpleImageRenderer("tiles/karren_links.png", -142 / 1.25d, -75 / 1.1d)), //
     CART_LEFT_GHOST("Kaputter Wagen nach links:Geister", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 0), true,
-            true, false, false, -1, Direction.NONE, VoidRenderer.get()),
+            true, true, false, -1, Direction.NONE, VoidRenderer.get()),
     CAR_LEFT_HANDLES("Kaputter Wagen nach links:Griffe", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 0, 1), true,
             false, false, false, -1, Direction.NONE, VoidRenderer.get()),
     //
     CART_RIGHT("Kaputter Wagen nach rechts", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 2), true, true,
-            false, false, -1, Direction.NONE,
+    true, false, -1, Direction.NONE,
             new SimpleImageRenderer("tiles/karren_rechts.png", -142 / 4.85d, -75 / 1.1d)), //
     CART_RIGHT_GHOST("Kaputter Wagen nach rechts:Geister", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 0),
-            true, true, false, false, -1, Direction.NONE, VoidRenderer.get()),
+            true, true, true, false, -1, Direction.NONE, VoidRenderer.get()),
     CAR_RIGHT_HANDLES("Kaputter Wagen nach rechts:Griffe", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 1, 1),
             true, false, false, false, -1, Direction.NONE, VoidRenderer.get()),;
 
     private final String displayName;
     private final boolean blocksWalking;
     private final boolean blocksLineOfSight;
-    private final boolean blocksFromSky;
+    private final boolean blocksOnPunch;
     private final boolean raised;
     private final int cost;
     private final Direction pushDirection;
@@ -72,11 +72,11 @@ public enum TerrainType {
 
     @SuppressWarnings("java:S107")
     private TerrainType(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
-            boolean blocksFromSky, boolean raised, int cost, Direction pushDirection, final IRenderData renderer) {
+            boolean blocksOnPunch, boolean raised, int cost, Direction pushDirection, final IRenderData renderer) {
         this.displayName = displayName;
         this.blocksWalking = blocksWalking;
         this.blocksLineOfSight = blocksLineOfSight;
-        this.blocksFromSky = blocksFromSky;
+        this.blocksOnPunch = blocksOnPunch;
         this.raised = raised;
         this.cost = cost;
         this.pushDirection = pushDirection;
@@ -85,7 +85,7 @@ public enum TerrainType {
     }
 
     private TerrainType(TerrainType copy, TerrainImprintNodeMap node) {
-        this(copy.displayName, node, copy.blocksWalking, copy.blocksLineOfSight, copy.blocksFromSky, copy.raised,
+        this(copy.displayName, node, copy.blocksWalking, copy.blocksLineOfSight, copy.blocksOnPunch, copy.raised,
                 copy.cost, copy.pushDirection, copy.renderer);
     }
 
@@ -97,8 +97,8 @@ public enum TerrainType {
         return blocksLineOfSight;
     }
 
-    public boolean blocksFromSky() {
-        return blocksFromSky;
+    public boolean blocksPunching() {
+        return blocksOnPunch;
     }
 
     public Direction getPushDirection() {

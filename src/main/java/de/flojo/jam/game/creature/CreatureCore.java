@@ -2,16 +2,17 @@ package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
-import de.gurkenlabs.litiengine.graphics.IRenderable;
+import de.flojo.jam.graphics.renderer.RenderHint;
 
-public class CreatureCore implements IRenderable {
+public class CreatureCore {
 
     private IRenderData mainData;
     private IRenderData dyingData;
-    
+
     IRenderData renderCore;
 
     private CreatureBase base;
@@ -20,10 +21,10 @@ public class CreatureCore implements IRenderable {
     private boolean isFlying = false;
 
     private boolean isDead = false;
-    private boolean isDying = false;
-    private boolean dieAnimationCompleted = false;
 
     private final PlayerId owner;
+
+    private AtomicBoolean highlight = new AtomicBoolean();
 
     public CreatureCore(PlayerId owner, IRenderData mainData, IRenderData dyingData, CreatureAttributes attributes) {
         this.mainData = mainData;
@@ -36,7 +37,6 @@ public class CreatureCore implements IRenderable {
     public void setBase(CreatureBase base) {
         this.base = base;
     }
-
 
     public CreatureAttributes getAttributes() {
         return attributes;
@@ -51,14 +51,34 @@ public class CreatureCore implements IRenderable {
     }
 
     public void die() {
-        isDead = isDying = true;
+        isDead = true;
+        unsetHighlight();
         renderCore = dyingData;
     }
 
-    @Override
-    public void render(Graphics2D g) {
+    public void highlight() {
+        this.highlight.set(true);
+    }
+
+    public void unsetHighlight() {
+        this.highlight.set(false);
+    }
+
+    private RenderHint getRenderHint() {
+        if (base.getTile().isHovered() || highlight.get()) {
+            return attributes.canDoSomething() ? RenderHint.HIGHLIGHT : RenderHint.DARK_HIGHLIGHT;
+        } else {
+            return attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK;
+        }
+    }
+
+    protected void render(Graphics2D g) {
         final Point c = base.getTile().getCenter();
-        renderCore.render(g, new Point(c.x - base.getMovementOffsetX(), c.y - base.getMovementOffsetY()),
-                base.getTile().isHovered());
+        renderCore.render(g, new Point(c.x - base.getMovementOffsetX(),
+                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY()), getRenderHint());
+    }
+
+    public boolean isFlying() {
+        return isFlying;
     }
 }

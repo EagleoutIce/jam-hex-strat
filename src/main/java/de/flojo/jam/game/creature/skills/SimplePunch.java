@@ -30,12 +30,13 @@ public class SimplePunch implements ICreatureSkill {
 
     @Override
     public int getRadius() {
-        return 1;
+        return 1; // aoe field
     }
 
+    // area of attack
     @Override
-    public CreatureSkillAOE getAOE() {
-        return CreatureSkillAOE.LINE;
+    public CreatureSkillAOA getAOA() {
+        return CreatureSkillAOA.LINE;
     }
 
     @Override

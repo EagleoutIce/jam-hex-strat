@@ -1,12 +1,14 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
+import java.util.Optional;
 
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.skills.DefaultEffectContext;
+import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
@@ -23,6 +25,8 @@ public class Creature implements IRenderable {
     private final TrapCollection tCollection;
 
     protected static final int DIE_DURATION = 800;
+
+    private Runnable onDead;
 
     public Creature(final String name,final CreatureCollection collection, final TrapCollection traps, CreatureBase base, CreatureCore core) {
         this.base = base;
@@ -63,10 +67,14 @@ public class Creature implements IRenderable {
     }
 
     public void move(Tile target) {
-        if(!dead()) {
+        if(dead())
             return;
-        }
         base.move(target);
+    }
+
+    // only one so no wrong clear
+    public void setOnDead(Runnable onDead) {
+        this.onDead = onDead;
     }
 
     public boolean dead() {
@@ -90,12 +98,12 @@ public class Creature implements IRenderable {
         return base.getTargetLocationReachedLock();
     }
 
-    public void clearHover() {
-        this.base.getTile().clearHover();
+    public void unsetHighlight() {
+        core.unsetHighlight();
     }
 
-    public void setHover() {
-        this.base.getTile().setHover();
+    public void highlight() {
+        core.highlight();
     }
 
     public boolean isHovered() {
@@ -106,8 +114,15 @@ public class Creature implements IRenderable {
         return this.core.getAttributes();
     }
 
+    public Optional<ICreatureSkill> getSkill(SkillId wantedSkill) {
+        return this.core.getAttributes().getSkill(wantedSkill);
+    }
+
+
     public void die() {
         core.die();
+        if(onDead != null)
+            onDead.run();
         Game.loop().perform(DIE_DURATION, () -> cCollection.remove(this));
     }
 
@@ -118,4 +133,8 @@ public class Creature implements IRenderable {
                 .append(", position=").append(getCoordinate()).append(", owner=").append(this.core.getOwner()).append("]");
         return builder.toString();
     }
+
+	public boolean isFlying() {
+		return core.isFlying();
+	}
 }

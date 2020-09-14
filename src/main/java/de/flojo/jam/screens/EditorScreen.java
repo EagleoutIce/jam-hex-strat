@@ -80,6 +80,7 @@ public class EditorScreen extends Screen {
     private Button p1;
     private Button p2;
     private Button both;
+    private Button nextRound;
     private TextFieldComponent terrainName;
 
     private List<ImageButton> terrainButtons;
@@ -91,7 +92,7 @@ public class EditorScreen extends Screen {
 
         board = new Board("configs/empty.terrain", EditorScreen.NAME);
         trapSpawner = new TrapSpawner(board, EditorScreen.NAME);
-        creatureFactory = new CreatureFactory(EditorScreen.NAME, trapSpawner.getTraps());
+        creatureFactory = new CreatureFactory(EditorScreen.NAME, board, trapSpawner.getTraps());
         architect = new Architect(board, this.creatureFactory, this.trapSpawner);
 
         Game.log().info("Building Editor Screen");
@@ -112,7 +113,7 @@ public class EditorScreen extends Screen {
                 creatureFactory.getSelectedCreature().die();
             }
         }, EditorScreen.NAME);
-        presenter = new SkillsPresenter(this, board, creatureFactory, getFakeId(), EditorScreen.NAME);
+        presenter = new SkillsPresenter(this, board, creatureFactory, trapSpawner, getFakeId(), EditorScreen.NAME);
         presenter.enable();
     }
 
@@ -147,7 +148,7 @@ public class EditorScreen extends Screen {
         // this did escalate... maybe with list?
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)
                 || loadField.getBoundingBox().contains(p) || p1.getBoundingBox().contains(p)
-                || p2.getBoundingBox().contains(p) || both.getBoundingBox().contains(p)) {
+                || p2.getBoundingBox().contains(p) || both.getBoundingBox().contains(p) || nextRound.getBoundingBox().contains(p)) {
             return true;
         }
         for (ImageButton imageButton : terrainButtons) {
@@ -299,6 +300,10 @@ public class EditorScreen extends Screen {
         });
         both.setColors(Color.GREEN, Color.GREEN.brighter());
 
+        // TODO: show round counter
+        nextRound = new Button("Next Round", Main.TEXT_STATUS);
+        nextRound.onClicked(c -> creatureFactory.resetAll());
+
         updatePositions();
         this.getComponents().add(newField);
         this.getComponents().add(saveField);
@@ -306,6 +311,7 @@ public class EditorScreen extends Screen {
         this.getComponents().add(p1);
         this.getComponents().add(p2);
         this.getComponents().add(both);
+        this.getComponents().add(nextRound);
     }
 
     private void saveField() {
@@ -351,11 +357,12 @@ public class EditorScreen extends Screen {
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
                 Game.window().getHeight() - 90d);
         int width = Game.window().getWidth();
-        p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 30d, 18d);
-        p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 20d, 18d);
+        p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 18d);
+        p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);
         both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 18d);
+        nextRound.setLocation(width - Main.INNER_MARGIN - nextRound.getWidth() - 10d, 30d + both.getHeight());
         for (int i = 0; i < trapButtons.size(); i++) {
-            trapButtons.get(i).setLocation(width - 260d, (i + 3) * 45d);
+            trapButtons.get(i).setLocation(width - 260d - Main.INNER_MARGIN, (i + 3) * 45d + 15d);
         }
     }
 

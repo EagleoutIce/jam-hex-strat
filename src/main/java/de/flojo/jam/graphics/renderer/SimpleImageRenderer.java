@@ -15,20 +15,42 @@ public class SimpleImageRenderer implements IRenderData {
     private final double offsetX;
     private final double offsetY;
     BufferedImage highlightImage;
+    BufferedImage darkerImage;
+    BufferedImage darkerHighlightImage;
+
 
     public SimpleImageRenderer(final String path, final double offsetX, final double offsetY) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.image = Resources.images().get(path);
+        darkerImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        RescaleOp darkerOperation = new RescaleOp(new float[] { 0.6f, 0.6f, 0.6f, 1 }, new float[4], null);
+        darkerOperation.filter(image, darkerImage);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        RescaleOp lighterOperation = new RescaleOp(new float[] { 1.36f, 1.36f, 1.36f, 1 }, new float[4], null);
+        RescaleOp lighterOperation = new RescaleOp(new float[] { 1.32f, 1.32f, 1.32f, 1 }, new float[4], null);
         lighterOperation.filter(image, highlightImage);
-
+        darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        RescaleOp darkerHighlightOperation = new RescaleOp(new float[] { 0.8f, 0.8f, 0.8f, 1 }, new float[4], null);
+        darkerHighlightOperation.filter(image, darkerHighlightImage);
     }
 
     @Override
-    public void render(final Graphics2D g, final Point2D pos, boolean highlight) {
-        ImageRenderer.render(g, highlight ? highlightImage : image, pos.getX() + offsetX, pos.getY() + offsetY);
+    public void render(final Graphics2D g, final Point2D pos, RenderHint hint) {
+        final BufferedImage renderImage;
+        switch(hint) {
+            case HIGHLIGHT:
+                renderImage = highlightImage;
+                break;
+            case DARK:
+                renderImage = darkerImage;
+                break;
+            default:
+            case NORMAL:
+                renderImage = image;
+                break;
+
+        }
+        ImageRenderer.render(g,  renderImage, pos.getX() + offsetX, pos.getY() + offsetY);
     }
 
     @Override

@@ -28,6 +28,4 @@ public final class SimpleHighlighter implements IHighlightMask {
         return anchor;    
     }
 
-    
-
 }

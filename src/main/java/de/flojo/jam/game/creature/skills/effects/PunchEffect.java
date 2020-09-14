@@ -7,6 +7,7 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.creature.Creature;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.IEffectCreature;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.gurkenlabs.litiengine.Game;
@@ -88,8 +89,8 @@ public class PunchEffect implements IEffectCreature {
         if (punchTarget == null)
             return;
 
-        if (punchTarget.getTerrainType().blocksWalking()) {
-            Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks walking.",
+        if (punchTarget.getTerrainType().blocksPunching()) {
+            Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
                     new Object[] { deltaX, deltaY, target.getName(), punchTarget });
             return;
         }
@@ -100,7 +101,11 @@ public class PunchEffect implements IEffectCreature {
         if(mayTrap.isPresent()) {
             Trap trap = mayTrap.get();
             target.move(punchTarget);
-            awaitMovementComplete(target);
+            try {
+                CreatureActionController.awaitMovementComplete(target);
+            } catch(Exception ex) {
+                ex.printStackTrace();
+            }
             trap.trigger();
             target.die();
             return;
@@ -110,27 +115,13 @@ public class PunchEffect implements IEffectCreature {
 
         Optional<Creature> mayHit = context.getCreatures().get(punchTargetCoordinate);
         if (mayHit.isPresent()) {
-            awaitMovementComplete(target);
+            CreatureActionController.awaitMovementComplete(target);
             effect(mayHit.get(), attacker);
         } else {
             // punch!
             target.move(punchTarget);
             powerLeft -= 1;
-
             effect(target, attacker);
-        }
-    }
-
-    private void awaitMovementComplete(Creature target) {
-        synchronized (target.moveLock()) {
-            while (!target.getBase().moveTargetReached()) {
-                try {
-                    target.moveLock().wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                    Thread.currentThread().interrupt();
-                }
-            }
         }
     }
 

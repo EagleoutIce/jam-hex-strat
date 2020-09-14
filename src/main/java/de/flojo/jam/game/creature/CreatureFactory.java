@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
+import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
@@ -58,9 +59,11 @@ public class CreatureFactory {
     private Consumer<Creature> onSelectionChanged = null;
     private CreatureCollection creatures;
     private TrapCollection traps;
+    private Board board;
 
-    public CreatureFactory(final String screen, TrapCollection traps) {
+    public CreatureFactory(final String screen, final Board board, TrapCollection traps) {
         creatures = new CreatureCollection();
+        this.board = board;
         this.traps = traps;
         InputController.get().onClicked(this::setActiveCreature, screen);
     }
@@ -73,7 +76,7 @@ public class CreatureFactory {
     private Creature selectedCreature = null;
 
     private void setActiveCreature(MouseEvent c) {
-        if (c.getButton() != MouseEvent.BUTTON1)
+        if (c.getButton() != MouseEvent.BUTTON1 || !board.doesHover())
             return;
 
         Creature oldCreature = selectedCreature;
@@ -169,5 +172,9 @@ public class CreatureFactory {
     public void removeAll() {
         this.creatures.clear();
     }
+
+	public void resetAll() {
+        creatures.resetAll();
+	}
 
 }

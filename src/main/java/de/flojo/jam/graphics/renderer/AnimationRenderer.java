@@ -36,7 +36,7 @@ public class AnimationRenderer implements IRenderData {
     }
 
     @Override
-    public void render(final Graphics2D g, final Point2D pos, boolean highlight) {
+    public void render(final Graphics2D g, final Point2D pos, RenderHint ignored) {
         if(lastFrameUpdate == 0) {
             lastFrameUpdate = Game.time().now();
         }

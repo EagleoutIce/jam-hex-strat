@@ -18,7 +18,7 @@ public class VoidRenderer implements IRenderData {
     }
 
     @Override
-    public void render(Graphics2D g, Point2D pos, boolean highlight) {
+    public void render(Graphics2D g, Point2D pos, RenderHint hint) {
         // do nothing
     }
 

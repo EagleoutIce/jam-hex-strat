@@ -5,12 +5,15 @@ import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.util.InputController;
@@ -19,25 +22,36 @@ import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
 public class SkillsPresenter {
-    
+
+
     private final Screen target;
     private final Board board;
     private final CreatureFactory factory;
+    private final TrapSpawner traps;
+
+    private boolean skillChoosing = false;
+
     private PlayerId playerId;
     private Creature currentCreature;
 
     private AtomicBoolean enabled = new AtomicBoolean();
 
+    private final CreatureActionController movementController;
+
     Button moveButton;
     private List<Button> skillButtons;
 
-    public SkillsPresenter(Screen target, Board board, CreatureFactory factory, PlayerId playerId,String screenName) {
+    public SkillsPresenter(Screen target, Board board, CreatureFactory factory, TrapSpawner traps, PlayerId playerId,
+            String screenName) {
         this.target = target;
         this.board = board;
         this.factory = factory;
+        this.traps = traps;
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
         skillButtons = new LinkedList<>();
+        movementController = new CreatureActionController(
+                new DefaultEffectContext(board, factory.getCreatures(), traps.getTraps()), screenName);
         Game.window().onResolutionChanged(r -> updatePositions());
         InputController.get().onMoved(this::lockOnMoved, screenName);
     }
@@ -49,22 +63,28 @@ public class SkillsPresenter {
     }
 
     private void updateCreature(Creature c) {
-        if(c == null) {
+        if (c == null) {
+            return;
+        }
+        if(skillChoosing) {
+            Game.log().log(Level.INFO, "Ignored character change for: {0} as the skill target choosing menu is active.", c);
             return;
         }
 
         resetButtons();
 
-        if(this.playerId != null && c.getOwner() != this.playerId) 
+        if (this.playerId != null && c.getOwner() != this.playerId)
             return;
 
         currentCreature = c;
-        currentCreature.setHover();
+        currentCreature.highlight();
         CreatureAttributes attributes = c.getAttributes();
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
-            attributes.useMp();
-            this.moveButton.setEnabled(attributes.getMpLeft() > 0);
+            if(movementController.requestMoveFor(currentCreature, b -> moveOperationEnded(attributes, b))) {
+                Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
+                moveButton.setEnabled(false);
+            }
         });
         moveButton.prepare();
 
@@ -79,6 +99,8 @@ public class SkillsPresenter {
             skillButtons.add(bt);
         }
 
+        currentCreature.setOnDead(this::resetButtons);
+
         // TODO: onClick
 
         target.getComponents().add(moveButton);
@@ -86,8 +108,16 @@ public class SkillsPresenter {
         updatePositions();
     }
 
+    private void moveOperationEnded(CreatureAttributes attributes, Boolean performed) {
+        if(performed.booleanValue())
+            attributes.useMp();
+        if(moveButton != null) {
+            moveButton.setEnabled(attributes.getMpLeft() > 0);
+        }
+    }
+
     private void lockOnMoved(MouseEvent mm) {
-        if(notActive())
+        if (notActive())
             return;
         if (intersectsWithButton(mm.getPoint())) {
             board.doNotHover();
@@ -109,7 +139,7 @@ public class SkillsPresenter {
     }
 
     private void updatePositions() {
-        if(notActive())
+        if (notActive())
             return;
         CreatureAttributes attributes = currentCreature.getAttributes();
         moveButton.setEnabled(attributes.getMpLeft() > 0);
@@ -132,14 +162,17 @@ public class SkillsPresenter {
     private void resetButtons() {
         skillButtons.forEach(GuiComponent::suspend);
         target.getComponents().removeAll(skillButtons);
-        if(moveButton != null)
+        if (moveButton != null)
             moveButton.suspend();
         target.getComponents().remove(moveButton);
         skillButtons.clear();
         moveButton = null;
-        if(currentCreature != null)
-            currentCreature.clearHover();
-        currentCreature = null;
+        if (currentCreature != null) {
+            // reset
+            currentCreature.unsetHighlight();
+            currentCreature.setOnDead(null);
+            currentCreature = null;
+        }
     }
 
     public void enable() {

@@ -1,5 +1,5 @@
 package de.flojo.jam.game.creature.skills;
 
-public enum CreatureSkillAOE {
+public enum CreatureSkillAOA {
     SINGLE, LINE, LINE_PLUS, CIRCLE
 }

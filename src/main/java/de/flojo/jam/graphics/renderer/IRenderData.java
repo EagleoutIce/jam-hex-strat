@@ -6,7 +6,11 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 
 public interface IRenderData {
-    void render(Graphics2D g, Point2D pos, boolean highlight);
+
+    default void render(Graphics2D g, Point2D pos, boolean doHighlight) {
+        render(g, pos, doHighlight ? RenderHint.HIGHLIGHT : RenderHint.NORMAL);
+    }
+    void render(Graphics2D g, Point2D pos, RenderHint hint);
 
     boolean hasImage();
 

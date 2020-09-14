@@ -94,5 +94,12 @@ public class CreatureCollection implements Serializable {
             return collection.remove(arg0);
         }
     }
-    
+
+	public void resetAll() {
+        synchronized(collection) {
+            for (Creature creature : collection) {
+                creature.getAttributes().reset();
+            }
+        }
+    }
 }

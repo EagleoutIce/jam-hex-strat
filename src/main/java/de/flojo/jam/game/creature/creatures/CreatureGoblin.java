@@ -29,7 +29,7 @@ public class CreatureGoblin extends Creature {
         Set<ICreatureSkill> skills = new HashSet<>();
         skills.add(new SimplePunch(1, 1, 1, "Punch (1)", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
         // TODO: flying
-        return new CreatureAttributes(1, 1, skills);
+        return new CreatureAttributes(3, 1, skills);
     }
 
 

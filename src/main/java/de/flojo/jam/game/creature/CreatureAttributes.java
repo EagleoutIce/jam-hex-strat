@@ -30,6 +30,10 @@ public class CreatureAttributes {
         this.currentMp = maxMp;
     }
 
+    public boolean canDoSomething() {
+        return currentAp != 0 || currentMp != 0;
+    }
+
     
     public int getMpLeft() {
         return currentMp;
