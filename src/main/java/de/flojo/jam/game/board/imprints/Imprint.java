@@ -14,6 +14,8 @@ public abstract class Imprint<T> implements Serializable {
 
     protected final transient BufferedImage bitMap;
 
+    private static final int COLOR_TRUE = Color.WHITE.getRGB();
+
     public Imprint(final List<List<T>> data, final Point anchor) {
         this.anchor = anchor;
         final int h = data.size();
@@ -24,7 +26,7 @@ public abstract class Imprint<T> implements Serializable {
             for (int x = 0; x < w; x++) {
                 T type = tl.get(x);
                 if(type != null)
-                    bitMap.setRGB(x, y, Color.WHITE.getRGB());
+                    bitMap.setRGB(x, y, COLOR_TRUE);
             }
         }
     }
@@ -32,6 +34,10 @@ public abstract class Imprint<T> implements Serializable {
 
     public Point getAnchor() {
         return this.anchor;
+    }
+
+    public boolean isSet(int x, int y) {
+        return bitMap.getRGB(x, y) == COLOR_TRUE;
     }
 
     public BufferedImage getBitMap() {

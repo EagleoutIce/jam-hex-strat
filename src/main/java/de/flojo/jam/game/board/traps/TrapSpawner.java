@@ -59,6 +59,13 @@ public class TrapSpawner {
         return traps;
     }
 
+
+
+    public Optional<Trap> getCollision(TrapId id, Tile pos, Board board) {
+        return traps.getCollision(id, pos, board);
+    }
+
+
     public Optional<Trap> get(BoardCoordinate coordinate) {
         return traps.get(coordinate);
     }

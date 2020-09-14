@@ -148,7 +148,8 @@ public class EditorScreen extends Screen {
         // this did escalate... maybe with list?
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)
                 || loadField.getBoundingBox().contains(p) || p1.getBoundingBox().contains(p)
-                || p2.getBoundingBox().contains(p) || both.getBoundingBox().contains(p) || nextRound.getBoundingBox().contains(p)) {
+                || p2.getBoundingBox().contains(p) || both.getBoundingBox().contains(p)
+                || nextRound.getBoundingBox().contains(p)) {
             return true;
         }
         for (ImageButton imageButton : terrainButtons) {
@@ -205,7 +206,8 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()) {
+            if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()
+                    && trapSpawner.getCollision(currentTrapId, t, board).isEmpty()) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -234,7 +236,7 @@ public class EditorScreen extends Screen {
     }
 
     void plantTileOrOther(MouseEvent e) {
-        if(!board.doesHover())
+        if (!board.doesHover())
             return;
         switch (selectionMode) {
             case CREATURE:

@@ -2,6 +2,7 @@ package de.flojo.jam.game.board.traps;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.image.BufferedImage;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
-import de.flojo.jam.game.board.traps.management.TrapData;
+import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
@@ -31,21 +32,22 @@ public class Trap  {
         this.owner = owner;
         this.trapId = id;
         this.rootPosition = rootPosition;
-        this.ghosts = new HashSet<>();
-        populateGhosts(board);
+        ghosts = getEffectiveGhosts(trapId.getImprint(), rootPosition, board);
     }
 
-    private void populateGhosts(final Board board) {
-        TrapData data = getImprint().getData();
-        Point anchor = getImprint().getAnchor();
+    private static Set<Tile> getEffectiveGhosts(Imprint<?> imprint, Tile pos, Board board) {
+        Set<Tile> ghosts = new HashSet<>();
+        BufferedImage data = imprint.getBitMap();
+        Point anchor = imprint.getAnchor();
         for (int y = 0; y < data.getHeight(); y++) {
             for (int x = 0; x < data.getHeight(); x++) {
-                if(data.getTrapTileAt(x, y).isPresent()) {
-                    BoardCoordinate effectiveCoordinate = rootPosition.getCoordinate().translateRelativeX(x - anchor.x, y - anchor.y);
+                if(imprint.isSet(x, y)) {
+                    BoardCoordinate effectiveCoordinate = pos.getCoordinate().translateRelativeX(x - anchor.x, y - anchor.y);
                     ghosts.add(board.getTile(effectiveCoordinate));
                 }
             }
         }
+        return ghosts;
     }
 
     public Tile getRootPosition() {
@@ -63,6 +65,15 @@ public class Trap  {
     public boolean coversTile(BoardCoordinate coordinate){
         for (Tile tile : ghosts) {
             if(Objects.equals(tile.getCoordinate(), coordinate))
+                return true;
+        }
+        return false;
+    }
+
+    public boolean collidesWith(Imprint<?> imprint, Tile pos, Board board) {
+        Set<Tile> effectiveTiles = getEffectiveGhosts(imprint, pos, board);
+        for (Tile t : effectiveTiles) {
+            if(coversTile(t.getCoordinate()))
                 return true;
         }
         return false;
