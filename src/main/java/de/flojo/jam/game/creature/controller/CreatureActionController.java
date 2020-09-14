@@ -13,6 +13,7 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.Creature;
+import de.flojo.jam.game.creature.skills.CreatureSkillAOAGenerator;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillId;
@@ -76,13 +77,8 @@ public class CreatureActionController {
         possibleTargets.clear();
 
         Tile start = creature.getBase().getTile();
-        Set<Tile> neighbours = start.getNeighbours();
-        for (Tile tile : neighbours) {
-            if (isWalkable(tile)) {
-                possibleTargets.add(tile);
-                tile.setBackgroundFill(MOVEMENT_COLOR);
-            }
-        }
+        possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(skill, start, context.getBoard(), context.getCreatures()));
+        possibleTargets.forEach(t -> t.setBackgroundFill(MOVEMENT_COLOR));
 
         InputController.get().onClicked(this::onClickPerform, screenName);
         return true;

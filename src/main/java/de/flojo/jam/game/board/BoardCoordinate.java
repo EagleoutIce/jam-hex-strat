@@ -34,10 +34,6 @@ public class BoardCoordinate extends Point {
         return new BoardCoordinate(x + rx, y + ry);
     }
 
-    public BoardCoordinate getShifted(int dx, int dy) {
-        return new BoardCoordinate(x + dx, y + dy);    
-    }
-
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

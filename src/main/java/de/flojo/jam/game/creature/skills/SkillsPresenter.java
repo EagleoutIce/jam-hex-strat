@@ -81,7 +81,7 @@ public class SkillsPresenter {
         CreatureAttributes attributes = c.getAttributes();
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
-            if(movementController.requestMoveFor(currentCreature, b -> moveOperationEnded(attributes, b))) {
+            if(movementController.requestMoveFor(currentCreature, p -> moveOperationEnded(attributes, p))) {
                 Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
             }
@@ -92,8 +92,10 @@ public class SkillsPresenter {
             Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
             bt.setEnabled(attributes.getMpLeft() > 0);
             bt.onClicked(me -> {
-                attributes.useAp();
-                bt.setEnabled(attributes.getApLeft() > 0);
+                if(movementController.requestSkillFor(currentCreature, skill.getSkillId(),  p -> skillOperationEnded(attributes, bt, p) )) {
+                    Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
+                    bt.setEnabled(false);
+                }
             });
             bt.prepare();
             skillButtons.add(bt);
@@ -106,6 +108,14 @@ public class SkillsPresenter {
         target.getComponents().add(moveButton);
         target.getComponents().addAll(skillButtons);
         updatePositions();
+    }
+
+    private void skillOperationEnded(CreatureAttributes attributes, Button button, Boolean performed) {
+        if(performed.booleanValue())
+            attributes.useAp();
+        if(button != null) {
+            button.setEnabled(attributes.getApLeft() > 0);
+        }
     }
 
     private void moveOperationEnded(CreatureAttributes attributes, Boolean performed) {
