@@ -11,12 +11,12 @@ import de.flojo.jam.graphics.renderer.RenderHint;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.flojo.jam.graphics.renderer.VoidRenderer;
 
-public enum TerrainType {
+public enum TerrainTile {
     EMPTY("Nothing.", new TerrainImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
             PushDirection.NONE, VoidRenderer.get()), //
     // dos not blick los or punch as it raised and we include a raised switch
     GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false, true, 2,
-            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -79 / 1.33)), //
+            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -73 / 1.33)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
             true, false, -1, PushDirection.NONE,
@@ -72,7 +72,7 @@ public enum TerrainType {
     private final TerrainImprintNodeMap node;
 
     @SuppressWarnings("java:S107")
-    private TerrainType(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
+    private TerrainTile(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
             boolean blocksOnPunch, boolean raised, int movementCost, PushDirection pushDirection, final IRenderData renderer) {
         this.displayName = displayName;
         this.blocksWalking = blocksWalking;
@@ -85,7 +85,7 @@ public enum TerrainType {
         this.node = node;
     }
 
-    private TerrainType(TerrainType copy, TerrainImprintNodeMap node) {
+    private TerrainTile(TerrainTile copy, TerrainImprintNodeMap node) {
         this(copy.displayName, node, copy.blocksWalking, copy.blocksLineOfSight, copy.blocksOnPunch, copy.raised,
                 copy.movementCost, copy.pushDirection, copy.renderer);
     }

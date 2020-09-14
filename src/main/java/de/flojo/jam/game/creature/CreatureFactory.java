@@ -17,32 +17,32 @@ import de.flojo.jam.game.creature.creatures.CreatureHalfling;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
+import de.flojo.jam.graphics.renderer.CreatureImageRenderer;
 import de.flojo.jam.graphics.renderer.IRenderData;
-import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 public class CreatureFactory {
-    private static final IRenderData PEASANT_P1_NORMAL = new SimpleImageRenderer("creatures/bauer_blau.png", -93d / 2.9,
+    private static final IRenderData PEASANT_P1_NORMAL = new CreatureImageRenderer("creatures/bauer_blau.png", "creatures/bauer_blau_glow.png", -93d / 2.9,
             -99 / 1.27d);
-    private static final IRenderData PEASANT_P2_NORMAL = new SimpleImageRenderer("creatures/bauer_lila.png",
+    private static final IRenderData PEASANT_P2_NORMAL = new CreatureImageRenderer("creatures/bauer_lila.png", "creatures/bauer_lila_glow.png",
             -93d / 1.53, -99 / 1.27d);
 
-    private static final IRenderData GOBLIN_P1_NORMAL = new SimpleImageRenderer("creatures/kobold_blau.png",
+    private static final IRenderData GOBLIN_P1_NORMAL = new CreatureImageRenderer("creatures/kobold_blau.png",  "creatures/kobold_blau_glow.png",
             -69 / 1.83d, -95 / 1.31d);
-    private static final IRenderData GOBLIN_P2_NORMAL = new SimpleImageRenderer("creatures/kobold_lila.png",
+    private static final IRenderData GOBLIN_P2_NORMAL = new CreatureImageRenderer("creatures/kobold_lila.png", "creatures/kobold_lila_glow.png",
             -69 / 2.22d, -95 / 1.31d);
 
-    private static final IRenderData ELF_P1_NORMAL = new SimpleImageRenderer("creatures/elf_blau.png", -76 / 2.34d,
+    private static final IRenderData ELF_P1_NORMAL = new CreatureImageRenderer("creatures/elf_blau.png", "creatures/elf_blau_glow.png", -76 / 2.34d,
             -92 / 1.27d);
-    private static final IRenderData ELF_P2_NORMAL = new SimpleImageRenderer("creatures/elf_lila.png", -76 / 1.78d,
+    private static final IRenderData ELF_P2_NORMAL = new CreatureImageRenderer("creatures/elf_lila.png", "creatures/elf_lila_glow.png", -76 / 1.78d,
             -92 / 1.27d);
 
-    private static final IRenderData HALFLING_P1_NORMAL = new SimpleImageRenderer("creatures/halbling_blau.png",
+    private static final IRenderData HALFLING_P1_NORMAL = new CreatureImageRenderer("creatures/halbling_blau.png", "creatures/halbling_blau_glow.png",
             -73 / 2.3d, -102 / 1.24d);
-    private static final IRenderData HALFLING_P2_NORMAL = new SimpleImageRenderer("creatures/halbling_lila.png",
+    private static final IRenderData HALFLING_P2_NORMAL = new CreatureImageRenderer("creatures/halbling_lila.png", "creatures/halbling_lila_glow.png",
             -73 / 1.65d, -102 / 1.29d);
 
     private static final Spritesheet S_CREATURE_P1_DIEING = Resources.spritesheets()

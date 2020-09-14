@@ -28,8 +28,6 @@ public class PunchEffect implements IEffectCreature {
         this.context = context;
     }
 
-
-
     @Override
     public void effect(Creature target, Creature attacker) {
         // done
@@ -58,19 +56,12 @@ public class PunchEffect implements IEffectCreature {
             return;
         }
 
-
         Optional<Trap> mayTrap = context.getTraps().get(punchTargetCoordinate);
 
-        if(mayTrap.isPresent()) {
-            Trap trap = mayTrap.get();
-            target.move(punchTarget);
-            try {
-                CreatureActionController.awaitMovementComplete(target);
-            } catch(Exception ex) {
-                ex.printStackTrace();
-            }
-            trap.trigger();
-            target.die();
+        if (mayTrap.isPresent()) {
+            new Thread(() -> 
+                trapExecution(target, punchTarget, mayTrap.get())
+            ).start();
             return;
         }
 
@@ -88,13 +79,23 @@ public class PunchEffect implements IEffectCreature {
         }
     }
 
-
+    private void trapExecution(Creature target, Tile punchTarget, Trap trap) {
+        target.move(punchTarget);
+        try {
+            CreatureActionController.awaitMovementComplete(target);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        trap.trigger();
+        CreatureActionController.sleep(trap.getAnimationCooldown());
+        target.die();
+    }
 
     private boolean terrainBlocksPunch(Tile punchTarget) {
         // allows to punch down, but not uphills.
         boolean blocksPunch = punchTarget.getTerrainType().blocksPunching();
-        if(!effectHitGround) {
-            if(!punchTarget.getTerrainType().isRaised()) {
+        if (!effectHitGround) {
+            if (!punchTarget.getTerrainType().isRaised()) {
                 effectHitGround = true;
             }
             return blocksPunch;

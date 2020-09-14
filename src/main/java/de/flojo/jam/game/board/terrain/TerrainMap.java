@@ -68,31 +68,31 @@ public class TerrainMap implements Serializable {
             data.add(new ArrayList<>(HexMaths.effectiveWidth(w)));
 
         for (int y = 0; y < h; y++) {
-            List<TerrainType> line = data.get(y);
+            List<TerrainTile> line = data.get(y);
             int offset = HexMaths.effectiveWidth(w) - line.size();
             for (int x = 0; x < offset; x++) {
-                line.add(TerrainType.EMPTY);
+                line.add(TerrainTile.EMPTY);
             }
         }
         Game.log().log(Level.INFO, "Loaded TerrainMap: {0}", terrain);
     }
 
-    public TerrainType getTerrainAt(int x, int y) {
+    public TerrainTile getTerrainAt(int x, int y) {
         TerrainData t = terrain.getData();
         if (t == null) {
             Game.log().warning("Requested nonexistent terrain.");
-            return TerrainType.EMPTY;
+            return TerrainTile.EMPTY;
         } else {
             return t.getTerrainAt(x, y);
         }
     }
 
-    public void updateTerrainAt(Point p, TerrainType newType) {
+    public void updateTerrainAt(Point p, TerrainTile newType) {
         updateTerrainAt(p.x, p.y, newType);
     }
 
 
-    public void updateTerrainAt(int x, int y, TerrainType newType) {
+    public void updateTerrainAt(int x, int y, TerrainTile newType) {
         TerrainData t = terrain.getData();
         if (t == null) {
             Game.log().warning("Requested nonexistent terrain.");

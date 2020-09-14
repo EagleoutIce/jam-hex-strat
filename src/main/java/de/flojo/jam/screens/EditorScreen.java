@@ -27,7 +27,7 @@ import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.Architect;
 import de.flojo.jam.game.board.terrain.TerrainMap;
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapId;
@@ -205,7 +205,7 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainType.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()) {
+            if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -234,6 +234,8 @@ public class EditorScreen extends Screen {
     }
 
     void plantTileOrOther(MouseEvent e) {
+        if(!board.doesHover())
+            return;
         switch (selectionMode) {
             case CREATURE:
                 summonCreature(e);
@@ -365,7 +367,7 @@ public class EditorScreen extends Screen {
         both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 18d);
         nextRound.setLocation(width - Main.INNER_MARGIN - nextRound.getWidth() - 10d, 30d + both.getHeight());
         for (int i = 0; i < trapButtons.size(); i++) {
-            trapButtons.get(i).setLocation(width - 260d - Main.INNER_MARGIN, (i + 3) * 45d + 15d);
+            trapButtons.get(i).setLocation(width - 260d - Main.INNER_MARGIN - 10d, (i + 3) * 45d + 15d);
         }
     }
 

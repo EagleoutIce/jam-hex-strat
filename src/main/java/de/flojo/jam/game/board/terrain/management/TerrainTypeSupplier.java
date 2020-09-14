@@ -2,11 +2,11 @@ package de.flojo.jam.game.board.terrain.management;
 
 import java.awt.Point;
 
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 
 @FunctionalInterface
 public interface TerrainTypeSupplier {
     
-    TerrainType getTerrainAt(Point point);
+    TerrainTile getTerrainAt(Point point);
 
 }

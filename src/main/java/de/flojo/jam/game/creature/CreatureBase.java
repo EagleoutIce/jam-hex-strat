@@ -7,7 +7,7 @@ import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 public class CreatureBase implements IRenderable {
 
-    private static final int RAISED_TERRAIN_OFFSET = -42;
+    private static final int RAISED_TERRAIN_OFFSET = -32;
 
     private Tile position;
     private int movementOffsetX = 0;

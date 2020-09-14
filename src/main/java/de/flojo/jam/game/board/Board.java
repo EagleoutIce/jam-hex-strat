@@ -20,7 +20,7 @@ import de.flojo.jam.game.board.highlighting.IHighlightMask;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
@@ -306,7 +306,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         // transform target in boardCoordinates
         BoardCoordinate effectiveCoordinate = hPoint.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = getTile(effectiveCoordinate);
-        TerrainType targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
+        TerrainTile targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
 
         // invalid as too close to border
         if (targetTile == null) 

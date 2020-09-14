@@ -104,6 +104,10 @@ public class Trap  {
 		return rootPosition.getCoordinate();
 	}
 
+    public int getAnimationCooldown() {
+        return trapId.getAnimationCooldown();
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

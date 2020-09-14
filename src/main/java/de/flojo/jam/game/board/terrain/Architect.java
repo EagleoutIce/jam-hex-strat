@@ -32,11 +32,11 @@ public class Architect {
 
     public void placeImprint(BoardCoordinate at, TerrainImprint imprint) {
         // collect all important points
-        final Map<Tile, TerrainType> targetTiles = new HashMap<>();
+        final Map<Tile, TerrainTile> targetTiles = new HashMap<>();
         TerrainData data = imprint.getData();
         for (int y = 0; y < data.size(); y++) {
             for (int x = 0; x < data.get(y).size(); x++) {
-                TerrainType type = data.get(y).get(x);
+                TerrainTile type = data.get(y).get(x);
                 if (type != null && !processSingleTileForImprint(at, imprint, targetTiles, x, y, type))
                     return;
             }
@@ -47,13 +47,13 @@ public class Architect {
     }
 
     private boolean processSingleTileForImprint(BoardCoordinate at, TerrainImprint imprint,
-            final Map<Tile, TerrainType> targetTiles, int x, int y, TerrainType type) {
+            final Map<Tile, TerrainTile> targetTiles, int x, int y, TerrainTile type) {
         // transform target in boardCoordinates
         BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - imprint.getAnchor().x,
                 y - imprint.getAnchor().y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
-        final TerrainType targetTileType = targetTile == null ? null : targetTile.getTerrainType();
-        if (targetTile != null && targetTileType.equals(TerrainType.EMPTY) && notAgainstOtherPlacements(targetTile)) {
+        final TerrainTile targetTileType = targetTile == null ? null : targetTile.getTerrainType();
+        if (targetTile != null && targetTileType.equals(TerrainTile.EMPTY) && notAgainstOtherPlacements(targetTile)) {
             targetTiles.put(targetTile, type);
         } else {// invalid as too close to border
             Game.log().log(Level.WARNING, "Tried to place {0} on field {1} for {2} but was: {3}",
@@ -71,7 +71,7 @@ public class Architect {
         final Set<Tile> tiles = new HashSet<>(imprint.getData().getWidth() * imprint.getData().getHeight());
         if (deleteImprintRecursion(at, imprint, imprint.getAnchor(), tiles)) {
             TerrainMap terrainMap = board.getTerrainMap();
-            tiles.forEach(tile -> terrainMap.updateTerrainAt(tile.getCoordinate(), TerrainType.EMPTY));
+            tiles.forEach(tile -> terrainMap.updateTerrainAt(tile.getCoordinate(), TerrainTile.EMPTY));
         }
     }
 
@@ -81,7 +81,7 @@ public class Architect {
         TerrainData data = imprint.getData();
         for (int y = 0; y < data.size(); y++) {
             for (int x = 0; x < data.get(y).size(); x++) {
-                TerrainType type = data.get(y).get(x);
+                TerrainTile type = data.get(y).get(x);
                 if (type != null && !processSingleTileForImprintRemoval(at, imprint, targetTiles, x, y, type, anchor))
                     return false;
             }
@@ -90,12 +90,12 @@ public class Architect {
     }
 
     private boolean processSingleTileForImprintRemoval(BoardCoordinate at, TerrainImprint imprint,
-            final Set<Tile> targetTiles, int x, int y, TerrainType type, Point anchor) {
+            final Set<Tile> targetTiles, int x, int y, TerrainTile type, Point anchor) {
         BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
-        final TerrainType targetTileType = targetTile == null ? null : targetTile.getTerrainType();
+        final TerrainTile targetTileType = targetTile == null ? null : targetTile.getTerrainType();
         if (targetTileType != null) {
-            if (targetTiles.add(targetTile) && targetTileType != TerrainType.EMPTY) {
+            if (targetTiles.add(targetTile) && targetTileType != TerrainTile.EMPTY) {
                 // recursive delete
                 if (!deleteImprintRecursion(targetTile.getCoordinate(),
                         targetTile.getTerrainType().getNode().getImprint(),
@@ -115,7 +115,7 @@ public class Architect {
         TerrainMap terrainMap = board.getTerrainMap();
         for (int y = 0; y < Main.BOARD_HEIGHT; y++) {
             for (int x = 0; x < Main.BOARD_WIDTH; x++) {
-                terrainMap.updateTerrainAt(x, y, TerrainType.EMPTY);
+                terrainMap.updateTerrainAt(x, y, TerrainTile.EMPTY);
             }
         }
     }

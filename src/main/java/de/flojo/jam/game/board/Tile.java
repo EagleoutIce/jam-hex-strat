@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.flojo.jam.Main;
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
 import de.flojo.jam.graphics.Hexagon;
 import de.flojo.jam.graphics.renderer.RenderHint;
@@ -103,7 +103,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     @Override
     public void renderDecorations(Graphics2D g) {
-        TerrainType tt = terrainSupplier.getTerrainAt(coordinate);
+        TerrainTile tt = terrainSupplier.getTerrainAt(coordinate);
         if(tt != null)
             tt.render(g, getCenter(), getHint());
     }
@@ -127,7 +127,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         return builder.toString();
     }
 
-    public TerrainType getTerrainType() {
+    public TerrainTile getTerrainType() {
         return terrainSupplier.getTerrainAt(coordinate);
     }
 

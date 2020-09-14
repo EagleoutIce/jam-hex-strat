@@ -213,7 +213,7 @@ public class CreatureActionController {
             Trap trap = mayTrap.get();
             CreatureActionController.awaitMovementCompleteAsync(creature, () -> {
                 trap.trigger();
-                sleep(250);
+                sleep(trap.getAnimationCooldown());
                 creature.die();
             });
             return true; // runs in trap
@@ -221,7 +221,7 @@ public class CreatureActionController {
         return false;
     }
 
-    private static void sleep(int duration) {
+    public static void sleep(int duration) {
         try {
             Thread.sleep(duration);
         } catch (InterruptedException e) {

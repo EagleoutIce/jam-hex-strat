@@ -2,6 +2,8 @@ package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.flojo.jam.game.player.PlayerId;
@@ -64,20 +66,25 @@ public class CreatureCore {
         this.highlight.set(false);
     }
 
-    private RenderHint getRenderHint() {
-        if (base.getTile().isHovered()) {
-            return attributes.canDoSomething() ? RenderHint.HOVER : RenderHint.DARK_HOVER;
-        } else if(base.getTile().isMarked() || highlight.get()) {
-            return RenderHint.GLOW;
-        } else {
-            return attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK;
+    private RenderHint[] getRenderHints() {
+        List<RenderHint>  hints = new ArrayList<>();
+        if(base.getTile().isMarked() || highlight.get()) {
+            hints.add(RenderHint.GLOW);
+            hints.add(RenderHint.MARKED);
         }
+
+        if (base.getTile().isHovered()) {
+            hints.add(attributes.canDoSomething() ? RenderHint.HOVER : RenderHint.DARK_HOVER);
+        } else if (hints.isEmpty()){
+            hints.add(attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK);
+        }
+        return hints.toArray(RenderHint[]::new);
     }
 
     protected void render(Graphics2D g) {
         final Point c = base.getTile().getCenter();
         renderCore.render(g, new Point(c.x - base.getMovementOffsetX(),
-                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY()), getRenderHint());
+                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY()), getRenderHints());
     }
 
     public boolean isFlying() {

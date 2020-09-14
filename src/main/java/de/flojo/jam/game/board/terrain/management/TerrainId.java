@@ -4,45 +4,45 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Arrays;
 
-import de.flojo.jam.game.board.terrain.TerrainType;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 
 
 // colors probably useless?
 public enum TerrainId {
-    T_EMPTY("Leer", TerrainImprint.getSingle(TerrainType.EMPTY), Color.WHITE, 0),
-    T_GRASS_HILL("Grashügel", TerrainImprint.getSingle(TerrainType.GRASS_HILL), Color.GREEN, 1),
+    T_EMPTY("Leer", TerrainImprint.getSingle(TerrainTile.EMPTY), Color.WHITE, 0),
+    T_GRASS_HILL("Grashügel", TerrainImprint.getSingle(TerrainTile.GRASS_HILL), Color.GREEN, 1),
     T_WDL_LEFT("Wand-L-Links", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
-                    Arrays.asList(TerrainType.WDL_LEFT_WINDOW, null), //
-                    Arrays.asList(null, TerrainType.WDL_LEFT), //
+                    Arrays.asList(TerrainTile.WDL_LEFT_WINDOW, null), //
+                    Arrays.asList(null, TerrainTile.WDL_LEFT), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE_1), //
+                    Arrays.asList(null, TerrainTile.WDL_LEFT_SLAVE_1), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(null, TerrainType.WDL_LEFT_SLAVE_2))),
+                    Arrays.asList(null, TerrainTile.WDL_LEFT_SLAVE_2))),
             new Point(1, 1)), Color.RED, 4),
     T_WDL_RIGHT("Wand-L-Rechts", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
-                    Arrays.asList(null, TerrainType.WDL_RIGHT_WINDOW), //
-                    Arrays.asList(TerrainType.WDL_RIGHT, null), //
+                    Arrays.asList(null, TerrainTile.WDL_RIGHT_WINDOW), //
+                    Arrays.asList(TerrainTile.WDL_RIGHT, null), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_1, null), //
+                    Arrays.asList(TerrainTile.WDL_RIGHT_SLAVE_1, null), //
                     Arrays.asList(null, null), //
-                    Arrays.asList(TerrainType.WDL_RIGHT_SLAVE_2, null))),
+                    Arrays.asList(TerrainTile.WDL_RIGHT_SLAVE_2, null))),
             new Point(0, 1)), Color.RED.darker(), 4),
-    T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainType.DEAD_TREE), Color.YELLOW, 1),
-    T_DEAD_TREE_B("Kahler Baum, B", TerrainImprint.getSingle(TerrainType.DEAD_TREE_B), Color.YELLOW.darker(), 1),
+    T_DEAD_TREE("Kahler Baum", TerrainImprint.getSingle(TerrainTile.DEAD_TREE), Color.YELLOW, 1),
+    T_DEAD_TREE_B("Kahler Baum, B", TerrainImprint.getSingle(TerrainTile.DEAD_TREE_B), Color.YELLOW.darker(), 1),
     T_CART_LEFT("Karren nach links", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
-                    Arrays.asList(null, TerrainType.CART_LEFT_GHOST), //
-                    Arrays.asList(TerrainType.CAR_LEFT_HANDLES, null), //
-                    Arrays.asList(null, TerrainType.CART_LEFT) //
+                    Arrays.asList(null, TerrainTile.CART_LEFT_GHOST), //
+                    Arrays.asList(TerrainTile.CAR_LEFT_HANDLES, null), //
+                    Arrays.asList(null, TerrainTile.CART_LEFT) //
                     )),new Point(1, 2)),
             Color.ORANGE, 3),
     T_CART_RIGHT("Karren nach rechts", new TerrainImprint(new TerrainData(//
             Arrays.asList(//
-                    Arrays.asList(TerrainType.CART_RIGHT_GHOST, null), //
-                    Arrays.asList(null, TerrainType.CAR_RIGHT_HANDLES), //
-                    Arrays.asList(TerrainType.CART_RIGHT, null) //
+                    Arrays.asList(TerrainTile.CART_RIGHT_GHOST, null), //
+                    Arrays.asList(null, TerrainTile.CAR_RIGHT_HANDLES), //
+                    Arrays.asList(TerrainTile.CART_RIGHT, null) //
                     )),new Point(0, 2)),
             Color.ORANGE.darker(), 3);
 
