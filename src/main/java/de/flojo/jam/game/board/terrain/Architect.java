@@ -15,6 +15,7 @@ import de.flojo.jam.game.board.terrain.management.TerrainData;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
 // Plants and removes terrains from a board and checks for validity
@@ -24,10 +25,16 @@ public class Architect {
     private final CreatureFactory factory;
     private final TrapSpawner spawner;
 
+    private PlayerId playerId = null;
+
     public Architect(Board board, CreatureFactory factory, TrapSpawner spawner) {
         this.board = board;
         this.factory = factory;
         this.spawner = spawner;
+    }
+
+    public void setPlayerId(PlayerId playerId) {
+        this.playerId = playerId;
     }
 
     public void placeImprint(BoardCoordinate at, TerrainImprint imprint) {
@@ -64,7 +71,11 @@ public class Architect {
     }
 
     private boolean notAgainstOtherPlacements(Tile tile) {
-        return factory.get(tile.getCoordinate()).isEmpty() && spawner.get(tile.getCoordinate()).isEmpty();
+        return notAgainstPlayer(tile) && factory.get(tile.getCoordinate()).isEmpty() && spawner.get(tile.getCoordinate()).isEmpty();
+    }
+
+    private boolean notAgainstPlayer(Tile tile) {
+        return playerId == null || playerId == tile.getPlacementOwner();
     }
 
     public void deleteImprint(BoardCoordinate at, TerrainImprint imprint) {

@@ -4,6 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
@@ -157,9 +158,14 @@ public class CreatureFactory {
         return creatures.get(coordinate);
     }
 
+    public Optional<Creature> get(Set<Tile> tiles) {
+        return creatures.get(tiles);
+    }
+
     public Creature get(String name) {
         return creatures.get(name);
     }
+
 
     public boolean isEmpty() {
         return creatures.isEmpty();

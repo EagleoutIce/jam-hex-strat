@@ -5,10 +5,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
 import de.flojo.jam.game.board.BoardCoordinate;
+import de.flojo.jam.game.board.Tile;
 
 // removed sort as it will be rendered with joint render and this is more effective
 public class CreatureCollection implements Serializable {
@@ -30,6 +32,15 @@ public class CreatureCollection implements Serializable {
     public Optional<Creature> get(BoardCoordinate coordinate) {
         return search(coordinate, (c, v) -> c.getCoordinate().equals(v));
     }
+
+	public Optional<Creature> get(Set<Tile> tiles) {
+		for (Tile tile : tiles) {
+            Optional<Creature> mayCreature = get(tile.getCoordinate());
+            if(mayCreature.isPresent())
+                return mayCreature;
+        }
+        return Optional.empty();
+	}
 
     private <T> Optional<Creature> search(T val, BiPredicate<Creature, T> check) {
         synchronized(collection) {
@@ -102,4 +113,6 @@ public class CreatureCollection implements Serializable {
             }
         }
     }
+
+
 }

@@ -153,19 +153,16 @@ public class EditorScreen extends Screen {
             return true;
         }
         for (ImageButton imageButton : terrainButtons) {
-            if (imageButton.getBoundingBox().contains(p)) {
+            if (imageButton.getBoundingBox().contains(p))
                 return true;
-            }
         }
         for (Button button : creatureButtons) {
-            if (button.getBoundingBox().contains(p)) {
+            if (button.getBoundingBox().contains(p))
                 return true;
-            }
         }
         for (ImageButton button : trapButtons) {
-            if (button.getBoundingBox().contains(p)) {
+            if (button.getBoundingBox().contains(p))
                 return true;
-            }
         }
         return false;
     }
@@ -207,7 +204,7 @@ public class EditorScreen extends Screen {
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
             if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()
-                    && trapSpawner.getCollision(currentTrapId, t, board).isEmpty()) {
+                    && !trapSpawner.doesCollide(creatureFactory, currentTrapId, t, board)) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
             }
         } else if (c.getButton() == MouseEvent.BUTTON3 || bitHigh(c.getModifiersEx(), 12)) {
@@ -280,6 +277,7 @@ public class EditorScreen extends Screen {
             showP1 = true;
             showP2 = false;
             presenter.setPlayerId(PlayerId.ONE);
+            architect.setPlayerId(PlayerId.ONE);
             p1.setColors(Color.GREEN, Color.GREEN.brighter());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.WHITE, Color.WHITE.darker());
@@ -289,6 +287,7 @@ public class EditorScreen extends Screen {
             showP1 = false;
             showP2 = true;
             presenter.setPlayerId(PlayerId.TWO);
+            architect.setPlayerId(PlayerId.TWO);
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.GREEN, Color.GREEN.brighter());
             both.setColors(Color.WHITE, Color.WHITE.darker());
@@ -298,6 +297,7 @@ public class EditorScreen extends Screen {
             showP1 = true;
             showP2 = true;
             presenter.setPlayerId(null);
+            architect.setPlayerId(null);
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.GREEN, Color.GREEN.brighter());

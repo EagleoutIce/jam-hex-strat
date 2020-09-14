@@ -7,8 +7,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.board.mask.DefaultBoardMask;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
+import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Hexagon;
 import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
@@ -23,15 +25,18 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
 
     private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
     private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
+    private static final Color NUMBER_COLOR = new Color(154, 215, 45);
 
     private AtomicBoolean hover = new AtomicBoolean();
     private AtomicBoolean mark = new AtomicBoolean();
     private final String tileLabel;
+    private final PlayerId placementOwner;
 
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
         this.coordinate = coordinate;
         this.terrainSupplier = type;
+        this.placementOwner = DefaultBoardMask.get().getOwner(coordinate);
         tileLabel = coordinate.x + "/"+ coordinate.y;
     }
 
@@ -87,6 +92,10 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
         return this.mark.get();
     }
 
+    public PlayerId getPlacementOwner() {
+        return placementOwner;
+    }
+
     @Override
     public void render(Graphics2D g) {
         if (hover.get()) 
@@ -96,7 +105,7 @@ public class Tile extends Hexagon implements IRenderable, IHaveDecorations, IAmM
             this.draw(g, 5, MARK_COLOR, true);
 
         this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
-        g.setColor(Color.RED);
+        g.setColor(NUMBER_COLOR);
         g.setFont(NUMBER_FONT);
         TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2, getCenter().y + TextRenderer.getHeight(g, tileLabel)*0.15);
     }

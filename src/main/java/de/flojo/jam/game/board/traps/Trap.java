@@ -32,10 +32,10 @@ public class Trap  {
         this.owner = owner;
         this.trapId = id;
         this.rootPosition = rootPosition;
-        ghosts = getEffectiveGhosts(trapId.getImprint(), rootPosition, board);
+        ghosts = getEffectiveTiles(trapId.getImprint(), rootPosition, board);
     }
 
-    private static Set<Tile> getEffectiveGhosts(Imprint<?> imprint, Tile pos, Board board) {
+    public static Set<Tile> getEffectiveTiles(Imprint<?> imprint, Tile pos, Board board) {
         Set<Tile> ghosts = new HashSet<>();
         BufferedImage data = imprint.getBitMap();
         Point anchor = imprint.getAnchor();
@@ -70,9 +70,8 @@ public class Trap  {
         return false;
     }
 
-    public boolean collidesWith(Imprint<?> imprint, Tile pos, Board board) {
-        Set<Tile> effectiveTiles = getEffectiveGhosts(imprint, pos, board);
-        for (Tile t : effectiveTiles) {
+    public boolean collidesWith(Set<Tile> tiles) {
+        for (Tile t : tiles) {
             if(coversTile(t.getCoordinate()))
                 return true;
         }

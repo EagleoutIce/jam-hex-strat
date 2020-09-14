@@ -9,7 +9,6 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
-import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 
@@ -29,8 +28,8 @@ public class TrapCollection implements Serializable {
         return search(null, (t, ignored) -> t.isHovered());
     }
 
-    public Optional<Trap> getCollision(TrapId id, Tile pos, Board board) {
-        return search(null, (t, v) -> t.collidesWith(id.getImprint(), pos, board));
+    public Optional<Trap> getCollision(Set<Tile> tiles) {
+        return search(null, (t, v) -> t.collidesWith(tiles));
     }
 
     public Optional<Trap> get(BoardCoordinate coordinate) {

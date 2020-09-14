@@ -3,11 +3,13 @@ package de.flojo.jam.game.board.traps;
 import java.awt.event.MouseEvent;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.logging.Level;
 
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
@@ -61,8 +63,13 @@ public class TrapSpawner {
 
 
 
-    public Optional<Trap> getCollision(TrapId id, Tile pos, Board board) {
-        return traps.getCollision(id, pos, board);
+    public boolean doesCollide(CreatureFactory creatures, TrapId id, Tile pos, Board board) {
+        Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
+        if(traps.getCollision(tiles).isPresent()) {
+            return true;
+        }
+
+        return creatures.get(tiles).isPresent();
     }
 
 
