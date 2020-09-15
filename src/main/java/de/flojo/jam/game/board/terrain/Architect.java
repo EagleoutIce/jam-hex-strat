@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 
-import de.flojo.jam.Main;
+import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
@@ -37,7 +37,7 @@ public class Architect {
         this.playerId = playerId;
     }
 
-    public void placeImprint(BoardCoordinate at, TerrainImprint imprint) {
+    public boolean placeImprint(BoardCoordinate at, TerrainImprint imprint) {
         // collect all important points
         final Map<Tile, TerrainTile> targetTiles = new HashMap<>();
         TerrainData data = imprint.getData();
@@ -45,12 +45,13 @@ public class Architect {
             for (int x = 0; x < data.get(y).size(); x++) {
                 TerrainTile type = data.get(y).get(x);
                 if (type != null && !processSingleTileForImprint(at, imprint, targetTiles, x, y, type))
-                    return;
+                    return false;
             }
         }
         // no highlight if invalid
         TerrainMap terrainMap = board.getTerrainMap();
         targetTiles.forEach((tile, type) -> terrainMap.updateTerrainAt(tile.getCoordinate(), type));
+        return true;
     }
 
     private boolean processSingleTileForImprint(BoardCoordinate at, TerrainImprint imprint,
@@ -124,8 +125,8 @@ public class Architect {
 
     public void clearField() {
         TerrainMap terrainMap = board.getTerrainMap();
-        for (int y = 0; y < Main.BOARD_HEIGHT; y++) {
-            for (int x = 0; x < Main.BOARD_WIDTH; x++) {
+        for (int y = 0; y < GameField.BOARD_HEIGHT; y++) {
+            for (int x = 0; x < GameField.BOARD_WIDTH; x++) {
                 terrainMap.updateTerrainAt(x, y, TerrainTile.EMPTY);
             }
         }

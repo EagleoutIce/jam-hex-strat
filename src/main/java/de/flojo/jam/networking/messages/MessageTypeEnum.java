@@ -4,7 +4,10 @@ public enum MessageTypeEnum {
     HELLO(HelloMessage.class),
     HELLO_REPLY(HelloReplyMessage.class),
     ERROR(ErrorMessage.class),
-    GAME_START(GameStartMessage.class);
+    GAME_START(GameStartMessage.class),
+    YOU_CAN_BUILD(YouCanBuildMessage.class),
+    BUILD_CHOICE(BuildChoiceMessage.class);
+    
     private final Class<? extends MessageContainer> targetClass;
 
     MessageTypeEnum(Class<? extends MessageContainer> targetClass) {

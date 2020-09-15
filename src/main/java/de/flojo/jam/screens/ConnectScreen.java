@@ -6,11 +6,13 @@ import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Arrays;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.client.ClientController;
+import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -102,18 +104,17 @@ public class ConnectScreen extends Screen {
     @Override
     protected void initializeComponents() {
         super.initializeComponents();
-
         this.connect = new Button("Verbinde", Main.GUI_FONT_SMALL);
         this.connect.onClicked(c -> {
-            if (connected)
+            if (connected) {
                 connected = false;
-            else
-                connected = connect();
-
-            if (!connected)
-                disconnect();
-            else
-                clientController.getSender().sendHello(nameField.getText());
+                updateOnConnected();
+            } else {
+                connect(b -> {
+                    connected = b;
+                    updateOnConnected();
+                });
+            }
                 
 
         });
@@ -132,20 +133,27 @@ public class ConnectScreen extends Screen {
         updatePositions();
     }
 
-    private boolean connect() {
+
+    private void updateOnConnected() {
+        if (!connected)
+            disconnect();
+        else
+            clientController.getSender().sendHello(nameField.getText());
+    }
+
+    private void connect(Consumer<Boolean> onCompleted) {
         this.portNumber.setEnabled(false);
         this.adress.setEnabled(false);
         nameField.setEnabled(false);
         this.connect.setText("Trenne");
         try {
             clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText() ), this::onNetworkUpdate);
-            return clientController.tryConnect();
+            clientController.tryConnect(onCompleted);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             // just to be sure
             clientController = null;
         }
-        return false;
     }
 
     void onNetworkUpdate(String... data) {
@@ -160,8 +168,8 @@ public class ConnectScreen extends Screen {
                 break;
             case "START":
                 // prepare correct Data :D
-                IngameScreen.get().setup(clientController.getContext().getMyPlayerId());
-                changeScreen(IngameScreen.NAME);
+                BuildingPhaseScreen.get().setup(clientController.getContext().getMyPlayerId());
+                changeScreen(BuildingPhaseScreen.NAME);
                 break;
             default:
                 Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
@@ -173,7 +181,8 @@ public class ConnectScreen extends Screen {
         this.adress.setEnabled(true);
         nameField.setEnabled(true);
         this.connect.setText("Verbinde");
-        clientController.close();
+        if(clientController != null)
+            clientController.close();
         clientController = null;
     }
     private void changeScreen(final String name) {

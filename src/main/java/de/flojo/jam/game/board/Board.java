@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 
-import de.flojo.jam.Main;
+import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.highlighting.IHighlightMask;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
@@ -60,10 +60,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private KeyInputGroup bInputGroupHor = new KeyInputGroup();
 
     public Board(final String terrainPath, final String screenName) {
-        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainPath, screenName);
+        this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainPath, screenName);
     }
     public Board(final TerrainMap terrainMap, final String screenName) {
-        this(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, Main.FIELD_BACKGROUND, terrainMap, screenName);
+        this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainMap, screenName);
     }
     public Board(final int w, final int h, final String backgroundPath, final String terrainPath, final String screenName) {
         this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath), screenName);

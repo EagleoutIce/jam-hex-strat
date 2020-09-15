@@ -7,9 +7,9 @@ import java.util.logging.Level;
 
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
-import de.flojo.jam.screens.IngameScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.screens.ServerSetupScreen;
+import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
@@ -30,13 +30,6 @@ public class Main {
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
     public static final double INNER_MARGIN = 20d;
-    public static final int BOARD_WIDTH = 24;
-    public static final int BOARD_HEIGHT = 33;
-
-    public static final String FIELD_BACKGROUND = "field-background.png";
-    // TODO: overwrite mode to allow replacement? probably not.. :D
-
-
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
@@ -59,7 +52,7 @@ public class Main {
         Game.window().setIcon(ICON);
 
         Game.screens().add(new MenuScreen());
-        Game.screens().add(IngameScreen.get());
+        Game.screens().add(BuildingPhaseScreen.get());
         Game.screens().add(new EditorScreen());
         Game.screens().add(ConnectScreen.get());
         Game.screens().add(new ServerSetupScreen());

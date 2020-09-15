@@ -3,13 +3,14 @@ package de.flojo.jam.networking.client;
 import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 import java.util.logging.Level;
 
 import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
-import de.flojo.jam.networking.exceptions.NoConnectionException;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
+import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
 import de.gurkenlabs.litiengine.Game;
 
 public class ClientController implements IClientController {
@@ -24,9 +25,9 @@ public class ClientController implements IClientController {
     private final ClientSocket socket;
     private final ClientContext context;
     private final INeedUpdates<String> onConnectionStateUpdate;
-    
 
-    // NOTE: We do not care about the state update safety... cause i have time problems :D
+    // NOTE: We do not care about the state update safety... cause i have time
+    // problems :D
     public ClientController(URI serverUri, INeedUpdates<String> onConnectionStateUpdate) {
         super();
         this.socket = new ClientSocket(serverUri, this);
@@ -35,28 +36,26 @@ public class ClientController implements IClientController {
         this.onConnectionStateUpdate = onConnectionStateUpdate;
     }
 
-    public boolean tryConnect() {
-        try {
-            return tryConnectRun();
-        } catch (InterruptedException | NoConnectionException  e) {
-            e.printStackTrace();
-            Thread.currentThread().interrupt();
-            return false;
-        }
-    }
-
-    private boolean tryConnectRun() throws InterruptedException, NoConnectionException {
+    public void tryConnect(Consumer<Boolean> onCompleted) {
         this.socket.connect();
-        synchronized (readyLock) {
-            for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
-                Game.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})", new Object[] {attempts, MAX_WAIT_INTERVAL});
-                readyLock.wait(500); // wait for it to be ready
+        new Thread(() -> {
+            synchronized (readyLock) {
+                for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
+                    Game.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})",
+                            new Object[] { attempts, MAX_WAIT_INTERVAL });
+                    try {
+                        readyLock.wait(500);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                        Thread.currentThread().interrupt();
+                    }
             }
             if (!isReady) {
-                throw new NoConnectionException(MAX_WAIT_INTERVAL);
+                Game.log().log(Level.SEVERE, "Was not able to establish a connection. Waited {0} times.", MAX_WAIT_INTERVAL);
             }
-            return true;
+            onCompleted.accept(isReady);
         }
+        }).start();
     }
 
 
@@ -99,11 +98,15 @@ public class ClientController implements IClientController {
                 context.handleGameStart(NetworkGson.getMessage(message));
                 onConnectionStateUpdate.call("START");
                 break;
+            case YOU_CAN_BUILD:
+                BuildingPhaseScreen.get().buildOne();
+                break;
             default:
                 Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[] {type, message});
         }
-
     }
+
+
 
 
     public void close() {
@@ -116,6 +119,7 @@ public class ClientController implements IClientController {
 
     @Override
     public void send(MessageContainer message) {
+        message.setClientId(context.getMyId());
         socket.send(message.toJson());
     }
 
@@ -125,7 +129,9 @@ public class ClientController implements IClientController {
     }
 
 	public String getConnectedStatus() {
-		return socket.getRemoteSocketAddress().toString();
+        if(socket != null && socket.getRemoteSocketAddress() != null)
+            return socket.getRemoteSocketAddress().toString();
+        return "Not connected";
 	}
 
     

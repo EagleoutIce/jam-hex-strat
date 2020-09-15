@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
@@ -344,7 +345,7 @@ public class EditorScreen extends Screen {
         }
         Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
-            TerrainMap map = new TerrainMap(Main.BOARD_WIDTH, Main.BOARD_HEIGHT, new FileInputStream(new File(chosen)),
+            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosen)),
                     chosen);
             this.board.setTerrainMap(map);
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());

@@ -81,6 +81,10 @@ public class PlayerController {
         return playerTwo;
     }
 
+    public ClientServerConnection getPlayer(PlayerId owner) {
+        return owner.ifOne(playerOne, playerTwo);
+    }
+
     public String playerOneName() {
         return playerOne == null ? null : playerOne.getClientName();
     }

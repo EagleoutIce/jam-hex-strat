@@ -1,4 +1,4 @@
-package de.flojo.jam.networking.util;
+package de.flojo.jam.networking.share.util;
 
 import java.io.Serializable;
 

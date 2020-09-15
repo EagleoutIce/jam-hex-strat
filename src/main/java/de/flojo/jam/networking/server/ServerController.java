@@ -11,19 +11,22 @@ import java.util.logging.Level;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 
-import de.flojo.jam.game.board.Board;
 import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.exceptions.ErrorTypeEnum;
 import de.flojo.jam.networking.exceptions.HandlerException;
 import de.flojo.jam.networking.exceptions.IllegalMessageException;
 import de.flojo.jam.networking.exceptions.NameNotAvailableException;
+import de.flojo.jam.networking.messages.BuildChoiceMessage;
 import de.flojo.jam.networking.messages.ErrorMessage;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.HelloMessage;
 import de.flojo.jam.networking.messages.HelloReplyMessage;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
+import de.flojo.jam.networking.server.management.MainGameControl;
+import de.flojo.jam.networking.server.management.ServerStateEnum;
+import de.flojo.jam.util.IProvideContext;
 import de.gurkenlabs.litiengine.Game;
 
 public class ServerController implements IServerController {
@@ -34,10 +37,12 @@ public class ServerController implements IServerController {
     private final MainGameControl mainGameController;
     private final INeedUpdates<String> networkUpdateTarget;
 
-    public ServerController(InetSocketAddress address, Board board, INeedUpdates<String> networkUpdateTarget) {
+    private ServerStateEnum state = ServerStateEnum.OFF;
+
+    public ServerController(InetSocketAddress address, IProvideContext context, INeedUpdates<String> networkUpdateTarget) {
         socket = new ServerSocket(address, this);
         playerController = new PlayerController();
-        mainGameController = new MainGameControl(this, board);
+        mainGameController = new MainGameControl(this, context);
         this.networkUpdateTarget = networkUpdateTarget;
     }
 
@@ -45,7 +50,12 @@ public class ServerController implements IServerController {
     public void handleCloseFor(WebSocket conn, int code, String reason, boolean remote) {
         Game.log().log(Level.INFO, "Closed connection with {0} with code {1} and reason {2} (remote: {3})",
                 new Object[] { conn, code, reason, remote });
-        executorService.execute(() -> playerController.removePlayer(conn));
+        executorService.execute(() -> {
+            playerController.removePlayer(conn);
+            if(state != ServerStateEnum.WAITING_FOR_PLAYERS) {
+                networkUpdateTarget.call("STOPPED", "Player left in game");
+            }
+        });
     }
 
     @Override
@@ -81,7 +91,9 @@ public class ServerController implements IServerController {
                 case HELLO:
                     handleHello(NetworkGson.getMessage(message), conn, connection);
                     break;
-
+                case BUILD_CHOICE:
+                    handleBuildChoice(NetworkGson.getMessage(message), conn, connection);
+                    break;
                 default:
                     throw new IllegalMessageException("There was no handler for: " + type + " (" + message + ")");
             }
@@ -90,6 +102,16 @@ public class ServerController implements IServerController {
             sendErrorMessageToDealWithHandlerException(conn, ex);
         }
     }
+
+    private void handleBuildChoice(BuildChoiceMessage message, WebSocket conn, ClientServerConnection csConnection) {
+        if(message.getTerrain() != null) {
+            // place terrain
+            mainGameController.placeTerrainAt(message.getTerrain(), message.getPosition());
+        }
+        // TODO: URGENT: SHARE WITH OTHER AND AFTER THAT SEND BUILD FOR OTHER
+    }
+
+
 
     private void handleHello(HelloMessage message, WebSocket conn, ClientServerConnection csConnection)
             throws IllegalMessageException, NameNotAvailableException {
@@ -102,7 +124,14 @@ public class ServerController implements IServerController {
         if(playerController.ready()) {
             playerController.getPlayerOne().send(new GameStartMessage(null, playerController));
             playerController.getPlayerTwo().send(new GameStartMessage(null, playerController));
+            startGame();
         }
+    }
+
+    private void startGame() {
+        this.state = ServerStateEnum.BUILD_PHASE;
+        // send request
+        mainGameController.startBuildPhase();
     }
 
     private void handleNullTypeOnContainer(WebSocket conn, ClientServerConnection connection, String message) {
@@ -139,6 +168,10 @@ public class ServerController implements IServerController {
         Game.log().log(Level.INFO, "Connected: {0}", new Object[] { conn });
     }
 
+    public PlayerController getPlayerController() {
+        return playerController;
+    }
+
     public boolean isReady() {
         return socket.isReady();
     }
@@ -153,11 +186,13 @@ public class ServerController implements IServerController {
 
     public void start() {
         socket.start();
+        state = ServerStateEnum.WAITING_FOR_PLAYERS;
     }
 
     public void stop() {
         try {
             socket.stop();
+            state = ServerStateEnum.OFF;
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             Thread.currentThread().interrupt();

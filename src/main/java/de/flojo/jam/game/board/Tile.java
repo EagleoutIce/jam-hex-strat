@@ -24,9 +24,9 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
     private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
-    private static final Color NONE_COLOR = new Color(154, 215, 45);
-    private static final Color P1_COLOR = new Color(45, 173, 215);
-    private static final Color P2_COLOR = new Color(141, 45, 215);
+    private static final Color NONE_COLOR = new Color(0, 0, 0, 60); // 154, 215, 45
+    private static final Color P1_COLOR = new Color(45, 173, 215, 60);
+    private static final Color P2_COLOR = new Color(141, 45, 215, 60);
 
     private AtomicBoolean hover = new AtomicBoolean();
     private AtomicBoolean mark = new AtomicBoolean();

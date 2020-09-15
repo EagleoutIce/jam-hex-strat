@@ -3,7 +3,7 @@ package de.flojo.jam.networking.messages;
 import java.util.Objects;
 import java.util.UUID;
 
-import de.flojo.jam.networking.util.IAmJson;
+import de.flojo.jam.networking.share.util.IAmJson;
 
 public class MessageContainer implements IAmJson {
 

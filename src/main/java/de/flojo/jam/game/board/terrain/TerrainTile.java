@@ -16,7 +16,7 @@ public enum TerrainTile {
             PushDirection.NONE, VoidRenderer.get()), //
     // dos not blick los or punch as it raised and we include a raised switch
     GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false, true, 2,
-            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2d, -73 / 1.33)), //
+            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -72 / 2.1d, -73 / 1.33)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
             true, false, -1, PushDirection.NONE,
