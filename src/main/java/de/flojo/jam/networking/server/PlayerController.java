@@ -6,6 +6,7 @@ import org.java_websocket.WebSocket;
 
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.exceptions.NameNotAvailableException;
+import de.flojo.jam.networking.messages.MessageContainer;
 
 public class PlayerController {
 
@@ -52,7 +53,9 @@ public class PlayerController {
         if (Objects.equals(playerOne, connection)) {
             // shift one down
             playerOne = playerTwo;
-            playerOne.setRole(PlayerId.ONE);
+            if(playerOne != null) {
+                playerOne.setRole(PlayerId.ONE);
+            }
             playerTwo = null;
         } else if (Objects.equals(playerTwo, connection)) {
             connection.setRole(null);
@@ -79,6 +82,11 @@ public class PlayerController {
 
     public ClientServerConnection getPlayerTwo() {
         return playerTwo;
+    }
+
+    public void sendBoth(MessageContainer message) {
+        playerOne.send(message);
+        playerTwo.send(message);
     }
 
     public ClientServerConnection getPlayer(PlayerId owner) {

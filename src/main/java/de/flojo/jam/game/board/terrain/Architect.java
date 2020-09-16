@@ -16,6 +16,7 @@ import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.util.HexMaths;
 import de.gurkenlabs.litiengine.Game;
 
 // Plants and removes terrains from a board and checks for validity
@@ -126,7 +127,7 @@ public class Architect {
     public void clearField() {
         TerrainMap terrainMap = board.getTerrainMap();
         for (int y = 0; y < GameField.BOARD_HEIGHT; y++) {
-            for (int x = 0; x < GameField.BOARD_WIDTH; x++) {
+            for (int x = 0; x < HexMaths.effectiveWidth(GameField.BOARD_WIDTH); x++) {
                 terrainMap.updateTerrainAt(x, y, TerrainTile.EMPTY);
             }
         }

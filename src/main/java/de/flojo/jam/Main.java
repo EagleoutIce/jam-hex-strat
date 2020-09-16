@@ -33,6 +33,24 @@ public class Main {
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
+        Game.addGameListener(new GameListener() {
+            @Override
+            public void initialized(String... args) {
+                // nothing
+            }
+
+            @Override
+            public void started() {
+                Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
+                Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
+            }
+
+            @Override
+            public void terminated() {
+                // nothing
+            }
+        });
+
         Game.init(args);
         Game.log().setLevel(Level.ALL);
         Game.graphics().setBaseRenderScale(3.0f);
@@ -57,25 +75,6 @@ public class Main {
         Game.screens().add(ConnectScreen.get());
         Game.screens().add(new ServerSetupScreen());
         
-        Game.addGameListener(new GameListener() {
-            @Override
-            public void initialized(String... args) {
-                // do sth when game is initialized
-            }
-
-            @Override
-            public void started() {
-                Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
-
-                // ((JFrame) Game.window().getHostControl()).setResizable(false);
-                Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
-            }
-
-            @Override
-            public void terminated() {
-                // do sth when game terminated
-            }
-        });
 
         Game.start();
     }

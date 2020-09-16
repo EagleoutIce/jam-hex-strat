@@ -35,6 +35,8 @@ public class GameField implements IRenderable, IProvideContext {
 
     private BuildingPhaseButtonPresenter buildingPhaseButtons;
 
+    private int moneyLeft;
+
     private boolean canBuild = false;
     private boolean ourTurn = false;
 
@@ -68,7 +70,7 @@ public class GameField implements IRenderable, IProvideContext {
 
     public void updateTerrain(TerrainMap map) {
         this.board.setTerrainMap(map);
-        this.board.doHover();
+        // this.board.doHover()
     }
 
     public String getTerrainName() {
@@ -113,7 +115,8 @@ public class GameField implements IRenderable, IProvideContext {
         return presenter;
     }
 
-    public void allowOneBuild(Consumer<BuildChoice> onChoice) {
+    public void allowOneBuild(Consumer<BuildChoice> onChoice, int moneyLeft) {
+        this.moneyLeft = moneyLeft;
         canBuild = true;
         ourTurn = true;
         buildingPhaseButtons.enable();
@@ -128,6 +131,11 @@ public class GameField implements IRenderable, IProvideContext {
 
     public boolean isOurTurn() {
         return ourTurn;
+    }
+
+    @Override
+    public int getMoneyLeft() {
+        return moneyLeft;
     }
 
 }

@@ -1,5 +1,6 @@
 package de.flojo.jam.graphics;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -25,13 +26,16 @@ import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
+import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
+import de.gurkenlabs.litiengine.util.Imaging;
 
 public class BuildingPhaseButtonPresenter implements IRenderable {
 
     private static final BufferedImage SIDEBAR = Resources.images().get("ui/sidebar.png");
+    public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30, true);
 
     private PlayerId ourId;
     private IProvideContext context;
@@ -83,8 +87,10 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             if (t == TerrainId.T_EMPTY)
                 continue;
 
-            ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 35d,
-                    t.getImprint().getBaseResource(), t.getName(), Main.TEXT_NORMAL);
+            ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 15d,
+                    t.getImprint().getBaseResource(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
+            imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
+            imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
@@ -105,7 +111,6 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             imgBt.prepare();
             imgBt.setTextAlign(Align.CENTER);
         }
-
     }
 
     // TODO: position
@@ -114,9 +119,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     public void disable() {
         terrainButtons.forEach(GuiComponent::suspend);
         screen.getComponents().removeAll(terrainButtons);
-        TerrainId currentTerrain = null;
-        ISummonCreature currentCreature = null;
-        TrapId currentTrapId = null;
+        currentTerrain = null;
+        currentCreature = null;
+        currentTrapId = null;
         enabled = false;
         resetCursor();
     }
@@ -134,14 +139,6 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
     public void setCurrentBuildConsumer(Consumer<BuildChoice> currentBuildConsumer) {
         this.currentBuildConsumer = currentBuildConsumer;
-    }
-
-    @Override
-    public void render(Graphics2D g) {
-        if (!enabled)
-            return;
-
-        ImageRenderer.render(g, SIDEBAR, 0, 0);
     }
 
     public void processMouse(MouseEvent e) {
@@ -199,4 +196,18 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
     }
 
+
+
+
+    @Override
+    public void render(Graphics2D g) {
+        if (!enabled)
+            return;
+        ImageRenderer.render(g, SIDEBAR, 0, 0);
+        g.setColor(Color.WHITE);
+        g.setFont(Main.TEXT_STATUS);
+        final String money = Integer.toString(context.getMoneyLeft());
+        TextRenderer.render(g, money, 90d, 50d - TextRenderer.getHeight(g, money)/2d);
+        ImageRenderer.render(g, MONEY_SYMBOL, 20d + MONEY_SYMBOL.getWidth()/2d, 50d - MONEY_SYMBOL.getHeight()/2d - TextRenderer.getHeight(g, money)/2 - 5d);
+    }
 }

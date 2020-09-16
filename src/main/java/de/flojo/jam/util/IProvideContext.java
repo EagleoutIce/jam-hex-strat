@@ -16,6 +16,8 @@ public interface IProvideContext extends IProvideEffectContext {
 
     SkillsPresenter getPresenter();
 
+    int getMoneyLeft();
+
     default CreatureCollection getCreatures() {
         return getFactory().getCreatures();
     }

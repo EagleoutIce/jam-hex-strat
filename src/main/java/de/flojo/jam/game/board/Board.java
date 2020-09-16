@@ -54,7 +54,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private IHighlightMask highlightMask;
     private final Map<BoardCoordinate, Tile> tiles;
     private AtomicBoolean doHover = new AtomicBoolean(true);
-    private AtomicBoolean showMapDetails = new AtomicBoolean(false);
+    private AtomicBoolean showMapDetails = new AtomicBoolean(true);
 
     private KeyInputGroup bInputGroupVert = new KeyInputGroup();
     private KeyInputGroup bInputGroupHor = new KeyInputGroup();

@@ -91,7 +91,7 @@ public class ServerSetupScreen extends Screen {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
-        this.startServer.setLocation(width - this.startServer.getWidth() - 0.5*Main.INNER_MARGIN, height - this.startServer.getHeight());
+        this.startServer.setLocation(width - this.startServer.getWidth() - 0.5*Main.INNER_MARGIN - 10d, height - this.startServer.getHeight());
         this.loadTerrain.setLocation(width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(), height - this.loadTerrain.getHeight());
     }
 
@@ -135,6 +135,8 @@ public class ServerSetupScreen extends Screen {
     }
 
     private void loadCurrentTerrain() {
+        if(chosenTerrain == null)
+            return;
         Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrain);
         try {
             TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosenTerrain)),
@@ -147,6 +149,7 @@ public class ServerSetupScreen extends Screen {
     }
 
     private void startServer() {
+        Game.log().log(Level.INFO, "Starting Server on Port {0}", getAdress());
         this.startServer.setText("Stopp");
         this.portNumber.setEnabled(false);
         this.loadTerrain.setEnabled(false);
@@ -177,14 +180,16 @@ public class ServerSetupScreen extends Screen {
 
 
     private void stopServer() {
+        Game.log().log(Level.INFO, "Stopping Server on Port {0}", getAdress());
         this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
         this.loadTerrain.setEnabled(true);
-        this.serverController.stop();
+        if(serverController != null)
+            this.serverController.stop();
         this.serverController = null;
         serverStarted = false;
-        loadCurrentTerrain();
         gameField.reset();
+        loadCurrentTerrain();
     }
 
 }

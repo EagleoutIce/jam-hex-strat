@@ -6,6 +6,7 @@ import java.awt.font.FontRenderContext;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.function.BooleanSupplier;
 
 import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Valign;
@@ -15,8 +16,14 @@ import de.gurkenlabs.litiengine.resources.Resources;
 
 public class ImageButton extends ImageComponent {
 
+    private BooleanSupplier shouldBeEnabled = null;
+
     public ImageButton(final String path, final String text, Font font) {
         this(0, 0, Resources.images().get(path), text, font);
+    }
+
+    public void setEnabledSupplier(BooleanSupplier shouldBeEnabled) {
+        this.shouldBeEnabled = shouldBeEnabled;
     }
 
 
@@ -27,6 +34,13 @@ public class ImageButton extends ImageComponent {
         postsetup();
     }
 
+    @Override
+    public void prepare() {
+        super.prepare();
+        if(shouldBeEnabled != null) {
+            this.setEnabled(shouldBeEnabled.getAsBoolean());
+        }
+    }
 
     private void postsetup() {
         this.setImageScaleMode(ImageScaleMode.FIT);

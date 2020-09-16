@@ -11,19 +11,19 @@ public class GameState {
 
     PlayerId currentTurn;
 
-    int moneyP1Left = 100;
-    int moneyP2Left = 100;
+    int moneyP1Left = 45;
+    int moneyP2Left = 45;
 
     public GameState() {
         currentTurn = Game.random().choose(PlayerId.values());
     }
 
 
-    public boolean p1CanDo() {
+    public boolean p1CanDoBuild() {
         return moneyP1Left > 0;
     }
 
-    public boolean p2CanDo() {
+    public boolean p2CanDoBuild() {
         return moneyP2Left > 0;
     }
 
@@ -55,16 +55,36 @@ public class GameState {
         return moneyP1Left;
     }
 
-    public void reduceMoneyP1(int moneyP1Left) {
-        this.moneyP1Left -= moneyP1Left;
+    public void reduceMoney(PlayerId player, int relative) {
+        if(player == PlayerId.ONE)
+            reduceMoneyP1(relative);
+        else if(player == PlayerId.TWO)
+            reduceMoneyP2(relative);
+    }
+
+
+    public void reduceMoneyP1(int relative) {
+        this.moneyP1Left -= relative;
     }
 
     public int getMoneyP2Left() {
         return moneyP2Left;
     }
 
-    public void reduceMoneyP2(int moneyP2Left) {
-        this.moneyP2Left -= moneyP2Left;
+    public void reduceMoneyP2(int relative) {
+        this.moneyP2Left -= relative;
     }
+
+
+	public boolean nextBuild() {
+        if(currentTurn == PlayerId.ONE && p2CanDoBuild()) {
+            currentTurn = PlayerId.TWO;
+            return true;
+        } else if(currentTurn == PlayerId.TWO && p1CanDoBuild()) {
+            currentTurn = PlayerId.ONE;
+            return true;
+        }
+        return p1CanDoBuild() || p2CanDoBuild();
+	}
 
 }

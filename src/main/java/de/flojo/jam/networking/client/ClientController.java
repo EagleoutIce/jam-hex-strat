@@ -24,7 +24,7 @@ public class ClientController implements IClientController {
     private final ClientSender sender;
     private final ClientSocket socket;
     private final ClientContext context;
-    private final INeedUpdates<String> onConnectionStateUpdate;
+    private INeedUpdates<String> onConnectionStateUpdate;
 
     // NOTE: We do not care about the state update safety... cause i have time
     // problems :D
@@ -71,7 +71,8 @@ public class ClientController implements IClientController {
     public void handleClose(int code, String reason, boolean remote) {
         Game.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}", new Object[] {code, reason, remote});
         // do nothing else?
-        onConnectionStateUpdate.call("CLOSED");
+        if(onConnectionStateUpdate != null)
+            onConnectionStateUpdate.call("CLOSED");
     }
 
     @Override
@@ -96,10 +97,14 @@ public class ClientController implements IClientController {
                 break;
             case GAME_START:
                 context.handleGameStart(NetworkGson.getMessage(message));
-                onConnectionStateUpdate.call("START");
+                if(onConnectionStateUpdate != null)
+                    onConnectionStateUpdate.call("START");
                 break;
             case YOU_CAN_BUILD:
-                BuildingPhaseScreen.get().buildOne();
+                BuildingPhaseScreen.get().buildOne(NetworkGson.getMessage(message));
+                break;
+            case BUILD_UPDATE:
+                BuildingPhaseScreen.get().updateMap(NetworkGson.getMessage(message));
                 break;
             default:
                 Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[] {type, message});
@@ -107,7 +112,9 @@ public class ClientController implements IClientController {
     }
 
 
-
+    public void setOnConnectionStateUpdate(INeedUpdates<String> onConnectionStateUpdate) {
+        this.onConnectionStateUpdate = onConnectionStateUpdate;
+    }
 
     public void close() {
         socket.close();
@@ -120,6 +127,7 @@ public class ClientController implements IClientController {
     @Override
     public void send(MessageContainer message) {
         message.setClientId(context.getMyId());
+        Game.log().log(Level.FINE, "Sending: {0}", message.toJson());
         socket.send(message.toJson());
     }
 

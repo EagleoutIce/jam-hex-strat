@@ -56,7 +56,9 @@ public class TerrainData extends ArrayList<List<TerrainTile>> {
             return;
         }
         TerrainTile old = tl.set(x, newType);
-        Game.log().log(Level.INFO, "Set Tile at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
+        if(old != newType) {
+            Game.log().log(Level.INFO, "Set Tile at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
+        }
     }
 
     public int getWidth() {

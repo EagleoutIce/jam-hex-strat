@@ -18,6 +18,7 @@ import de.flojo.jam.networking.exceptions.HandlerException;
 import de.flojo.jam.networking.exceptions.IllegalMessageException;
 import de.flojo.jam.networking.exceptions.NameNotAvailableException;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
+import de.flojo.jam.networking.messages.BuildUpdateMessage;
 import de.flojo.jam.networking.messages.ErrorMessage;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.HelloMessage;
@@ -34,7 +35,7 @@ public class ServerController implements IServerController {
     protected final ExecutorService executorService = Executors.newFixedThreadPool(1);
     private ServerSocket socket;
     private PlayerController playerController;
-    private final MainGameControl mainGameController;
+    private final MainGameControl mGController;
     private final INeedUpdates<String> networkUpdateTarget;
 
     private ServerStateEnum state = ServerStateEnum.OFF;
@@ -42,7 +43,7 @@ public class ServerController implements IServerController {
     public ServerController(InetSocketAddress address, IProvideContext context, INeedUpdates<String> networkUpdateTarget) {
         socket = new ServerSocket(address, this);
         playerController = new PlayerController();
-        mainGameController = new MainGameControl(this, context);
+        mGController = new MainGameControl(this, context);
         this.networkUpdateTarget = networkUpdateTarget;
     }
 
@@ -106,9 +107,14 @@ public class ServerController implements IServerController {
     private void handleBuildChoice(BuildChoiceMessage message, WebSocket conn, ClientServerConnection csConnection) {
         if(message.getTerrain() != null) {
             // place terrain
-            mainGameController.placeTerrainAt(message.getTerrain(), message.getPosition());
+            System.out.println("Connection: " + csConnection + "; " + conn + "; " + message);
+            mGController.buildTerrainAt(csConnection.getRole(), message.getTerrain(), message.getPosition());
         }
+        playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
+        
         // TODO: URGENT: SHARE WITH OTHER AND AFTER THAT SEND BUILD FOR OTHER
+        // TODO: check if no more builds
+        mGController.nextBuildRequest();
     }
 
 
@@ -120,10 +126,10 @@ public class ServerController implements IServerController {
         
         ClientServerConnection newConnection = new ClientServerConnection(conn, message);
         playerController.addPlayer(newConnection);
-        conn.send(new HelloReplyMessage(newConnection, mainGameController.getTerrain()).toJson());
+        conn.setAttachment(newConnection);
+        conn.send(new HelloReplyMessage(newConnection, mGController.getTerrain()).toJson());
         if(playerController.ready()) {
-            playerController.getPlayerOne().send(new GameStartMessage(null, playerController));
-            playerController.getPlayerTwo().send(new GameStartMessage(null, playerController));
+            playerController.sendBoth(new GameStartMessage(null, playerController));
             startGame();
         }
     }
@@ -131,7 +137,7 @@ public class ServerController implements IServerController {
     private void startGame() {
         this.state = ServerStateEnum.BUILD_PHASE;
         // send request
-        mainGameController.startBuildPhase();
+        mGController.startBuildPhase();
     }
 
     private void handleNullTypeOnContainer(WebSocket conn, ClientServerConnection connection, String message) {

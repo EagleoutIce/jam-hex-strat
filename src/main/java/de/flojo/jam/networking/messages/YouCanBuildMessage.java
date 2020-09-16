@@ -6,18 +6,18 @@ public class YouCanBuildMessage extends MessageContainer {
 
     private static final long serialVersionUID = -6643166910354159927L;
 
-    private int currentRound;
+    private int moneyLeft;
 
-    public YouCanBuildMessage(UUID clientId, int currentRound) {
-        this(clientId, currentRound, "");
+    public YouCanBuildMessage(UUID clientId, int moneyLeft) {
+        this(clientId, moneyLeft, "");
     }
 
-    public YouCanBuildMessage(UUID clientId, int currentRound, String debugMessage) {
+    public YouCanBuildMessage(UUID clientId, int moneyLeft, String debugMessage) {
         super(MessageTypeEnum.YOU_CAN_BUILD, clientId, debugMessage);
-        this.currentRound = currentRound;
+        this.moneyLeft = moneyLeft;
     }
     
-    public int getCurrentRound() {
-        return currentRound;
+    public int getMoneyLeft() {
+        return moneyLeft;
     }
 }

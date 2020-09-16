@@ -25,7 +25,10 @@ public class ConnectScreen extends Screen {
 
     private static final String[] RANDOM_NAMES = new String[] {
         "PeterMeter", "Pain Gain", "H4ns3l", "Joseph", "Achtung Butter!", "Hallo Mami",
-        "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf"
+        "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
+        "Jaiger", "Nicht du", "Nicht ich", "Humbug", "Wer das liest...", "0x48", "Errör", "Fehlähr", "Wortjoke",
+        "Vormorgen", "Nachgestern", "Blumenwiese", "Ostfriese", "Sonnenkind", "Mondmöchtegern", "Jarl", "Karl",
+        "Schweizer", "Hinterdupfinger", "Der coole", "Der coolere"
     };
 
     private boolean locked;
@@ -157,7 +160,7 @@ public class ConnectScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
-        Game.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
+        Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
         if(data.length == 0)
             return;
