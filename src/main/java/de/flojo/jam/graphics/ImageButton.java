@@ -22,6 +22,7 @@ public class ImageButton extends ImageComponent {
         this(0, 0, Resources.images().get(path), text, font);
     }
 
+
     public void setEnabledSupplier(BooleanSupplier shouldBeEnabled) {
         this.shouldBeEnabled = shouldBeEnabled;
     }
@@ -63,5 +64,4 @@ public class ImageButton extends ImageComponent {
         getAppearance().setForeColor(normal);
         getAppearanceHovered().setForeColor(hovered);
     }
-
 }

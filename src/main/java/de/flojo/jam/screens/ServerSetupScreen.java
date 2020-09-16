@@ -83,7 +83,6 @@ public class ServerSetupScreen extends Screen {
         super.prepare();
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
-
         gameField = new GameField(this, ServerSetupScreen.NAME, null);
     }
 
@@ -106,13 +105,12 @@ public class ServerSetupScreen extends Screen {
             } else {
                 startServer();
             }});
+
         this.getComponents().add(startServer);
 
         this.loadTerrain = new Button("Terrain", Main.GUI_FONT_SMALL);
-        this.loadTerrain.onClicked(c -> {
-            // jeah jeah.. outsource da shit -.-
-            loadTerrain();
-        });
+        // jeah jeah.. outsource da shit -.-
+        this.loadTerrain.onClicked(c -> loadTerrain() );
         this.getComponents().add(loadTerrain);
 
         // pos will be recalculated

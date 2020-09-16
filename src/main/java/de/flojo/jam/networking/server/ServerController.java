@@ -107,8 +107,9 @@ public class ServerController implements IServerController {
     private void handleBuildChoice(BuildChoiceMessage message, WebSocket conn, ClientServerConnection csConnection) {
         if(message.getTerrain() != null) {
             // place terrain
-            System.out.println("Connection: " + csConnection + "; " + conn + "; " + message);
             mGController.buildTerrainAt(csConnection.getRole(), message.getTerrain(), message.getPosition());
+        } else if (message.getCreature() != null) {
+            mGController.summonCreatureAt(csConnection.getRole(), message.getCreature(), message.getPosition());
         }
         playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
         

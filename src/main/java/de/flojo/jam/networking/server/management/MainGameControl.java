@@ -1,11 +1,13 @@
 package de.flojo.jam.networking.server.management;
 
+import java.util.UUID;
 import java.util.logging.Level;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
+import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
 import de.flojo.jam.networking.messages.YouCanBuildMessage;
@@ -69,5 +71,10 @@ public class MainGameControl {
         }
         return false;
     }
+
+	public void summonCreatureAt(PlayerId player, CreatureId creature, BoardCoordinate position) {
+        context.getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), context.getBoard().getTile(position), player);
+        state.reduceMoney(player, creature.getCost());
+	}
 
 }

@@ -65,5 +65,15 @@ public class AnimationRenderer implements IRenderData {
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
         return new Rectangle((int)(pos.getX() + offsetX), (int)(pos.getY() + offsetY), sWidth, sHeight);
     }
+
+    @Override
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    @Override
+    public double getOffsetY() {
+        return offsetY;
+    }
     
 }

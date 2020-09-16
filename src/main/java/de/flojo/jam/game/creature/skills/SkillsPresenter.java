@@ -63,7 +63,7 @@ public class SkillsPresenter {
     }
 
     private void updateCreature(Creature c) {
-        if (c == null) {
+        if (c == null || !enabled.get()) {
             return;
         }
         if(skillChoosing) {
@@ -194,6 +194,7 @@ public class SkillsPresenter {
 
     public void disable() {
         enabled.set(false);
+        currentCreature = null;
     }
 
     public CreatureFactory getFactory() {

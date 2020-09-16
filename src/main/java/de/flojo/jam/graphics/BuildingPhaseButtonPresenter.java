@@ -3,10 +3,12 @@ package de.flojo.jam.graphics;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 import de.flojo.jam.Main;
@@ -16,8 +18,10 @@ import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.ISummonCreature;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.IProvideContext;
@@ -35,7 +39,8 @@ import de.gurkenlabs.litiengine.util.Imaging;
 public class BuildingPhaseButtonPresenter implements IRenderable {
 
     private static final BufferedImage SIDEBAR = Resources.images().get("ui/sidebar.png");
-    public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30, true);
+    public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30,
+            true);
 
     private PlayerId ourId;
     private IProvideContext context;
@@ -49,6 +54,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
     private TerrainId currentTerrain = null;
     private ISummonCreature currentCreature = null;
+    private CreatureId currentCreatureId = null;
     private TrapId currentTrapId = null;
 
     private boolean enabled = false;
@@ -66,6 +72,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         this.terrainButtons = new ArrayList<>();
         populateTerrainButtons();
         this.creatureButtons = new ArrayList<>();
+        populateCreatureButtons();
         this.trapButtons = new ArrayList<>();
         this.currentBuildConsumer = null;
         InputController.get().onMoved(this::lockOnOver, BuildingPhaseScreen.NAME);
@@ -94,6 +101,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
+                this.currentCreatureId = null;
                 this.currentTerrain = t;
                 this.selectionMode = BuildingPhaseSelectionMode.TERRAIN;
 
@@ -113,6 +121,41 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         }
     }
 
+    private void populateCreatureButtons() {
+        // Populate TerrainButtons
+        CreatureId[] creatures = CreatureId.values();
+        for (int i = 0; i < creatures.length; i++) {
+            CreatureId c = creatures[i];
+            if (c == CreatureId.NONE)
+                continue;
+            IRenderData creatureRenderer = c.getRenderer(ourId);
+            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 100, i * 80d - 15d,
+                creatureRenderer.getImage(), Integer.toString(c.getCost()), Main.TEXT_NORMAL);
+            imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
+            imgBt.setFont(Main.GUI_FONT_SMALL);
+            terrainButtons.add(imgBt);
+            imgBt.onClicked(mce -> {
+                this.currentCreature = (n, t) -> context.getFactory().getSpell(c).summon(c + "_" + n, t, ourId);
+                this.currentCreatureId = c;
+                this.currentTerrain = null;
+                this.selectionMode = BuildingPhaseSelectionMode.CREATURE;
+                
+                BufferedImage img = context.getFactory().getBufferedImage(c, ourId.ifOne(true, false));
+                if (img != null) {
+                    Game.window().cursor().setVisible(true);
+                    Game.window().cursor().set(img);
+                    context.getBoard().setHighlightMask(SimpleHighlighter.get());
+                    Game.window().cursor().showDefaultCursor();
+                } else {
+                    resetCursor();
+                }
+            });
+            screen.getComponents().add(imgBt);
+            imgBt.prepare();
+            imgBt.setTextAlign(Align.CENTER);
+        }
+    }
+
     // TODO: position
     // TODO: disable hoverover
 
@@ -121,6 +164,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         screen.getComponents().removeAll(terrainButtons);
         currentTerrain = null;
         currentCreature = null;
+        currentCreatureId = null;
         currentTrapId = null;
         enabled = false;
         resetCursor();
@@ -193,11 +237,31 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void summonCreature(MouseEvent c) {
+        if (this.selectionMode != BuildingPhaseSelectionMode.CREATURE || context.getArchitect() == null) {
+            return;
+        }
 
+        if (currentCreature == null)
+            return;
+
+        if (c.getButton() != MouseEvent.BUTTON1)
+            return;
+
+
+        Point p = c.getPoint();
+        if (intersectsWithButton(p))
+            return;
+        Tile t = context.getBoard().findTile(p);
+        if (t == null)
+            return;
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(t.getCoordinate()).isEmpty()
+                    && context.getFactory().get(t.getCoordinate()).isEmpty()) {
+                currentCreature.summon(UUID.randomUUID().toString(), t);
+                currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate()));
+            }
+        }
     }
-
-
-
 
     @Override
     public void render(Graphics2D g) {
@@ -207,7 +271,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         g.setColor(Color.WHITE);
         g.setFont(Main.TEXT_STATUS);
         final String money = Integer.toString(context.getMoneyLeft());
-        TextRenderer.render(g, money, 90d, 50d - TextRenderer.getHeight(g, money)/2d);
-        ImageRenderer.render(g, MONEY_SYMBOL, 20d + MONEY_SYMBOL.getWidth()/2d, 50d - MONEY_SYMBOL.getHeight()/2d - TextRenderer.getHeight(g, money)/2 - 5d);
+        TextRenderer.render(g, money, 90d, 50d - TextRenderer.getHeight(g, money) / 2d);
+        ImageRenderer.render(g, MONEY_SYMBOL, 20d + MONEY_SYMBOL.getWidth() / 2d,
+                50d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
     }
 }

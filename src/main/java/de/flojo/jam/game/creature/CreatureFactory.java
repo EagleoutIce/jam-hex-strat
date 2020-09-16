@@ -18,7 +18,6 @@ import de.flojo.jam.game.creature.creatures.CreatureHalfling;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
-import de.flojo.jam.graphics.renderer.CreatureImageRenderer;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
@@ -26,25 +25,6 @@ import de.gurkenlabs.litiengine.graphics.Spritesheet;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 public class CreatureFactory {
-    private static final IRenderData PEASANT_P1_NORMAL = new CreatureImageRenderer("creatures/bauer_blau.png", "creatures/bauer_blau_glow.png", -93d / 2.9,
-            -99 / 1.27d);
-    private static final IRenderData PEASANT_P2_NORMAL = new CreatureImageRenderer("creatures/bauer_lila.png", "creatures/bauer_lila_glow.png",
-            -93d / 1.53, -99 / 1.27d);
-
-    private static final IRenderData GOBLIN_P1_NORMAL = new CreatureImageRenderer("creatures/kobold_blau.png",  "creatures/kobold_blau_glow.png",
-            -69 / 1.83d, -95 / 1.31d);
-    private static final IRenderData GOBLIN_P2_NORMAL = new CreatureImageRenderer("creatures/kobold_lila.png", "creatures/kobold_lila_glow.png",
-            -69 / 2.22d, -95 / 1.31d);
-
-    private static final IRenderData ELF_P1_NORMAL = new CreatureImageRenderer("creatures/elf_blau.png", "creatures/elf_blau_glow.png", -76 / 2.34d,
-            -92 / 1.27d);
-    private static final IRenderData ELF_P2_NORMAL = new CreatureImageRenderer("creatures/elf_lila.png", "creatures/elf_lila_glow.png", -76 / 1.78d,
-            -92 / 1.27d);
-
-    private static final IRenderData HALFLING_P1_NORMAL = new CreatureImageRenderer("creatures/halbling_blau.png", "creatures/halbling_blau_glow.png",
-            -73 / 2.3d, -102 / 1.24d);
-    private static final IRenderData HALFLING_P2_NORMAL = new CreatureImageRenderer("creatures/halbling_lila.png", "creatures/halbling_lila_glow.png",
-            -73 / 1.65d, -102 / 1.29d);
 
     private static final Spritesheet S_CREATURE_P1_DIEING = Resources.spritesheets()
             .load("creatures/animations/creature_die_p1.png", 128, 128);
@@ -111,39 +91,29 @@ public class CreatureFactory {
     }
 
     public BufferedImage getBufferedImage(CreatureId id, boolean p1) {
-        switch (id) {
-            case PEASANT:
-                return p1 ? PEASANT_P1_NORMAL.getImage() : PEASANT_P2_NORMAL.getImage();
-            case GOBLIN:
-                return p1 ? GOBLIN_P1_NORMAL.getImage() : GOBLIN_P2_NORMAL.getImage();
-            case ELF:
-                return p1 ? ELF_P1_NORMAL.getImage() : ELF_P2_NORMAL.getImage();
-            case HALFLING:
-                return p1 ? HALFLING_P1_NORMAL.getImage() : HALFLING_P2_NORMAL.getImage();
-            default:
-            case NONE:
-                return null;
-        }
+        if(id == CreatureId.NONE)
+            return null;
+        return p1 ? id.getP1Image().getImage() : id.getP2Image().getImage();
     }
 
     public Creature summonPeasant(String uniqueName, Tile startBase, PlayerId pId) {
         return new CreaturePeasant(uniqueName, startBase, pId, creatures, traps,
-                pId.ifOne(PEASANT_P1_NORMAL, PEASANT_P2_NORMAL), getDieAnimation(pId));
+        CreatureId.PEASANT.getRenderer(pId), getDieAnimation(pId));
     }
 
     public Creature summonGoblin(String uniqueName, Tile startBase, PlayerId pId) {
         return new CreatureGoblin(uniqueName, startBase, pId, creatures, traps,
-                pId.ifOne(GOBLIN_P1_NORMAL, GOBLIN_P2_NORMAL), getDieAnimation(pId));
+        CreatureId.GOBLIN.getRenderer(pId), getDieAnimation(pId));
     }
 
     public Creature summonElf(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureElf(uniqueName, startBase, pId, creatures, traps, pId.ifOne(ELF_P1_NORMAL, ELF_P2_NORMAL),
+        return new CreatureElf(uniqueName, startBase, pId, creatures, traps, CreatureId.ELF.getRenderer(pId),
                 getDieAnimation(pId));
     }
 
     public Creature summonHalfling(String uniqueName, Tile startBase, PlayerId pId) {
         return new CreatureHalfling(uniqueName, startBase, pId, creatures, traps,
-                pId.ifOne(HALFLING_P1_NORMAL, HALFLING_P2_NORMAL), getDieAnimation(pId));
+            CreatureId.HALFLING.getRenderer(pId), getDieAnimation(pId));
     }
 
     public void removeCreature(Tile onBase) {

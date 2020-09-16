@@ -78,4 +78,13 @@ public class SimpleImageRenderer implements IRenderData {
         return new Rectangle((int)(pos.getX() + offsetX), (int)(pos.getY() + offsetY), image.getWidth(), image.getHeight());
     }
     
+    @Override
+    public double getOffsetX() {
+        return offsetX;
+    }
+
+    @Override
+    public double getOffsetY() {
+        return offsetY;
+    }
 }

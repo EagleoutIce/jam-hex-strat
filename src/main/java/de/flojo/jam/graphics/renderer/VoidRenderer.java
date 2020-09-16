@@ -36,5 +36,15 @@ public class VoidRenderer implements IRenderData {
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
         return new Rectangle((int)pos.getX(), (int)pos.getY(), 0, 0);
     }
+
+    @Override
+    public double getOffsetX() {
+        return 0;
+    }
+
+    @Override
+    public double getOffsetY() {
+        return 0;
+    }
     
 }

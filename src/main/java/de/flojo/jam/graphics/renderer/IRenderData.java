@@ -16,5 +16,10 @@ public interface IRenderData {
 
     BufferedImage getImage();
 
+    double getOffsetX();
+
+    double getOffsetY();
+
+
     public Rectangle2D getEffectiveRectangle(Point2D pos);
 }
