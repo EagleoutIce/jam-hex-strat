@@ -15,9 +15,11 @@ import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.board.traps.TrapImprint;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.ISummonCreature;
 import de.flojo.jam.game.player.PlayerId;
@@ -74,8 +76,11 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         this.creatureButtons = new ArrayList<>();
         populateCreatureButtons();
         this.trapButtons = new ArrayList<>();
+        populateTrapButtons();
         this.currentBuildConsumer = null;
         InputController.get().onMoved(this::lockOnOver, BuildingPhaseScreen.NAME);
+        updatePositions();
+        Game.window().onResolutionChanged(r -> updatePositions());
     }
 
     private void lockOnOver(MouseEvent me) {
@@ -100,8 +105,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
-                this.currentCreature = null;
-                this.currentCreatureId = null;
+                resetSelection();
                 this.currentTerrain = t;
                 this.selectionMode = BuildingPhaseSelectionMode.TERRAIN;
 
@@ -129,15 +133,15 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             if (c == CreatureId.NONE)
                 continue;
             IRenderData creatureRenderer = c.getRenderer(ourId);
-            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 100, i * 80d - 15d,
+            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 90, i * 80d - 15d,
                 creatureRenderer.getImage(), Integer.toString(c.getCost()), Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
-            terrainButtons.add(imgBt);
+            creatureButtons.add(imgBt);
             imgBt.onClicked(mce -> {
+                resetSelection();
                 this.currentCreature = (n, t) -> context.getFactory().getSpell(c).summon(c + "_" + n, t, ourId);
                 this.currentCreatureId = c;
-                this.currentTerrain = null;
                 this.selectionMode = BuildingPhaseSelectionMode.CREATURE;
                 
                 BufferedImage img = context.getFactory().getBufferedImage(c, ourId.ifOne(true, false));
@@ -156,23 +160,70 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         }
     }
 
-    // TODO: position
+    private void populateTrapButtons() {
+        // Populate TerrainButtons
+        TrapId[] traps = TrapId.values();
+        for (int i = 0; i < traps.length; i++) {
+            TrapId t = traps[i];
+
+            IRenderData trapRenderer = t.getImprint().getNormalRenderer();
+            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 90, Game.window().getHeight() - i * 80d - 110d,
+                trapRenderer.getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
+            imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
+            imgBt.setFont(Main.GUI_FONT_SMALL);
+            trapButtons.add(imgBt);
+            imgBt.onClicked(mce -> {
+                resetSelection();
+                this.currentTrapId = t;
+                this.selectionMode = BuildingPhaseSelectionMode.TRAP;
+                
+                TrapImprint imprint = t.getImprint();
+                Game.window().cursor().setVisible(true);
+                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImage());
+                context.getBoard().setHighlightMask(new ImprintHighlighter(imprint));
+                Game.window().cursor().showDefaultCursor();
+            });
+            screen.getComponents().add(imgBt);
+            imgBt.prepare();
+            imgBt.setTextAlign(Align.CENTER);
+        }
+    }
+
+
+    private void updatePositions() {
+        for (int i = 0; i < trapButtons.size(); i++) {
+            trapButtons.get(i).setLocation(Main.INNER_MARGIN + 90, Game.window().getHeight() - i * 80d - 110d);
+        }
+    }
+
+    private void resetSelection() {
+        this.currentCreature = null;
+        this.currentCreatureId = null;
+        this.currentTerrain = null;
+        this.currentTrapId = null;
+    }
+
     // TODO: disable hoverover
 
     public void disable() {
         terrainButtons.forEach(GuiComponent::suspend);
+        creatureButtons.forEach(GuiComponent::suspend);
+        trapButtons.forEach(GuiComponent::suspend);
         screen.getComponents().removeAll(terrainButtons);
-        currentTerrain = null;
-        currentCreature = null;
-        currentCreatureId = null;
-        currentTrapId = null;
+        screen.getComponents().removeAll(creatureButtons);
+        screen.getComponents().removeAll(trapButtons);
+        resetSelection();
         enabled = false;
         resetCursor();
     }
 
     public void enable() {
         terrainButtons.forEach(ImageButton::prepare);
+        creatureButtons.forEach(ImageButton::prepare);
+        trapButtons.forEach(ImageButton::prepare);
         screen.getComponents().addAll(terrainButtons);
+        screen.getComponents().addAll(creatureButtons);
+        screen.getComponents().addAll(trapButtons);
         enabled = true;
     }
 
@@ -233,7 +284,30 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void spawnTrap(MouseEvent c) {
+        if (this.selectionMode != BuildingPhaseSelectionMode.TRAP || context.getArchitect() == null) {
+            return;
+        }
 
+        if (currentTrapId == null)
+            return;
+
+        if (c.getButton() != MouseEvent.BUTTON1)
+            return;
+
+        Point p = c.getPoint();
+        if (intersectsWithButton(p))
+            return;
+        Tile t = context.getBoard().findTile(p);
+        if (t == null)
+            return;
+
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
+                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId, context.getBoard())) {
+                context.getSpawner().spawnTrap(currentTrapId, ourId, t);
+                currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate()));
+            }
+        }
     }
 
     private void summonCreature(MouseEvent c) {

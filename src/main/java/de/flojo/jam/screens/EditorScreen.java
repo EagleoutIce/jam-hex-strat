@@ -123,7 +123,6 @@ public class EditorScreen extends Screen {
         super.prepare();
 
         // TODO: maybe group reset?
-
         trapSpawner.removeAll();
         creatureFactory.removeAll();
         architect.clearField();// init

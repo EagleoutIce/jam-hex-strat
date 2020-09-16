@@ -11,6 +11,7 @@ import java.util.function.Predicate;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.player.PlayerId;
 
 // removed sort as it will be rendered with joint render and this is more effective
 public class CreatureCollection implements Serializable {
@@ -113,6 +114,18 @@ public class CreatureCollection implements Serializable {
             }
         }
     }
+
+	public boolean playerOneOwns() {
+		return collection.stream().anyMatch(c -> c.getOwner() == PlayerId.ONE);
+	}
+
+	public boolean playerTwoOwns() {
+        return collection.stream().anyMatch(c -> c.getOwner() == PlayerId.TWO);
+	}
+
+	public boolean noneCanDoSomething() {
+		return collection.stream().noneMatch(Creature::canDoSomething);
+	}
 
 
 }

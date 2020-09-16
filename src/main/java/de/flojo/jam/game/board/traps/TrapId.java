@@ -8,23 +8,25 @@ import de.flojo.jam.game.board.traps.management.TrapData;
 import de.flojo.jam.game.board.traps.management.TrapTile;
 
 public enum TrapId {
-    T_SPIKE("SpikeTrap", TrapImprint.getSingle(TrapTile.SPIKE), Color.MAGENTA, 250),
+    T_SPIKE("SpikeTrap", TrapImprint.getSingle(TrapTile.SPIKE), Color.MAGENTA, 250, 5),
     T_BEAR_TRAP("BearTrap", new TrapImprint(new TrapData(//
         Arrays.asList(//
             Arrays.asList(TrapTile.BEAR_TRAP_GHOST, null), //
             Arrays.asList(null, TrapTile.BEAR_TRAP) //
-        )), new Point(1, 1)), Color.GREEN, 300);
+        )), new Point(1, 1)), Color.GREEN, 300, 10);
     
     private final TrapImprint imprint;
     private final Color simpleColor;
     private final String name;
     private final int animationCooldown;
+    private final int cost;
 
-    TrapId(final String name, final TrapImprint imprint, Color simpleColor, int animationCooldown) {
+    TrapId(final String name, final TrapImprint imprint, Color simpleColor, int animationCooldown, int cost) {
         this.name = name;
         this.imprint = imprint;
         this.simpleColor = simpleColor;
         this.animationCooldown = animationCooldown;
+        this.cost = cost;
     }
 
 
@@ -44,4 +46,7 @@ public enum TrapId {
         return animationCooldown;
     }
 
+    public int getCost() {
+        return cost;
+    }
 }

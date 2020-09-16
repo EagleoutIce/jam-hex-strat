@@ -110,12 +110,16 @@ public class ServerController implements IServerController {
             mGController.buildTerrainAt(csConnection.getRole(), message.getTerrain(), message.getPosition());
         } else if (message.getCreature() != null) {
             mGController.summonCreatureAt(csConnection.getRole(), message.getCreature(), message.getPosition());
+        } else if (message.getTrap() != null) {
+            mGController.spawnTrapAt(csConnection.getRole(), message.getTrap(), message.getPosition());
+        } else {
+            Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}", new Object[] {message, csConnection});
         }
         playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
         
-        // TODO: URGENT: SHARE WITH OTHER AND AFTER THAT SEND BUILD FOR OTHER
-        // TODO: check if no more builds
-        mGController.nextBuildRequest();
+        if(!mGController.nextBuildRequest()) {
+            mGController.startMainGame();
+        }
     }
 
 

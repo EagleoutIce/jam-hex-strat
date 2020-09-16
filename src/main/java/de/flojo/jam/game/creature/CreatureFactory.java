@@ -136,6 +136,13 @@ public class CreatureFactory {
         return creatures.get(name);
     }
 
+    public boolean playerOneOwns() {
+        return creatures.playerOneOwns();
+    }
+
+    public boolean playerTwoOwns() {
+        return creatures.playerTwoOwns();
+    }
 
     public boolean isEmpty() {
         return creatures.isEmpty();
@@ -151,6 +158,10 @@ public class CreatureFactory {
 
 	public void resetAll() {
         creatures.resetAll();
+	}
+
+	public boolean noneCanDoSomething() {
+		return creatures.noneCanDoSomething();
 	}
 
 }

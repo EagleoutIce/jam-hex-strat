@@ -28,7 +28,9 @@ public class ConnectScreen extends Screen {
         "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
         "Jaiger", "Nicht du", "Nicht ich", "Humbug", "Wer das liest...", "0x48", "Errör", "Fehlähr", "Wortjoke",
         "Vormorgen", "Nachgestern", "Blumenwiese", "Ostfriese", "Sonnenkind", "Mondmöchtegern", "Jarl", "Karl",
-        "Schweizer", "Hinterdupfinger", "Der coole", "Der coolere"
+        "Schweizer", "Hinterdupfinger", "Der coole", "Der coolere", "Möchtegern", "Möchte-Gern", "Der mit der Macht", "Der mit dem Geld",
+        "Pusteblume", "Narzisse", "Jens", "Jakob", "Jerome", "0x12", "Der lustige", "Hammer Hans", "Hyänen Heini", "Steppenjürgen",
+        "Eine Box", "Eine Katze"
     };
 
     private boolean locked;

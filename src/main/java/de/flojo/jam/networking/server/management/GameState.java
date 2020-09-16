@@ -76,6 +76,14 @@ public class GameState {
     }
 
 
+	public void nextPlayer() {
+        if(currentTurn == PlayerId.ONE) {
+            currentTurn = PlayerId.TWO;
+        } else if(currentTurn == PlayerId.TWO) {
+            currentTurn = PlayerId.ONE;
+        }
+	}
+
 	public boolean nextBuild() {
         if(currentTurn == PlayerId.ONE && p2CanDoBuild()) {
             currentTurn = PlayerId.TWO;

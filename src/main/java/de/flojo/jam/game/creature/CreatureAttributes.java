@@ -31,7 +31,7 @@ public class CreatureAttributes {
     }
 
     public boolean canDoSomething() {
-        return currentAp != 0 || currentMp != 0;
+        return currentAp > 0 || currentMp > 0;
     }
 
     
@@ -87,5 +87,10 @@ public class CreatureAttributes {
                 .append("]");
         return builder.toString();
     }
+
+	public void setUsed() {
+        this.currentAp = 0;
+        this.currentMp = 0;
+	}
 
 }

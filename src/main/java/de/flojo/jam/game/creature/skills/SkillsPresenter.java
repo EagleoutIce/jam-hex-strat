@@ -39,6 +39,7 @@ public class SkillsPresenter {
     private final CreatureActionController actionController;
 
     Button moveButton;
+    Button skipButton;
     private List<Button> skillButtons;
 
     public SkillsPresenter(Screen target, Board board, CreatureFactory factory, TrapSpawner traps, PlayerId playerId,
@@ -88,6 +89,13 @@ public class SkillsPresenter {
             }
         });
         moveButton.prepare();
+        skipButton = new Button("Skip", Main.GUI_FONT_SMALL);
+        skipButton.onClicked(me -> {
+            actionController.cancelCurrentOperation();
+            currentCreature.setUsed();
+            update();
+        });
+        skipButton.prepare();
 
         for (ICreatureSkill skill : attributes.getSkills()) {
             Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
@@ -108,6 +116,7 @@ public class SkillsPresenter {
         // TODO: onClick
 
         target.getComponents().add(moveButton);
+        target.getComponents().add(skipButton);
         target.getComponents().addAll(skillButtons);
         updatePositions();
     }
@@ -118,6 +127,9 @@ public class SkillsPresenter {
         if(button != null) {
             button.setEnabled(attributes.getApLeft() > 0);
         }
+        if(skipButton != null) {
+            skipButton.setEnabled(attributes.canDoSomething());
+        }
     }
 
     private void moveOperationEnded(CreatureAttributes attributes, Boolean performed) {
@@ -125,6 +137,9 @@ public class SkillsPresenter {
             attributes.useMp();
         if(moveButton != null) {
             moveButton.setEnabled(attributes.getMpLeft() > 0);
+        }
+        if(skipButton != null) {
+            skipButton.setEnabled(attributes.canDoSomething());
         }
     }
 
@@ -140,7 +155,7 @@ public class SkillsPresenter {
 
     private boolean intersectsWithButton(Point p) {
         // this did escalate... maybe with list?
-        if (moveButton.getBoundingBox().contains(p)) {
+        if (moveButton.getBoundingBox().contains(p) || skipButton.getBoundingBox().contains(p)) {
             return true;
         }
         for (Button button : skillButtons) {
@@ -155,6 +170,7 @@ public class SkillsPresenter {
             return;
         CreatureAttributes attributes = currentCreature.getAttributes();
         moveButton.setEnabled(attributes.getMpLeft() > 0);
+        skipButton.setEnabled(attributes.canDoSomething());
         int width = Game.window().getWidth();
         int height = Game.window().getHeight();
         double mw = moveButton.getWidth();
@@ -165,6 +181,8 @@ public class SkillsPresenter {
             offCounter += button.getWidth() + 10;
             button.setLocation(width - offCounter, height - 90d);
         }
+
+        skipButton.setLocation(width - offCounter - skipButton.getWidth() - 10, height - 90d);
     }
 
     private boolean notActive() {
@@ -176,9 +194,13 @@ public class SkillsPresenter {
         target.getComponents().removeAll(skillButtons);
         if (moveButton != null)
             moveButton.suspend();
+        if(skipButton != null)
+            skipButton.suspend();
         target.getComponents().remove(moveButton);
+        target.getComponents().remove(skipButton);
         skillButtons.clear();
         moveButton = null;
+        skipButton = null;
         if (currentCreature != null) {
             // reset
             currentCreature.unsetHighlight();

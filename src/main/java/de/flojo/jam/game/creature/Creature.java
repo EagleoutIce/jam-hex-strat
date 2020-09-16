@@ -145,4 +145,12 @@ public class Creature implements IRenderable {
 	public boolean isRaised() {
 		return base.getTile().getTerrainType().isRaised();
 	}
+
+	public boolean canDoSomething() {
+		return getAttributes().canDoSomething();
+	}
+
+	public void setUsed() {
+        getAttributes().setUsed();
+	}
 }
