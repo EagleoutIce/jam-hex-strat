@@ -8,11 +8,12 @@ public enum TrapTile {
     SPIKE("Stachelfalle", new SimpleImageRenderer("tiles/traps/stachelfalle.png", -69 / 2.15d, -51 / 1.55),
             new SimpleImageRenderer("tiles/traps/stachelfalle_aktiv.png", -69 / 2.15d, -51 / 1.55),
             new TrapImprintNodeMap(TrapIdConstants.T_SPIKE, 0, 0)),
-    BEAR_TRAP("Bärenfalle", new SimpleImageRenderer("tiles/traps/baerenfalle.png", -124 / 4.09d, -100 / 1.95),
-            new SimpleImageRenderer("tiles/traps/baerenfalle_aktiv.png", -124 / 4.09d, -100 / 1.95),
-            new TrapImprintNodeMap(TrapIdConstants.T_BEAR_TRAP, 0, 0)),
+    BEAR_TRAP("Bärenfalle", new SimpleImageRenderer("tiles/traps/baerenfalle.png", -124 / 1.39d, -100 / 1.39),
+            new SimpleImageRenderer("tiles/traps/baerenfalle_aktiv.png", -124 / 1.39d, -100 / 1.39),
+            new TrapImprintNodeMap(TrapIdConstants.T_BEAR_TRAP, 1, 1)),
     BEAR_TRAP_GHOST("Bärenfalle:Geist", VoidRenderer.get(), VoidRenderer.get(),
-            new TrapImprintNodeMap(TrapIdConstants.T_BEAR_TRAP, 1, 1));
+            new TrapImprintNodeMap(TrapIdConstants.T_BEAR_TRAP, 0, 0));
+
 
     private final String displayName;
     private final IRenderData normalRenderer;

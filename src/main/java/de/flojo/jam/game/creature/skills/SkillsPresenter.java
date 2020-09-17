@@ -244,6 +244,8 @@ public class SkillsPresenter {
 
     public void disable() {
         enabled.set(false);
+        if(currentCreature != null)
+            currentCreature.unsetHighlight();   
         currentCreature = null;
         creatureCoordinate = null;
         movementBuffer.clear();
