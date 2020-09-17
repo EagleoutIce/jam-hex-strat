@@ -24,7 +24,7 @@ import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.ISummonCreature;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
-import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
@@ -78,7 +78,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         this.trapButtons = new ArrayList<>();
         populateTrapButtons();
         this.currentBuildConsumer = null;
-        InputController.get().onMoved(this::lockOnOver, BuildingPhaseScreen.NAME);
+        InputController.get().onMoved(this::lockOnOver, GameScreen.NAME);
         updatePositions();
         Game.window().onResolutionChanged(r -> updatePositions());
     }
@@ -252,12 +252,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         }
     }
 
-    private boolean intersectsWithButton(Point p) {
-        for (ImageButton imageButton : terrainButtons) {
-            if (imageButton.getBoundingBox().contains(p))
-                return true;
-        }
-        return false;
+    private boolean intersectsWithSideBar(Point p) {
+        return enabled && p.getX() <= SIDEBAR.getWidth();
     }
 
     private void plantTile(MouseEvent c) {
@@ -272,7 +268,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             return;
 
         Point p = c.getPoint();
-        if (intersectsWithButton(p))
+        if (intersectsWithSideBar(p))
             return;
         Tile t = context.getBoard().findTile(p);
         if (t == null)
@@ -295,7 +291,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             return;
 
         Point p = c.getPoint();
-        if (intersectsWithButton(p))
+        if (intersectsWithSideBar(p))
             return;
         Tile t = context.getBoard().findTile(p);
         if (t == null)
@@ -323,7 +319,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
 
         Point p = c.getPoint();
-        if (intersectsWithButton(p))
+        if (intersectsWithSideBar(p))
             return;
         Tile t = context.getBoard().findTile(p);
         if (t == null)

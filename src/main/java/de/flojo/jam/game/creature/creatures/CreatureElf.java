@@ -10,6 +10,7 @@ import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureBase;
 import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
+import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
@@ -17,7 +18,7 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 public class CreatureElf extends Creature {
 
     public CreatureElf(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
+        super(CreatureId.ELF, name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
     }
 
     private static CreatureCore createElfCore(PlayerId playerId, IRenderData normal, IRenderData dying) {

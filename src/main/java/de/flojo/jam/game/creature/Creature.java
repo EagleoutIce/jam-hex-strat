@@ -19,6 +19,7 @@ import de.gurkenlabs.litiengine.graphics.IRenderable;
 public class Creature implements IRenderable {
 
     private final String name;
+    private final CreatureId creatureId;
     private final CreatureBase base;
     private final CreatureCore core;
     private final CreatureCollection cCollection;
@@ -28,12 +29,15 @@ public class Creature implements IRenderable {
 
     private Runnable onDead;
 
-    public Creature(final String name,final CreatureCollection collection, final TrapCollection traps, CreatureBase base, CreatureCore core) {
+    public Creature(final CreatureId creatureId, final String name, final CreatureCollection collection,
+            final TrapCollection traps, CreatureBase base, CreatureCore core) {
+        this.creatureId = creatureId;
         this.base = base;
         this.core = core;
         this.name = name;
         this.cCollection = collection;
-        this.cCollection.add(this);
+        if(cCollection != null)
+            this.cCollection.add(this);
         this.tCollection = traps;
         this.base.assignCreature(core);
     }
@@ -67,7 +71,7 @@ public class Creature implements IRenderable {
     }
 
     public void move(Tile target) {
-        if(dead())
+        if (dead())
             return;
         base.move(target);
     }
@@ -85,7 +89,7 @@ public class Creature implements IRenderable {
     public void render(Graphics2D g) {
         this.base.render(g);
     }
-    
+
     public void useSkill(Board board, SkillId wantedSkill, Creature target) {
         useSkill(new DefaultEffectContext(board, cCollection, tCollection), wantedSkill, target);
     }
@@ -97,7 +101,7 @@ public class Creature implements IRenderable {
     public void useSkill(IProvideEffectContext context, ICreatureSkill skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
-    
+
     public Object moveLock() {
         return base.getTargetLocationReachedLock();
     }
@@ -122,35 +126,38 @@ public class Creature implements IRenderable {
         return this.core.getAttributes().getSkill(wantedSkill);
     }
 
-
     public void die() {
         core.die();
-        if(onDead != null)
+        if (onDead != null)
             onDead.run();
         Game.loop().perform(DIE_DURATION, () -> cCollection.remove(this));
+    }
+
+    public boolean isFlying() {
+        return core.isFlying();
+    }
+
+    public boolean isRaised() {
+        return base.getTile().getTerrainType().isRaised();
+    }
+
+    public boolean canDoSomething() {
+        return getAttributes().canDoSomething();
+    }
+
+    public void skip() {
+        getAttributes().setUsed();
+    }
+
+    public CreatureId getCreatureId() {
+        return creatureId;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Creature [").append("name=").append(name)
-                .append(", position=").append(getCoordinate()).append(", owner=").append(this.core.getOwner()).append("]");
+        builder.append("Creature [").append("name=").append(name).append(", position=").append(getCoordinate())
+                .append(", owner=").append(this.core.getOwner()).append("]");
         return builder.toString();
     }
-
-	public boolean isFlying() {
-		return core.isFlying();
-	}
-
-	public boolean isRaised() {
-		return base.getTile().getTerrainType().isRaised();
-	}
-
-	public boolean canDoSomething() {
-		return getAttributes().canDoSomething();
-	}
-
-	public void setUsed() {
-        getAttributes().setUsed();
-	}
 }

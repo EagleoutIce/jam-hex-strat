@@ -1,6 +1,5 @@
 package de.flojo.jam.game.creature;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -8,19 +7,18 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.player.PlayerId;
 
 // removed sort as it will be rendered with joint render and this is more effective
-public class CreatureCollection implements Serializable {
-
-    private static final long serialVersionUID = -2951185236311104006L;
+public class CreatureCollection {
 
     private static final int DEFAULT_SIZE = 32;
 
-    private final transient List<Creature> collection;
+    private final List<Creature> collection;
 
     public CreatureCollection() {
         collection = Collections.synchronizedList(new ArrayList<>(DEFAULT_SIZE));
@@ -125,6 +123,21 @@ public class CreatureCollection implements Serializable {
 
 	public boolean noneCanDoSomething() {
 		return collection.stream().noneMatch(Creature::canDoSomething);
+	}
+
+	public void addAll(CreatureCollection creatures) {
+        this.collection.addAll(creatures.collection);
+	}
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("CreatureCollection [collection=").append(collection).append("]");
+        return builder.toString();
+    }
+
+	public List<CreatureJson> getJsonData() {
+		return collection.stream().map(CreatureJson::new).collect(Collectors.toList());
 	}
 
 

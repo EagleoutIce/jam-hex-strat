@@ -2,6 +2,7 @@ package de.flojo.jam.game.creature;
 
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -32,17 +33,17 @@ public class CreatureFactory {
             .load("creatures/animations/creature_die_p2.png", 128, 128);
 
     // new one for each
-    private IRenderData getDieAnimation(PlayerId playerId) {
+    private IRenderData getDieAnimation(final PlayerId playerId) {
         return new AnimationRenderer(playerId.ifOne(S_CREATURE_P1_DIEING, S_CREATURE_P2_DIEING),
                 Creature.DIE_DURATION / 25, -128 / 2d, -128 / 1.325d);
     }
 
     private Consumer<Creature> onSelectionChanged = null;
-    private CreatureCollection creatures;
-    private TrapCollection traps;
-    private Board board;
+    private final CreatureCollection creatures;
+    private final TrapCollection traps;
+    private final Board board;
 
-    public CreatureFactory(final String screen, final Board board, TrapCollection traps) {
+    public CreatureFactory(final String screen, final Board board, final TrapCollection traps) {
         creatures = new CreatureCollection();
         this.board = board;
         this.traps = traps;
@@ -50,21 +51,21 @@ public class CreatureFactory {
     }
 
     // maybe allow more?
-    public void setOnSelectionChanged(Consumer<Creature> onSelectionChanged) {
+    public void setOnSelectionChanged(final Consumer<Creature> onSelectionChanged) {
         this.onSelectionChanged = onSelectionChanged;
     }
 
     private Creature selectedCreature = null;
 
-    private void setActiveCreature(MouseEvent c) {
+    private void setActiveCreature(final MouseEvent c) {
         if (c.getButton() != MouseEvent.BUTTON1 || !board.doesHover())
             return;
 
-        Creature oldCreature = selectedCreature;
+        final Creature oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
         if (oldCreature != selectedCreature) {
             Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
-            if(onSelectionChanged != null) {
+            if (onSelectionChanged != null) {
                 onSelectionChanged.accept(selectedCreature);
             }
         }
@@ -74,7 +75,7 @@ public class CreatureFactory {
         return selectedCreature;
     }
 
-    public ISummonPlayerCreature getSpell(CreatureId id) {
+    public ISummonPlayerCreature getSpell(final CreatureId id) {
         switch (id) {
             case PEASANT:
                 return this::summonPeasant;
@@ -90,33 +91,33 @@ public class CreatureFactory {
         }
     }
 
-    public BufferedImage getBufferedImage(CreatureId id, boolean p1) {
-        if(id == CreatureId.NONE)
+    public BufferedImage getBufferedImage(final CreatureId id, final boolean p1) {
+        if (id == CreatureId.NONE)
             return null;
         return p1 ? id.getP1Image().getImage() : id.getP2Image().getImage();
     }
 
-    public Creature summonPeasant(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreaturePeasant(uniqueName, startBase, pId, creatures, traps,
-        CreatureId.PEASANT.getRenderer(pId), getDieAnimation(pId));
+    public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId) {
+        return new CreaturePeasant(uniqueName, startBase, pId, creatures, traps, CreatureId.PEASANT.getRenderer(pId),
+                getDieAnimation(pId));
     }
 
-    public Creature summonGoblin(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureGoblin(uniqueName, startBase, pId, creatures, traps,
-        CreatureId.GOBLIN.getRenderer(pId), getDieAnimation(pId));
+    public Creature summonGoblin(final String uniqueName, final Tile startBase, final PlayerId pId) {
+        return new CreatureGoblin(uniqueName, startBase, pId, creatures, traps, CreatureId.GOBLIN.getRenderer(pId),
+                getDieAnimation(pId));
     }
 
-    public Creature summonElf(String uniqueName, Tile startBase, PlayerId pId) {
+    public Creature summonElf(final String uniqueName, final Tile startBase, final PlayerId pId) {
         return new CreatureElf(uniqueName, startBase, pId, creatures, traps, CreatureId.ELF.getRenderer(pId),
                 getDieAnimation(pId));
     }
 
-    public Creature summonHalfling(String uniqueName, Tile startBase, PlayerId pId) {
-        return new CreatureHalfling(uniqueName, startBase, pId, creatures, traps,
-            CreatureId.HALFLING.getRenderer(pId), getDieAnimation(pId));
+    public Creature summonHalfling(final String uniqueName, final Tile startBase, final PlayerId pId) {
+        return new CreatureHalfling(uniqueName, startBase, pId, creatures, traps, CreatureId.HALFLING.getRenderer(pId),
+                getDieAnimation(pId));
     }
 
-    public void removeCreature(Tile onBase) {
+    public void removeCreature(final Tile onBase) {
         creatures.removeIf(c -> Objects.equals(c.getCoordinate(), onBase.getCoordinate()));
     }
 
@@ -124,15 +125,15 @@ public class CreatureFactory {
         return creatures;
     }
 
-    public Optional<Creature> get(BoardCoordinate coordinate) {
+    public Optional<Creature> get(final BoardCoordinate coordinate) {
         return creatures.get(coordinate);
     }
 
-    public Optional<Creature> get(Set<Tile> tiles) {
+    public Optional<Creature> get(final Set<Tile> tiles) {
         return creatures.get(tiles);
     }
 
-    public Creature get(String name) {
+    public Creature get(final String name) {
         return creatures.get(name);
     }
 
@@ -156,12 +157,22 @@ public class CreatureFactory {
         this.creatures.clear();
     }
 
-	public void resetAll() {
+    public void resetAll() {
         creatures.resetAll();
-	}
+    }
 
-	public boolean noneCanDoSomething() {
-		return creatures.noneCanDoSomething();
-	}
+    public boolean noneCanDoSomething() {
+        return creatures.noneCanDoSomething();
+    }
+
+    public void updateCreatures(List<CreatureJson> c) {
+        // we cannot reassign to avoid the loss of references
+        this.creatures.clear();
+        for (CreatureJson cJ : c) {
+            getSpell(cJ.getId()).summon(cJ.getName(), board.getTile(cJ.getPos()),
+                    cJ.getOwner());
+        }
+        this.selectedCreature = null;
+    }
 
 }

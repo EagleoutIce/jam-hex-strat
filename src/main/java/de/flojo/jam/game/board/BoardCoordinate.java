@@ -10,6 +10,10 @@ public class BoardCoordinate extends Point {
         super();
     }
 
+    public BoardCoordinate(BoardCoordinate p) {
+        super(p.x, p.y);
+    }
+
     public BoardCoordinate(Point p) {
         super(p);
     }

@@ -4,10 +4,14 @@ public enum MessageTypeEnum {
     HELLO(HelloMessage.class),
     HELLO_REPLY(HelloReplyMessage.class),
     ERROR(ErrorMessage.class),
-    GAME_START(GameStartMessage.class),
+    BUILD_START(BuildPhaseStartMessage.class),
     YOU_CAN_BUILD(YouCanBuildMessage.class),
     BUILD_CHOICE(BuildChoiceMessage.class),
-    BUILD_UPDATE(BuildUpdateMessage.class);
+    BUILD_UPDATE(BuildUpdateMessage.class),
+    GAME_START(GameStartMessage.class),
+    NEXT_ROUND(NextRoundMessage.class), 
+    YOUR_TURN(ItIsYourTurnMessage.class),
+    TURN_ACTION(TurnActionMessage.class);
     
     private final Class<? extends MessageContainer> targetClass;
 

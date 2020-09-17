@@ -5,9 +5,10 @@ import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.logging.Level;
 
+import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.board.traps.TrapCollection;
@@ -30,8 +31,9 @@ public class CreatureActionController {
     private Set<Tile> possibleTargets;
     private boolean completed = false;
     private boolean performed = false;
-    private Consumer<Boolean> onCompleted = null;
+    private BiConsumer<Boolean, BoardCoordinate> onCompleted = null;
     private ICreatureSkill currentSkill = null;
+    private BoardCoordinate clickedOn;
 
     private enum CurrentActionType {
         MOVEMENT, SKILL, NONE
@@ -50,7 +52,7 @@ public class CreatureActionController {
         return !t.getTerrainType().blocksWalking() && context.getCreatures().get(t.getCoordinate()).isEmpty();
     }
 
-    public boolean requestSkillFor(Creature creature, SkillId skillId, Consumer<Boolean> onCompleted) {
+    public boolean requestSkillFor(Creature creature, SkillId skillId, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
         if (activeCreature != null) {
             Game.log().log(Level.WARNING, "Ignored Operation-Skill ({2}) request for {0} as there was anther active Creature ({1})", new Object[] {creature, activeCreature, skillId});
             return false;
@@ -83,9 +85,12 @@ public class CreatureActionController {
     }
 
 
-    public boolean requestMoveFor(Creature creature, Consumer<Boolean> onCompleted) {
+    public boolean requestMoveFor(Creature creature, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
         if (activeCreature != null) {
-            Game.log().log(Level.WARNING, "Ignored Operation-Movement request for {0} as there was anther active Creature ({1})", new Object[] {creature, activeCreature});
+            Game.log().log(Level.WARNING, "Ignored Operation-Movement request for {0} as there was another active Creature ({1})", new Object[] {creature, activeCreature});
+            return false;
+        } else if (creature == null) {
+            Game.log().severe("Requested Operation-Movement for null creature!");
             return false;
         }
 
@@ -129,6 +134,7 @@ public class CreatureActionController {
             return;
 
         Tile tile = mayTile.get();
+        this.clickedOn = tile.getCoordinate();
 
         switch(currentActionType) {
             case MOVEMENT:
@@ -166,6 +172,7 @@ public class CreatureActionController {
         
         Game.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[] { tile, activeCreature, currentSkill });
         activeCreature.useSkill(context, currentSkill, targetCreature);
+        
         performed = true;
         completed(false);
     }
@@ -241,10 +248,10 @@ public class CreatureActionController {
             selectionLock.notifyAll();
         }
         if(onCompleted != null)
-            onCompleted.accept(performed);
+            onCompleted.accept(performed, clickedOn);
         // want to move again?
         Creature storedCreature = activeCreature;
-        Consumer<Boolean> storeOnComplete = onCompleted;
+        BiConsumer<Boolean, BoardCoordinate> storeOnComplete = onCompleted;
         boolean didPerform = performed;
         reset();
         // redo movement request if mp left
@@ -254,6 +261,7 @@ public class CreatureActionController {
 
     void reset() {
         this.activeCreature = null;
+        this.clickedOn = null;
         this.possibleTargets.forEach(t -> t.mark(false));
         this.possibleTargets.clear();
         this.onCompleted = null;

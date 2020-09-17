@@ -1,6 +1,7 @@
 package de.flojo.jam.game.board.traps;
 
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -61,8 +62,6 @@ public class TrapSpawner {
         return traps;
     }
 
-
-
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
         for (Tile tile : tiles) {
@@ -93,4 +92,12 @@ public class TrapSpawner {
 	public void removeAll() {
         this.traps.clear();
 	}
+
+	public void updateTraps(List<TrapJson> nT) {
+        traps.clear();
+        for (TrapJson tJ : nT) {
+            Trap deserialized = new Trap(board, tJ.getOwner(), tJ.getId(), board.getTile(tJ.getPos()));
+            traps.add(deserialized);
+        }
+    }
 }

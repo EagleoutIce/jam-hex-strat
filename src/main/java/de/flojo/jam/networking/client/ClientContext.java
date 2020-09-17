@@ -4,7 +4,7 @@ import java.util.UUID;
 
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.player.PlayerId;
-import de.flojo.jam.networking.messages.GameStartMessage;
+import de.flojo.jam.networking.messages.BuildPhaseStartMessage;
 import de.flojo.jam.networking.messages.HelloReplyMessage;
 
 public class ClientContext {
@@ -45,7 +45,7 @@ public class ClientContext {
         this.terrain = message.getTerrain();
     }
 
-    public void handleGameStart(GameStartMessage message){
+    public void handleGameStart(BuildPhaseStartMessage message){
         this.p1Id = message.getP1Id();
         this.p2Id = message.getP2Id();
         this.p1Name = message.getP1Name();

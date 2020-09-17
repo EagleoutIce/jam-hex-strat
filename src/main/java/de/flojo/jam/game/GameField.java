@@ -2,16 +2,26 @@ package de.flojo.jam.game;
 
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.function.Consumer;
 
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.terrain.Architect;
 import de.flojo.jam.game.board.terrain.TerrainMap;
+import de.flojo.jam.game.board.traps.TrapJson;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.creature.CreatureJson;
+import de.flojo.jam.game.creature.IAction;
+import de.flojo.jam.game.creature.IActionMove;
+import de.flojo.jam.game.creature.IActionSkill;
+import de.flojo.jam.game.creature.IActionSkip;
+import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.BuildingPhaseButtonPresenter;
+import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
@@ -39,6 +49,7 @@ public class GameField implements IRenderable, IProvideContext {
 
     private boolean canBuild = false;
     private boolean ourTurn = false;
+    private boolean canDoAction = false;
 
     // TODO: present our id to the player. present turn etc.
 
@@ -62,10 +73,10 @@ public class GameField implements IRenderable, IProvideContext {
         if (!board.doesHover() || !ourTurn)
             return;
 
-        if(canBuild) {
+        if (canBuild) {
             buildingPhaseButtons.processMouse(e);
         }
-    
+
     }
 
     public void updateTerrain(TerrainMap map) {
@@ -137,5 +148,53 @@ public class GameField implements IRenderable, IProvideContext {
     public int getMoneyLeft() {
         return moneyLeft;
     }
+
+    public void setPlayerId(PlayerId id) {
+        presenter.setPlayerId(id);
+        architect.setPlayerId(id);
+        owner = id;
+    }
+
+    public void updateCreatures(List<CreatureJson> creatures) {
+        factory.updateCreatures(creatures);
+    }
+
+    public void updateTraps(List<TrapJson> traps) {
+        spawner.updateTraps(traps);
+    }
+
+    public void allowOneTurn(IActionSkip skip, IActionMove move, IActionSkill skill, ItIsYourTurnMessage message) {
+        // do smth with message?
+        canDoAction = true;
+        ourTurn = true;
+        presenter.enable();
+        presenter.setOnActionConsumer(new IAction(){
+			@Override
+			public void onSkip(BoardCoordinate creaturePosition) {
+                skip.process(creaturePosition);
+                cleanup();
+			}
+
+			@Override
+			public void onMove(BoardCoordinate from, BoardCoordinate target) {
+                move.process(from, target);
+                cleanup();
+				
+			}
+
+			@Override
+			public void onSkill(BoardCoordinate from, BoardCoordinate target, SkillId skillId) {
+				skill.process(from, target, skillId);
+				cleanup();
+			}
+            
+            private void cleanup() {
+                canDoAction = false;
+                ourTurn = false;
+                presenter.disable();
+                presenter.setOnActionConsumer(null);
+            }
+        });
+	}
 
 }

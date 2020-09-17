@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.terrain.TerrainMap;
+import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.server.ServerController;
 import de.flojo.jam.util.FileHelper;
@@ -33,9 +34,11 @@ public class ServerSetupScreen extends Screen {
     private GameField gameField;
 
     private boolean serverStarted = false;
-    
-    private String chosenTerrain = null;
+    private String chosenTerrainPath = null;
 
+    private Button p1;
+    private Button p2;
+    private Button both;
 
     public ServerSetupScreen() {
         super(NAME);
@@ -65,7 +68,7 @@ public class ServerSetupScreen extends Screen {
         int largeHeight = g.getFontMetrics().getHeight();
         TextRenderer.render(g, "Server-Configuration", Main.INNER_MARGIN,
                 7.0 + largeHeight);
-    
+
         g.setFont(Main.TEXT_STATUS);
         TextRenderer.render(g, "Server status: " + serverStatus(), Main.INNER_MARGIN,
                 15.0 + g.getFontMetrics().getHeight() + largeHeight);
@@ -92,6 +95,9 @@ public class ServerSetupScreen extends Screen {
         this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
         this.startServer.setLocation(width - this.startServer.getWidth() - 0.5*Main.INNER_MARGIN - 10d, height - this.startServer.getHeight());
         this.loadTerrain.setLocation(width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(), height - this.loadTerrain.getHeight());
+        this.p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 23d);
+        this.p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 23d);
+        this.both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 23d);
     }
 
     @Override
@@ -117,7 +123,36 @@ public class ServerSetupScreen extends Screen {
         this.portNumber = new TextFieldComponent(0, 0, 100, 40, DEFAULT_PORT);
         this.portNumber.setFormat("[0-9]{1,4}");
         this.getComponents().add(portNumber);
+        initShowTeamButtons();
         updatePositions();
+    }
+
+    private void initShowTeamButtons() {
+        p1 = new Button("P1", Main.GUI_FONT_SMALL);
+        p1.onClicked(c -> {//
+            gameField.setPlayerId(PlayerId.ONE);
+            p1.setColors(Color.GREEN, Color.GREEN.brighter());
+            p2.setColors(Color.WHITE, Color.WHITE.darker());
+            both.setColors(Color.WHITE, Color.WHITE.darker());
+        });
+        p2 = new Button("P2", Main.GUI_FONT_SMALL);
+        p2.onClicked(c -> {//
+            gameField.setPlayerId(PlayerId.TWO);
+            p1.setColors(Color.WHITE, Color.WHITE.darker());
+            p2.setColors(Color.GREEN, Color.GREEN.brighter());
+            both.setColors(Color.WHITE, Color.WHITE.darker());
+        });
+        both = new Button("Both", Main.GUI_FONT_SMALL);
+        both.onClicked(c -> {//
+            gameField.setPlayerId(null);
+            p1.setColors(Color.WHITE, Color.WHITE.darker());
+            p2.setColors(Color.WHITE, Color.WHITE.darker());
+            both.setColors(Color.GREEN, Color.GREEN.brighter());
+        });
+        this.getComponents().add(p1);
+        this.getComponents().add(p2);
+        this.getComponents().add(both);
+        both.setColors(Color.GREEN, Color.GREEN.brighter());
     }
 
     private void loadTerrain() {
@@ -127,18 +162,18 @@ public class ServerSetupScreen extends Screen {
             return;
         }
 
-        this.chosenTerrain = chosen;
+        this.chosenTerrainPath = chosen;
 
         loadCurrentTerrain();
     }
 
     private void loadCurrentTerrain() {
-        if(chosenTerrain == null)
+        if(chosenTerrainPath == null)
             return;
-        Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrain);
+        Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosenTerrain)),
-            chosenTerrain);
+            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosenTerrainPath)),
+            chosenTerrainPath);
             gameField.updateTerrain(map);
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", gameField.getTerrainName());
         } catch (FileNotFoundException e) {
@@ -165,10 +200,10 @@ public class ServerSetupScreen extends Screen {
 
         if(data.length == 0)
             return;
-        
+
         switch(data[0]) {
             case "STOPPED":
-                stopServer();   
+                stopServer();
                 break;
 
             default:

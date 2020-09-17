@@ -1,16 +1,24 @@
 package de.flojo.jam.networking.server.management;
 
+import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.board.traps.TrapSpawner;
+import de.flojo.jam.game.creature.Creature;
+import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.player.PlayerId;
-import de.flojo.jam.networking.messages.BuildChoiceMessage;
+import de.flojo.jam.networking.messages.GameStartMessage;
+import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
+import de.flojo.jam.networking.messages.NextRoundMessage;
+import de.flojo.jam.networking.messages.TurnActionMessage;
 import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.networking.server.ClientServerConnection;
 import de.flojo.jam.networking.server.PlayerController;
@@ -27,24 +35,17 @@ public class MainGameControl {
 
     public MainGameControl(ServerController controller, IProvideContext context) {
         this.controller = controller;
+        this.playerController = controller.getPlayerController();
         this.context = context;
         this.state = new GameState();
     }
 
     public TerrainMap getTerrainMap() {
-        return context.getBoard().getTerrainMap();
+        return getBoard().getTerrainMap();
     }
 
     public Terrain getTerrain() {
         return getTerrainMap().getTerrain();
-    }
-
-    public boolean dealWithBuildChoice(BuildChoiceMessage choice) {
-        // we do not check if the build is valid as i do not want to duplicate checking
-        // really
-        // we place the stuff and if it breaks we will end the session
-        return true;
-
     }
 
     public void startBuildPhase() {
@@ -75,7 +76,21 @@ public class MainGameControl {
 
     public void startMainGame() {
         Game.log().info("Started main game!");
+        playerController.sendBoth(new GameStartMessage(null, getBoard().getTerrainMap(), getFactory().getCreatures(), getSpawner().getTraps()));
+        nextRound();
         nextGameAction();
+    }
+
+    private TrapSpawner getSpawner() {
+        return context.getSpawner();
+    }
+
+    private CreatureFactory getFactory() {
+        return context.getFactory();
+    }
+
+    private Board getBoard() {
+        return context.getBoard();
     }
 
     private void nextGameAction() {
@@ -83,28 +98,70 @@ public class MainGameControl {
         if(isGameOver()){
             // GAME OVER
             Game.log().info("Game Over");
+            return;
         } else if(roundEnd()) {
-            state.nextRound();
-            context.getFactory().resetAll();
+            nextRound();
         }
+        sendTurnRequest();
+    }
+
+    private void sendTurnRequest() {
+        ClientServerConnection currentPlayer = controller.getPlayerController()
+                .getPlayer(state.getCurrentTurn());
+        currentPlayer.send(new ItIsYourTurnMessage(null));
+        Game.log().log(Level.INFO, "Sending game-turn request to {0}.", currentPlayer);
+    }
+
+    private void nextRound() {
+        state.nextRound();
+        playerController.sendBoth(new NextRoundMessage(null, state.getCurrentRound()));
+        getFactory().resetAll();
     }
 
 	private boolean roundEnd() {
-        return context.getFactory().noneCanDoSomething();
+        return getFactory().noneCanDoSomething();
     }
 
     private boolean isGameOver() {
-        return !context.getFactory().playerOneOwns() || !context.getFactory().playerTwoOwns();
+        return !getFactory().playerOneOwns() || !getFactory().playerTwoOwns();
     }
 
     public void summonCreatureAt(PlayerId player, CreatureId creature, BoardCoordinate position) {
-        context.getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), context.getBoard().getTile(position), player);
+        getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), getBoard().getTile(position), player);
         state.reduceMoney(player, creature.getCost());
 	}
 
 	public void spawnTrapAt(PlayerId player, TrapId trap, BoardCoordinate position) {
-        context.getSpawner().spawnTrap(trap, player, context.getBoard().getTile(position));
+        getSpawner().spawnTrap(trap, player, getBoard().getTile(position));
         state.reduceMoney(player, trap.getCost());
+	}
+
+	public void performAction(TurnActionMessage message) {
+        Optional<Creature> mayCreature = getFactory().get(message.getFrom());
+        if(mayCreature.isEmpty()) {
+            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message);
+            return;
+        }
+        final Creature creature = mayCreature.get();
+
+        switch(message.getAction()) {
+            case MOVEMENT:
+                creature.move(getBoard().getTile(message.getTarget()));
+                break;
+            case SKILL:
+                Optional<Creature> mayTarget = getFactory().get(message.getTarget());
+                if(mayTarget.isEmpty()) {
+                    Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message);
+                    return;
+                }
+                creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
+                break;
+            case SKIP:
+                creature.skip();
+                break;
+            default:
+            case NONE:
+        }
 	}
 
 }

@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.client.ClientController;
-import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -173,8 +173,8 @@ public class ConnectScreen extends Screen {
                 break;
             case "START":
                 // prepare correct Data :D
-                BuildingPhaseScreen.get().setup(clientController.getContext().getMyPlayerId());
-                changeScreen(BuildingPhaseScreen.NAME);
+                GameScreen.get().setup(clientController.getContext().getMyPlayerId());
+                changeScreen(GameScreen.NAME);
                 break;
             default:
                 Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);

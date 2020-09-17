@@ -28,6 +28,8 @@ public class PunchEffect implements IEffectCreature {
         this.context = context;
     }
 
+    // TODO: kill creature if falls off field!
+
     @Override
     public void effect(Creature target, Creature attacker) {
         // done

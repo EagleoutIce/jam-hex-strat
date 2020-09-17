@@ -93,6 +93,10 @@ public class PlayerController {
         return owner.ifOne(playerOne, playerTwo);
     }
 
+    public ClientServerConnection getOtherPlayer(PlayerId owner) {
+        return owner.ifTwo(playerOne, playerTwo);
+    }
+
     public String playerOneName() {
         return playerOne == null ? null : playerOne.getClientName();
     }

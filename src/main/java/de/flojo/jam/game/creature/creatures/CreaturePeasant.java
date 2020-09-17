@@ -10,6 +10,7 @@ import de.flojo.jam.game.creature.CreatureAttributes;
 import de.flojo.jam.game.creature.CreatureBase;
 import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
+import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.SimplePunch;
 import de.flojo.jam.game.player.PlayerId;
@@ -18,7 +19,7 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 public class CreaturePeasant extends Creature {
 
     public CreaturePeasant(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
+        super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
     }
 
     private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying) {

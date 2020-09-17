@@ -18,13 +18,14 @@ import de.flojo.jam.networking.exceptions.HandlerException;
 import de.flojo.jam.networking.exceptions.IllegalMessageException;
 import de.flojo.jam.networking.exceptions.NameNotAvailableException;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
+import de.flojo.jam.networking.messages.BuildPhaseStartMessage;
 import de.flojo.jam.networking.messages.BuildUpdateMessage;
 import de.flojo.jam.networking.messages.ErrorMessage;
-import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.HelloMessage;
 import de.flojo.jam.networking.messages.HelloReplyMessage;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
+import de.flojo.jam.networking.messages.TurnActionMessage;
 import de.flojo.jam.networking.server.management.MainGameControl;
 import de.flojo.jam.networking.server.management.ServerStateEnum;
 import de.flojo.jam.util.IProvideContext;
@@ -77,6 +78,7 @@ public class ServerController implements IServerController {
         return container;
     }
 
+    // TODO: maybe "round data" on every nextRound?
     private void processMessage(WebSocket conn, String message) {
         ClientServerConnection connection = conn.getAttachment();
         try {
@@ -94,6 +96,9 @@ public class ServerController implements IServerController {
                     break;
                 case BUILD_CHOICE:
                     handleBuildChoice(NetworkGson.getMessage(message), conn, connection);
+                    break;
+                case TURN_ACTION:
+                    handleTurnAction(NetworkGson.getMessage(message), conn, connection);
                     break;
                 default:
                     throw new IllegalMessageException("There was no handler for: " + type + " (" + message + ")");
@@ -113,8 +118,9 @@ public class ServerController implements IServerController {
         } else if (message.getTrap() != null) {
             mGController.spawnTrapAt(csConnection.getRole(), message.getTrap(), message.getPosition());
         } else {
-            Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}", new Object[] {message, csConnection});
+            Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}.", new Object[] {message, csConnection});
         }
+
         playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
         
         if(!mGController.nextBuildRequest()) {
@@ -122,7 +128,12 @@ public class ServerController implements IServerController {
         }
     }
 
-
+    private void handleTurnAction(TurnActionMessage message, WebSocket conn, ClientServerConnection connection) {
+        mGController.performAction(message);
+        // Maybe make a new message to avoid wrong sending?
+        // or introduce a private signature?
+        playerController.getOtherPlayer(connection.getRole()).send(message);
+    }
 
     private void handleHello(HelloMessage message, WebSocket conn, ClientServerConnection csConnection)
             throws IllegalMessageException, NameNotAvailableException {
@@ -134,7 +145,7 @@ public class ServerController implements IServerController {
         conn.setAttachment(newConnection);
         conn.send(new HelloReplyMessage(newConnection, mGController.getTerrain()).toJson());
         if(playerController.ready()) {
-            playerController.sendBoth(new GameStartMessage(null, playerController));
+            playerController.sendBoth(new BuildPhaseStartMessage(null, playerController));
             startGame();
         }
     }

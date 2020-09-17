@@ -10,7 +10,7 @@ import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
-import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.gurkenlabs.litiengine.Game;
 
 public class ClientController implements IClientController {
@@ -36,6 +36,7 @@ public class ClientController implements IClientController {
         this.onConnectionStateUpdate = onConnectionStateUpdate;
     }
 
+    @SuppressWarnings("java:S2274")
     public void tryConnect(Consumer<Boolean> onCompleted) {
         this.socket.connect();
         new Thread(() -> {
@@ -95,16 +96,29 @@ public class ClientController implements IClientController {
             case HELLO_REPLY:
                 context.handleHelloReply(NetworkGson.getMessage(message));
                 break;
-            case GAME_START:
+            case BUILD_START:
                 context.handleGameStart(NetworkGson.getMessage(message));
                 if(onConnectionStateUpdate != null)
                     onConnectionStateUpdate.call("START");
                 break;
             case YOU_CAN_BUILD:
-                BuildingPhaseScreen.get().buildOne(NetworkGson.getMessage(message));
+                GameScreen.get().buildOne(NetworkGson.getMessage(message));
                 break;
             case BUILD_UPDATE:
-                BuildingPhaseScreen.get().updateMap(NetworkGson.getMessage(message));
+                GameScreen.get().updateMap(NetworkGson.getMessage(message));
+                break;
+            case GAME_START:
+                GameScreen.get().initGameStart(NetworkGson.getMessage(message));
+                break;
+            case NEXT_ROUND:
+                GameScreen.get().nextRound(NetworkGson.getMessage(message));
+                break;
+            case YOUR_TURN:
+                GameScreen.get().ourTurn(NetworkGson.getMessage(message));
+                break;
+            // For mirroring, may be changed
+            case TURN_ACTION:
+                GameScreen.get().performTurn(NetworkGson.getMessage(message));
                 break;
             default:
                 Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[] {type, message});

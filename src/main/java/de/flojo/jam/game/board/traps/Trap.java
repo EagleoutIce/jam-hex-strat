@@ -3,6 +3,7 @@ package de.flojo.jam.game.board.traps;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -15,8 +16,10 @@ import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
-public class Trap  {
+public class Trap implements Serializable {
     
+    private static final long serialVersionUID = 2185724284978150753L;
+
     private static final int TRAP_DURATION = 1000;
 
     private final TrapId trapId;
@@ -53,7 +56,11 @@ public class Trap  {
     public Tile getRootPosition() {
         return rootPosition;
     }
-    
+
+    public TrapId getTrapId() {
+        return trapId;
+    }
+
     public TrapImprint getImprint() {
         return trapId.getImprint();
     }
@@ -111,11 +118,19 @@ public class Trap  {
     }
 
 	public BoardCoordinate getCoordinate() {
-		return rootPosition.getCoordinate();
+		return getRootPosition().getCoordinate();
 	}
 
     public int getAnimationCooldown() {
         return trapId.getAnimationCooldown();
+    }
+
+    public PlayerId getOwner() {
+        return owner;
+    }
+
+    public boolean uncoveredByEnemy() {
+        return enemyDidUncover;
     }
 
     @Override

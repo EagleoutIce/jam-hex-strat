@@ -9,7 +9,7 @@ import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.screens.ServerSetupScreen;
-import de.flojo.jam.screens.ingame.BuildingPhaseScreen;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
@@ -70,7 +70,7 @@ public class Main {
         Game.window().setIcon(ICON);
 
         Game.screens().add(new MenuScreen());
-        Game.screens().add(BuildingPhaseScreen.get());
+        Game.screens().add(GameScreen.get());
         Game.screens().add(new EditorScreen());
         Game.screens().add(ConnectScreen.get());
         Game.screens().add(new ServerSetupScreen());
