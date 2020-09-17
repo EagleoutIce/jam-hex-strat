@@ -18,15 +18,16 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     public static final int DEFAULT_RADIUS = 30;
-    private BoardCoordinate coordinate;
-    private transient TerrainTypeSupplier terrainSupplier;
-    private static final Font NUMBER_FONT = Main.TEXT_NORMAL.deriveFont(20f);
 
+    private static final Font NUMBER_FONT = Main.TEXT_NORMAL.deriveFont(20f);
     private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
     private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
     private static final Color NONE_COLOR = new Color(0, 0, 0, 60); // 154, 215, 45
     private static final Color P1_COLOR = new Color(45, 173, 215, 60);
     private static final Color P2_COLOR = new Color(141, 45, 215, 60);
+
+    private BoardCoordinate coordinate;
+    private transient TerrainTypeSupplier terrainSupplier;
 
     private AtomicBoolean hover = new AtomicBoolean();
     private AtomicBoolean mark = new AtomicBoolean();
@@ -135,6 +136,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     @Override
     public void move(int rx, int ry) {
         super.move(rx, ry);
+        // TODO: other stuff on zoom?
     }
 
     @Override

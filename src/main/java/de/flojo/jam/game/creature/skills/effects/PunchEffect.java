@@ -85,30 +85,26 @@ public class PunchEffect implements IEffectCreature {
     }
 
     private void moveAndKill(Creature target) {
-        try {
-            CreatureActionController.awaitMovementComplete(target);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        awaitMovementCompletion(target);
         target.getBase()
                 .moveOutFieldRaw(new Point(
-                        (int) (target.getBase().getTile().getCenter().x + deltaX * 2 * Tile.DEFAULT_RADIUS * 1.25),
-                        target.getBase().getTile().getCenter().y + deltaY * 2 * Tile.DEFAULT_RADIUS));
+                        (int) (target.getBase().getTile().getCenter().x + deltaX *Tile.DEFAULT_RADIUS * 1.25),
+                        target.getBase().getTile().getCenter().y + deltaY * Tile.DEFAULT_RADIUS));
+        awaitMovementCompletion(target);
+        target.die();
+    }
+
+    private void awaitMovementCompletion(Creature target) {
         try {
             CreatureActionController.awaitMovementComplete(target);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        target.die();
     }
 
     private void trapExecution(Creature target, Tile punchTarget, Trap trap) {
         target.move(punchTarget);
-        try {
-            CreatureActionController.awaitMovementComplete(target);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        awaitMovementCompletion(target);
         trap.trigger();
         CreatureActionController.sleep(trap.getAnimationCooldown());
         target.die();

@@ -4,6 +4,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 public class CreatureBase implements IRenderable {
@@ -27,8 +28,7 @@ public class CreatureBase implements IRenderable {
         updateTerrainOffset(position);
     }
 
-
-    protected void assignCreature(CreatureCore core){
+    protected void assignCreature(CreatureCore core) {
         this.core = core;
         core.setBase(this);
     }
@@ -36,31 +36,30 @@ public class CreatureBase implements IRenderable {
     public void moveOutFieldRaw(Point coordinate) {
         movementOffsetX += coordinate.x - position.getCenter().x;
         movementOffsetY += coordinate.y - position.getCenter().y;
-        deltaX = Math.abs(0.06*movementOffsetX);
-        deltaY = Math.abs(0.06*movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
+        deltaX = Math.abs(0.06 * movementOffsetX);
+        deltaY = Math.abs(0.06 * movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
         resetTerrainOffset = true;
-        // TODO: FIX
-        // position = new Tile(new BoardCoordinate(-1, -1), coordinate.x, coordinate.y, null)
+        // we keep the old coordinate so the figure will get still drawn
+        position = new Tile(position.getCoordinate(), position.getCenter().x + movementOffsetX,
+                position.getCenter().y + movementOffsetY, c -> TerrainTile.EMPTY);
     }
 
-    public void move(Tile target){
+    public void move(Tile target) {
         movementOffsetX += target.getCenter().x - position.getCenter().x;
         movementOffsetY += target.getCenter().y - position.getCenter().y;
-        deltaX = Math.abs(0.06*movementOffsetX);
-        deltaY = Math.abs(0.06*movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
+        deltaX = Math.abs(0.06 * movementOffsetX);
+        deltaY = Math.abs(0.06 * movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
         updateTerrainOffset(target);
         position = target;
     }
 
-
     private void updateTerrainOffset(Tile target) {
-        if(target.getTerrainType().isRaised()) {
+        if (target.getTerrainType().isRaised()) {
             terrainOffsetY = RAISED_TERRAIN_OFFSET;
         } else {
             resetTerrainOffset = true;
         }
     }
-
 
     public Object getTargetLocationReachedLock() {
         return targetLocationReachedLock;
@@ -72,17 +71,16 @@ public class CreatureBase implements IRenderable {
 
     @Override
     public void render(Graphics2D g) {
-        if(movementOffsetX != 0)
-            movementOffsetX = (int)(Math.signum(movementOffsetX) * Math.max(Math.abs(movementOffsetX) - deltaX, 0));
-        if(movementOffsetY != 0)
-            movementOffsetY = (int)(Math.signum(movementOffsetY) * Math.max(Math.abs(movementOffsetY) - deltaY, 0));
+        if (movementOffsetX != 0)
+            movementOffsetX = (int) (Math.signum(movementOffsetX) * Math.max(Math.abs(movementOffsetX) - deltaX, 0));
+        if (movementOffsetY != 0)
+            movementOffsetY = (int) (Math.signum(movementOffsetY) * Math.max(Math.abs(movementOffsetY) - deltaY, 0));
 
-        if(moveTargetIsReached()) {
-            synchronized(targetLocationReachedLock) {
+        if (moveTargetIsReached()) {
+            synchronized (targetLocationReachedLock) {
                 targetLocationReachedLock.notifyAll();
             }
         }
-
 
         core.render(g);
     }
@@ -116,10 +114,10 @@ public class CreatureBase implements IRenderable {
     }
 
     protected int getTerrainOffsetY() {
-        if(resetTerrainOffset && Math.abs(movementOffsetX) <= 11 && Math.abs(movementOffsetY) <= 11) {
+        if (resetTerrainOffset && Math.abs(movementOffsetX) <= 11 && Math.abs(movementOffsetY) <= 11) {
             terrainOffsetY = 0;
             resetTerrainOffset = false;
-            
+
         }
         return terrainOffsetY;
     }
