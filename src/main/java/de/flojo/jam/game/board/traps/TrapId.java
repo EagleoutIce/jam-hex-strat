@@ -13,7 +13,7 @@ public enum TrapId {
         Arrays.asList(//
             Arrays.asList(TrapTile.BEAR_TRAP_GHOST, null), //
             Arrays.asList(null, TrapTile.BEAR_TRAP) //
-        )), new Point(1, 1)), Color.GREEN, 300, 39); // TODO: update costs
+        )), new Point(1, 1)), Color.GREEN, 300, 10); // TODO: update costs
     
     private final TrapImprint imprint;
     private final Color simpleColor;
