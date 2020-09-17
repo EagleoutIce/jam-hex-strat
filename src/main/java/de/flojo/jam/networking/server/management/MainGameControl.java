@@ -142,7 +142,7 @@ public class MainGameControl {
 	public void performAction(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if(mayCreature.isEmpty()) {
-            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message);
+            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
             return;
         }
         final Creature creature = mayCreature.get();
@@ -154,7 +154,7 @@ public class MainGameControl {
             case SKILL:
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
                 if(mayTarget.isEmpty()) {
-                    Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message);
+                    Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());

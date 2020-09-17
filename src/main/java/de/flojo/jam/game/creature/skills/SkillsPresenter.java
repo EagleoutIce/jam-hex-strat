@@ -141,7 +141,7 @@ public class SkillsPresenter {
         if (performed.booleanValue()) {
             attributes.useAp();
             if (onAction != null)
-                onAction.onSkill(creatureCoordinate, target, skillId);
+                onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);
         }
         if (button != null)
             button.setEnabled(attributes.getApLeft() > 0);
@@ -237,9 +237,7 @@ public class SkillsPresenter {
 
     public void enable() {
         enabled.set(true);
-        currentCreature = factory.getSelectedCreature();
-        if (currentCreature != null)
-            creatureCoordinate = new BoardCoordinate(currentCreature.getCoordinate());
+        updateCreature(factory.getSelectedCreature());
     }
 
     public void disable() {

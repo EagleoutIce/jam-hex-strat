@@ -284,4 +284,8 @@ public class CreatureActionController {
         return false;
 	}
 
+	public Creature getActiveCreature() {
+		return activeCreature;
+	}
+
 }

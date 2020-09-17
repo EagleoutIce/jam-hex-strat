@@ -181,7 +181,7 @@ public class GameScreen extends Screen {
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
                 if (mayTarget.isEmpty()) {
                     Game.log().log(Level.SEVERE,
-                            "ActionMessage could not be performed, as skill target was no creature in: {0}", message);
+                            "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
