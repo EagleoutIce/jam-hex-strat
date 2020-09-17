@@ -135,7 +135,6 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     @Override
     public void move(int rx, int ry) {
         super.move(rx, ry);
-        // TODO: other
     }
 
     @Override

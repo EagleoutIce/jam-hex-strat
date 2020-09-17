@@ -133,6 +133,9 @@ public class ServerController implements IServerController {
         // Maybe make a new message to avoid wrong sending?
         // or introduce a private signature?
         playerController.getOtherPlayer(connection.getRole()).send(message);
+        if(!mGController.nextGameAction()) {
+            // TODO: GAME OVER
+        }
     }
 
     private void handleHello(HelloMessage message, WebSocket conn, ClientServerConnection csConnection)

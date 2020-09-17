@@ -93,16 +93,17 @@ public class MainGameControl {
         return context.getBoard();
     }
 
-    private void nextGameAction() {
+    public boolean nextGameAction() {
         state.nextPlayer();
         if(isGameOver()){
             // GAME OVER
             Game.log().info("Game Over");
-            return;
+            return false;
         } else if(roundEnd()) {
             nextRound();
         }
         sendTurnRequest();
+        return true;
     }
 
     private void sendTurnRequest() {

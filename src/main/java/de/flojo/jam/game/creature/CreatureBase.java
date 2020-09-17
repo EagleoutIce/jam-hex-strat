@@ -1,6 +1,7 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
+import java.awt.Point;
 
 import de.flojo.jam.game.board.Tile;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
@@ -30,6 +31,16 @@ public class CreatureBase implements IRenderable {
     protected void assignCreature(CreatureCore core){
         this.core = core;
         core.setBase(this);
+    }
+
+    public void moveOutFieldRaw(Point coordinate) {
+        movementOffsetX += coordinate.x - position.getCenter().x;
+        movementOffsetY += coordinate.y - position.getCenter().y;
+        deltaX = Math.abs(0.06*movementOffsetX);
+        deltaY = Math.abs(0.06*movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
+        resetTerrainOffset = true;
+        // TODO: FIX
+        // position = new Tile(new BoardCoordinate(-1, -1), coordinate.x, coordinate.y, null)
     }
 
     public void move(Tile target){
@@ -62,10 +73,10 @@ public class CreatureBase implements IRenderable {
     @Override
     public void render(Graphics2D g) {
         if(movementOffsetX != 0)
-            movementOffsetX =  (int)(Math.signum(movementOffsetX) * Math.max(Math.abs(movementOffsetX) - deltaX, 0));
+            movementOffsetX = (int)(Math.signum(movementOffsetX) * Math.max(Math.abs(movementOffsetX) - deltaX, 0));
         if(movementOffsetY != 0)
             movementOffsetY = (int)(Math.signum(movementOffsetY) * Math.max(Math.abs(movementOffsetY) - deltaY, 0));
-        
+
         if(moveTargetIsReached()) {
             synchronized(targetLocationReachedLock) {
                 targetLocationReachedLock.notifyAll();

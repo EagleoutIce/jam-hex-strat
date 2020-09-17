@@ -1,5 +1,6 @@
 package de.flojo.jam.game.creature.skills.effects;
 
+import java.awt.Point;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -49,8 +50,10 @@ public class PunchEffect implements IEffectCreature {
         Tile punchTarget = context.getBoard().getTile(punchTargetCoordinate);
 
         // if no more on field exit
-        if (punchTarget == null)
+        if (punchTarget == null) {
+            moveAndKillFromField(target);
             return;
+        }
 
         if (terrainBlocksPunch(punchTarget)) {
             Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
@@ -61,13 +64,9 @@ public class PunchEffect implements IEffectCreature {
         Optional<Trap> mayTrap = context.getTraps().get(punchTargetCoordinate);
 
         if (mayTrap.isPresent()) {
-            new Thread(() -> 
-                trapExecution(target, punchTarget, mayTrap.get())
-            ).start();
+            new Thread(() -> trapExecution(target, punchTarget, mayTrap.get())).start();
             return;
         }
-
-        // URGENT TODO: traps
 
         Optional<Creature> mayHit = context.getCreatures().get(punchTargetCoordinate);
         if (mayHit.isPresent()) {
@@ -79,6 +78,28 @@ public class PunchEffect implements IEffectCreature {
             powerLeft -= 1;
             effect(target, attacker);
         }
+    }
+
+    private void moveAndKillFromField(Creature target) {
+        new Thread(() -> moveAndKill(target)).start();
+    }
+
+    private void moveAndKill(Creature target) {
+        try {
+            CreatureActionController.awaitMovementComplete(target);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        target.getBase()
+                .moveOutFieldRaw(new Point(
+                        (int) (target.getBase().getTile().getCenter().x + deltaX * 2 * Tile.DEFAULT_RADIUS * 1.25),
+                        target.getBase().getTile().getCenter().y + deltaY * 2 * Tile.DEFAULT_RADIUS));
+        try {
+            CreatureActionController.awaitMovementComplete(target);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        target.die();
     }
 
     private void trapExecution(Creature target, Tile punchTarget, Trap trap) {
