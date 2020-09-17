@@ -217,15 +217,18 @@ public class CreatureActionController {
         Optional<Trap> mayTrap = traps.get(tile.getCoordinate());
         creature.move(tile);
         if (mayTrap.isPresent() && !creature.isFlying()) {
-            Trap trap = mayTrap.get();
-            CreatureActionController.awaitMovementCompleteAsync(creature, () -> {
-                trap.trigger();
-                sleep(trap.getAnimationCooldown());
-                creature.die();
-            });
+            triggerTrap(creature, mayTrap.get());
             return true; // runs in trap
         }
         return false;
+    }
+
+    private static void triggerTrap(Creature creature, Trap trap) {
+        CreatureActionController.awaitMovementCompleteAsync(creature, () -> {
+            trap.trigger();
+            sleep(trap.getAnimationCooldown());
+            creature.die();
+        });
     }
 
     public static void sleep(int duration) {
@@ -270,5 +273,15 @@ public class CreatureActionController {
         this.performed = false;
         this.currentActionType = CurrentActionType.NONE;
     }
+
+	public static boolean processMovementBlocking(TrapCollection traps, Creature creature, Tile tile) {
+        Optional<Trap> mayTrap = traps.get(tile.getCoordinate());
+        creature.moveBlocking(tile);
+        if (mayTrap.isPresent() && !creature.isFlying()) {
+            triggerTrap(creature, mayTrap.get());
+            return true; // runs in trap
+        }
+        return false;
+	}
 
 }

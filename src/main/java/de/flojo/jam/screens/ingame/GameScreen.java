@@ -119,7 +119,7 @@ public class GameScreen extends Screen {
         g.setFont(Main.GUI_FONT_SMALL);
         if (currentRound == 0) {
             final String buildPhase = "Bauphase";
-            TextRenderer.render(g, buildPhase, Game.window().getCenter().getX() - TextRenderer.getWidth(g, buildPhase),
+            TextRenderer.render(g, buildPhase, Game.window().getCenter().getX() - TextRenderer.getWidth(g, buildPhase)/2,
                     60, true);
         } else if (currentRound > 0) {
             final String roundText = "Runde: " + currentRound;
@@ -141,6 +141,7 @@ public class GameScreen extends Screen {
 
     public void nextRound(NextRoundMessage message) {
         getFactory().resetAll();
+        field.getPresenter().update();
         this.currentRound = message.getCurrentRound();
     }
 
@@ -198,7 +199,7 @@ public class GameScreen extends Screen {
         for (BoardCoordinate target : targets) {
             Game.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
                     new Object[] { target, targets, creature });
-            CreatureActionController.processMovement(field.getTraps(), creature, getBoard().getTile(target));
+            CreatureActionController.processMovementBlocking(field.getTraps(), creature, getBoard().getTile(target));
         }
     }
 

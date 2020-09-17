@@ -37,7 +37,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private static final long serialVersionUID = 6531704891590315776L;
 
     public static final int PADDING = 0;
-
+    private static final int PAN_SPEED = 3;
     private final transient BufferedImage background;
 
     private TerrainMap terrainMap;
@@ -62,14 +62,18 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public Board(final String terrainPath, final String screenName) {
         this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainPath, screenName);
     }
+
     public Board(final TerrainMap terrainMap, final String screenName) {
         this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainMap, screenName);
     }
-    public Board(final int w, final int h, final String backgroundPath, final String terrainPath, final String screenName) {
+
+    public Board(final int w, final int h, final String backgroundPath, final String terrainPath,
+            final String screenName) {
         this(w, h, backgroundPath, new TerrainMap(w, h, terrainPath), screenName);
     }
 
-    public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap, final String screenName) {
+    public Board(final int w, final int h, final String backgroundPath, final TerrainMap terrainMap,
+            final String screenName) {
         this.width = w;
         this.height = h;
         this.backgroundPath = backgroundPath;
@@ -101,12 +105,12 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private void setupResizeListener() {
         Game.window().onResolutionChanged(r -> {
-            if (Game.window().getHeight() - shiftY >= background.getHeight() - 5) {
+            if (Game.window().getHeight() - shiftY >= background.getHeight() - PAN_SPEED) {
                 final int offset = getBackgroundOffsetPosY();
                 move(0, offset - shiftY);
             }
 
-            if (Game.window().getWidth() - shiftX >= background.getWidth() - 5) {
+            if (Game.window().getWidth() - shiftX >= background.getWidth() - PAN_SPEED) {
                 final int offset = getBackgroundOffsetPosX();
                 move(offset - shiftX, 0);
             }
@@ -114,11 +118,11 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private int getBackgroundOffsetPosX() {
-        return Math.min(0, Game.window().getWidth() - background.getWidth() - 5);
+        return Math.min(0, Game.window().getWidth() - background.getWidth() - PAN_SPEED);
     }
 
     private int getBackgroundOffsetPosY() {
-        return Math.min(0, Game.window().getHeight() - background.getHeight() - 5);
+        return Math.min(0, Game.window().getHeight() - background.getHeight() - PAN_SPEED);
     }
 
     private Point getTilesUpperLeft() {
@@ -141,16 +145,11 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private void setupInput() {
         Input.mouse().addMouseMotionListener(this);
 
-        InputController.get().onKeyPressed(KeyEvent.VK_W, e -> cameraPanUp(),
-                Set.of(screenName), bInputGroupVert);
-        InputController.get().onKeyPressed(KeyEvent.VK_A, e -> cameraPanLeft(),
-                Set.of(screenName), bInputGroupHor);
-        InputController.get().onKeyPressed(KeyEvent.VK_S, e -> cameraPanDown(),
-                Set.of(screenName), bInputGroupVert);
-        InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(),
-                Set.of(screenName), bInputGroupHor);
-        InputController.get().onKeyTyped(KeyEvent.VK_M, e -> toggleDataView(),
-                Set.of(screenName), bInputGroupHor);
+        InputController.get().onKeyPressed(KeyEvent.VK_W, e -> cameraPanUp(), Set.of(screenName), bInputGroupVert);
+        InputController.get().onKeyPressed(KeyEvent.VK_A, e -> cameraPanLeft(), Set.of(screenName), bInputGroupHor);
+        InputController.get().onKeyPressed(KeyEvent.VK_S, e -> cameraPanDown(), Set.of(screenName), bInputGroupVert);
+        InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(), Set.of(screenName), bInputGroupHor);
+        InputController.get().onKeyTyped(KeyEvent.VK_M, e -> toggleDataView(), Set.of(screenName), bInputGroupHor);
     }
 
     private void toggleDataView() {
@@ -158,30 +157,30 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void cameraPanRight() {
-        if (Game.window().getWidth() - shiftX < background.getWidth() - 5) {
-            tiles.forEach((c, h) -> h.move(-5, 0));
-            shiftX -= 5;
+        if (Game.window().getWidth() - shiftX < background.getWidth() - PAN_SPEED) {
+            tiles.forEach((c, h) -> h.move(-PAN_SPEED, 0));
+            shiftX -= PAN_SPEED;
         }
     }
 
     private void cameraPanDown() {
-        if (Game.window().getHeight() - shiftY < background.getHeight() - 5) {
-            tiles.forEach((c, h) -> h.move(0, -5));
-            shiftY -= 5;
+        if (Game.window().getHeight() - shiftY < background.getHeight() - PAN_SPEED) {
+            tiles.forEach((c, h) -> h.move(0, -PAN_SPEED));
+            shiftY -= PAN_SPEED;
         }
     }
 
     private void cameraPanLeft() {
-        if (shiftX <= -5) {
-            tiles.forEach((c, h) -> h.move(5, 0));
-            shiftX += 5;
+        if (shiftX <= -PAN_SPEED) {
+            tiles.forEach((c, h) -> h.move(PAN_SPEED, 0));
+            shiftX += PAN_SPEED;
         }
     }
 
     private void cameraPanUp() {
-        if (shiftY <= -5) {
-            shiftY += 5;
-            tiles.forEach((c, h) -> h.move(0, 5));
+        if (shiftY <= -PAN_SPEED) {
+            shiftY += PAN_SPEED;
+            tiles.forEach((c, h) -> h.move(0, PAN_SPEED));
         }
     }
 
@@ -316,7 +315,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         TerrainTile targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
 
         // invalid as too close to border
-        if (targetTile == null) 
+        if (targetTile == null)
             return false;
 
         if (highlightTiles.add(targetTile)) {
@@ -342,7 +341,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         }
     }
 
-    public void jointRender(final Graphics2D g, PlayerId renderOwner,  CreatureFactory factory, TrapSpawner traps) {
+    public void jointRender(final Graphics2D g, PlayerId renderOwner, CreatureFactory factory, TrapSpawner traps) {
         ImageRenderer.render(g, background, shiftX, shiftY);
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());

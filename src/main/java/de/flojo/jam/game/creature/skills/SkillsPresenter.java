@@ -31,8 +31,6 @@ public class SkillsPresenter {
     private final CreatureFactory factory;
     private final TrapSpawner traps;
 
-    private boolean skillChoosing = false;
-
     private PlayerId playerId;
     private Creature currentCreature;
     private BoardCoordinate creatureCoordinate;
@@ -71,9 +69,12 @@ public class SkillsPresenter {
         if (c == null || !enabled.get()) {
             return;
         }
-        if (skillChoosing) {
-            Game.log().log(Level.INFO, "Ignored character change for: {0} as the skill target choosing menu is active.",
-                    c);
+
+        if (c == currentCreature)
+            return;
+
+        if (!movementBuffer.isEmpty()) {
+            moveOperationEnded(currentCreature.getAttributes(), false, new BoardCoordinate(-1, -1));
             return;
         }
 
@@ -96,6 +97,7 @@ public class SkillsPresenter {
             if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(attributes, p, t))) {
                 Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
+                skipButton.setEnabled(false);
             }
         });
         moveButton.prepare();
@@ -105,7 +107,7 @@ public class SkillsPresenter {
             currentCreature.skip();
             currentCreature.setOnDead(this::resetButtons);
             onAction.onSkip(currentCreature.getCoordinate());
-            update();
+            updatePositions();
         });
         skipButton.prepare();
 
@@ -119,6 +121,7 @@ public class SkillsPresenter {
                         (p, t) -> skillOperationEnded(attributes, bt, p, skill.getSkillId(), t))) {
                     Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                     bt.setEnabled(false);
+                    skipButton.setEnabled(false);
                 }
             });
             bt.prepare();
@@ -140,26 +143,24 @@ public class SkillsPresenter {
             if (onAction != null)
                 onAction.onSkill(creatureCoordinate, target, skillId);
         }
-        if (button != null) {
+        if (button != null)
             button.setEnabled(attributes.getApLeft() > 0);
-        }
-        if (skipButton != null) {
-            skipButton.setEnabled(attributes.canDoSomething());
-        }
     }
 
     private void moveOperationEnded(CreatureAttributes attributes, Boolean performed, BoardCoordinate target) {
         if (performed.booleanValue()) {
             attributes.useMp();
             movementBuffer.add(target);
-        } else if (!movementBuffer.isEmpty() && onAction != null) {
+        }
+
+        if ((!performed.booleanValue() || attributes.getMpLeft() <= 0) && !movementBuffer.isEmpty()
+                && onAction != null) {
             onAction.onMove(creatureCoordinate, movementBuffer);
+            movementBuffer.clear();
         }
 
         if (moveButton != null)
             moveButton.setEnabled(attributes.getMpLeft() > 0);
-        if (skipButton != null)
-            skipButton.setEnabled(attributes.canDoSomething());
     }
 
     private void lockOnMoved(MouseEvent mm) {
@@ -193,7 +194,8 @@ public class SkillsPresenter {
             return;
         CreatureAttributes attributes = currentCreature.getAttributes();
         moveButton.setEnabled(attributes.getMpLeft() > 0);
-        skipButton.setEnabled(attributes.canDoSomething());
+        if(movementBuffer.isEmpty())
+            skipButton.setEnabled(attributes.canDoSomething());
         int width = Game.window().getWidth();
         int height = Game.window().getHeight();
         double mw = moveButton.getWidth();

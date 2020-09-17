@@ -170,7 +170,7 @@ public class MainGameControl {
     private void processMovement(TurnActionMessage message, final Creature creature) {
         List<BoardCoordinate> targets = message.getTargets();
         for (BoardCoordinate target : targets) {
-            CreatureActionController.processMovement(context.getTraps(), creature, getBoard().getTile(target));
+            CreatureActionController.processMovementBlocking(context.getTraps(), creature, getBoard().getTile(target));
         }
     }
 
