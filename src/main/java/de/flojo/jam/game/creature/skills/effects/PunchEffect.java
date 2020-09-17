@@ -1,6 +1,5 @@
 package de.flojo.jam.game.creature.skills.effects;
 
-import java.awt.Point;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -28,8 +27,6 @@ public class PunchEffect implements IEffectCreature {
         this.powerLeft = totalPower;
         this.context = context;
     }
-
-    // TODO: kill creature if falls off field!
 
     @Override
     public void effect(Creature target, Creature attacker) {
@@ -86,10 +83,9 @@ public class PunchEffect implements IEffectCreature {
 
     private void moveAndKill(Creature target) {
         awaitMovementCompletion(target);
-        target.getBase()
-                .moveOutFieldRaw(new Point(
-                        (int) (target.getBase().getTile().getCenter().x + deltaX *Tile.DEFAULT_RADIUS * 1.25),
-                        target.getBase().getTile().getCenter().y + deltaY * Tile.DEFAULT_RADIUS));
+        target.getBase().moveOutFieldRaw(
+                (int) (target.getBase().getTile().getCenter().x + deltaX * Tile.DEFAULT_RADIUS * 1.25),
+                target.getBase().getTile().getCenter().y + deltaY * Tile.DEFAULT_RADIUS);
         awaitMovementCompletion(target);
         target.die();
     }
@@ -103,8 +99,7 @@ public class PunchEffect implements IEffectCreature {
     }
 
     private void trapExecution(Creature target, Tile punchTarget, Trap trap) {
-        target.move(punchTarget);
-        awaitMovementCompletion(target);
+        target.moveBlocking(punchTarget);
         trap.trigger();
         CreatureActionController.sleep(trap.getAnimationCooldown());
         target.die();

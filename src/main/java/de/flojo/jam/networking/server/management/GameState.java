@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.server.management;
 
+import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.share.GamePhase;
 import de.gurkenlabs.litiengine.Game;
@@ -76,10 +77,10 @@ public class GameState {
     }
 
 
-	public void nextPlayer() {
-        if(currentTurn == PlayerId.ONE) {
+	public void nextPlayer(CreatureCollection collection) {
+        if(currentTurn == PlayerId.ONE && collection.p2CanDoSomething()) {
             currentTurn = PlayerId.TWO;
-        } else if(currentTurn == PlayerId.TWO) {
+        } else if(currentTurn == PlayerId.TWO && collection.p1CanDoSomething()) {
             currentTurn = PlayerId.ONE;
         }
 	}

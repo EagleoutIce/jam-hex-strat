@@ -242,6 +242,7 @@ public class CreatureActionController {
         completed(false);
     }
 
+
     private void completed(boolean allowRedoMovement) {
         completed = true;
         synchronized (selectionLock) {

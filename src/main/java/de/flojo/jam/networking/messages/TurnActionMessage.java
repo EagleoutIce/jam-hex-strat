@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.messages;
 
+import java.util.List;
 import java.util.UUID;
 
 import de.flojo.jam.game.board.BoardCoordinate;
@@ -12,14 +13,15 @@ public class TurnActionMessage extends MessageContainer {
 
     private ActionType action;
     private BoardCoordinate from;
-    private BoardCoordinate target;
+    private List<BoardCoordinate> targets;
     private SkillId skillId;
 
-    public TurnActionMessage(UUID clientId, ActionType action, BoardCoordinate from, BoardCoordinate target, SkillId skillId) {
+
+    public TurnActionMessage(UUID clientId, ActionType action, BoardCoordinate from, List<BoardCoordinate> targets, SkillId skillId) {
         super(MessageTypeEnum.TURN_ACTION, clientId);
         this.action = action;
         this.from = from;
-        this.target = target;
+        this.targets = targets;
         this.skillId = skillId;
     }
 
@@ -31,8 +33,12 @@ public class TurnActionMessage extends MessageContainer {
         return from;
     }
 
+    public List<BoardCoordinate> getTargets() {
+        return targets;
+    }
+
     public BoardCoordinate getTarget() {
-        return target;
+        return targets.isEmpty() ? null : targets.get(0);
     }
 
     public SkillId getSkillId() {

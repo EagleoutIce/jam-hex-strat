@@ -129,6 +129,8 @@ public class ServerController implements IServerController {
     }
 
     private void handleTurnAction(TurnActionMessage message, WebSocket conn, ClientServerConnection connection) {
+        if(connection == null)
+            return;
         mGController.performAction(message);
         // Maybe make a new message to avoid wrong sending?
         // or introduce a private signature?

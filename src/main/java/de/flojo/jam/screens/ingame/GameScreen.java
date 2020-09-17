@@ -3,6 +3,7 @@ package de.flojo.jam.screens.ingame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -14,6 +15,7 @@ import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.creature.ActionType;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.client.ClientController;
@@ -66,12 +68,12 @@ public class GameScreen extends Screen {
     void onNetworkUpdate(String... data) {
         Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
-        if(data.length == 0)
+        if (data.length == 0)
             return;
-        
-        switch(data[0]) {
+
+        switch (data[0]) {
             case "CLOSED":
-                disconnect();   
+                disconnect();
                 break;
             default:
                 Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
@@ -114,68 +116,71 @@ public class GameScreen extends Screen {
         g.setColor(P2_COLOR);
         TextRenderer.render(g, p2, Game.window().getWidth() - Main.INNER_MARGIN - w, 160, true);
         g.setColor(Color.WHITE);
-        if(currentRound == 0) {
+        g.setFont(Main.GUI_FONT_SMALL);
+        if (currentRound == 0) {
             final String buildPhase = "Bauphase";
-            TextRenderer.render(g, buildPhase,
-            Game.window().getCenter().getX() - TextRenderer.getWidth(g, buildPhase), 60, true);
-        } else if(currentRound > 0) {
+            TextRenderer.render(g, buildPhase, Game.window().getCenter().getX() - TextRenderer.getWidth(g, buildPhase),
+                    60, true);
+        } else if (currentRound > 0) {
             final String roundText = "Runde: " + currentRound;
             TextRenderer.render(g, roundText,
-                    Game.window().getCenter().getX() - TextRenderer.getWidth(g, roundText), 60, true);
+                    Game.window().getCenter().getX() - TextRenderer.getWidth(g, roundText) / 2, 60, true);
         }
         super.render(g);
     }
 
-	public void updateMap(BuildUpdateMessage message) {
+    public void updateMap(BuildUpdateMessage message) {
         field.updateTerrain(message.getMap());
-	}
+    }
 
-	public void initGameStart(GameStartMessage message) {
+    public void initGameStart(GameStartMessage message) {
         field.updateTerrain(message.getTerrain());
         field.updateCreatures(message.getCreatures());
         field.updateTraps(message.getTraps());
-	}
+    }
 
-	public void nextRound(NextRoundMessage message) {
+    public void nextRound(NextRoundMessage message) {
         getFactory().resetAll();
         this.currentRound = message.getCurrentRound();
-	}
+    }
 
-	public void ourTurn(ItIsYourTurnMessage message) {
+    public void ourTurn(ItIsYourTurnMessage message) {
         field.allowOneTurn(this::onTurnSkip, this::onTurnMove, this::onTurnSkill, message);
     }
-    
+
     private void onTurnSkip(BoardCoordinate creaturePosition) {
         Game.log().log(Level.INFO, "Skip for creature on {0}", creaturePosition);
         clientController.send(new TurnActionMessage(null, ActionType.SKIP, creaturePosition, null, null));
     }
 
-    private void onTurnMove(BoardCoordinate from, BoardCoordinate moveTarget) {
-        Game.log().log(Level.INFO, "Move from {0} to {1}", new Object[] {from, moveTarget});
-        clientController.send(new TurnActionMessage(null, ActionType.MOVEMENT, from, moveTarget, null));
+    private void onTurnMove(BoardCoordinate from, List<BoardCoordinate> moveTargets) {
+        Game.log().log(Level.INFO, "Move from {0} to {1}", new Object[] { from, moveTargets });
+        clientController.send(new TurnActionMessage(null, ActionType.MOVEMENT, from, moveTargets, null));
     }
 
     private void onTurnSkill(BoardCoordinate from, BoardCoordinate target, SkillId skill) {
-        Game.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[] {from, target, skill});
-        clientController.send(new TurnActionMessage(null, ActionType.SKILL, from, target, skill));
+        Game.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[] { from, target, skill });
+        clientController.send(new TurnActionMessage(null, ActionType.SKILL, from, List.of(target), skill));
     }
 
-	public void performTurn(TurnActionMessage message) {
+    public void performTurn(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
-        if(mayCreature.isEmpty()) {
-            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message);
+        if (mayCreature.isEmpty()) {
+            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
+                    message.toJson());
             return;
         }
         final Creature creature = mayCreature.get();
 
-        switch(message.getAction()) {
+        switch (message.getAction()) {
             case MOVEMENT:
-                creature.move(getBoard().getTile(message.getTarget()));
+                new Thread(() -> processMovement(message, creature)).start();
                 break;
             case SKILL:
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
-                if(mayTarget.isEmpty()) {
-                    Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message);
+                if (mayTarget.isEmpty()) {
+                    Game.log().log(Level.SEVERE,
+                            "ActionMessage could not be performed, as skill target was no creature in: {0}", message);
                     return;
                 }
                 creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
@@ -186,7 +191,16 @@ public class GameScreen extends Screen {
             default:
             case NONE:
         }
-	}
+    }
+
+    private void processMovement(TurnActionMessage message, final Creature creature) {
+        List<BoardCoordinate> targets = message.getTargets();
+        for (BoardCoordinate target : targets) {
+            Game.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
+                    new Object[] { target, targets, creature });
+            CreatureActionController.processMovement(field.getTraps(), creature, getBoard().getTile(target));
+        }
+    }
 
     private Board getBoard() {
         return field.getBoard();

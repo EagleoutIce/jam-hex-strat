@@ -7,6 +7,7 @@ import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.DefaultEffectContext;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
@@ -68,6 +69,15 @@ public class Creature implements IRenderable {
 
     public String getName() {
         return name;
+    }
+
+    public void moveBlocking(Tile target) {
+        move(target);
+        try {
+            CreatureActionController.awaitMovementComplete(this);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void move(Tile target) {

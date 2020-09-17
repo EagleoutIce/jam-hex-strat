@@ -34,6 +34,8 @@ public class CreatureCollection {
 
 	public Optional<Creature> get(Set<Tile> tiles) {
 		for (Tile tile : tiles) {
+            if(tile == null)
+                continue;
             Optional<Creature> mayCreature = get(tile.getCoordinate());
             if(mayCreature.isPresent())
                 return mayCreature;
@@ -138,6 +140,14 @@ public class CreatureCollection {
 
 	public List<CreatureJson> getJsonData() {
 		return collection.stream().map(CreatureJson::new).collect(Collectors.toList());
+	}
+
+	public boolean p1CanDoSomething() {
+		return collection.stream().filter(c -> c.getOwner() == PlayerId.ONE).anyMatch(Creature::canDoSomething);
+	}
+
+	public boolean p2CanDoSomething() {
+		return collection.stream().filter(c -> c.getOwner() == PlayerId.TWO).anyMatch(Creature::canDoSomething);
 	}
 
 

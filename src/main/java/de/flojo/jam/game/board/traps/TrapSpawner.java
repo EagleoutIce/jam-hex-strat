@@ -65,6 +65,8 @@ public class TrapSpawner {
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
         for (Tile tile : tiles) {
+            if (tile == null)
+                return false;
             if(playerId != null && tile.getPlacementOwner() != playerId)
                 return false;
         }

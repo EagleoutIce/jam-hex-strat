@@ -71,7 +71,7 @@ public class Trap implements Serializable {
 
     public boolean coversTile(BoardCoordinate coordinate){
         for (Tile tile : ghosts) {
-            if(Objects.equals(tile.getCoordinate(), coordinate))
+            if(tile != null && Objects.equals(tile.getCoordinate(), coordinate))
                 return true;
         }
         return false;
@@ -79,7 +79,7 @@ public class Trap implements Serializable {
 
     public boolean collidesWith(Set<Tile> tiles) {
         for (Tile t : tiles) {
-            if(coversTile(t.getCoordinate()))
+            if(t == null || coversTile(t.getCoordinate()))
                 return true;
         }
         return false;
@@ -97,7 +97,7 @@ public class Trap implements Serializable {
 
     public boolean isHovered() {
         for (Tile tile : ghosts) {
-            if(tile.isHovered())
+            if(tile != null && tile.isHovered())
                 return true;
         }
         return false;

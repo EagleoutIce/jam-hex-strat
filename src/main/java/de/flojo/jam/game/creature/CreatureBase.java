@@ -1,7 +1,6 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Graphics2D;
-import java.awt.Point;
 
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.TerrainTile;
@@ -33,9 +32,9 @@ public class CreatureBase implements IRenderable {
         core.setBase(this);
     }
 
-    public void moveOutFieldRaw(Point coordinate) {
-        movementOffsetX += coordinate.x - position.getCenter().x;
-        movementOffsetY += coordinate.y - position.getCenter().y;
+    public void moveOutFieldRaw(int x, int y) {
+        movementOffsetX += x - position.getCenter().x;
+        movementOffsetY += y - position.getCenter().y;
         deltaX = Math.abs(0.06 * movementOffsetX);
         deltaY = Math.abs(0.06 * movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
         resetTerrainOffset = true;

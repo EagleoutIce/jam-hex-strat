@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.server.management;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -14,6 +15,7 @@ import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
@@ -94,7 +96,7 @@ public class MainGameControl {
     }
 
     public boolean nextGameAction() {
-        state.nextPlayer();
+        state.nextPlayer(context.getCreatures());
         if(isGameOver()){
             // GAME OVER
             Game.log().info("Game Over");
@@ -147,7 +149,7 @@ public class MainGameControl {
 
         switch(message.getAction()) {
             case MOVEMENT:
-                creature.move(getBoard().getTile(message.getTarget()));
+                new Thread(() -> processMovement(message, creature)).start();
                 break;
             case SKILL:
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
@@ -164,5 +166,12 @@ public class MainGameControl {
             case NONE:
         }
 	}
+
+    private void processMovement(TurnActionMessage message, final Creature creature) {
+        List<BoardCoordinate> targets = message.getTargets();
+        for (BoardCoordinate target : targets) {
+            CreatureActionController.processMovement(context.getTraps(), creature, getBoard().getTile(target));
+        }
+    }
 
 }

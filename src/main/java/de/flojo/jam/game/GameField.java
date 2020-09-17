@@ -171,20 +171,20 @@ public class GameField implements IRenderable, IProvideContext {
         presenter.setOnActionConsumer(new IAction(){
 			@Override
 			public void onSkip(BoardCoordinate creaturePosition) {
-                skip.process(creaturePosition);
+                skip.onSkip(creaturePosition);
                 cleanup();
 			}
 
 			@Override
-			public void onMove(BoardCoordinate from, BoardCoordinate target) {
-                move.process(from, target);
+			public void onMove(BoardCoordinate from, List<BoardCoordinate> targets) {
+                move.onMove(from, targets);
                 cleanup();
 				
 			}
 
 			@Override
 			public void onSkill(BoardCoordinate from, BoardCoordinate target, SkillId skillId) {
-				skill.process(from, target, skillId);
+				skill.onSkill(from, target, skillId);
 				cleanup();
 			}
             
