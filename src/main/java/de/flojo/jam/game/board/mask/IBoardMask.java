@@ -4,7 +4,5 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.player.PlayerId;
 
 public interface IBoardMask {
-    
-    PlayerId getOwner(BoardCoordinate coordinate);
-
+	PlayerId getOwner(BoardCoordinate coordinate);
 }

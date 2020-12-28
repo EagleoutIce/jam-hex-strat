@@ -9,52 +9,52 @@ import de.flojo.jam.networking.server.ClientServerConnection;
 
 public class HelloReplyMessage extends MessageContainer {
 
-    private static final long serialVersionUID = 7630983891460330082L;
+	private static final long serialVersionUID = 7630983891460330082L;
 
-    private Terrain terrain;
-    private PlayerId role;
+	private Terrain terrain;
+	private PlayerId role;
 
-    public HelloReplyMessage(ClientServerConnection connection, Terrain terrain) {
-        this(connection.getClientId(), terrain, connection.getRole(), "");
-    }
+	public HelloReplyMessage(ClientServerConnection connection, Terrain terrain) {
+		this(connection.getClientId(), terrain, connection.getRole(), "");
+	}
 
-    public HelloReplyMessage(UUID clientId, Terrain terrain, PlayerId role, String debugMessage) {
-        super(MessageTypeEnum.HELLO_REPLY, clientId, debugMessage);
-        this.terrain = terrain;
-        this.role = role;
-    }
+	public HelloReplyMessage(UUID clientId, Terrain terrain, PlayerId role, String debugMessage) {
+		super(MessageTypeEnum.HELLO_REPLY, clientId, debugMessage);
+		this.terrain = terrain;
+		this.role = role;
+	}
 
-    public Terrain getTerrain() {
-        return terrain;
-    }
+	public Terrain getTerrain() {
+		return terrain;
+	}
 
-    @Override
-    public String toString() {
-        return "HelloReplyMessage [<container>=" + super.toString() + ", role=" + this.role + ", terrain="
-                + this.terrain + "]";
-    }
+	@Override
+	public String toString() {
+		return "HelloReplyMessage [<container>=" + super.toString() + ", role=" + this.role + ", terrain="
+				+ this.terrain + "]";
+	}
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + Objects.hash(terrain, role);
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + Objects.hash(terrain, role);
+		return result;
+	}
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
 
-        if (!super.equals(obj))
-            return false;
+		if (!super.equals(obj))
+			return false;
 
-        if (!(obj instanceof HelloReplyMessage))
-            return false;
+		if (!(obj instanceof HelloReplyMessage))
+			return false;
 
-        HelloReplyMessage other = (HelloReplyMessage) obj;
-        return Objects.equals(terrain, other.terrain) && role == other.role && super.equals(obj);
-    }
+		HelloReplyMessage other = (HelloReplyMessage) obj;
+		return Objects.equals(terrain, other.terrain) && role == other.role && super.equals(obj);
+	}
 
 }

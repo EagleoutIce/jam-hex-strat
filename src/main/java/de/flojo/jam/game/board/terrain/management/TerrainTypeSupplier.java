@@ -6,7 +6,5 @@ import de.flojo.jam.game.board.terrain.TerrainTile;
 
 @FunctionalInterface
 public interface TerrainTypeSupplier {
-    
-    TerrainTile getTerrainAt(Point point);
-
+	TerrainTile getTerrainAt(Point point);
 }

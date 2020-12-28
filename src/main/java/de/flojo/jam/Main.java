@@ -21,61 +21,60 @@ import de.gurkenlabs.litiengine.resources.Resources;
  */
 public class Main {
 
-    public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
-    public static final BufferedImage ICON = Resources.images().get("icon.png");
+	public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
+	public static final BufferedImage ICON = Resources.images().get("icon.png");
 
-    public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
-    public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
-    public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
-    public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
+	public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
+	public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
+	public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
+	public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
-    public static final double INNER_MARGIN = 20d;
-    public static void main(String[] args) {
+	public static final double INNER_MARGIN = 20d;
+	public static void main(String[] args) {
 
-        Game.setInfo("info.xml");
-        Game.addGameListener(new GameListener() {
-            @Override
-            public void initialized(String... args) {
-                // nothing
-            }
+		Game.setInfo("info.xml");
+		Game.addGameListener(new GameListener() {
+			@Override
+			public void initialized(String... args) {
+				// nothing
+			}
 
-            @Override
-            public void started() {
-                Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
-                Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
-            }
+			@Override
+			public void started() {
+				Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
+				Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
+			}
 
-            @Override
-            public void terminated() {
-                // nothing
-            }
-        });
+			@Override
+			public void terminated() {
+				// nothing
+			}
+		});
 
-        Game.init(args);
-        Game.log().setLevel(Level.ALL);
-        Game.graphics().setBaseRenderScale(3.0f);
+		Game.init(args);
+		Game.log().setLevel(Level.ALL);
+		Game.graphics().setBaseRenderScale(3.0f);
 
-        Game.window().setTitle("Super duper game");
+		Game.window().setTitle("Super duper game");
 
-        Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
-            System.err.println("Mimimi do this with a stream");
-            ex.printStackTrace();
-        });
+		Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
+			System.err.println("Mimimi do this with a stream");
+			ex.printStackTrace();
+		});
 
-        GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
-        GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
-        GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
+		GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
+		GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
+		GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
 
-        Game.window().cursor().set(DEFAULT_CURSOR);
-        Game.window().setIcon(ICON);
+		Game.window().cursor().set(DEFAULT_CURSOR);
+		Game.window().setIcon(ICON);
 
-        Game.screens().add(new MenuScreen());
-        Game.screens().add(GameScreen.get());
-        Game.screens().add(new EditorScreen());
-        Game.screens().add(ConnectScreen.get());
-        Game.screens().add(new ServerSetupScreen());
-        
+		Game.screens().add(new MenuScreen());
+		Game.screens().add(GameScreen.get());
+		Game.screens().add(new EditorScreen());
+		Game.screens().add(ConnectScreen.get());
+		Game.screens().add(new ServerSetupScreen());
 
-        Game.start();
-    }
+		Game.start();
+	}
 }

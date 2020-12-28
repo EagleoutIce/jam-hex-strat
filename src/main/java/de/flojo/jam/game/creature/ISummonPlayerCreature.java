@@ -5,8 +5,6 @@ import de.flojo.jam.game.player.PlayerId;
 
 @FunctionalInterface
 public interface ISummonPlayerCreature {
-    
-    Creature summon(String uniqueName, Tile startBase, PlayerId pId);
-
+	Creature summon(String uniqueName, Tile startBase, PlayerId pId);
 }
 

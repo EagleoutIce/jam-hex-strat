@@ -18,21 +18,18 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureElf extends Creature {
 
-    public CreatureElf(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.ELF, name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
-    }
+	public CreatureElf(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.ELF, name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying));
+	}
 
-    private static CreatureCore createElfCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-        return new CreatureCore(playerId, normal, dying, createElfAttributes());
-    }
+	private static CreatureCore createElfCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
+		return new CreatureCore(playerId, normal, dying, createElfAttributes());
+	}
 
-    private static CreatureAttributes createElfAttributes() {
-        Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit mit dem Elfenbogen des kleinen Goblins."));
-        // TODO: arrows
-        return new CreatureAttributes(4, 1, skills);
-    }
-
-
-
+	private static CreatureAttributes createElfAttributes() {
+		Set<ICreatureSkill> skills = new HashSet<>();
+		skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit mit dem Elfenbogen des kleinen Goblins."));
+		// TODO: arrows
+		return new CreatureAttributes(4, 1, skills);
+	}
 }

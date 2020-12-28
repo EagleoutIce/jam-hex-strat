@@ -6,34 +6,34 @@ import de.flojo.jam.networking.share.util.IAmJson;
 
 // serializer is not really working as it has to be embedded in the list etc.
 public class CreatureJson implements IAmJson {
-    
-    private static final long serialVersionUID = 2384082420599588581L;
 
-    private String name;
-    private CreatureId id;
-    private BoardCoordinate pos;
-    private PlayerId owner;
+	private static final long serialVersionUID = 2384082420599588581L;
 
-    public CreatureJson(final Creature base) {
-        this.name = base.getName();
-        this.id = base.getCreatureId();
-        this.pos = base.getCoordinate();
-        this.owner = base.getOwner();
-    }
+	private String name;
+	private CreatureId id;
+	private BoardCoordinate pos;
+	private PlayerId owner;
 
-    public String getName() {
-        return name;
-    }
+	public CreatureJson(final Creature base) {
+		this.name = base.getName();
+		this.id = base.getCreatureId();
+		this.pos = base.getCoordinate();
+		this.owner = base.getOwner();
+	}
 
-    public CreatureId getId() {
-        return id;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public BoardCoordinate getPos() {
-        return pos;
-    }
+	public CreatureId getId() {
+		return id;
+	}
 
-    public PlayerId getOwner() {
-        return owner;
-    }
+	public BoardCoordinate getPos() {
+		return pos;
+	}
+
+	public PlayerId getOwner() {
+		return owner;
+	}
 }

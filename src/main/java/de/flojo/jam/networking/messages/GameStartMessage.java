@@ -11,29 +11,29 @@ import de.flojo.jam.game.creature.CreatureJson;
 
 public class GameStartMessage extends MessageContainer {
 
-    private static final long serialVersionUID = -952666793933075961L;
+	private static final long serialVersionUID = -952666793933075961L;
 
-    private TerrainMap terrain;
-    private List<CreatureJson> creatures;
-    private List<TrapJson> traps;
+	private TerrainMap terrain;
+	private List<CreatureJson> creatures;
+	private List<TrapJson> traps;
 
 
-    public GameStartMessage(UUID clientId, TerrainMap terrain, CreatureCollection creatures, TrapCollection traps) {
-        super(MessageTypeEnum.GAME_START, clientId, "");
-        this.terrain = terrain;
-        this.creatures = creatures.getJsonData();
-        this.traps = traps.getJsonData();
-    }
+	public GameStartMessage(UUID clientId, TerrainMap terrain, CreatureCollection creatures, TrapCollection traps) {
+		super(MessageTypeEnum.GAME_START, clientId, "");
+		this.terrain = terrain;
+		this.creatures = creatures.getJsonData();
+		this.traps = traps.getJsonData();
+	}
 
-    public TerrainMap getTerrain() {
-        return terrain;
-    }
+	public TerrainMap getTerrain() {
+		return terrain;
+	}
 
-    public List<CreatureJson> getCreatures() {
-        return creatures;
-    }
+	public List<CreatureJson> getCreatures() {
+		return creatures;
+	}
 
-    public List<TrapJson> getTraps() {
-        return traps;
-    }
+	public List<TrapJson> getTraps() {
+		return traps;
+	}
 }

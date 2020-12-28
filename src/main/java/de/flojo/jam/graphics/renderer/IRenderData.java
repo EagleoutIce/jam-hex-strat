@@ -7,19 +7,19 @@ import java.awt.image.BufferedImage;
 
 public interface IRenderData {
 
-    default void render(Graphics2D g, Point2D pos, boolean doHighlight) {
-        render(g, pos, doHighlight ? RenderHint.HOVER : RenderHint.NORMAL);
-    }
-    void render(Graphics2D g, Point2D pos, RenderHint... hints);
+	default void render(Graphics2D g, Point2D pos, boolean doHighlight) {
+		render(g, pos, doHighlight ? RenderHint.HOVER : RenderHint.NORMAL);
+	}
+	void render(Graphics2D g, Point2D pos, RenderHint... hints);
 
-    boolean hasImage();
+	boolean hasImage();
 
-    BufferedImage getImage();
+	BufferedImage getImage();
 
-    double getOffsetX();
+	double getOffsetX();
 
-    double getOffsetY();
+	double getOffsetY();
 
 
-    public Rectangle2D getEffectiveRectangle(Point2D pos);
+	public Rectangle2D getEffectiveRectangle(Point2D pos);
 }

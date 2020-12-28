@@ -30,156 +30,156 @@ import de.gurkenlabs.litiengine.gui.screens.Screen;
 
 // The superduperwuperclass
 public class GameField implements IRenderable, IProvideContext {
-    public static final String FIELD_BACKGROUND = "field-background.png";
-    public static final int BOARD_HEIGHT = 33;
-    public static final int BOARD_WIDTH = 24;
+	public static final String FIELD_BACKGROUND = "field-background.png";
+	public static final int BOARD_HEIGHT = 33;
+	public static final int BOARD_WIDTH = 24;
 
-    private final String screenName;
+	private final String screenName;
 
-    private Board board;
-    private Architect architect;
-    private CreatureFactory factory;
-    private TrapSpawner spawner;
-    private SkillsPresenter presenter;
-    private PlayerId owner;
+	private Board board;
+	private Architect architect;
+	private CreatureFactory factory;
+	private TrapSpawner spawner;
+	private SkillsPresenter presenter;
+	private PlayerId owner;
 
-    private BuildingPhaseButtonPresenter buildingPhaseButtons;
+	private BuildingPhaseButtonPresenter buildingPhaseButtons;
 
-    private int moneyLeft;
+	private int moneyLeft;
 
-    private boolean canBuild = false;
-    private boolean ourTurn = false;
-    private boolean canDoAction = false;
+	private boolean canBuild = false;
+	private boolean ourTurn = false;
+	private boolean canDoAction = false;
 
-    // TODO: present our id to the player. present turn etc.
+	// TODO: present our id to the player. present turn etc.
 
-    public GameField(final Screen target, final String screenName, PlayerId owner) {
-        this.screenName = screenName;
-        this.owner = owner;
-        this.board = new Board("configs/empty.terrain", screenName);
-        this.spawner = new TrapSpawner(board, screenName);
-        this.factory = new CreatureFactory(screenName, board, spawner.getTraps());
-        this.architect = new Architect(board, factory, spawner);
-        this.architect.setPlayerId(owner);
-        this.presenter = new SkillsPresenter(target, board, factory, spawner, owner, screenName);
-        // initially off; just to be sure
-        this.presenter.disable();
-        InputController.get().onClicked(this::processMouse, screenName);
-        buildingPhaseButtons = new BuildingPhaseButtonPresenter(target, this, owner);
-        buildingPhaseButtons.disable();
-    }
+	public GameField(final Screen target, final String screenName, PlayerId owner) {
+		this.screenName = screenName;
+		this.owner = owner;
+		this.board = new Board("configs/empty.terrain", screenName);
+		this.spawner = new TrapSpawner(board, screenName);
+		this.factory = new CreatureFactory(screenName, board, spawner.getTraps());
+		this.architect = new Architect(board, factory, spawner);
+		this.architect.setPlayerId(owner);
+		this.presenter = new SkillsPresenter(target, board, factory, spawner, owner, screenName);
+		// initially off; just to be sure
+		this.presenter.disable();
+		InputController.get().onClicked(this::processMouse, screenName);
+		buildingPhaseButtons = new BuildingPhaseButtonPresenter(target, this, owner);
+		buildingPhaseButtons.disable();
+	}
 
-    void processMouse(MouseEvent e) {
-        if (!board.doesHover() || !ourTurn)
-            return;
+	void processMouse(MouseEvent e) {
+		if (!board.doesHover() || !ourTurn)
+			return;
 
-        if (canBuild) {
-            buildingPhaseButtons.processMouse(e);
-        }
+		if (canBuild) {
+			buildingPhaseButtons.processMouse(e);
+		}
 
-    }
+	}
 
-    public void updateTerrain(TerrainMap map) {
-        this.board.setTerrainMap(map);
-        // this.board.doHover()
-    }
+	public void updateTerrain(TerrainMap map) {
+		this.board.setTerrainMap(map);
+		// this.board.doHover()
+	}
 
-    public String getTerrainName() {
-        return board.getTerrainMap().getTerrain().getName();
-    }
+	public String getTerrainName() {
+		return board.getTerrainMap().getTerrain().getName();
+	}
 
-    public void reset() {
-        architect.clearField();
-        presenter.disable();
-        factory.removeAll();
-        spawner.removeAll();
-    }
+	public void reset() {
+		architect.clearField();
+		presenter.disable();
+		factory.removeAll();
+		spawner.removeAll();
+	}
 
-    @Override
-    public void render(Graphics2D g) {
-        board.jointRender(g, owner, factory, spawner);
-        buildingPhaseButtons.render(g);
-    }
+	@Override
+	public void render(Graphics2D g) {
+		board.jointRender(g, owner, factory, spawner);
+		buildingPhaseButtons.render(g);
+	}
 
-    @Override
-    public Board getBoard() {
-        return board;
-    }
+	@Override
+	public Board getBoard() {
+		return board;
+	}
 
-    @Override
-    public CreatureFactory getFactory() {
-        return factory;
-    }
+	@Override
+	public CreatureFactory getFactory() {
+		return factory;
+	}
 
-    @Override
-    public TrapSpawner getSpawner() {
-        return spawner;
-    }
+	@Override
+	public TrapSpawner getSpawner() {
+		return spawner;
+	}
 
-    @Override
-    public Architect getArchitect() {
-        return architect;
-    }
+	@Override
+	public Architect getArchitect() {
+		return architect;
+	}
 
-    @Override
-    public SkillsPresenter getPresenter() {
-        return presenter;
-    }
+	@Override
+	public SkillsPresenter getPresenter() {
+		return presenter;
+	}
 
-    public void allowOneBuild(Consumer<BuildChoice> onChoice, int moneyLeft) {
-        this.moneyLeft = moneyLeft;
-        canBuild = true;
-        ourTurn = true;
-        buildingPhaseButtons.enable();
-        buildingPhaseButtons.setCurrentBuildConsumer(b -> {
-            canBuild = false;
-            onChoice.accept(b);
-            buildingPhaseButtons.disable();
-            ourTurn = false;
-            buildingPhaseButtons.setCurrentBuildConsumer(null);
-        });
-    }
+	public void allowOneBuild(Consumer<BuildChoice> onChoice, int moneyLeft) {
+		this.moneyLeft = moneyLeft;
+		canBuild = true;
+		ourTurn = true;
+		buildingPhaseButtons.enable();
+		buildingPhaseButtons.setCurrentBuildConsumer(b -> {
+			canBuild = false;
+			onChoice.accept(b);
+			buildingPhaseButtons.disable();
+			ourTurn = false;
+			buildingPhaseButtons.setCurrentBuildConsumer(null);
+		});
+	}
 
-    public boolean isOurTurn() {
-        return ourTurn;
-    }
+	public boolean isOurTurn() {
+		return ourTurn;
+	}
 
-    @Override
-    public int getMoneyLeft() {
-        return moneyLeft;
-    }
+	@Override
+	public int getMoneyLeft() {
+		return moneyLeft;
+	}
 
-    public void setPlayerId(PlayerId id) {
-        presenter.setPlayerId(id);
-        architect.setPlayerId(id);
-        owner = id;
-    }
+	public void setPlayerId(PlayerId id) {
+		presenter.setPlayerId(id);
+		architect.setPlayerId(id);
+		owner = id;
+	}
 
-    public void updateCreatures(List<CreatureJson> creatures) {
-        factory.updateCreatures(creatures);
-    }
+	public void updateCreatures(List<CreatureJson> creatures) {
+		factory.updateCreatures(creatures);
+	}
 
-    public void updateTraps(List<TrapJson> traps) {
-        spawner.updateTraps(traps);
-    }
+	public void updateTraps(List<TrapJson> traps) {
+		spawner.updateTraps(traps);
+	}
 
-    public void allowOneTurn(IActionSkip skip, IActionMove move, IActionSkill skill, ItIsYourTurnMessage message) {
-        // do smth with message?
-        canDoAction = true;
-        ourTurn = true;
-        presenter.enable();
-        presenter.setOnActionConsumer(new IAction(){
+	public void allowOneTurn(IActionSkip skip, IActionMove move, IActionSkill skill, ItIsYourTurnMessage message) {
+		// do smth with message?
+		canDoAction = true;
+		ourTurn = true;
+		presenter.enable();
+		presenter.setOnActionConsumer(new IAction(){
 			@Override
 			public void onSkip(BoardCoordinate creaturePosition) {
-                skip.onSkip(creaturePosition);
-                cleanup();
+				skip.onSkip(creaturePosition);
+				cleanup();
 			}
 
 			@Override
 			public void onMove(BoardCoordinate from, List<BoardCoordinate> targets) {
-                move.onMove(from, targets);
-                cleanup();
-				
+				move.onMove(from, targets);
+				cleanup();
+
 			}
 
 			@Override
@@ -187,14 +187,14 @@ public class GameField implements IRenderable, IProvideContext {
 				skill.onSkill(from, target, skillId);
 				cleanup();
 			}
-            
-            private void cleanup() {
-                canDoAction = false;
-                ourTurn = false;
-                presenter.disable();
-                presenter.setOnActionConsumer(null);
-            }
-        });
+
+			private void cleanup() {
+				canDoAction = false;
+				ourTurn = false;
+				presenter.disable();
+				presenter.setOnActionConsumer(null);
+			}
+		});
 	}
 
 }

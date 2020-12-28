@@ -18,21 +18,19 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureGoblin extends Creature {
 
-    public CreatureGoblin(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.GOBLIN, name, cCollection, tCollection, new CreatureBase(startBase), createGoblinCore(playerId, normal, dying));
-    }
+	public CreatureGoblin(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.GOBLIN, name, cCollection, tCollection, new CreatureBase(startBase), createGoblinCore(playerId, normal, dying));
+	}
 
-    private static CreatureCore createGoblinCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-        return new CreatureCore(playerId, normal, dying, createGoblinAttributes());
-    }
-    
-    private static CreatureAttributes createGoblinAttributes() {
-        Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
-        // TODO: flying
-        return new CreatureAttributes(3, 1, skills);
-    }
+	private static CreatureCore createGoblinCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
+		return new CreatureCore(playerId, normal, dying, createGoblinAttributes());
+	}
 
-
+	private static CreatureAttributes createGoblinAttributes() {
+		Set<ICreatureSkill> skills = new HashSet<>();
+		skills.add(new SimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
+		// TODO: flying
+		return new CreatureAttributes(3, 1, skills);
+	}
 
 }

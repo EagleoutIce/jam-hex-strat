@@ -18,17 +18,17 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreaturePeasant extends Creature {
 
-    public CreaturePeasant(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
-    }
+	public CreaturePeasant(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
+	}
 
-    private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-        return new CreatureCore(playerId, normal, dying, createPeasantAttributes());
-    }
-    
-    private static CreatureAttributes createPeasantAttributes() {
-        Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(3, 0, 1, "Punch (3)", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
-        return new CreatureAttributes(4, 1, skills);
-    }
+	private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
+		return new CreatureCore(playerId, normal, dying, createPeasantAttributes());
+	}
+
+	private static CreatureAttributes createPeasantAttributes() {
+		Set<ICreatureSkill> skills = new HashSet<>();
+		skills.add(new SimplePunch(3, 0, 1, "Punch (3)", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
+		return new CreatureAttributes(4, 1, skills);
+	}
 }

@@ -18,20 +18,18 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureHalfling extends Creature {
 
-    public CreatureHalfling(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying));
-    }
+	public CreatureHalfling(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying));
+	}
 
-    private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-        return new CreatureCore(playerId, normal, dying, createHalflingAttributes());
-    }
+	private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
+		return new CreatureCore(playerId, normal, dying, createHalflingAttributes());
+	}
 
-    private static CreatureAttributes createHalflingAttributes() {
-        Set<ICreatureSkill> skills = new HashSet<>();
-        skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
-        return new CreatureAttributes(3, 1, skills);
-    }
-
-
+	private static CreatureAttributes createHalflingAttributes() {
+		Set<ICreatureSkill> skills = new HashSet<>();
+		skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
+		return new CreatureAttributes(3, 1, skills);
+	}
 
 }

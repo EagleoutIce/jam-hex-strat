@@ -5,33 +5,33 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.share.util.IAmJson;
 
 public class TrapJson implements IAmJson {
-    
-    private TrapId id;
-    private BoardCoordinate pos;
-    private PlayerId owner;
-    private boolean uncovered;
 
-    public TrapJson(final Trap trap){
-        this.id = trap.getTrapId();
-        this.pos = trap.getCoordinate();
-        this.owner = trap.getOwner();
-        this.uncovered = trap.uncoveredByEnemy();
-    }
+	private TrapId id;
+	private BoardCoordinate pos;
+	private PlayerId owner;
+	private boolean uncovered;
 
-    public TrapId getId() {
-        return id;
-    }
+	public TrapJson(final Trap trap){
+		this.id = trap.getTrapId();
+		this.pos = trap.getCoordinate();
+		this.owner = trap.getOwner();
+		this.uncovered = trap.uncoveredByEnemy();
+	}
 
-    public PlayerId getOwner() {
-        return owner;
-    }
+	public TrapId getId() {
+		return id;
+	}
 
-    public BoardCoordinate getPos() {
-        return pos;
-    }
+	public PlayerId getOwner() {
+		return owner;
+	}
 
-    public boolean isUncovered() {
-        return uncovered;
-    }
+	public BoardCoordinate getPos() {
+		return pos;
+	}
+
+	public boolean isUncovered() {
+		return uncovered;
+	}
 
 }

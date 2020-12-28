@@ -5,9 +5,7 @@ import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.CreatureCollection;
 
 public interface IProvideEffectContext {
-
-    Board getBoard();
-    CreatureCollection getCreatures();
-    TrapCollection getTraps();
-    
+	Board getBoard();
+	CreatureCollection getCreatures();
+	TrapCollection getTraps();
 }

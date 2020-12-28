@@ -9,21 +9,16 @@ import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillsPresenter;
 
 public interface IProvideContext extends IProvideEffectContext {
-    
-    CreatureFactory getFactory();
-    TrapSpawner getSpawner();
-    Architect getArchitect();
-
-    SkillsPresenter getPresenter();
-
-    int getMoneyLeft();
-
-    default CreatureCollection getCreatures() {
-        return getFactory().getCreatures();
-    }
-
-    default TrapCollection getTraps() {
-        return getSpawner().getTraps();
-    }
+	CreatureFactory getFactory();
+	TrapSpawner getSpawner();
+	Architect getArchitect();
+	SkillsPresenter getPresenter();
+	int getMoneyLeft();
+	default CreatureCollection getCreatures() {
+		return getFactory().getCreatures();
+	}
+	default TrapCollection getTraps() {
+		return getSpawner().getTraps();
+	}
 
 }

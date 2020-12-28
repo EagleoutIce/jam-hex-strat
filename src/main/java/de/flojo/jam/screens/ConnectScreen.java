@@ -23,202 +23,202 @@ import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 public class ConnectScreen extends Screen {
-    private static final BufferedImage background = Resources.images().get("painted03.jpeg");
+	private static final BufferedImage background = Resources.images().get("painted03.jpeg");
 
-    private static final String[] RANDOM_NAMES = new String[] {
-        "PeterMeter", "Pain Gain", "H4ns3l", "Joseph", "Achtung Butter!", "Hallo Mami",
-        "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
-        "Jaiger", "Nicht du", "Nicht ich", "Humbug", "Wer das liest...", "0x48", "Errör", "Fehlähr", "Wortjoke",
-        "Vormorgen", "Nachgestern", "Blumenwiese", "Ostfriese", "Sonnenkind", "Mondmöchtegern", "Jarl", "Karl",
-        "Schweizer", "Hinterdupfinger", "Der coole", "Der coolere", "Möchtegern", "Möchte-Gern", "Der mit der Macht", "Der mit dem Geld",
-        "Pusteblume", "Narzisse", "Jens", "Jakob", "Jerome", "0x12", "Der lustige", "Hammer Hans", "Hyänen Heini", "Steppenjürgen",
-        "Eine Box", "Eine Katze"
-    };
+	private static final String[] RANDOM_NAMES = new String[] {
+		"PeterMeter", "Pain Gain", "H4ns3l", "Joseph", "Achtung Butter!", "Hallo Mami",
+		"Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
+		"Jaiger", "Nicht du", "Nicht ich", "Humbug", "Wer das liest...", "0x48", "Errör", "Fehlähr", "Wortjoke",
+		"Vormorgen", "Nachgestern", "Blumenwiese", "Ostfriese", "Sonnenkind", "Mondmöchtegern", "Jarl", "Karl",
+		"Schweizer", "Hinterdupfinger", "Der coole", "Der coolere", "Möchtegern", "Möchte-Gern", "Der mit der Macht", "Der mit dem Geld",
+		"Pusteblume", "Narzisse", "Jens", "Jakob", "Jerome", "0x12", "Der lustige", "Hammer Hans", "Hyänen Heini", "Steppenjürgen",
+		"Eine Box", "Eine Katze"
+	};
 
-    private boolean locked;
+	private boolean locked;
 
-    private ClientController clientController;
-    public static final String NAME = "Game-Connect";
+	private ClientController clientController;
+	public static final String NAME = "Game-Connect";
 
-    private TextFieldComponent nameField;
-    private TextFieldComponent portNumber;
-    private TextFieldComponent adress;
-    private Button connect;
+	private TextFieldComponent nameField;
+	private TextFieldComponent portNumber;
+	private TextFieldComponent adress;
+	private Button connect;
 
-    private boolean connected = false;
+	private boolean connected = false;
 
-    private ConnectScreen() {
-        super(NAME);
-        Game.log().info("Building game connect Screen");
-        updatePositions();
-    }
+	private ConnectScreen() {
+		super(NAME);
+		Game.log().info("Building game connect Screen");
+		updatePositions();
+	}
 
-    private static final ConnectScreen instance = new ConnectScreen();
+	private static final ConnectScreen instance = new ConnectScreen();
 
-    public static ConnectScreen get() {
-        return instance;
-    }
-
-
-    @Override
-    public void render(final Graphics2D g) {
-        if (Game.world().environment() != null) {
-            Game.world().environment().render(g);
-        }
-        ImageRenderer.render(g, background, 0, 0);
-        // render info
-        g.setColor(Color.WHITE);
-        g.setFont(Main.GUI_FONT);
-        int largeHeight = g.getFontMetrics().getHeight();
-        TextRenderer.render(g, "Connection Menu", Main.INNER_MARGIN, 7.0 + largeHeight);
-
-        g.setFont(Main.TEXT_STATUS);
-        TextRenderer.render(g, "Connection status: " + getConnectStatus(), Main.INNER_MARGIN,
-                15.0 + g.getFontMetrics().getHeight() + largeHeight);
-        TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
-
-        TextRenderer.render(g, "Adr.: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight()) / 2);
-
-        TextRenderer.render(g, "Name: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 400) / 2);
-
-        super.render(g);
-    }
-
-    private String getConnectStatus() {
-        return clientController == null ? "Not connected" : clientController.getConnectedStatus();
-    }
-
-    @Override
-    public void prepare() {
-        super.prepare();
-        Game.window().onResolutionChanged(r -> updatePositions());
-        Game.loop().perform(100, this::updatePositions);
-        if(connected)
-            switchToGameScreen();
-        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), ConnectScreen.NAME);
-    }
-
-    private void updatePositions() {
-        final double height = Game.window().getResolution().getHeight();
-        final double width = Game.window().getResolution().getWidth();
-        this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 200) / 2 - 26);
-        nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
-        this.adress.setLocation(Main.INNER_MARGIN + 45d, (height + adress.getHeight()) / 2 - 26);
-        this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
-                height - this.connect.getHeight());
-    }
-
-    @Override
-    protected void initializeComponents() {
-        super.initializeComponents();
-        this.connect = new Button("Verbinde", Main.GUI_FONT_SMALL);
-        this.connect.onClicked(c -> {
-            if (connected) {
-                connected = false;
-                updateOnConnected();
-            } else {
-                connect(b -> {
-                    connected = b;
-                    updateOnConnected();
-                });
-            }
-        });
-        this.getComponents().add(connect);
-
-        // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 70, ServerSetupScreen.DEFAULT_PORT);
-        this.portNumber.setFormat("[0-9]{0,4}");
-        this.getComponents().add(portNumber);
-        this.adress = new TextFieldComponent(0, 0, 600, 70, "localhost");
-        this.adress.setFormat("[a-zA-Z.0-9]{0,200}");
-        this.getComponents().add(adress);
-        nameField = new TextFieldComponent(0, 0, 600, 70, Game.random().choose(RANDOM_NAMES));
-        nameField.setFormat(".{0,25}");
-        this.getComponents().add(nameField);
-        updatePositions();
-    }
+	public static ConnectScreen get() {
+		return instance;
+	}
 
 
-    private void updateOnConnected() {
-        if (!connected)
-            disconnect();
-        else
-            clientController.getSender().sendHello(nameField.getText());
-    }
+	@Override
+	public void render(final Graphics2D g) {
+		if (Game.world().environment() != null) {
+			Game.world().environment().render(g);
+		}
+		ImageRenderer.render(g, background, 0, 0);
+		// render info
+		g.setColor(Color.WHITE);
+		g.setFont(Main.GUI_FONT);
+		int largeHeight = g.getFontMetrics().getHeight();
+		TextRenderer.render(g, "Connection Menu", Main.INNER_MARGIN, 7.0 + largeHeight);
 
-    private void connect(Consumer<Boolean> onCompleted) {
-        this.portNumber.setEnabled(false);
-        this.adress.setEnabled(false);
-        nameField.setEnabled(false);
-        this.connect.setText("Trenne");
-        try {
-            clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText() ), this::onNetworkUpdate);
-            clientController.tryConnect(onCompleted);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            // just to be sure
-            clientController = null;
-        }
-    }
+		g.setFont(Main.TEXT_STATUS);
+		TextRenderer.render(g, "Connection status: " + getConnectStatus(), Main.INNER_MARGIN,
+				15.0 + g.getFontMetrics().getHeight() + largeHeight);
+		TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
+				(Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
 
-    void onNetworkUpdate(String... data) {
-        Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
+		TextRenderer.render(g, "Adr.: ", Main.INNER_MARGIN,
+				(Game.window().getHeight() + portNumber.getHeight()) / 2);
 
-        if(data.length == 0)
-            return;
+		TextRenderer.render(g, "Name: ", Main.INNER_MARGIN,
+				(Game.window().getHeight() + portNumber.getHeight() + 400) / 2);
 
-        switch(data[0]) {
-            case "CLOSED":
-                disconnect();
-                break;
-            case "START":
-                switchToGameScreen();
-                break;
-            default:
-                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
-        }
-    }
+		super.render(g);
+	}
+
+	private String getConnectStatus() {
+		return clientController == null ? "Not connected" : clientController.getConnectedStatus();
+	}
+
+	@Override
+	public void prepare() {
+		super.prepare();
+		Game.window().onResolutionChanged(r -> updatePositions());
+		Game.loop().perform(100, this::updatePositions);
+		if(connected)
+			switchToGameScreen();
+		InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), ConnectScreen.NAME);
+	}
+
+	private void updatePositions() {
+		final double height = Game.window().getResolution().getHeight();
+		final double width = Game.window().getResolution().getWidth();
+		this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 200) / 2 - 26);
+		nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
+		this.adress.setLocation(Main.INNER_MARGIN + 45d, (height + adress.getHeight()) / 2 - 26);
+		this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
+				height - this.connect.getHeight());
+	}
+
+	@Override
+	protected void initializeComponents() {
+		super.initializeComponents();
+		this.connect = new Button("Verbinde", Main.GUI_FONT_SMALL);
+		this.connect.onClicked(c -> {
+			if (connected) {
+				connected = false;
+				updateOnConnected();
+			} else {
+				connect(b -> {
+					connected = b;
+					updateOnConnected();
+				});
+			}
+		});
+		this.getComponents().add(connect);
+
+		// pos will be recalculated
+		this.portNumber = new TextFieldComponent(0, 0, 100, 70, ServerSetupScreen.DEFAULT_PORT);
+		this.portNumber.setFormat("[0-9]{0,4}");
+		this.getComponents().add(portNumber);
+		this.adress = new TextFieldComponent(0, 0, 600, 70, "localhost");
+		this.adress.setFormat("[a-zA-Z.0-9]{0,200}");
+		this.getComponents().add(adress);
+		nameField = new TextFieldComponent(0, 0, 600, 70, Game.random().choose(RANDOM_NAMES));
+		nameField.setFormat(".{0,25}");
+		this.getComponents().add(nameField);
+		updatePositions();
+	}
 
 
-    private void switchToGameScreen() {
-        // prepare correct Data :D
-        GameScreen.get().setup(clientController.getContext().getMyPlayerId());
-        changeScreen(GameScreen.NAME);
-    }
+	private void updateOnConnected() {
+		if (!connected)
+			disconnect();
+		else
+			clientController.getSender().sendHello(nameField.getText());
+	}
 
-    private void disconnect() {
-        this.portNumber.setEnabled(true);
-        this.adress.setEnabled(true);
-        nameField.setEnabled(true);
-        this.connect.setText("Verbinde");
-        if(clientController != null)
-            clientController.close();
-        clientController = null;
-    }
-    private void changeScreen(final String name) {
-        if (this.locked)
-            return;
+	private void connect(Consumer<Boolean> onCompleted) {
+		this.portNumber.setEnabled(false);
+		this.adress.setEnabled(false);
+		nameField.setEnabled(false);
+		this.connect.setText("Trenne");
+		try {
+			clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText() ), this::onNetworkUpdate);
+			clientController.tryConnect(onCompleted);
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
+			// just to be sure
+			clientController = null;
+		}
+	}
 
-        Game.window().cursor().set(Main.DEFAULT_CURSOR);
+	void onNetworkUpdate(String... data) {
+		Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
-        this.locked = true;
-        Game.window().getRenderComponent().fadeOut(650);
-        Game.loop().perform(950, () -> {
-            Game.screens().display(name);
-            Game.window().getRenderComponent().fadeIn(650);
-            this.locked = false;
-        });
-    }
+		if(data.length == 0)
+			return;
 
-    public ClientController getClientController() {
-        return clientController;
-    }
+		switch(data[0]) {
+			case "CLOSED":
+				disconnect();
+				break;
+			case "START":
+				switchToGameScreen();
+				break;
+			default:
+				Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+		}
+	}
 
-    public String getChosenPlayerName() {
-        return nameField.getText();
-    }
+
+	private void switchToGameScreen() {
+		// prepare correct Data :D
+		GameScreen.get().setup(clientController.getContext().getMyPlayerId());
+		changeScreen(GameScreen.NAME);
+	}
+
+	private void disconnect() {
+		this.portNumber.setEnabled(true);
+		this.adress.setEnabled(true);
+		nameField.setEnabled(true);
+		this.connect.setText("Verbinde");
+		if(clientController != null)
+			clientController.close();
+		clientController = null;
+	}
+	private void changeScreen(final String name) {
+		if (this.locked)
+			return;
+
+		Game.window().cursor().set(Main.DEFAULT_CURSOR);
+
+		this.locked = true;
+		Game.window().getRenderComponent().fadeOut(650);
+		Game.loop().perform(950, () -> {
+			Game.screens().display(name);
+			Game.window().getRenderComponent().fadeIn(650);
+			this.locked = false;
+		});
+	}
+
+	public ClientController getClientController() {
+		return clientController;
+	}
+
+	public String getChosenPlayerName() {
+		return nameField.getText();
+	}
 }
 
