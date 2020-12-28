@@ -116,11 +116,11 @@ public class CreatureCollection {
 	}
 
 	public boolean playerOneOwns() {
-		return collection.stream().anyMatch(c -> c.getOwner() == PlayerId.ONE);
+		return collection.stream().anyMatch(c -> !c.isMoribound() && c.getOwner() == PlayerId.ONE);
 	}
 
 	public boolean playerTwoOwns() {
-		return collection.stream().anyMatch(c -> c.getOwner() == PlayerId.TWO);
+		return collection.stream().anyMatch(c -> !c.isMoribound() && c.getOwner() == PlayerId.TWO);
 	}
 
 	public boolean noneCanDoSomething() {

@@ -40,7 +40,8 @@ import de.gurkenlabs.litiengine.util.Imaging;
 
 public class BuildingPhaseButtonPresenter implements IRenderable {
 
-	private static final BufferedImage SIDEBAR = Resources.images().get("ui/sidebar.png");
+	private BufferedImage sidebar;
+
 	public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30,
 			true);
 
@@ -71,6 +72,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 		this.screen = screen;
 		this.ourId = ourId;
 		this.context = context;
+		assignSidebar();
 		this.terrainButtons = new ArrayList<>();
 		populateTerrainButtons();
 		this.creatureButtons = new ArrayList<>();
@@ -83,8 +85,12 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 		Game.window().onResolutionChanged(r -> updatePositions());
 	}
 
+	private void assignSidebar() {
+		sidebar = Resources.images().get(this.ourId == null ? "ui/sidebar_player1.png" : this.ourId.ifOne("ui/sidebar_player1.png", "ui/sidebar_player2.png"));
+	}
+
 	private void lockOnOver(MouseEvent me) {
-		if (enabled && me.getX() <= SIDEBAR.getWidth()) {
+		if (enabled && me.getX() <= sidebar.getWidth()) {
 			context.getBoard().doNotHover();
 		} else {
 			context.getBoard().doHover();
@@ -99,7 +105,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 			if (t == TerrainId.T_EMPTY)
 				continue;
 
-			ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 15d,
+			ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
 					t.getImprint().getBaseResource(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
 			imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
 			imgBt.setFont(Main.GUI_FONT_SMALL);
@@ -133,7 +139,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 			if (c == CreatureId.NONE)
 				continue;
 			IRenderData creatureRenderer = c.getRenderer(ourId);
-			ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 90, i * 80d - 15d,
+			ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
 				creatureRenderer.getImage(), Integer.toString(c.getCost()), Main.TEXT_NORMAL);
 			imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
 			imgBt.setFont(Main.GUI_FONT_SMALL);
@@ -167,7 +173,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 			TrapId t = traps[i];
 
 			IRenderData trapRenderer = t.getImprint().getNormalRenderer();
-			ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 90, Game.window().getHeight() - i * 80d - 110d,
+			ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, Game.window().getHeight() - i * 80d - 110d,
 				trapRenderer.getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
 			imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
 			imgBt.setFont(Main.GUI_FONT_SMALL);
@@ -253,7 +259,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 	}
 
 	private boolean intersectsWithSideBar(Point p) {
-		return enabled && p.getX() <= SIDEBAR.getWidth();
+		return enabled && p.getX() <= sidebar.getWidth();
 	}
 
 	private void plantTile(MouseEvent c) {
@@ -337,12 +343,12 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 	public void render(Graphics2D g) {
 		if (!enabled)
 			return;
-		ImageRenderer.render(g, SIDEBAR, 0, 0);
+		ImageRenderer.render(g, sidebar, 0, 0);
 		g.setColor(Color.WHITE);
 		g.setFont(Main.TEXT_STATUS);
 		final String money = Integer.toString(context.getMoneyLeft());
-		TextRenderer.render(g, money, 90d, 50d - TextRenderer.getHeight(g, money) / 2d);
-		ImageRenderer.render(g, MONEY_SYMBOL, 20d + MONEY_SYMBOL.getWidth() / 2d,
-				50d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
+		TextRenderer.render(g, money, 110d, 43d - TextRenderer.getHeight(g, money) / 2d);
+		ImageRenderer.render(g, MONEY_SYMBOL, 40d + MONEY_SYMBOL.getWidth() / 2d,
+				43d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
 	}
 }

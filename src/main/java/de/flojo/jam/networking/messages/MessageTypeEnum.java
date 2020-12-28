@@ -11,7 +11,8 @@ public enum MessageTypeEnum {
 	GAME_START(GameStartMessage.class),
 	NEXT_ROUND(NextRoundMessage.class),
 	YOUR_TURN(ItIsYourTurnMessage.class),
-	TURN_ACTION(TurnActionMessage.class);
+	TURN_ACTION(TurnActionMessage.class),
+	GAME_OVER(GameOverMessage.class);
 
 	private final Class<? extends MessageContainer> targetClass;
 

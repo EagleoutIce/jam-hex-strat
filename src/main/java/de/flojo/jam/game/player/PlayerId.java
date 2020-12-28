@@ -11,4 +11,8 @@ public enum PlayerId {
         return this == TWO ? a : b;
     }
 
+    public PlayerId other() {
+        return this == ONE ? TWO : ONE;
+    }
+
 }

@@ -82,6 +82,8 @@ public class PunchEffect implements IEffectCreature {
 	}
 
 	private void moveAndKill(Creature target) {
+		// is dying => do not use for player owns
+		target.moribound();
 		awaitMovementCompletion(target);
 		target.getBase().moveOutFieldRaw(
 				(int) (target.getBase().getTile().getCenter().x + deltaX * Tile.DEFAULT_RADIUS * 1.25),

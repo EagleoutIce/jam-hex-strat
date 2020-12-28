@@ -3,6 +3,8 @@ package de.flojo.jam.screens.ingame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.client.ClientController;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
 import de.flojo.jam.networking.messages.BuildUpdateMessage;
+import de.flojo.jam.networking.messages.GameOverMessage;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
 import de.flojo.jam.networking.messages.NextRoundMessage;
@@ -34,16 +37,24 @@ import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
+import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
+import de.gurkenlabs.litiengine.resources.Resources;
 
 public class GameScreen extends Screen {
 	private static final Color P1_COLOR = new Color(45, 173, 215);
 	private static final Color P2_COLOR = new Color(141, 45, 215);
 
+	public static final BufferedImage PLAYER_VIEW_TURN_P1 = Resources.images().get("ui/spieleranzeige_player1.png");
+	public static final BufferedImage PLAYER_VIEW_TURN_P2 = Resources.images().get("ui/spieleranzeige_player2.png");
+	public static final int RIGHT_WIDTH = Math.max(PLAYER_VIEW_TURN_P1.getWidth(), PLAYER_VIEW_TURN_P2.getWidth());
+
+	public static final BufferedImage BUILD_PHASE = Resources.images().get("ui/phasenanzeige_building_phase.png");
+	public static final BufferedImage MAIN_PHASE = Resources.images().get("ui/phasenanzeige_main_phase.png");
+
 	GameField field;
 	private PlayerId ourId;
-	private String playerTag;
 	private ClientController clientController;
 	private int currentRound = 0;
 
@@ -67,8 +78,9 @@ public class GameScreen extends Screen {
 		this.clientController = ConnectScreen.get().getClientController();
 		this.field.updateTerrain(new TerrainMap(clientController.getContext().getTerrain()));
 		this.ourId = ourId;
-		this.playerTag = this.ourId.ifOne("Spieler 1", "Spieler 2");
+		// this.playerTag = this.ourId.ifOne("Spieler 1", "Spieler 2");
 		this.clientController.setOnConnectionStateUpdate(this::onNetworkUpdate);
+		InputController.get().onMoved(this::lockOnOver, GameScreen.NAME);
 	}
 
 	void onNetworkUpdate(String... data) {
@@ -108,35 +120,49 @@ public class GameScreen extends Screen {
 				choice.getChosenCreature(), choice.getChosenTrap(), ""));
 	}
 
+	final int MAX_NAME_LENGTH = 7;
+
 	@Override
 	public void render(final Graphics2D g) {
 		if (field == null)
 			return;
 		field.render(g);
-		g.setFont(Main.GUI_FONT_SMALL);
-		g.setColor(field.isOurTurn() ? Color.GREEN : Color.WHITE);
-		TextRenderer.render(g, playerTag,
-				Game.window().getWidth() - Main.INNER_MARGIN - TextRenderer.getWidth(g, playerTag), 60, true);
-		final String p1 = "Player 1: " + clientController.getContext().getP1Name();
-		final String p2 = "Player 2: " + clientController.getContext().getP2Name();
+		PlayerId turnPlayerId = field.isOurTurn() ? ourId : ourId.other();
+
+		ImageRenderer.render(g, turnPlayerId.ifOne(PLAYER_VIEW_TURN_P1, PLAYER_VIEW_TURN_P2), Game.window().getWidth() - (double)RIGHT_WIDTH, 0);
+
+		g.setFont(Main.TEXT_STATUS);
+		g.setColor(Color.WHITE);
+		final String roundText = "Runde: " + currentRound;
+		TextRenderer.render(g, roundText,
+				Game.window().getWidth() - 105 - TextRenderer.getWidth(g, roundText)/2, 38d, true);
+		String p1 = ourId.ifOne(">", "") + clientController.getContext().getP1Name();
+		p1 = p1.substring(0, Math.min(p1.length(), MAX_NAME_LENGTH)) + (p1.length() > MAX_NAME_LENGTH ? "..." : "");
+		String p2 = ourId.ifTwo(">", "") + clientController.getContext().getP2Name();
+		p2 = p2.substring(0, Math.min(p2.length(), MAX_NAME_LENGTH)) + (p2.length() > MAX_NAME_LENGTH ? "..." : "");
 		g.setColor(P1_COLOR);
 		g.setFont(Main.TEXT_STATUS);
-		int w = (int) Math.max(TextRenderer.getWidth(g, p1), TextRenderer.getWidth(g, p2));
-		TextRenderer.render(g, p1, Game.window().getWidth() - Main.INNER_MARGIN - w, 120, true);
+		TextRenderer.render(g, p1, Game.window().getWidth() - 190d, 120, true);
 		g.setColor(P2_COLOR);
-		TextRenderer.render(g, p2, Game.window().getWidth() - Main.INNER_MARGIN - w, 160, true);
+		TextRenderer.render(g, p2, Game.window().getWidth() - 190d, 160, true);
 		g.setColor(Color.WHITE);
 		g.setFont(Main.GUI_FONT_SMALL);
 		if (currentRound == 0) {
-			final String buildPhase = "Bauphase";
-			TextRenderer.render(g, buildPhase, Game.window().getCenter().getX() - TextRenderer.getWidth(g, buildPhase)/2,
-					60, true);
+			ImageRenderer.render(g, BUILD_PHASE, Game.window().getCenter().getX() - BUILD_PHASE.getWidth()/2d, 0);
 		} else if (currentRound > 0) {
-			final String roundText = "Runde: " + currentRound;
-			TextRenderer.render(g, roundText,
-					Game.window().getCenter().getX() - TextRenderer.getWidth(g, roundText) / 2, 60, true);
+			ImageRenderer.render(g, MAIN_PHASE, Game.window().getCenter().getX() - MAIN_PHASE.getWidth()/2d, 0);
 		}
 		super.render(g);
+	}
+
+
+	private void lockOnOver(MouseEvent me) {
+		if (me.getX() >= Game.window().getWidth() - PLAYER_VIEW_TURN_P1.getWidth() &&
+			me.getY() <= PLAYER_VIEW_TURN_P1.getHeight()) {
+			field.getBoard().doNotHover();
+		} else {
+			field.getBoard().doHover();
+		}
 	}
 
 	public void updateMap(BuildUpdateMessage message) {
@@ -242,6 +268,11 @@ public class GameScreen extends Screen {
 			Game.window().getRenderComponent().fadeIn(650);
 			this.locked = false;
 		});
+	}
+
+	public void gameOver(GameOverMessage message) {
+		JOptionPane.showMessageDialog(Game.window().getRenderComponent(),
+		"Das Spiel ist vorbei. Gewonnen hat: " + message.getWinnerId());
 	}
 
 }

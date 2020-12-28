@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 
+import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.exceptions.ErrorTypeEnum;
@@ -21,6 +22,7 @@ import de.flojo.jam.networking.messages.BuildChoiceMessage;
 import de.flojo.jam.networking.messages.BuildPhaseStartMessage;
 import de.flojo.jam.networking.messages.BuildUpdateMessage;
 import de.flojo.jam.networking.messages.ErrorMessage;
+import de.flojo.jam.networking.messages.GameOverMessage;
 import de.flojo.jam.networking.messages.HelloMessage;
 import de.flojo.jam.networking.messages.HelloReplyMessage;
 import de.flojo.jam.networking.messages.MessageContainer;
@@ -34,14 +36,15 @@ import de.gurkenlabs.litiengine.Game;
 public class ServerController implements IServerController {
 
 	protected final ExecutorService executorService = Executors.newFixedThreadPool(1);
-	private ServerSocket socket;
-	private PlayerController playerController;
+	private final ServerSocket socket;
+	private final PlayerController playerController;
 	private final MainGameControl mGController;
 	private final INeedUpdates<String> networkUpdateTarget;
 
 	private ServerStateEnum state = ServerStateEnum.OFF;
 
-	public ServerController(InetSocketAddress address, IProvideContext context, INeedUpdates<String> networkUpdateTarget) {
+	public ServerController(final InetSocketAddress address, final IProvideContext context,
+			final INeedUpdates<String> networkUpdateTarget) {
 		socket = new ServerSocket(address, this);
 		playerController = new PlayerController();
 		mGController = new MainGameControl(this, context);
@@ -49,19 +52,19 @@ public class ServerController implements IServerController {
 	}
 
 	@Override
-	public void handleCloseFor(WebSocket conn, int code, String reason, boolean remote) {
+	public void handleCloseFor(final WebSocket conn, final int code, final String reason, final boolean remote) {
 		Game.log().log(Level.INFO, "Closed connection with {0} with code {1} and reason {2} (remote: {3})",
 				new Object[] { conn, code, reason, remote });
 		executorService.execute(() -> {
 			playerController.removePlayer(conn);
-			if(state != ServerStateEnum.WAITING_FOR_PLAYERS) {
+			if (state != ServerStateEnum.WAITING_FOR_PLAYERS) {
 				networkUpdateTarget.call("STOPPED", "Player left in game");
 			}
 		});
 	}
 
 	@Override
-	public void handleMessage(WebSocket conn, String message) {
+	public void handleMessage(final WebSocket conn, final String message) {
 		Game.log().log(Level.INFO, "Got Message: \"{0}\" from {1}", new Object[] { message, conn });
 		executorService.execute(() -> processMessage(conn, message));
 	}
@@ -79,8 +82,8 @@ public class ServerController implements IServerController {
 	}
 
 	// TODO: maybe "round data" on every nextRound?
-	private void processMessage(WebSocket conn, String message) {
-		ClientServerConnection connection = conn.getAttachment();
+	private void processMessage(final WebSocket conn, final String message) {
+		final ClientServerConnection connection = conn.getAttachment();
 		try {
 			final MessageContainer container = getContainerWithUuidCheck(message, connection);
 			final MessageTypeEnum type = container == null ? null : container.getType();
@@ -109,8 +112,9 @@ public class ServerController implements IServerController {
 		}
 	}
 
-	private void handleBuildChoice(BuildChoiceMessage message, WebSocket conn, ClientServerConnection csConnection) {
-		if(message.getTerrain() != null) {
+	private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
+			final ClientServerConnection csConnection) {
+		if (message.getTerrain() != null) {
 			// place terrain
 			mGController.buildTerrainAt(csConnection.getRole(), message.getTerrain(), message.getPosition());
 		} else if (message.getCreature() != null) {
@@ -118,38 +122,38 @@ public class ServerController implements IServerController {
 		} else if (message.getTrap() != null) {
 			mGController.spawnTrapAt(csConnection.getRole(), message.getTrap(), message.getPosition());
 		} else {
-			Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}.", new Object[] {message, csConnection});
+			Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}.", new Object[] { message, csConnection });
 		}
 
 		playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
 
-		if(!mGController.nextBuildRequest()) {
+		if (!mGController.nextBuildRequest()) {
 			mGController.startMainGame();
 		}
 	}
 
-	private void handleTurnAction(TurnActionMessage message, WebSocket conn, ClientServerConnection connection) {
-		if(connection == null)
+	private void handleTurnAction(final TurnActionMessage message, final WebSocket conn,
+			final ClientServerConnection connection) {
+		if (connection == null)
 			return;
 		mGController.performAction(message);
 		// Maybe make a new message to avoid wrong sending?
 		// or introduce a private signature?
 		playerController.getOtherPlayer(connection.getRole()).send(message);
-		if(!mGController.nextGameAction()) {
-			// TODO: GAME OVER
-		}
+		if (!mGController.nextGameAction())
+			gameOver();
 	}
 
-	private void handleHello(HelloMessage message, WebSocket conn, ClientServerConnection csConnection)
-			throws IllegalMessageException, NameNotAvailableException {
-		if(csConnection != null)
+	private void handleHello(final HelloMessage message, final WebSocket conn,
+			final ClientServerConnection csConnection) throws IllegalMessageException, NameNotAvailableException {
+		if (csConnection != null)
 			throw new IllegalMessageException("You have already sent a Hello-Message");
 
-		ClientServerConnection newConnection = new ClientServerConnection(conn, message);
+		final ClientServerConnection newConnection = new ClientServerConnection(conn, message);
 		playerController.addPlayer(newConnection);
 		conn.setAttachment(newConnection);
 		conn.send(new HelloReplyMessage(newConnection, mGController.getTerrain()).toJson());
-		if(playerController.ready()) {
+		if (playerController.ready()) {
 			playerController.sendBoth(new BuildPhaseStartMessage(null, playerController));
 			startGame();
 		}
@@ -161,7 +165,8 @@ public class ServerController implements IServerController {
 		mGController.startBuildPhase();
 	}
 
-	private void handleNullTypeOnContainer(WebSocket conn, ClientServerConnection connection, String message) {
+	private void handleNullTypeOnContainer(final WebSocket conn, final ClientServerConnection connection,
+			final String message) {
 		Game.log().log(Level.WARNING, "The Message: \"{0}\" was not in a valid Containerformat!", message);
 		UUID servedByClientId;
 		if (connection == null) {
@@ -177,7 +182,8 @@ public class ServerController implements IServerController {
 	}
 
 	private void sendErrorMessageToDealWithHandlerException(final WebSocket conn, final HandlerException ex) {
-		Game.log().log(Level.SEVERE, "Error while handling: {0} ({1}).", new Object[] {ex.getError(), ex.getMessage()});
+		Game.log().log(Level.SEVERE, "Error while handling: {0} ({1}).",
+				new Object[] { ex.getError(), ex.getMessage() });
 		final ClientServerConnection connection = conn.getAttachment();
 		UUID servedByClientId;
 		if (connection == null) { // Bounce-Back to sender!
@@ -191,7 +197,7 @@ public class ServerController implements IServerController {
 	}
 
 	@Override
-	public void handleOpenFor(WebSocket conn) {
+	public void handleOpenFor(final WebSocket conn) {
 		Game.log().log(Level.INFO, "Connected: {0}", new Object[] { conn });
 	}
 
@@ -216,6 +222,20 @@ public class ServerController implements IServerController {
 		state = ServerStateEnum.WAITING_FOR_PLAYERS;
 	}
 
+	public void gameOver() {
+		// analyze winner
+		final PlayerId winner = mGController.getWinner().orElse(null);
+		// !No Present banner
+		// send
+		sendGameOver(winner);
+		// ?stopchange?
+	}
+
+	public void sendGameOver(final PlayerId winnerId) {
+		final GameOverMessage gameOverMessage = new GameOverMessage(null, winnerId);
+		playerController.sendBoth(gameOverMessage);
+	}
+
 	public void stop() {
 		try {
 			socket.stop();
@@ -227,7 +247,7 @@ public class ServerController implements IServerController {
 	}
 
 	@Override
-	public void handleError(WebSocket conn, Exception ex) {
+	public void handleError(final WebSocket conn, final Exception ex) {
 		networkUpdateTarget.call("STOPPED", ex.getMessage());
 	}
 

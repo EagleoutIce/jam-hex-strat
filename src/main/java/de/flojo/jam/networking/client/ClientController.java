@@ -105,10 +105,11 @@ public class ClientController implements IClientController {
 				GameScreen.get().buildOne(NetworkGson.getMessage(message));
 				break;
 			case BUILD_UPDATE:
-				GameScreen.get().updateMap(NetworkGson.getMessage(message));
-				break;
-			case GAME_START:
-				GameScreen.get().initGameStart(NetworkGson.getMessage(message));
+			GameScreen.get().updateMap(NetworkGson.getMessage(message));
+			break;
+			// For mirroring, may be changed
+			case TURN_ACTION:
+				GameScreen.get().performTurn(NetworkGson.getMessage(message));
 				break;
 			case NEXT_ROUND:
 				GameScreen.get().nextRound(NetworkGson.getMessage(message));
@@ -116,9 +117,11 @@ public class ClientController implements IClientController {
 			case YOUR_TURN:
 				GameScreen.get().ourTurn(NetworkGson.getMessage(message));
 				break;
-			// For mirroring, may be changed
-			case TURN_ACTION:
-				GameScreen.get().performTurn(NetworkGson.getMessage(message));
+			case GAME_START:
+				GameScreen.get().initGameStart(NetworkGson.getMessage(message));
+				break;
+			case GAME_OVER:
+				GameScreen.get().gameOver(NetworkGson.getMessage(message));
 				break;
 			default:
 				Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[] {type, message});

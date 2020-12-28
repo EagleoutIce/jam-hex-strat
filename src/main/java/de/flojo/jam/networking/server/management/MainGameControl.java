@@ -129,6 +129,18 @@ public class MainGameControl {
 		return !getFactory().playerOneOwns() || !getFactory().playerTwoOwns();
 	}
 
+
+	public Optional<PlayerId> getWinner() {
+		final boolean p1 = getFactory().playerOneOwns();
+		final boolean p2 = getFactory().playerTwoOwns();
+		if(p1 ^ p2) {
+			return p1 ? Optional.of(playerController.getPlayerOne().getRole()) : Optional.of(playerController.getPlayerTwo().getRole());
+		} else {
+			return Optional.empty();
+		}
+	}
+
+
 	public void summonCreatureAt(PlayerId player, CreatureId creature, BoardCoordinate position) {
 		getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), getBoard().getTile(position), player);
 		state.reduceMoney(player, creature.getCost());

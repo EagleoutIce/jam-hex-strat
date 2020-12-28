@@ -17,8 +17,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -488,16 +486,9 @@ public class EditorScreen extends Screen {
 		super.render(g);
 	}
 
-	private boolean askStupidUserForConfirmationOnExit() {
-		final Object[] options = {"Ja","Nein"};
-		final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
-		"Bist du dir sicher, dass du dieses sehr gute Spiel verlassen möchtest?",null, JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
-		return n != 0;
-	}
-
 
 	private void changeScreen(final String name) {
-		if (this.locked || askStupidUserForConfirmationOnExit())
+		if (this.locked)
 			return;
 
 		Game.window().cursor().set(Main.DEFAULT_CURSOR);

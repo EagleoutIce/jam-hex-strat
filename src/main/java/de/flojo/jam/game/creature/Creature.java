@@ -26,6 +26,9 @@ public class Creature implements IRenderable {
 	private final CreatureCollection cCollection;
 	private final TrapCollection tCollection;
 
+	// is dying
+	private boolean moribound = false;
+
 	protected static final int DIE_DURATION = 1200;
 
 	private Runnable onDead;
@@ -169,5 +172,13 @@ public class Creature implements IRenderable {
 		builder.append("Creature [").append("name=").append(name).append(", position=").append(getCoordinate())
 				.append(", owner=").append(this.core.getOwner()).append("]");
 		return builder.toString();
+	}
+
+	public void moribound() {
+		moribound = true;
+	}
+
+	public boolean isMoribound() {
+		return this.moribound;
 	}
 }
