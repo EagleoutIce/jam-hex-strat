@@ -2,12 +2,15 @@ package de.flojo.jam.screens;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.logging.Level;
+
+import javax.swing.JOptionPane;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
@@ -16,6 +19,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.server.ServerController;
 import de.flojo.jam.util.FileHelper;
+import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
@@ -39,6 +43,8 @@ public class ServerSetupScreen extends Screen {
     private Button p1;
     private Button p2;
     private Button both;
+
+    private boolean locked;
 
     public ServerSetupScreen() {
         super(NAME);
@@ -87,6 +93,7 @@ public class ServerSetupScreen extends Screen {
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
         gameField = new GameField(this, ServerSetupScreen.NAME, null);
+        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> {if(stopServer(true)) changeScreen(MenuScreen.NAME);}, ServerSetupScreen.NAME);
     }
 
     private void updatePositions() {
@@ -107,7 +114,7 @@ public class ServerSetupScreen extends Screen {
         this.startServer = new Button("Start", Main.GUI_FONT_SMALL);
         this.startServer.onClicked(c -> {
             if(serverStarted) {
-                stopServer();
+                stopServer(true);
             } else {
                 startServer();
             }});
@@ -161,9 +168,7 @@ public class ServerSetupScreen extends Screen {
             Game.log().info("Load was cancelled.");
             return;
         }
-
         this.chosenTerrainPath = chosen;
-
         loadCurrentTerrain();
     }
 
@@ -203,7 +208,7 @@ public class ServerSetupScreen extends Screen {
 
         switch(data[0]) {
             case "STOPPED":
-                stopServer();
+                stopServer(false);
                 break;
 
             default:
@@ -211,8 +216,17 @@ public class ServerSetupScreen extends Screen {
         }
     }
 
+    private boolean askStupidUserForConfirmationOnExit() {
+        final Object[] options = {"Ja","Nein"};
+        final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
+        "Bist du dir sicher, dass du den Server beenden möchtest?",null, JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+        return n != 0;
+    }
 
-    private void stopServer() {
+    // only true if stopped and reset
+    private boolean stopServer(boolean ask) {
+        if(ask && this.serverStarted && askStupidUserForConfirmationOnExit())
+            return false;
         Game.log().log(Level.INFO, "Stopping Server on Port {0}", getAdress());
         this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
@@ -223,6 +237,22 @@ public class ServerSetupScreen extends Screen {
         serverStarted = false;
         gameField.reset();
         loadCurrentTerrain();
+        return true;
+    }
+
+    private void changeScreen(final String name) {
+        if (this.locked)
+            return;
+
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);
+
+        this.locked = true;
+        Game.window().getRenderComponent().fadeOut(650);
+        Game.loop().perform(950, () -> {
+            Game.screens().display(name);
+            Game.window().getRenderComponent().fadeIn(650);
+            this.locked = false;
+        });
     }
 
 }

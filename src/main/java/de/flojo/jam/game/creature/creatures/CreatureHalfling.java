@@ -12,6 +12,7 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.SimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
@@ -24,10 +25,10 @@ public class CreatureHalfling extends Creature {
     private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
         return new CreatureCore(playerId, normal, dying, createHalflingAttributes());
     }
-    
+
     private static CreatureAttributes createHalflingAttributes() {
         Set<ICreatureSkill> skills = new HashSet<>();
-        // skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
+        skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Hieb mit Mit dem Ellenbogen des kleinen Goblins."));
         return new CreatureAttributes(3, 1, skills);
     }
 

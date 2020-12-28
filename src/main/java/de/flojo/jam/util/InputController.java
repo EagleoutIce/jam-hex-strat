@@ -10,10 +10,10 @@ import de.gurkenlabs.litiengine.input.IMouse.MouseMovedListener;
 import de.gurkenlabs.litiengine.input.Input;
 
 public class InputController {
- 
-    
+
+
     private static final InputController instance = new InputController();
-    
+
 
     public InputController() {
         //

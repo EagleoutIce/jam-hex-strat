@@ -2,6 +2,7 @@ package de.flojo.jam.screens;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -13,6 +14,7 @@ import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.client.ClientController;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -94,6 +96,9 @@ public class ConnectScreen extends Screen {
         super.prepare();
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
+        if(connected)
+            switchToGameScreen();
+        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), ConnectScreen.NAME);
     }
 
     private void updatePositions() {
@@ -120,8 +125,6 @@ public class ConnectScreen extends Screen {
                     updateOnConnected();
                 });
             }
-                
-
         });
         this.getComponents().add(connect);
 
@@ -166,19 +169,24 @@ public class ConnectScreen extends Screen {
 
         if(data.length == 0)
             return;
-        
+
         switch(data[0]) {
             case "CLOSED":
-                disconnect();   
+                disconnect();
                 break;
             case "START":
-                // prepare correct Data :D
-                GameScreen.get().setup(clientController.getContext().getMyPlayerId());
-                changeScreen(GameScreen.NAME);
+                switchToGameScreen();
                 break;
             default:
                 Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
+    }
+
+
+    private void switchToGameScreen() {
+        // prepare correct Data :D
+        GameScreen.get().setup(clientController.getContext().getMyPlayerId());
+        changeScreen(GameScreen.NAME);
     }
 
     private void disconnect() {
@@ -194,7 +202,7 @@ public class ConnectScreen extends Screen {
         if (this.locked)
             return;
 
-        Game.window().cursor().set(Main.DEFAULT_CURSOR);        
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);
 
         this.locked = true;
         Game.window().getRenderComponent().fadeOut(650);
@@ -213,3 +221,4 @@ public class ConnectScreen extends Screen {
         return nameField.getText();
     }
 }
+

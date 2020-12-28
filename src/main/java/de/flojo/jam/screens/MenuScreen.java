@@ -2,8 +2,8 @@ package de.flojo.jam.screens;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.util.Objects;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
@@ -11,7 +11,6 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
-import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 public class MenuScreen extends Screen {
@@ -56,10 +55,6 @@ public class MenuScreen extends Screen {
         super.prepare();
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
-
-        // Return to main menu
-        // TODO: regular back buttons with unset? server e.g. continues running
-        Input.keyboard().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME, startGame));
     }
 
     private void updatePositions() {
@@ -94,10 +89,10 @@ public class MenuScreen extends Screen {
     }
 
     private void changeScreen(final String name, final Button button) {
-        if (this.locked)
+        if (this.locked || Objects.equals(Game.screens().current().getName(), name))
             return;
 
-        Game.window().cursor().set(Main.DEFAULT_CURSOR);        
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);
 
         this.locked = true;
         button.setEnabled(false);

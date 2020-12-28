@@ -17,6 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
+import javax.swing.JOptionPane;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -88,6 +90,8 @@ public class EditorScreen extends Screen {
     private List<ImageButton> trapButtons;
     private List<Button> creatureButtons;
 
+    private boolean locked;
+
     public EditorScreen() {
         super(NAME);
 
@@ -114,6 +118,8 @@ public class EditorScreen extends Screen {
                 creatureFactory.getSelectedCreature().die();
             }
         }, EditorScreen.NAME);
+
+        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), EditorScreen.NAME);
         presenter = new SkillsPresenter(this, board, creatureFactory, trapSpawner, getFakeId(), EditorScreen.NAME);
         presenter.enable();
     }
@@ -480,6 +486,29 @@ public class EditorScreen extends Screen {
     public void render(final Graphics2D g) {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
+    }
+
+    private boolean askStupidUserForConfirmationOnExit() {
+        final Object[] options = {"Ja","Nein"};
+        final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
+        "Bist du dir sicher, dass du dieses sehr gute Spiel verlassen möchtest?",null, JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+        return n != 0;
+    }
+
+
+    private void changeScreen(final String name) {
+        if (this.locked || askStupidUserForConfirmationOnExit())
+            return;
+
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);
+
+        this.locked = true;
+        Game.window().getRenderComponent().fadeOut(650);
+        Game.loop().perform(950, () -> {
+            Game.screens().display(name);
+            Game.window().getRenderComponent().fadeIn(650);
+            this.locked = false;
+        });
     }
 
 }

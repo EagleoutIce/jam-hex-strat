@@ -2,10 +2,13 @@ package de.flojo.jam.screens.ingame;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.event.KeyEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
+
+import javax.swing.JOptionPane;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
@@ -29,6 +32,7 @@ import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.util.BuildChoice;
+import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
@@ -42,6 +46,8 @@ public class GameScreen extends Screen {
     private String playerTag;
     private ClientController clientController;
     private int currentRound = 0;
+
+    private boolean locked;
 
     public static final String NAME = "BUILDPHASE";
 
@@ -73,20 +79,24 @@ public class GameScreen extends Screen {
 
         switch (data[0]) {
             case "CLOSED":
-                disconnect();
+                disconnect(false);
                 break;
             default:
                 Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
-    private void disconnect() {
-        Game.screens().display(MenuScreen.NAME);
+    private void disconnect(boolean ask) {
+        if(ask && askStupidUserForConfirmationOnExit())
+            return;
+        clientController.close();
+        changeScreen(MenuScreen.NAME);
     }
 
     @Override
     public void prepare() {
         super.prepare();
+        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> disconnect(true), ConnectScreen.NAME);
     }
 
     public void buildOne(YouCanBuildMessage message) {
@@ -209,6 +219,29 @@ public class GameScreen extends Screen {
 
     private CreatureFactory getFactory() {
         return field.getFactory();
+    }
+
+    private boolean askStupidUserForConfirmationOnExit() {
+        final Object[] options = {"Ja","Nein"};
+        final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
+        "Bist du dir sicher, dass du dieses sehr gute Spiel verlassen möchtest?",null, JOptionPane.YES_NO_CANCEL_OPTION,JOptionPane.QUESTION_MESSAGE,null,options,options[1]);
+        return n != 0;
+    }
+
+    // TODO: refactor screen hierarchy
+    private void changeScreen(final String name) {
+        if (this.locked)
+            return;
+
+        Game.window().cursor().set(Main.DEFAULT_CURSOR);
+
+        this.locked = true;
+        Game.window().getRenderComponent().fadeOut(650);
+        Game.loop().perform(950, () -> {
+            Game.screens().display(name);
+            Game.window().getRenderComponent().fadeIn(650);
+            this.locked = false;
+        });
     }
 
 }
