@@ -1,6 +1,5 @@
 package de.flojo.jam.networking.server;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.UUID;
@@ -240,7 +239,7 @@ public class ServerController implements IServerController {
 		try {
 			socket.stop();
 			state = ServerStateEnum.OFF;
-		} catch (IOException | InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 			Thread.currentThread().interrupt();
 		}
