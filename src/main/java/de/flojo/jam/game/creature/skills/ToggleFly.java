@@ -1,21 +1,19 @@
 package de.flojo.jam.game.creature.skills;
 
-import de.flojo.jam.game.creature.skills.effects.PunchEffect;
+import de.flojo.jam.game.creature.skills.effects.ToggleFlyEffect;
 
-public class SimplePunch implements ICreatureSkill {
+public class ToggleFly implements ICreatureSkill {
 
-	private final int maximumPunchLength;
 	private final String name;
 	private final String description;
 	private final int minRange;
 	private final int maxRange;
 
-	public SimplePunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description) {
-		this.maximumPunchLength = maximumPunchLength;
+	public ToggleFly(final String name, final String description) {
 		this.name = name;
 		this.description = description;
-		this.minRange = minRange;
-		this.maxRange = maxRange;
+		this.minRange =ICreatureSkill.RANGE_SELF;
+		this.maxRange =ICreatureSkill.RANGE_SELF;
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class SimplePunch implements ICreatureSkill {
 	// area of attack
 	@Override
 	public CreatureSkillAOA getAOA() {
-		return CreatureSkillAOA.LINE;
+		return CreatureSkillAOA.SINGLE;
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class SimplePunch implements ICreatureSkill {
 
 	@Override
 	public IEffectCreature getEffect(final IProvideEffectContext context) {
-		return new PunchEffect(context, maximumPunchLength);
+		return new ToggleFlyEffect();
 	}
 
 	@Override
@@ -71,7 +69,7 @@ public class SimplePunch implements ICreatureSkill {
 
 	@Override
 	public boolean isRanged() {
-		return false;// TODO: change for elf shoot
+		return false;
 	}
 
 	@Override

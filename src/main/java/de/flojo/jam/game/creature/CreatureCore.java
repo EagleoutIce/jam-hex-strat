@@ -90,4 +90,8 @@ public class CreatureCore {
 	public boolean isFlying() {
 		return isFlying;
 	}
+
+	public void toggleFly() {
+		this.isFlying = !this.isFlying;
+	}
 }

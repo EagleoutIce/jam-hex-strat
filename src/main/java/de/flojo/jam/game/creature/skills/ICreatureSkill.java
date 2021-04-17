@@ -1,6 +1,9 @@
 package de.flojo.jam.game.creature.skills;
 
 public interface ICreatureSkill {
+
+	public static final int RANGE_SELF=0;
+
 	public int getMinRange();
 	public int getMaxRange();
 

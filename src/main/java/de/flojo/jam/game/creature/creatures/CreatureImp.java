@@ -13,6 +13,7 @@ import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.SimplePunch;
+import de.flojo.jam.game.creature.skills.ToggleFly;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
@@ -29,7 +30,7 @@ public class CreatureImp extends Creature {
 	private static CreatureAttributes createImpAttributes() {
 		Set<ICreatureSkill> skills = new HashSet<>();
 		skills.add(new SimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Stupser mit dem Ellenbogen."));
-		// TODO: flying
+		skills.add(new ToggleFly("Fliegen/Landen", "Wechselt den Flugstatus."));
 		return new CreatureAttributes(3, 1, skills);
 	}
 
