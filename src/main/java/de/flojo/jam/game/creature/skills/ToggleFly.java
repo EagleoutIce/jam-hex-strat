@@ -1,16 +1,18 @@
 package de.flojo.jam.game.creature.skills;
 
+import java.util.function.Supplier;
+
 import de.flojo.jam.game.creature.skills.effects.ToggleFlyEffect;
 
 public class ToggleFly implements ICreatureSkill {
 
-	private final String name;
+	private final Supplier<String> nameSupplier;
 	private final String description;
 	private final int minRange;
 	private final int maxRange;
 
-	public ToggleFly(final String name, final String description) {
-		this.name = name;
+	public ToggleFly(Supplier<String> nameSupplier, final String description) {
+		this.nameSupplier = nameSupplier;
 		this.description = description;
 		this.minRange = ICreatureSkill.RANGE_SELF;
 		this.maxRange = ICreatureSkill.RANGE_SELF;
@@ -59,7 +61,7 @@ public class ToggleFly implements ICreatureSkill {
 
 	@Override
 	public String getName() {
-		return name;
+		return nameSupplier.get();
 	}
 
 	@Override

@@ -21,6 +21,8 @@ public class CreatureImp extends Creature {
 
 	public CreatureImp(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
 		super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase), createImpCore(playerId, normal, dying));
+		// arrrrgh kill me
+		getAttributes().getSkills().add(new ToggleFly(() -> isFlying() ? "Landen" : "Fliegen", "Wechselt den Flugstatus."));
 	}
 
 	private static CreatureCore createImpCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
@@ -30,7 +32,6 @@ public class CreatureImp extends Creature {
 	private static CreatureAttributes createImpAttributes() {
 		Set<ICreatureSkill> skills = new HashSet<>();
 		skills.add(new SimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Stupser mit dem Ellenbogen."));
-		skills.add(new ToggleFly("Fliegen/Landen", "Wechselt den Flugstatus."));
 		return new CreatureAttributes(3, 1, skills);
 	}
 

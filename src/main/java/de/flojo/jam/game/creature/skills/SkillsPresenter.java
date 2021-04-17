@@ -3,8 +3,9 @@ package de.flojo.jam.game.creature.skills;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
@@ -41,7 +42,7 @@ public class SkillsPresenter {
 
     private Button moveButton;
     private Button skipButton;
-    private List<Button> skillButtons;
+    private Map<ICreatureSkill,Button> skillButtons;
     private List<BoardCoordinate> movementBuffer;
     private IAction onAction;
 
@@ -53,7 +54,7 @@ public class SkillsPresenter {
         this.traps = traps;
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
-        this.skillButtons = new LinkedList<>();
+        this.skillButtons = new HashMap<>();
         this.movementBuffer = new ArrayList<>();
         actionController = new CreatureActionController(
                 new DefaultEffectContext(board, factory.getCreatures(), traps.getTraps()), screenName);
@@ -95,7 +96,7 @@ public class SkillsPresenter {
 
         target.getComponents().add(moveButton);
         target.getComponents().add(skipButton);
-        target.getComponents().addAll(skillButtons);
+        target.getComponents().addAll(skillButtons.values());
         updatePositions();
     }
 
@@ -103,7 +104,7 @@ public class SkillsPresenter {
         for (ICreatureSkill skill : c.getAttributes().getSkills()) {
             Button bt = setupSkillButton(c, skill);
             bt.prepare();
-            skillButtons.add(bt);
+            skillButtons.put(skill, bt);
         }
     }
 
@@ -114,7 +115,7 @@ public class SkillsPresenter {
             actionController.cancelCurrentOperation();
             currentCreature.setOnDead(this::resetButtons);
             if (actionController.requestSkillFor(currentCreature, skill.getSkillId(),
-                    (p, t) -> skillOperationEnded(c.getAttributes(), bt, p, skill.getSkillId(), t))) {
+                    (p, t) -> skillOperationEnded(c, bt, p, skill.getSkillId(), t))) {
                 Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                 bt.setEnabled(false);
                 skipButton.setEnabled(false);
@@ -129,7 +130,8 @@ public class SkillsPresenter {
             actionController.cancelCurrentOperation();
             currentCreature.skip();
             currentCreature.setOnDead(this::resetButtons);
-            onAction.onSkip(currentCreature.getCoordinate());
+            if(onAction != null)
+                onAction.onSkip(currentCreature.getCoordinate());
             updatePositions();
         });
         skipButton.prepare();
@@ -152,15 +154,19 @@ public class SkillsPresenter {
         moveButton.prepare();
     }
 
-    private void skillOperationEnded(CreatureAttributes attributes, Button button, Boolean performed, SkillId skillId,
+    private void skillOperationEnded(Creature c, Button button, Boolean performed, SkillId skillId,
             BoardCoordinate target) {
         if (performed.booleanValue()) {
-            attributes.useAp();
+            c.getAttributes().useAp();
             if (onAction != null)
                 onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);
         }
-        if (button != null)
-            button.setEnabled(attributes.getApLeft() > 0);
+        for (Map.Entry<ICreatureSkill,Button> btpair: skillButtons.entrySet()) {
+            if(btpair.getValue() != null) {
+                btpair.getValue().setEnabled(c.canCastSkill(btpair.getKey()));
+            }
+        }
+        skipButton.setEnabled(true);
     }
 
     private void moveOperationEnded(CreatureAttributes attributes, Boolean performed, BoardCoordinate target) {
@@ -194,7 +200,7 @@ public class SkillsPresenter {
         if (intersectsWith(moveButton, p) || intersectsWith(skipButton, p)) {
             return true;
         }
-        for (Button button : skillButtons) {
+        for (Button button : skillButtons.values()) {
             if (intersectsWith(button, p))
                 return true;
         }
@@ -217,7 +223,7 @@ public class SkillsPresenter {
         double mw = moveButton.getWidth();
         double offCounter = Main.INNER_MARGIN + mw;
         moveButton.setLocation(width - offCounter, height - 90d);
-        for (Button button : skillButtons) {
+        for (Button button : skillButtons.values()) {
             button.setEnabled(attributes.getApLeft() > 0);
             offCounter += button.getWidth() + 10;
             button.setLocation(width - offCounter, height - 90d);
@@ -231,8 +237,8 @@ public class SkillsPresenter {
     }
 
     private void resetButtons() {
-        skillButtons.forEach(GuiComponent::suspend);
-        target.getComponents().removeAll(skillButtons);
+        skillButtons.values().forEach(GuiComponent::suspend);
+        target.getComponents().removeAll(skillButtons.values());
         if (moveButton != null)
             moveButton.suspend();
         if (skipButton != null)
