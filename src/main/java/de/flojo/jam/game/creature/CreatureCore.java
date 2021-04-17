@@ -78,6 +78,8 @@ public class CreatureCore {
 		} else if (hints.isEmpty()){
 			hints.add(attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK);
 		}
+		if(isFlying())
+			hints.add(RenderHint.FLY);
 		return hints.toArray(RenderHint[]::new);
 	}
 

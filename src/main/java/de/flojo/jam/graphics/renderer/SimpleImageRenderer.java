@@ -12,8 +12,8 @@ import de.gurkenlabs.litiengine.resources.Resources;
 
 public class SimpleImageRenderer implements IRenderData {
 	private final BufferedImage image;
-	private final double offsetX;
-	private final double offsetY;
+	protected final double offsetX;
+	protected final double offsetY;
 	private final BufferedImage highlightImage;
 	private final BufferedImage markImage;
 	public SimpleImageRenderer(final String path, final double offsetX, final double offsetY) {

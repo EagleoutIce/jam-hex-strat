@@ -19,9 +19,14 @@ public class CreatureImageRenderer implements IRenderData {
 	private final BufferedImage darkerHighlightImage;
 	private final BufferedImage markImage;
 	private final BufferedImage glowImage;
+	private final BufferedImage flyImage;
 	private static final int GLOW_OFFSET_X = 10;
 	private static final int GLOW_OFFSET_Y = 10;
-	public CreatureImageRenderer(final String path, final String glowPath, final double offsetX, final double offsetY) {
+
+	public static final String FLY_LILA = "creatures/effects/fliegen_overlay_lila.png";
+	public static final String FLY_BLAU = "creatures/effects/fliegen_overlay_blau.png";
+
+	public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX, final double offsetY) {
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
 		this.image = Resources.images().get(path);
@@ -30,6 +35,7 @@ public class CreatureImageRenderer implements IRenderData {
 		darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
 		glowImage = Resources.images().get(glowPath);
+		flyImage = Resources.images().get(flyPath);
 		generateImageVariants();
 	}
 
@@ -65,6 +71,9 @@ public class CreatureImageRenderer implements IRenderData {
 					break;
 				case MARKED:
 					renderImage = markImage;
+					break;
+				case FLY:
+					renderImage = flyImage;
 					break;
 				default:
 				case NORMAL:
