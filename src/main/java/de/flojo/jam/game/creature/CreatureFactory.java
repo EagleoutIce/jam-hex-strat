@@ -14,8 +14,8 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.creatures.CreatureElf;
-import de.flojo.jam.game.creature.creatures.CreatureGoblin;
 import de.flojo.jam.game.creature.creatures.CreatureHalfling;
+import de.flojo.jam.game.creature.creatures.CreatureImp;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
@@ -79,8 +79,8 @@ public class CreatureFactory {
 		switch (id) {
 			case PEASANT:
 				return this::summonPeasant;
-			case GOBLIN:
-				return this::summonGoblin;
+			case IMP:
+				return this::summonImp;
 			case ELF:
 				return this::summonElf;
 			case HALFLING:
@@ -102,8 +102,8 @@ public class CreatureFactory {
 				getDieAnimation(pId));
 	}
 
-	public Creature summonGoblin(final String uniqueName, final Tile startBase, final PlayerId pId) {
-		return new CreatureGoblin(uniqueName, startBase, pId, creatures, traps, CreatureId.GOBLIN.getRenderer(pId),
+	public Creature summonImp(final String uniqueName, final Tile startBase, final PlayerId pId) {
+		return new CreatureImp(uniqueName, startBase, pId, creatures, traps, CreatureId.IMP.getRenderer(pId),
 				getDieAnimation(pId));
 	}
 

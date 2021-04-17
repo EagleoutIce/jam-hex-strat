@@ -14,7 +14,7 @@ public enum CreatureId {
 			new CreatureImageRenderer("creatures/bauer_lila.png", "creatures/bauer_lila_glow.png",
 	-93d / 1.53, -99 / 1.27d)
 	),
-	GOBLIN("Kobold", 8, //
+	IMP("Kobold", 8, //
 		new CreatureImageRenderer("creatures/kobold_blau.png",  "creatures/kobold_blau_glow.png",
 	-69 / 1.83d, -95 / 1.31d),//
 		new CreatureImageRenderer("creatures/kobold_lila.png", "creatures/kobold_lila_glow.png",

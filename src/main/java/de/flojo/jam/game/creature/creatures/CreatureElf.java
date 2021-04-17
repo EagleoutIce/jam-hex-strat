@@ -28,7 +28,7 @@ public class CreatureElf extends Creature {
 
 	private static CreatureAttributes createElfAttributes() {
 		Set<ICreatureSkill> skills = new HashSet<>();
-		skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit mit dem Elfenbogen des kleinen Goblins."));
+		skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit dem Elfenbogen."));
 		// TODO: arrows
 		return new CreatureAttributes(4, 1, skills);
 	}
