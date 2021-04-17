@@ -27,4 +27,12 @@ public interface ICreatureSkill {
 
 	// will traverse line until hit
 	public boolean isRanged();
+
+	public default boolean castOnGround() {
+		return true;
+	}
+
+	public default boolean castOnAir() {
+		return false;
+	}
 }

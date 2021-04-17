@@ -27,7 +27,7 @@ public class Creature implements IRenderable {
 	private final TrapCollection tCollection;
 
 	// is dying
-	private boolean moribound = false;
+	private boolean moribund = false;
 
 	protected static final int DIE_DURATION = 1200;
 
@@ -174,11 +174,16 @@ public class Creature implements IRenderable {
 		return builder.toString();
 	}
 
-	public void moribound() {
-		moribound = true;
+	public void moribund() {
+		moribund = true;
 	}
 
-	public boolean isMoribound() {
-		return this.moribound;
+	public boolean isMoribund() {
+		return this.moribund;
 	}
+
+    public boolean canCastSkill(ICreatureSkill skill) {
+        final boolean canCastFly = this.isFlying() && skill.castOnAir() || !this.isFlying() && skill.castOnGround();
+		return this.getAttributes().getMpLeft() >= skill.getCost() && canCastFly;
+    }
 }

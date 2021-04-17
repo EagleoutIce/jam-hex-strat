@@ -169,10 +169,10 @@ public class CreatureActionController {
         } else {
             targetCreature = mayTargetCreature.get();
         }
-        
+
         Game.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[] { tile, activeCreature, currentSkill });
         activeCreature.useSkill(context, currentSkill, targetCreature);
-        
+
         performed = true;
         completed(false);
     }

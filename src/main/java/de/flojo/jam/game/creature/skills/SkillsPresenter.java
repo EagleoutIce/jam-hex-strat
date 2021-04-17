@@ -87,6 +87,55 @@ public class SkillsPresenter {
         creatureCoordinate = new BoardCoordinate(currentCreature.getCoordinate());
         currentCreature.highlight();
         CreatureAttributes attributes = c.getAttributes();
+        setupMoveButton(attributes);
+        setupSkipButton();
+        setupSkillButtons(c);
+
+        currentCreature.setOnDead(this::resetButtons);
+
+        target.getComponents().add(moveButton);
+        target.getComponents().add(skipButton);
+        target.getComponents().addAll(skillButtons);
+        updatePositions();
+    }
+
+    private void setupSkillButtons(Creature c) {
+        for (ICreatureSkill skill : c.getAttributes().getSkills()) {
+            Button bt = setupSkillButton(c, skill);
+            bt.prepare();
+            skillButtons.add(bt);
+        }
+    }
+
+    private Button setupSkillButton(Creature c, ICreatureSkill skill) {
+        Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
+        bt.setEnabled(c.canCastSkill(skill));
+        bt.onClicked(me -> {
+            actionController.cancelCurrentOperation();
+            currentCreature.setOnDead(this::resetButtons);
+            if (actionController.requestSkillFor(currentCreature, skill.getSkillId(),
+                    (p, t) -> skillOperationEnded(c.getAttributes(), bt, p, skill.getSkillId(), t))) {
+                Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
+                bt.setEnabled(false);
+                skipButton.setEnabled(false);
+            }
+        });
+        return bt;
+    }
+
+    private void setupSkipButton() {
+        skipButton = new Button("Skip", Main.GUI_FONT_SMALL);
+        skipButton.onClicked(me -> {
+            actionController.cancelCurrentOperation();
+            currentCreature.skip();
+            currentCreature.setOnDead(this::resetButtons);
+            onAction.onSkip(currentCreature.getCoordinate());
+            updatePositions();
+        });
+        skipButton.prepare();
+    }
+
+    private void setupMoveButton(CreatureAttributes attributes) {
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
             actionController.cancelCurrentOperation();
@@ -101,39 +150,6 @@ public class SkillsPresenter {
             }
         });
         moveButton.prepare();
-        skipButton = new Button("Skip", Main.GUI_FONT_SMALL);
-        skipButton.onClicked(me -> {
-            actionController.cancelCurrentOperation();
-            currentCreature.skip();
-            currentCreature.setOnDead(this::resetButtons);
-            onAction.onSkip(currentCreature.getCoordinate());
-            updatePositions();
-        });
-        skipButton.prepare();
-
-        for (ICreatureSkill skill : attributes.getSkills()) {
-            Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
-            bt.setEnabled(attributes.getMpLeft() > 0);
-            bt.onClicked(me -> {
-                actionController.cancelCurrentOperation();
-                currentCreature.setOnDead(this::resetButtons);
-                if (actionController.requestSkillFor(currentCreature, skill.getSkillId(),
-                        (p, t) -> skillOperationEnded(attributes, bt, p, skill.getSkillId(), t))) {
-                    Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
-                    bt.setEnabled(false);
-                    skipButton.setEnabled(false);
-                }
-            });
-            bt.prepare();
-            skillButtons.add(bt);
-        }
-
-        currentCreature.setOnDead(this::resetButtons);
-
-        target.getComponents().add(moveButton);
-        target.getComponents().add(skipButton);
-        target.getComponents().addAll(skillButtons);
-        updatePositions();
     }
 
     private void skillOperationEnded(CreatureAttributes attributes, Button button, Boolean performed, SkillId skillId,
@@ -243,7 +259,7 @@ public class SkillsPresenter {
     public void disable() {
         enabled.set(false);
         if(currentCreature != null)
-            currentCreature.unsetHighlight();   
+            currentCreature.unsetHighlight();
         currentCreature = null;
         creatureCoordinate = null;
         movementBuffer.clear();

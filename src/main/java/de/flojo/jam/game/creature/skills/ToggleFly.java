@@ -12,8 +12,8 @@ public class ToggleFly implements ICreatureSkill {
 	public ToggleFly(final String name, final String description) {
 		this.name = name;
 		this.description = description;
-		this.minRange =ICreatureSkill.RANGE_SELF;
-		this.maxRange =ICreatureSkill.RANGE_SELF;
+		this.minRange = ICreatureSkill.RANGE_SELF;
+		this.maxRange = ICreatureSkill.RANGE_SELF;
 	}
 
 	@Override
@@ -64,7 +64,7 @@ public class ToggleFly implements ICreatureSkill {
 
 	@Override
 	public SkillId getSkillId() {
-		return SkillId.SIMPLE_PUNCH;
+		return SkillId.TOGGLE_FLY;
 	}
 
 	@Override
@@ -74,7 +74,11 @@ public class ToggleFly implements ICreatureSkill {
 
 	@Override
 	public int bonusOnRaised() {
-		return 1;
+		return 0;
 	}
 
+	@Override
+	public boolean castOnAir() {
+		return true;
+	}
 }
