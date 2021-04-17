@@ -1,6 +1,6 @@
 package de.flojo.jam.game.creature.creatures;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.flojo.jam.game.board.Tile;
@@ -30,7 +30,7 @@ public class CreatureImp extends Creature {
 	}
 
 	private static CreatureAttributes createImpAttributes() {
-		Set<ICreatureSkill> skills = new HashSet<>();
+		Set<ICreatureSkill> skills = new LinkedHashSet<>();
 		skills.add(new SimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Stupser mit dem Ellenbogen."));
 		return new CreatureAttributes(3, 1, skills);
 	}

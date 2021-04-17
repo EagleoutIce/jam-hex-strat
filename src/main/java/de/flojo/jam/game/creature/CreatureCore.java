@@ -1,5 +1,7 @@
 package de.flojo.jam.game.creature;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.RenderHint;
+import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
 public class CreatureCore {
 
@@ -85,8 +88,14 @@ public class CreatureCore {
 
 	protected void render(Graphics2D g) {
 		final Point c = base.getTile().getCenter();
-		renderCore.render(g, new Point(c.x - base.getMovementOffsetX(),
-				c.y - base.getMovementOffsetY() + base.getTerrainOffsetY()), getRenderHints());
+		final Point renderTarget = new Point(c.x - base.getMovementOffsetX(),
+				c.y - base.getMovementOffsetY() + base.getTerrainOffsetY());
+		renderCore.render(g, renderTarget, getRenderHints());
+		g.setColor(Color.WHITE);
+		g.setFont(g.getFont().deriveFont(Font.PLAIN, 20f));
+		final String coords = Integer.toString(getAttributes().getApLeft()) + " / " + Integer.toString(getAttributes().getMpLeft());
+		renderTarget.translate((int)(-TextRenderer.getWidth(g, coords)/2), (int)(-renderCore.getEffectiveRectangle(renderTarget).getHeight()));
+		TextRenderer.renderWithOutline(g, coords, renderTarget, Color.BLACK, true);
 	}
 
 	public boolean isFlying() {

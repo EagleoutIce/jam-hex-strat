@@ -3,7 +3,7 @@ package de.flojo.jam.game.creature.skills;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,7 +54,7 @@ public class SkillsPresenter {
         this.traps = traps;
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
-        this.skillButtons = new HashMap<>();
+        this.skillButtons = new LinkedHashMap<>();
         this.movementBuffer = new ArrayList<>();
         actionController = new CreatureActionController(
                 new DefaultEffectContext(board, factory.getCreatures(), traps.getTraps()), screenName);
@@ -75,7 +75,7 @@ public class SkillsPresenter {
             return;
 
         if (!movementBuffer.isEmpty()) {
-            moveOperationEnded(currentCreature.getAttributes(), false, new BoardCoordinate(-1, -1));
+            moveOperationEnded(currentCreature, false, new BoardCoordinate(-1, -1));
             return;
         }
 
@@ -87,8 +87,7 @@ public class SkillsPresenter {
         currentCreature = c;
         creatureCoordinate = new BoardCoordinate(currentCreature.getCoordinate());
         currentCreature.highlight();
-        CreatureAttributes attributes = c.getAttributes();
-        setupMoveButton(attributes);
+        setupMoveButton(c);
         setupSkipButton();
         setupSkillButtons(c);
 
@@ -137,15 +136,15 @@ public class SkillsPresenter {
         skipButton.prepare();
     }
 
-    private void setupMoveButton(CreatureAttributes attributes) {
+    private void setupMoveButton(Creature c) {
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
             actionController.cancelCurrentOperation();
             currentCreature.setOnDead(() -> {
-                moveOperationEnded(attributes, false, new BoardCoordinate(-1, -1));
+                moveOperationEnded(c, false, new BoardCoordinate(-1, -1));
                 resetButtons();
             });
-            if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(attributes, p, t))) {
+            if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(c, p, t))) {
                 Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
                 skipButton.setEnabled(false);
@@ -161,15 +160,20 @@ public class SkillsPresenter {
             if (onAction != null)
                 onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);
         }
+        updateSkillButtonStates(c);
+    }
+
+    private void updateSkillButtonStates(Creature c) {
         for (Map.Entry<ICreatureSkill,Button> btpair: skillButtons.entrySet()) {
             if(btpair.getValue() != null) {
                 btpair.getValue().setEnabled(c.canCastSkill(btpair.getKey()));
+                btpair.getValue().setText(btpair.getKey().getName());
             }
         }
-        skipButton.setEnabled(true);
     }
 
-    private void moveOperationEnded(CreatureAttributes attributes, Boolean performed, BoardCoordinate target) {
+    private void moveOperationEnded(Creature c, Boolean performed, BoardCoordinate target) {
+        final CreatureAttributes attributes = c.getAttributes();
         if (performed.booleanValue()) {
             attributes.useMp();
             movementBuffer.add(target);
@@ -180,6 +184,8 @@ public class SkillsPresenter {
             onAction.onMove(creatureCoordinate, movementBuffer);
             movementBuffer.clear();
         }
+
+        updateSkillButtonStates(c);
 
         if (moveButton != null)
             moveButton.setEnabled(attributes.getMpLeft() > 0);
@@ -249,6 +255,7 @@ public class SkillsPresenter {
         moveButton = null;
         skipButton = null;
         if (currentCreature != null) {
+            updateSkillButtonStates(currentCreature);
             // reset
             currentCreature.unsetHighlight();
             currentCreature.setOnDead(null);

@@ -1,6 +1,6 @@
 package de.flojo.jam.game.creature.creatures;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.flojo.jam.game.board.Tile;
@@ -27,7 +27,7 @@ public class CreaturePeasant extends Creature {
 	}
 
 	private static CreatureAttributes createPeasantAttributes() {
-		Set<ICreatureSkill> skills = new HashSet<>();
+		Set<ICreatureSkill> skills = new LinkedHashSet<>();
 		skills.add(new SimplePunch(3, 0, 1, "Punch (3)", "Ein einfacher Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
 		return new CreatureAttributes(4, 1, skills);
 	}

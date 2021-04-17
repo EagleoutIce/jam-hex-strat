@@ -1,6 +1,6 @@
 package de.flojo.jam.game.creature.creatures;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import de.flojo.jam.game.board.Tile;
@@ -27,7 +27,7 @@ public class CreatureElf extends Creature {
 	}
 
 	private static CreatureAttributes createElfAttributes() {
-		Set<ICreatureSkill> skills = new HashSet<>();
+		Set<ICreatureSkill> skills = new LinkedHashSet<>();
 		skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit dem Elfenbogen."));
 		// TODO: arrows
 		return new CreatureAttributes(4, 1, skills);

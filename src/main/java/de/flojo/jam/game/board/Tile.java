@@ -20,11 +20,11 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 	public static final int DEFAULT_RADIUS = 30;
 
 	private static final Font NUMBER_FONT = Main.TEXT_NORMAL.deriveFont(20f);
-	private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.2f);
+	private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.25f);
 	private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
-	private static final Color NONE_COLOR = new Color(0, 0, 0, 60); // 154, 215, 45
-	private static final Color P1_COLOR = new Color(45, 173, 215, 60);
-	private static final Color P2_COLOR = new Color(141, 45, 215, 60);
+	private static final Color NONE_COLOR = new Color(0, 0, 0, 35); // 154, 215, 45
+	private static final Color P1_COLOR = new Color(45, 173, 215, 35);
+	private static final Color P2_COLOR = new Color(141, 45, 215, 35);
 
 	private BoardCoordinate coordinate;
 	private transient TerrainTypeSupplier terrainSupplier;
@@ -112,7 +112,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 		if(mark.get())
 			this.draw(g, 5, MARK_COLOR, true);
 
-		this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.6f), false);
+		this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.15f), false);
 		if(showCordData) {
 			g.setColor(Color.WHITE);
 			g.setFont(NUMBER_FONT);

@@ -184,6 +184,6 @@ public class Creature implements IRenderable {
 
     public boolean canCastSkill(ICreatureSkill skill) {
         final boolean canCastFly = this.isFlying() && skill.castOnAir() || !this.isFlying() && skill.castOnGround();
-		return this.getAttributes().getMpLeft() >= skill.getCost() && canCastFly;
+		return this.getAttributes().getApLeft() >= skill.getCost() && canCastFly;
     }
 }
