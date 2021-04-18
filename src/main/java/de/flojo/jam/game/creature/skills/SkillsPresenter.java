@@ -171,8 +171,13 @@ public class SkillsPresenter {
     }
 
     private void moveOperationEnded(Creature c, Boolean performed, BoardCoordinate target) {
+        if(c == null) {
+            movementBuffer.clear();
+            return;
+        }
+
         final CreatureAttributes attributes = c.getAttributes();
-        if (performed) {
+        if (Boolean.TRUE.equals(performed)) {
             attributes.useMp();
             movementBuffer.add(target);
         }

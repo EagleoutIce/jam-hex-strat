@@ -147,6 +147,4 @@ public class CreatureCollection {
     public boolean p2CanDoSomething() {
         return collection.stream().filter(c -> c.getOwner() == PlayerId.TWO).anyMatch(Creature::canDoSomething);
     }
-
-
 }

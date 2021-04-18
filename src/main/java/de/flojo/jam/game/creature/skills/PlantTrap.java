@@ -1,18 +1,19 @@
 package de.flojo.jam.game.creature.skills;
 
-import de.flojo.jam.game.creature.skills.effects.PunchEffect;
+import de.flojo.jam.game.creature.skills.effects.PlantTrapEffect;
+import de.flojo.jam.game.creature.skills.effects.ToggleFlyEffect;
 
-public class SimplePunch implements ICreatureSkill {
+import java.util.function.Supplier;
 
-    private final int maximumPunchLength;
-    private final String name;
+public class PlantTrap implements ICreatureSkill {
+
+    private final Supplier<String> nameSupplier;
     private final String description;
     private final int minRange;
     private final int maxRange;
 
-    public SimplePunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description) {
-        this.maximumPunchLength = maximumPunchLength;
-        this.name = name;
+    public PlantTrap(Supplier<String> nameSupplier, final String description, int minRange, int maxRange) {
+        this.nameSupplier = nameSupplier;
         this.description = description;
         this.minRange = minRange;
         this.maxRange = maxRange;
@@ -46,12 +47,12 @@ public class SimplePunch implements ICreatureSkill {
 
     @Override
     public boolean doesFriendlyFire() {
-        return true;
+        return false;
     }
 
     @Override
     public IEffectCreature getEffect(final IProvideEffectContext context) {
-        return new PunchEffect(context, maximumPunchLength);
+        return new PlantTrapEffect(context);
     }
 
     @Override
@@ -61,22 +62,22 @@ public class SimplePunch implements ICreatureSkill {
 
     @Override
     public String getName() {
-        return name;
+        return nameSupplier.get();
     }
 
     @Override
     public SkillId getSkillId() {
-        return SkillId.SIMPLE_PUNCH;
+        return SkillId.PLANT_TRAP;
     }
 
     @Override
     public boolean isRanged() {
-        return false;// TODO: for archer
+        return false;
     }
 
     @Override
     public int bonusOnRaised() {
-        return 1;
+        return 0;
     }
 
 }

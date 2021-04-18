@@ -51,7 +51,7 @@ public class GameScreen extends Screen {
     private static final Color P1_COLOR = new Color(45, 173, 215);
     private static final Color P2_COLOR = new Color(141, 45, 215);
     private static final GameScreen instance = new GameScreen();
-    final int MAX_NAME_LENGTH = 7;
+    private static final int MAX_NAME_LENGTH = 7;
     GameField field;
     private PlayerId ourId;
     private ClientController clientController;

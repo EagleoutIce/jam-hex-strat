@@ -4,6 +4,7 @@ import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexStartLogger;
@@ -67,7 +68,7 @@ public class TrapSpawner {
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
         for (Tile tile : tiles) {
-            if (tile == null)
+            if (tile == null || !tile.getTerrainType().equals(TerrainTile.EMPTY))
                 return false;
             if (playerId != null && tile.getPlacementOwner() != playerId)
                 return false;

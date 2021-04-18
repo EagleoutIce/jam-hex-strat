@@ -2,7 +2,8 @@ package de.flojo.jam.game.creature.skills;
 
 public enum SkillId {
     SIMPLE_PUNCH(1),
-    TOGGLE_FLY(1);
+    TOGGLE_FLY(1),
+    PLANT_TRAP(1);
 
     private final int cost;
 

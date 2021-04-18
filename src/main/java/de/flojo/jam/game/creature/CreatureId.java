@@ -28,7 +28,12 @@ public enum CreatureId {
             new CreatureImageRenderer("creatures/halbling_blau.png", "creatures/halbling_blau_glow.png", CreatureImageRenderer.FLY_BLAU,
                     -73 / 2.3d, -102 / 1.24d), //
             new CreatureImageRenderer("creatures/halbling_lila.png", "creatures/halbling_lila_glow.png", CreatureImageRenderer.FLY_LILA,
-                    -73 / 1.65d, -102 / 1.29d));
+                    -73 / 1.65d, -102 / 1.29d)),
+    GOBLIN("Goblin", 8, //
+            new CreatureImageRenderer("creatures/goblin_blau.png", "creatures/goblin_blau_glow.png", CreatureImageRenderer.FLY_BLAU,
+                    -76 / 2.27d, -97 / 1.30d), //
+            new CreatureImageRenderer("creatures/goblin_lila.png", "creatures/goblin_lila_glow.png", CreatureImageRenderer.FLY_LILA,
+                    -74 / 1.92d, -97 / 1.32d));
 
     private final String name;
     private final int cost;

@@ -59,6 +59,7 @@ public class Main {
 
         Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
             System.err.println("Mimimi do this with a stream");
+            HexStartLogger.log().severe(ex.getMessage());
             ex.printStackTrace();
         });
 
