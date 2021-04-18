@@ -152,7 +152,7 @@ public class Creature implements IRenderable {
     }
 
     public boolean canDoSomething() {
-        return getAttributes().canDoSomething();
+        return !isMoribund() && !core.isDead() && getAttributes().canDoSomething();
     }
 
     public void skip() {
