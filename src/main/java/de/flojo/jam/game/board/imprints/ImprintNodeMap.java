@@ -8,13 +8,13 @@ public abstract class ImprintNodeMap<T> implements ImprintNode<T> {
     protected final String imprintSupplierName;
     protected final Point pos;
 
-    public ImprintNodeMap(String supplierName, int x, int y) {
+    protected ImprintNodeMap(String supplierName, int x, int y) {
         this.imprintSupplierName = supplierName;
         this.pos = new Point(x, y);
         this.imprint = null;
     }
 
-    public ImprintNodeMap(Imprint<T> imprint, Point pos) {
+    protected ImprintNodeMap(Imprint<T> imprint, Point pos) {
         this.imprint = imprint;
         this.pos = pos;
         this.imprintSupplierName = null;

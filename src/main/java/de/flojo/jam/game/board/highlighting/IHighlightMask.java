@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 public interface IHighlightMask extends Serializable {
-    public boolean[][] getGrid();
+    boolean[][] getGrid();
 
-    public Point getAnchor();
+    Point getAnchor();
 }

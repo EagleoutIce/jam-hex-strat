@@ -22,7 +22,7 @@ public class TerrainMap implements Serializable {
 
     private Terrain terrain;
 
-    private transient Gson gson = new GsonBuilder().create();
+    private final transient Gson gson = new GsonBuilder().create();
 
     public TerrainMap(Terrain terrain) {
         this.terrain = terrain;

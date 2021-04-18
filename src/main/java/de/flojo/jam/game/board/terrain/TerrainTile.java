@@ -73,8 +73,8 @@ public enum TerrainTile {
     private final TerrainImprintNodeMap node;
 
     @SuppressWarnings("java:S107")
-    private TerrainTile(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
-                        boolean blocksOnPunch, boolean raised, int movementCost, PushDirection pushDirection, final IRenderData renderer) {
+    TerrainTile(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
+                boolean blocksOnPunch, boolean raised, int movementCost, PushDirection pushDirection, final IRenderData renderer) {
         this.displayName = displayName;
         this.blocksWalking = blocksWalking;
         this.blocksLineOfSight = blocksLineOfSight;
@@ -86,7 +86,7 @@ public enum TerrainTile {
         this.node = node;
     }
 
-    private TerrainTile(TerrainTile copy, TerrainImprintNodeMap node) {
+    TerrainTile(TerrainTile copy, TerrainImprintNodeMap node) {
         this(copy.displayName, node, copy.blocksWalking, copy.blocksLineOfSight, copy.blocksOnPunch, copy.raised,
                 copy.movementCost, copy.pushDirection, copy.renderer);
     }

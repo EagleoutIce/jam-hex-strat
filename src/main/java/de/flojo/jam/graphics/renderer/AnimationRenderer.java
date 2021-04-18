@@ -42,7 +42,7 @@ public class AnimationRenderer implements IRenderData {
             currentIndex = Math.min(currentIndex + 1, totalFrameCount - 1);
             BufferedImage spriteImage = spritesheet.getSprite(this.currentIndex);
             currentImg = new BufferedImage(sWidth, sHeight, BufferedImage.TYPE_INT_ARGB);
-            RescaleOp lighterOperation = new RescaleOp(new float[]{1f, 1f, 1f, 1f * (1 - 0.5f * currentIndex / (float) totalFrameCount)}, new float[4], null);
+            RescaleOp lighterOperation = new RescaleOp(new float[]{1f, 1f, 1f, (1 - 0.5f * currentIndex / (float) totalFrameCount)}, new float[4], null);
             lighterOperation.filter(spriteImage, currentImg);
             lastFrameUpdate = Game.time().now();
         }

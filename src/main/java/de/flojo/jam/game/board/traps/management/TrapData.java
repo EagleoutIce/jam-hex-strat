@@ -15,12 +15,8 @@ public class TrapData extends ArrayList<List<TrapTile>> {
 
     public TrapData(TrapTile single) {
         super(1);
-        this.add(Arrays.asList(single));
+        this.add(Collections.singletonList(single));
     }
-
-    public TrapData() {
-    }
-
 
     public TrapData(int initialCapacity) {
         super(initialCapacity);

@@ -28,16 +28,8 @@ public class Terrain implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Terrain [data=").append(data).append(", name=").append(name).append("]");
-        return builder.toString();
+        return "Terrain [data=" + data + ", name=" + name + "]";
     }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see java.lang.Object#hashCode()
-     */
 
     @Override
     public int hashCode() {

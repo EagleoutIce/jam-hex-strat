@@ -1,11 +1,10 @@
 package de.flojo.jam.game.board.mask;
 
 public class RectangleMask {
-
-    private int sx;
-    private int sy;
-    private int ex;
-    private int ey;
+    private final int sx;
+    private final int sy;
+    private final int ex;
+    private final int ey;
 
     public RectangleMask(int sx, int sy, int ex, int ey) {
         this.sx = sx;
@@ -14,9 +13,7 @@ public class RectangleMask {
         this.ey = ey;
     }
 
-
     public boolean covers(int x, int y) {
         return sx <= x && ex >= x && sy <= y && ey >= y;
     }
-
 }

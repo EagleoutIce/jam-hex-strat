@@ -110,11 +110,9 @@ public class Architect {
         if (targetTileType != null) {
             if (targetTiles.add(targetTile) && targetTileType != TerrainTile.EMPTY) {
                 // recursive delete
-                if (!deleteImprintRecursion(targetTile.getCoordinate(),
+                return deleteImprintRecursion(targetTile.getCoordinate(),
                         targetTile.getTerrainType().getNode().getImprint(),
-                        targetTile.getTerrainType().getNode().getPos(), targetTiles)) {
-                    return false;
-                }
+                        targetTile.getTerrainType().getNode().getPos(), targetTiles);
             }
         } else {// invalid as too close to border
             Game.log().log(Level.WARNING, "Tried to remove {0} on field {1} for {2} but expected: {3}",

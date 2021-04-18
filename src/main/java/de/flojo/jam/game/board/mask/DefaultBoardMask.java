@@ -41,7 +41,7 @@ public class DefaultBoardMask implements IBoardMask {
         playerTwoMasks.add(new RectangleMask(10, 0, 11, 6));
     }
 
-    public static final DefaultBoardMask get() {
+    public static DefaultBoardMask get() {
         return instance;
     }
 

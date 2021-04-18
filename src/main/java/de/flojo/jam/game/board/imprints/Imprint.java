@@ -12,7 +12,7 @@ public abstract class Imprint<T> implements Serializable {
     protected final Point anchor;
     protected final transient BufferedImage bitMap;
 
-    public Imprint(final List<List<T>> data, final Point anchor) {
+    protected Imprint(final List<List<T>> data, final Point anchor) {
         this.anchor = anchor;
         final int h = data.size();
         final int w = data.isEmpty() ? 0 : data.get(0).size();

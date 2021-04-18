@@ -3,10 +3,7 @@ package de.flojo.jam.game.board.terrain.management;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.gurkenlabs.litiengine.Game;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 // assert rectangle :/
@@ -20,12 +17,8 @@ public class TerrainData extends ArrayList<List<TerrainTile>> {
 
     public TerrainData(TerrainTile single) {
         super(1);
-        this.add(Arrays.asList(single));
+        this.add(Collections.singletonList(single));
     }
-
-    public TerrainData() {
-    }
-
 
     public TerrainData(int initialCapacity) {
         super(initialCapacity);

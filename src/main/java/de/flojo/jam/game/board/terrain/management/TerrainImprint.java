@@ -13,14 +13,13 @@ public class TerrainImprint extends Imprint<TerrainTile> {
     private final TerrainData data;
     private final TerrainTile baseType;
 
-
     public TerrainImprint(TerrainData data, final Point anchor) {
         super(data, anchor);
         this.data = data;
         this.baseType = this.data.getTerrainAt(anchor.x, anchor.y);
     }
 
-    public static final TerrainImprint getSingle(TerrainTile type) {
+    public static TerrainImprint getSingle(TerrainTile type) {
         return new TerrainImprint(new TerrainData(type), new Point(0, 0));
     }
 

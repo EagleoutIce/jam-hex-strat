@@ -5,8 +5,8 @@ import java.awt.*;
 public final class SimpleHighlighter implements IHighlightMask {
     private static final long serialVersionUID = -4881823468464682506L;
     private static final SimpleHighlighter INSTANCE = new SimpleHighlighter();
-    private boolean[][] grid = {{true}};
-    private Point anchor = new Point(0, 0);
+    private final boolean[][] grid = {{true}};
+    private final Point anchor = new Point(0, 0);
 
     private SimpleHighlighter() {
     }
