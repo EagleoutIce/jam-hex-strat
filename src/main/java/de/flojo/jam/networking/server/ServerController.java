@@ -102,16 +102,17 @@ public class ServerController implements IServerController {
     }
 
     private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
-                                   final ClientServerConnection csConnection) {
+                                   final ClientServerConnection connection) {
+        Game.log().log(Level.FINE, "Received build choice from {0}: {1}", new Object[]{connection, message});
         if (message.getTerrain() != null) {
             // place terrain
-            mGController.buildTerrainAt(csConnection.getRole(), message.getTerrain(), message.getPosition());
+            mGController.buildTerrainAt(connection.getRole(), message.getTerrain(), message.getPosition());
         } else if (message.getCreature() != null) {
-            mGController.summonCreatureAt(csConnection.getRole(), message.getCreature(), message.getPosition());
+            mGController.summonCreatureAt(connection.getRole(), message.getCreature(), message.getPosition());
         } else if (message.getTrap() != null) {
-            mGController.spawnTrapAt(csConnection.getRole(), message.getTrap(), message.getPosition());
+            mGController.spawnTrapAt(connection.getRole(), message.getTrap(), message.getPosition());
         } else {
-            Game.log().log(Level.SEVERE, "No build-choice with: {0} from {1}.", new Object[]{message, csConnection});
+            Game.log().log(Level.SEVERE, "No build-choice from {0}: {1}.", new Object[]{connection, message});
         }
 
         playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
@@ -123,6 +124,7 @@ public class ServerController implements IServerController {
 
     private void handleTurnAction(final TurnActionMessage message, final WebSocket conn,
                                   final ClientServerConnection connection) {
+        Game.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
             return;
         mGController.performAction(message);
@@ -135,6 +137,7 @@ public class ServerController implements IServerController {
 
     private void handleHello(final HelloMessage message, final WebSocket conn,
                              final ClientServerConnection csConnection) throws IllegalMessageException, NameNotAvailableException {
+        Game.log().log(Level.FINE, "Received hello: {0}", message);
         if (csConnection != null)
             throw new IllegalMessageException("You have already sent a Hello-Message");
 
@@ -156,7 +159,7 @@ public class ServerController implements IServerController {
 
     private void handleNullTypeOnContainer(final WebSocket conn, final ClientServerConnection connection,
                                            final String message) {
-        Game.log().log(Level.WARNING, "The Message: \"{0}\" was not in a valid Containerformat!", message);
+        Game.log().log(Level.WARNING, "The Message: \"{0}\" was not in a valid container format!", message);
         UUID servedByClientId;
         if (connection == null) {
             servedByClientId = null;

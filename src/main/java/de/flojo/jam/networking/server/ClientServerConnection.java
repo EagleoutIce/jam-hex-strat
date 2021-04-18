@@ -78,10 +78,8 @@ public class ClientServerConnection implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("ClientServerConnection [clientId=").append(clientId).append(", clientName=").append(clientName)
-                .append(", connection=").append(connection).append(", role=").append(role).append("]");
-        return builder.toString();
+        return "ClientServerConnection [clientId=" + clientId + ", clientName=" + clientName +
+                ", connection=" + connection + ", role=" + role + "]";
     }
 
 }
