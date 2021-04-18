@@ -28,7 +28,7 @@ public class CreatureHalfling extends Creature {
 
     private static CreatureAttributes createHalflingAttributes() {
         Set<ICreatureSkill> skills = new LinkedHashSet<>();
-        skills.add(new SimplePunch(1, 1, 1, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
+        skills.add(new SimplePunch(1, 0, 1, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
         return new CreatureAttributes(3, 1, skills);
     }
 
