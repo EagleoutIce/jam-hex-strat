@@ -9,10 +9,16 @@ public interface IRenderData {
     default void render(Graphics2D g, Point2D pos, boolean doHighlight) {
         render(g, pos, doHighlight ? RenderHint.HOVER : RenderHint.NORMAL);
     }
+
     void render(Graphics2D g, Point2D pos, RenderHint... hints);
+
     boolean hasImage();
+
     BufferedImage getImage();
+
     double getOffsetX();
+
     double getOffsetY();
+
     Rectangle2D getEffectiveRectangle(Point2D pos);
 }

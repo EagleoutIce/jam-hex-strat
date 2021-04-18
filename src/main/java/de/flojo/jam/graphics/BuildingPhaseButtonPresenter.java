@@ -40,15 +40,13 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
     public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30,
             true);
-    private BufferedImage sidebar;
     private final PlayerId ourId;
     private final IProvideContext context;
     private final Screen screen;
-
     private final List<ImageButton> terrainButtons;
     private final List<ImageButton> creatureButtons;
     private final List<ImageButton> trapButtons;
-
+    private BufferedImage sidebar;
     private Consumer<BuildChoice> currentBuildConsumer;
 
     private TerrainId currentTerrain = null;

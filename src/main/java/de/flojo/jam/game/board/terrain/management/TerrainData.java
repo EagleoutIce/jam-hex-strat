@@ -3,7 +3,10 @@ package de.flojo.jam.game.board.terrain.management;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.gurkenlabs.litiengine.Game;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 
 // assert rectangle :/
@@ -24,6 +27,9 @@ public class TerrainData extends ArrayList<List<TerrainTile>> {
         super(initialCapacity);
     }
 
+    public TerrainData() {
+        // Needed for gson setup
+    }
 
     public TerrainTile getTerrainAt(int x, int y) {
         if (isEmpty() || y < 0 || y >= size()) {

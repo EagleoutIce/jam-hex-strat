@@ -11,7 +11,11 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,10 +23,8 @@ import java.util.logging.Level;
 public class TerrainMap implements Serializable {
 
     private static final long serialVersionUID = 4299557680869120087L;
-
-    private Terrain terrain;
-
     private final transient Gson gson = new GsonBuilder().create();
+    private Terrain terrain;
 
     public TerrainMap(Terrain terrain) {
         this.terrain = terrain;
@@ -40,7 +42,6 @@ public class TerrainMap implements Serializable {
             e.printStackTrace();
         }
     }
-
 
     public void changeName(String name) {
         terrain.setName(name);
@@ -85,7 +86,6 @@ public class TerrainMap implements Serializable {
     public void updateTerrainAt(Point p, TerrainTile newType) {
         updateTerrainAt(p.x, p.y, newType);
     }
-
 
     public void updateTerrainAt(int x, int y, TerrainTile newType) {
         TerrainData t = terrain.getData();

@@ -2,7 +2,12 @@ package de.flojo.jam.game.creature.creatures;
 
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
-import de.flojo.jam.game.creature.*;
+import de.flojo.jam.game.creature.Creature;
+import de.flojo.jam.game.creature.CreatureAttributes;
+import de.flojo.jam.game.creature.CreatureBase;
+import de.flojo.jam.game.creature.CreatureCollection;
+import de.flojo.jam.game.creature.CreatureCore;
+import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.SimplePunch;
 import de.flojo.jam.game.player.PlayerId;

@@ -26,9 +26,8 @@ public class Trap implements Serializable {
     private final Set<Tile> ghosts;
 
     private final PlayerId owner;
-
-    private boolean enemyDidUncover = false;
     private final AtomicBoolean triggered = new AtomicBoolean();
+    private boolean enemyDidUncover = false;
 
     public Trap(Board board, PlayerId owner, TrapId id, Tile rootPosition) {
         this.owner = owner;

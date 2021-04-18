@@ -36,7 +36,10 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -45,14 +48,14 @@ import java.util.logging.Level;
 public class EditorScreen extends Screen {
 
     public static final String NAME = "EDITOR";
-    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private final Board board;
     private final CreatureFactory creatureFactory;
     private final TrapSpawner trapSpawner;
     private final SkillsPresenter presenter;
+    private final Architect architect;
+    Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private boolean showP1 = true;
     private boolean showP2 = true;
-    private final Architect architect;
     private TerrainId currentTerrain = TerrainId.T_EMPTY;
     private ISummonCreature currentCreature = null;
     private TrapId currentTrapId = null;

@@ -6,7 +6,7 @@ import java.util.Objects;
 public class Terrain implements Serializable {
 
     private static final long serialVersionUID = 8198115689285126822L;
-    private final TerrainData data;
+    protected TerrainData data;
     private String name;
 
     public Terrain(String name, TerrainData terrain) {

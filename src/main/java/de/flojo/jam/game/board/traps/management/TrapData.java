@@ -2,7 +2,11 @@ package de.flojo.jam.game.board.traps.management;
 
 import de.gurkenlabs.litiengine.Game;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 
 public class TrapData extends ArrayList<List<TrapTile>> {

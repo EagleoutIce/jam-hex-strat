@@ -19,8 +19,8 @@ public class ClientServerConnection implements Serializable {
     private static final long serialVersionUID = -7696855335934225575L;
     private final UUID clientId;
     private final String clientName;
-    private PlayerId role;
     private final transient WebSocket connection;
+    private PlayerId role;
 
     public ClientServerConnection(WebSocket conn, HelloMessage message) {
         this(conn, UUID.randomUUID(), message.getName());

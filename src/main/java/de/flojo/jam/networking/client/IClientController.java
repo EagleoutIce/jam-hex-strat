@@ -8,7 +8,9 @@ public interface IClientController {
     void handleClose(int code, String reason, boolean remote);
 
     void handleMessage(String message);
+
     // TODO: split to sender?
     void send(MessageContainer message);
+
     ClientContext getContext();
 }

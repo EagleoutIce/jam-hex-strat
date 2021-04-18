@@ -26,9 +26,8 @@ public class CreatureActionController {
     private final String screenName;
 
     private final Object selectionLock = new Object();
-
-    private Creature activeCreature = null;
     private final Set<Tile> possibleTargets;
+    private Creature activeCreature = null;
     private boolean completed = false;
     private boolean performed = false;
     private BiConsumer<Boolean, BoardCoordinate> onCompleted = null;

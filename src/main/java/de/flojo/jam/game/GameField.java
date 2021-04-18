@@ -6,7 +6,12 @@ import de.flojo.jam.game.board.terrain.Architect;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.traps.TrapJson;
 import de.flojo.jam.game.board.traps.TrapSpawner;
-import de.flojo.jam.game.creature.*;
+import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.creature.CreatureJson;
+import de.flojo.jam.game.creature.IAction;
+import de.flojo.jam.game.creature.IActionMove;
+import de.flojo.jam.game.creature.IActionSkill;
+import de.flojo.jam.game.creature.IActionSkip;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
@@ -36,10 +41,8 @@ public class GameField implements IRenderable, IProvideContext {
     private final CreatureFactory factory;
     private final TrapSpawner spawner;
     private final SkillsPresenter presenter;
-    private PlayerId owner;
-
     private final BuildingPhaseButtonPresenter buildingPhaseButtons;
-
+    private PlayerId owner;
     private int moneyLeft;
 
     private boolean canBuild = false;

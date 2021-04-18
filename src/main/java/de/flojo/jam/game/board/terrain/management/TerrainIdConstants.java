@@ -9,6 +9,7 @@ public class TerrainIdConstants {
     public static final String T_CART_LEFT = "T_CART_LEFT";
     public static final String T_CART_RIGHT = "T_CART_RIGHT";
     public static final String T_DEAD_TREE_B = "T_DEAD_TREE_B";
+
     private TerrainIdConstants() {
         throw new UnsupportedOperationException();
     }

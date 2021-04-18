@@ -44,14 +44,14 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private final Point tilesUpperLeft;
     private final Map<BoardCoordinate, Tile> tiles;
     private final Set<Tile> highlightTiles = new HashSet<>();
-    private TerrainMap terrainMap;
-    private int shiftX;
-    private int shiftY;
-    private IHighlightMask highlightMask;
     private final AtomicBoolean doHover = new AtomicBoolean(true);
     private final AtomicBoolean showMapDetails = new AtomicBoolean(true);
     private final KeyInputGroup bInputGroupVert = new KeyInputGroup();
     private final KeyInputGroup bInputGroupHor = new KeyInputGroup();
+    private TerrainMap terrainMap;
+    private int shiftX;
+    private int shiftY;
+    private IHighlightMask highlightMask;
 
     public Board(final String terrainPath, final String screenName) {
         this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainPath, screenName);

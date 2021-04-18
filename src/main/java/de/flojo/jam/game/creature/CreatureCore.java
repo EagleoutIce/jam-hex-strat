@@ -16,15 +16,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CreatureCore {
 
     private final PlayerId owner;
-    IRenderData renderCore;
     private final IRenderData mainData;
     private final IRenderData dyingData;
-    private CreatureBase base;
     private final CreatureAttributes attributes;
-    private boolean isFlying = false;
-    private boolean isDead = false;
     private final boolean isOur;
     private final AtomicBoolean highlight = new AtomicBoolean();
+    IRenderData renderCore;
+    private CreatureBase base;
+    private boolean isFlying = false;
+    private boolean isDead = false;
 
     public CreatureCore(PlayerId owner, boolean isOur, IRenderData mainData, IRenderData dyingData,
                         CreatureAttributes attributes) {
