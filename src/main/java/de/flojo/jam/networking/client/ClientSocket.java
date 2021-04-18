@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.client;
 
+import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -14,7 +15,7 @@ public class ClientSocket extends WebSocketClient {
     public ClientSocket(URI serverUri, IClientController controller) {
         super(serverUri);
         this.controller = controller;
-        Game.log().log(Level.INFO, "Starting client on uri: {0}", serverUri);
+        HexStartLogger.log().log(Level.INFO, "Starting client on uri: {0}", serverUri);
     }
 
     @Override

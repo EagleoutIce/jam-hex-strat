@@ -11,6 +11,7 @@ import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
 import de.flojo.jam.graphics.renderer.IRenderData;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
@@ -62,7 +63,7 @@ public class CreatureFactory {
         final Creature oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
         if (oldCreature != selectedCreature) {
-            Game.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
+            HexStartLogger.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);
             if (onSelectionChanged != null) {
                 onSelectionChanged.accept(selectedCreature);
             }

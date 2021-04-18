@@ -8,6 +8,7 @@ import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.IEffectCreature;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.util.HexMaths;
+import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class PunchEffect implements IEffectCreature {
         }
 
         if (terrainBlocksPunch(punchTarget)) {
-            Game.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
+            HexStartLogger.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
                     new Object[]{deltaX, deltaY, target.getName(), punchTarget});
             return;
         }

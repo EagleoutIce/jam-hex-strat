@@ -5,6 +5,7 @@ import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.screens.ServerSetupScreen;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
@@ -15,6 +16,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Main {
 

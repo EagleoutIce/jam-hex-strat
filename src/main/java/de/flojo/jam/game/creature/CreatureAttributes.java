@@ -3,6 +3,7 @@ package de.flojo.jam.game.creature;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideEffectContext;
 import de.flojo.jam.game.creature.skills.SkillId;
+import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 
 import java.util.Optional;
@@ -74,7 +75,7 @@ public class CreatureAttributes {
 
     public void useSkill(IProvideEffectContext context, SkillId wantedSkill, Creature attacker, Creature target) {
         getSkill(wantedSkill).ifPresentOrElse(s -> useSkill(context, s, attacker, target), //
-                () -> Game.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
+                () -> HexStartLogger.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
     }
 
     public void useSkill(IProvideEffectContext context, ICreatureSkill skill, Creature attacker, Creature target) {

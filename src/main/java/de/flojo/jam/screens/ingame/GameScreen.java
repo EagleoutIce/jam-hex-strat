@@ -23,6 +23,7 @@ import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.util.BuildChoice;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -77,7 +78,7 @@ public class GameScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
-        Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
+        HexStartLogger.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
         if (data.length == 0)
             return;
@@ -85,7 +86,7 @@ public class GameScreen extends Screen {
         if ("CLOSED".equals(data[0])) {
             disconnect(false);
         } else {
-            Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+            HexStartLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
@@ -175,24 +176,24 @@ public class GameScreen extends Screen {
     }
 
     private void onTurnSkip(BoardCoordinate creaturePosition) {
-        Game.log().log(Level.INFO, "Skip for creature on {0}", creaturePosition);
+        HexStartLogger.log().log(Level.INFO, "Skip for creature on {0}", creaturePosition);
         clientController.send(new TurnActionMessage(null, ActionType.SKIP, creaturePosition, null, null));
     }
 
     private void onTurnMove(BoardCoordinate from, List<BoardCoordinate> moveTargets) {
-        Game.log().log(Level.INFO, "Move from {0} to {1}", new Object[]{from, moveTargets});
+        HexStartLogger.log().log(Level.INFO, "Move from {0} to {1}", new Object[]{from, moveTargets});
         clientController.send(new TurnActionMessage(null, ActionType.MOVEMENT, from, moveTargets, null));
     }
 
     private void onTurnSkill(BoardCoordinate from, BoardCoordinate target, SkillId skill) {
-        Game.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[]{from, target, skill});
+        HexStartLogger.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[]{from, target, skill});
         clientController.send(new TurnActionMessage(null, ActionType.SKILL, from, List.of(target), skill));
     }
 
     public void performTurn(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
-            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
+            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
                     message.toJson());
             return;
         }
@@ -205,7 +206,7 @@ public class GameScreen extends Screen {
             case SKILL:
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
                 if (mayTarget.isEmpty()) {
-                    Game.log().log(Level.SEVERE,
+                    HexStartLogger.log().log(Level.SEVERE,
                             "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
                     return;
                 }
@@ -222,7 +223,7 @@ public class GameScreen extends Screen {
     private void processMovement(TurnActionMessage message, final Creature creature) {
         List<BoardCoordinate> targets = message.getTargets();
         for (BoardCoordinate target : targets) {
-            Game.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
+            HexStartLogger.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
                     new Object[]{target, targets, creature});
             CreatureActionController.processMovementBlocking(field.getTraps(), creature, getBoard().getTile(target));
         }

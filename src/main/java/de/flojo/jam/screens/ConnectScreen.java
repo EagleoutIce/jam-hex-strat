@@ -4,6 +4,7 @@ import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.client.ClientController;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -159,7 +160,7 @@ public class ConnectScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
-        Game.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
+        HexStartLogger.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
         if (data.length == 0)
             return;
@@ -172,7 +173,7 @@ public class ConnectScreen extends Screen {
                 switchToGameScreen();
                 break;
             default:
-                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+                HexStartLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 

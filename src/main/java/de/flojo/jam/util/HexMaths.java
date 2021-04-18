@@ -42,10 +42,10 @@ public class HexMaths {
             if (dY < 0) {
                 return new BoardCoordinate(dX, -1);
             } else if (dY == 0) {
-                Game.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0}  to b {1}", new Object[]{a, t});
+                HexStartLogger.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0}  to b {1}", new Object[]{a, t});
             }
         } else if (dY == 0) {
-            Game.log().log(Level.SEVERE, "dX < 0 && dY == 0 steppe from a {0}  to b {1}", new Object[]{a, t});
+            HexStartLogger.log().log(Level.SEVERE, "dX < 0 && dY == 0 steppe from a {0}  to b {1}", new Object[]{a, t});
         } else if (dY < 0) {
             return new BoardCoordinate(mY == 0 ? -1 : 1, dY);
         }

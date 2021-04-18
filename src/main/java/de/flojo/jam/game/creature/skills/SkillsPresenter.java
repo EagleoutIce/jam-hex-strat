@@ -11,6 +11,7 @@ import de.flojo.jam.game.creature.IAction;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
@@ -111,7 +112,7 @@ public class SkillsPresenter {
             currentCreature.setOnDead(this::resetButtons);
             if (actionController.requestSkillFor(currentCreature, skill.getSkillId(),
                     (p, t) -> skillOperationEnded(c, bt, p, skill.getSkillId(), t))) {
-                Game.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
+                HexStartLogger.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                 bt.setEnabled(false);
                 skipButton.setEnabled(false);
             }
@@ -142,7 +143,7 @@ public class SkillsPresenter {
                     resetButtons();
                 });
             if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(c, p, t))) {
-                Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
+                HexStartLogger.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
                 skipButton.setEnabled(false);
             }

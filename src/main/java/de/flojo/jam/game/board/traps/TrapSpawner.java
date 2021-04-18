@@ -1,10 +1,12 @@
 package de.flojo.jam.game.board.traps;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 
@@ -37,7 +39,7 @@ public class TrapSpawner {
         Trap oldTrap = selectedTrap;
         this.selectedTrap = traps.getHighlighted().orElse(null);
         if (oldTrap != selectedTrap)
-            Game.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
+            HexStartLogger.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
     }
 
 
@@ -46,7 +48,7 @@ public class TrapSpawner {
             return null;
         Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"), tile);
         traps.add(trap);
-        Game.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
+        HexStartLogger.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
         return trap;
     }
 

@@ -20,7 +20,6 @@ public class GameState {
         moneyP2Left = startMoney;
     }
 
-
     public boolean p1CanDoBuild() {
         return moneyP1Left > 0;
     }

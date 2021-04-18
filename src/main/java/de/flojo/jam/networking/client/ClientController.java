@@ -5,6 +5,7 @@ import de.flojo.jam.networking.NetworkGson;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 
 import java.net.URI;
@@ -41,7 +42,7 @@ public class ClientController implements IClientController {
         new Thread(() -> {
             synchronized (readyLock) {
                 for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
-                    Game.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})",
+                    HexStartLogger.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})",
                             new Object[]{attempts, MAX_WAIT_INTERVAL});
                     try {
                         readyLock.wait(500);
@@ -51,7 +52,7 @@ public class ClientController implements IClientController {
                     }
                 }
                 if (!isReady) {
-                    Game.log().log(Level.SEVERE, "Was not able to establish a connection. Waited {0} times.", MAX_WAIT_INTERVAL);
+                    HexStartLogger.log().log(Level.SEVERE, "Was not able to establish a connection. Waited {0} times.", MAX_WAIT_INTERVAL);
                 }
                 onCompleted.accept(isReady);
             }
@@ -69,7 +70,7 @@ public class ClientController implements IClientController {
 
     @Override
     public void handleClose(int code, String reason, boolean remote) {
-        Game.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}", new Object[]{code, reason, remote});
+        HexStartLogger.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}", new Object[]{code, reason, remote});
         // do nothing else?
         if (onConnectionStateUpdate != null)
             onConnectionStateUpdate.call("CLOSED");
@@ -81,7 +82,7 @@ public class ClientController implements IClientController {
     }
 
     private void processMessage(String message) {
-        Game.log().log(Level.INFO, "Handling message: \"{0}\"", message);
+        HexStartLogger.log().log(Level.INFO, "Handling message: \"{0}\"", message);
 
         final MessageContainer container = NetworkGson.getContainer(message);
         final MessageTypeEnum type = container == null ? null : container.getType();
@@ -123,7 +124,7 @@ public class ClientController implements IClientController {
                 GameScreen.get().gameOver(NetworkGson.getMessage(message));
                 break;
             default:
-                Game.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[]{type, message});
+                HexStartLogger.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[]{type, message});
         }
     }
 
@@ -143,7 +144,7 @@ public class ClientController implements IClientController {
     @Override
     public void send(MessageContainer message) {
         message.setClientId(context.getMyId());
-        Game.log().log(Level.FINE, "Sending: {0}", message.toJson());
+        HexStartLogger.log().log(Level.FINE, "Sending: {0}", message.toJson());
         socket.send(message.toJson());
     }
 

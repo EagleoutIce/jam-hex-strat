@@ -24,6 +24,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
 import de.flojo.jam.util.FileHelper;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Game;
@@ -315,7 +316,7 @@ public class EditorScreen extends Screen {
             Game.log().info("Save was cancelled.");
             return;
         }
-        Game.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
+        HexStartLogger.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
         try (PrintWriter writer = new PrintWriter(chosen)) {
             writer.println(gson.toJson(board.getTerrainMap().getTerrain()));
         } catch (IOException ex) {
@@ -329,12 +330,12 @@ public class EditorScreen extends Screen {
             Game.log().info("Load was cancelled.");
             return;
         }
-        Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
+        HexStartLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
             TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
                     chosen);
             this.board.setTerrainMap(map);
-            Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());
+            HexStartLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return;

@@ -20,6 +20,7 @@ import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.networking.server.ClientServerConnection;
 import de.flojo.jam.networking.server.PlayerController;
 import de.flojo.jam.networking.server.ServerController;
+import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.IProvideContext;
 import de.gurkenlabs.litiengine.Game;
 
@@ -60,7 +61,7 @@ public class MainGameControl {
                 .getPlayer(state.getCurrentTurn());
         currentPlayer.send(new YouCanBuildMessage(null,
                 state.getCurrentTurn().ifOne(state.getMoneyP1Left(), state.getMoneyP2Left())));
-        Game.log().log(Level.INFO, "Sending build request to {0}.", currentPlayer);
+        HexStartLogger.log().log(Level.INFO, "Sending build request to {0}.", currentPlayer);
     }
 
     public void buildTerrainAt(PlayerId player, TerrainId terrain, BoardCoordinate position) {
@@ -112,7 +113,7 @@ public class MainGameControl {
         ClientServerConnection currentPlayer = controller.getPlayerController()
                 .getPlayer(state.getCurrentTurn());
         currentPlayer.send(new ItIsYourTurnMessage(null));
-        Game.log().log(Level.INFO, "Sending game-turn request to {0}.", currentPlayer);
+        HexStartLogger.log().log(Level.INFO, "Sending game-turn request to {0}.", currentPlayer);
     }
 
     private void nextRound() {
@@ -154,7 +155,7 @@ public class MainGameControl {
     public void performAction(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
-            Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
+            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
             return;
         }
         final Creature creature = mayCreature.get();
@@ -166,7 +167,7 @@ public class MainGameControl {
             case SKILL:
                 Optional<Creature> mayTarget = getFactory().get(message.getTarget());
                 if (mayTarget.isEmpty()) {
-                    Game.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
+                    HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
