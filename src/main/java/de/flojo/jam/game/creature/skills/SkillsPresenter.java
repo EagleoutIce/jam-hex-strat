@@ -1,14 +1,5 @@
 package de.flojo.jam.game.creature.skills;
 
-import java.awt.Point;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.logging.Level;
-
 import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
@@ -25,29 +16,34 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
+
 public class SkillsPresenter {
 
     private final Screen target;
     private final Board board;
     private final CreatureFactory factory;
     private final TrapSpawner traps;
-
+    private final CreatureActionController actionController;
     private PlayerId playerId;
     private Creature currentCreature;
     private BoardCoordinate creatureCoordinate;
-
     private AtomicBoolean enabled = new AtomicBoolean();
-
-    private final CreatureActionController actionController;
-
     private Button moveButton;
     private Button skipButton;
-    private Map<ICreatureSkill,Button> skillButtons;
+    private Map<ICreatureSkill, Button> skillButtons;
     private List<BoardCoordinate> movementBuffer;
     private IAction onAction;
 
     public SkillsPresenter(Screen target, Board board, CreatureFactory factory, TrapSpawner traps, PlayerId playerId,
-            String screenName) {
+                           String screenName) {
         this.target = target;
         this.board = board;
         this.factory = factory;
@@ -129,7 +125,7 @@ public class SkillsPresenter {
             actionController.cancelCurrentOperation();
             currentCreature.skip();
             currentCreature.setOnDead(this::resetButtons);
-            if(onAction != null)
+            if (onAction != null)
                 onAction.onSkip(currentCreature.getCoordinate());
             updatePositions();
         });
@@ -154,7 +150,7 @@ public class SkillsPresenter {
     }
 
     private void skillOperationEnded(Creature c, Button button, Boolean performed, SkillId skillId,
-            BoardCoordinate target) {
+                                     BoardCoordinate target) {
         if (performed.booleanValue()) {
             c.getAttributes().useAp();
             if (onAction != null)
@@ -164,8 +160,8 @@ public class SkillsPresenter {
     }
 
     private void updateSkillButtonStates(Creature c) {
-        for (Map.Entry<ICreatureSkill,Button> btpair: skillButtons.entrySet()) {
-            if(btpair.getValue() != null) {
+        for (Map.Entry<ICreatureSkill, Button> btpair : skillButtons.entrySet()) {
+            if (btpair.getValue() != null) {
                 btpair.getValue().setEnabled(c.canCastSkill(btpair.getKey()));
                 btpair.getValue().setText(btpair.getKey().getName());
             }
@@ -222,7 +218,7 @@ public class SkillsPresenter {
             return;
         CreatureAttributes attributes = currentCreature.getAttributes();
         moveButton.setEnabled(attributes.getMpLeft() > 0);
-        if(movementBuffer.isEmpty())
+        if (movementBuffer.isEmpty())
             skipButton.setEnabled(attributes.canDoSomething());
         int width = Game.window().getWidth();
         int height = Game.window().getHeight();
@@ -271,7 +267,7 @@ public class SkillsPresenter {
 
     public void disable() {
         enabled.set(false);
-        if(currentCreature != null)
+        if (currentCreature != null)
             currentCreature.unsetHighlight();
         currentCreature = null;
         creatureCoordinate = null;

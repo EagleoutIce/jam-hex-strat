@@ -1,10 +1,5 @@
 package de.flojo.jam;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;
@@ -16,65 +11,67 @@ import de.gurkenlabs.litiengine.gui.GuiProperties;
 import de.gurkenlabs.litiengine.gui.screens.Resolution;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-/**
- * Main
- */
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.logging.Level;
+
 public class Main {
 
-	public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
-	public static final BufferedImage ICON = Resources.images().get("icon.png");
+    public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
+    public static final BufferedImage ICON = Resources.images().get("icon.png");
 
-	public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
-	public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
-	public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
-	public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
+    public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
+    public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
+    public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
+    public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
-	public static final double INNER_MARGIN = 20d;
-	public static void main(String[] args) {
+    public static final double INNER_MARGIN = 20d;
 
-		Game.setInfo("info.xml");
-		Game.addGameListener(new GameListener() {
-			@Override
-			public void initialized(String... args) {
-				// nothing
-			}
+    public static void main(String[] args) {
 
-			@Override
-			public void started() {
-				Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
-				Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
-			}
+        Game.setInfo("info.xml");
+        Game.addGameListener(new GameListener() {
+            @Override
+            public void initialized(String... args) {
+                // nothing
+            }
 
-			@Override
-			public void terminated() {
-				// nothing
-			}
-		});
+            @Override
+            public void started() {
+                Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
+                Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
+            }
 
-		Game.init(args);
-		Game.log().setLevel(Level.ALL);
-		Game.graphics().setBaseRenderScale(3.0f);
+            @Override
+            public void terminated() {
+                // nothing
+            }
+        });
 
-		Game.window().setTitle("Super duper game");
+        Game.init(args);
+        Game.log().setLevel(Level.ALL);
+        Game.graphics().setBaseRenderScale(3.0f);
 
-		Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
-			System.err.println("Mimimi do this with a stream");
-			ex.printStackTrace();
-		});
+        Game.window().setTitle("Super duper game");
 
-		GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
-		GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
-		GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
+        Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
+            System.err.println("Mimimi do this with a stream");
+            ex.printStackTrace();
+        });
 
-		Game.window().cursor().set(DEFAULT_CURSOR);
-		Game.window().setIcon(ICON);
+        GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
+        GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
+        GuiProperties.getDefaultAppearanceHovered().setTextAntialiasing(true);
 
-		Game.screens().add(new MenuScreen());
-		Game.screens().add(GameScreen.get());
-		Game.screens().add(new EditorScreen());
-		Game.screens().add(ConnectScreen.get());
-		Game.screens().add(new ServerSetupScreen());
+        Game.window().cursor().set(DEFAULT_CURSOR);
+        Game.window().setIcon(ICON);
 
-		Game.start();
-	}
+        Game.screens().add(new MenuScreen());
+        Game.screens().add(GameScreen.get());
+        Game.screens().add(new EditorScreen());
+        Game.screens().add(ConnectScreen.get());
+        Game.screens().add(new ServerSetupScreen());
+
+        Game.start();
+    }
 }

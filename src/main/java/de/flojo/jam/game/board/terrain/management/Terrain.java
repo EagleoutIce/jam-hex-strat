@@ -5,56 +5,55 @@ import java.util.Objects;
 
 public class Terrain implements Serializable {
 
-	private static final long serialVersionUID = 8198115689285126822L;
+    private static final long serialVersionUID = 8198115689285126822L;
+    private final TerrainData data;
+    private String name;
 
-	private String name;
-	private final TerrainData data;
+    public Terrain(String name, TerrainData terrain) {
+        this.name = name;
+        this.data = terrain;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public TerrainData getData() {
-		return data;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public Terrain(String name, TerrainData terrain) {
-		this.name = name;
-		this.data = terrain;
-	}
+    public TerrainData getData() {
+        return data;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("Terrain [data=").append(data).append(", name=").append(name).append("]");
+        return builder.toString();
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Terrain [data=").append(data).append(", name=").append(name).append("]");
-		return builder.toString();
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see java.lang.Object#hashCode()
+     */
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#hashCode()
-	 */
+    @Override
+    public int hashCode() {
+        return Objects.hash(data, name);
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(data, name);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof Terrain)) {
-			return false;
-		}
-		Terrain other = (Terrain) obj;
-		return Objects.equals(data, other.data) && Objects.equals(name, other.name);
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (!(obj instanceof Terrain)) {
+            return false;
+        }
+        Terrain other = (Terrain) obj;
+        return Objects.equals(data, other.data) && Objects.equals(name, other.name);
+    }
 
 }

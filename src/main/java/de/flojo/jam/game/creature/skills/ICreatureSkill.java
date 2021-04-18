@@ -2,37 +2,39 @@ package de.flojo.jam.game.creature.skills;
 
 public interface ICreatureSkill {
 
-	public static final int RANGE_SELF=0;
+    public static final int RANGE_SELF = 0;
 
-	public int getMinRange();
-	public int getMaxRange();
+    public int getMinRange();
 
-	public int getRadius();
-	public CreatureSkillAOA getAOA();
+    public int getMaxRange();
 
-	public int getCost();
+    public int getRadius();
 
-	public boolean doesFriendlyFire();
+    public CreatureSkillAOA getAOA();
 
-	// called for every target
-	public IEffectCreature getEffect(final IProvideEffectContext context);
+    public int getCost();
 
-	public String getDescription();
+    public boolean doesFriendlyFire();
 
-	public String getName();
+    // called for every target
+    public IEffectCreature getEffect(final IProvideEffectContext context);
 
-	public SkillId getSkillId();
+    public String getDescription();
 
-	public int bonusOnRaised();
+    public String getName();
 
-	// will traverse line until hit
-	public boolean isRanged();
+    public SkillId getSkillId();
 
-	public default boolean castOnGround() {
-		return true;
-	}
+    public int bonusOnRaised();
 
-	public default boolean castOnAir() {
-		return false;
-	}
+    // will traverse line until hit
+    public boolean isRanged();
+
+    public default boolean castOnGround() {
+        return true;
+    }
+
+    public default boolean castOnAir() {
+        return false;
+    }
 }

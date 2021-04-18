@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gameinfo>
- <name>Hex-Strat</name>
- <subTitle>Superduper Jamgame</subTitle>
- <description>A little testgame.</description>
- <version>v1.0.0</version>
- <developer>Florian Sihler</developer>
- <developer>Jonas Authenrieth</developer>
+    <name>Hex-Strat</name>
+    <subTitle>Superduper Jamgame</subTitle>
+    <description>A little testgame.</description>
+    <version>v1.0.0</version>
+    <developer>Florian Sihler</developer>
+    <developer>Jonas Authenrieth</developer>
 </gameinfo>

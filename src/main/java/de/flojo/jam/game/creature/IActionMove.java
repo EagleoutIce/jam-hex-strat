@@ -1,10 +1,10 @@
 package de.flojo.jam.game.creature;
 
-import java.util.List;
-
 import de.flojo.jam.game.board.BoardCoordinate;
+
+import java.util.List;
 
 @FunctionalInterface
 public interface IActionMove {
-	void onMove(BoardCoordinate creaturePosition, List<BoardCoordinate> targets);
+    void onMove(BoardCoordinate creaturePosition, List<BoardCoordinate> targets);
 }

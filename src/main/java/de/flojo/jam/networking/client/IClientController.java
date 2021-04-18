@@ -4,15 +4,15 @@ import de.flojo.jam.networking.messages.MessageContainer;
 
 public interface IClientController {
 
-	void handleOpen();
+    void handleOpen();
 
-	void handleClose(int code, String reason, boolean remote);
+    void handleClose(int code, String reason, boolean remote);
 
-	void handleMessage(String message);
+    void handleMessage(String message);
 
-	// TODO: split to sender?
-	void send(MessageContainer message);
+    // TODO: split to sender?
+    void send(MessageContainer message);
 
 
-	ClientContext getContext();
+    ClientContext getContext();
 }

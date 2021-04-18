@@ -4,5 +4,5 @@ import de.flojo.jam.game.board.BoardCoordinate;
 
 @FunctionalInterface
 public interface IActionSkip {
-	void onSkip(BoardCoordinate from);
+    void onSkip(BoardCoordinate from);
 }
