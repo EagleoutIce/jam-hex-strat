@@ -13,6 +13,7 @@ import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Arrays;
 import java.util.logging.Level;
 
 public class Main {
@@ -49,7 +50,7 @@ public class Main {
         });
 
         Game.init(args);
-        Game.log().setLevel(Level.ALL);
+        Arrays.stream(Game.log().getHandlers()).forEach(h -> h.setLevel(Level.ALL));
         Game.graphics().setBaseRenderScale(3.0f);
 
         Game.window().setTitle("Super duper game");

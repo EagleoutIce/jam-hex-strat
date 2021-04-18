@@ -193,6 +193,7 @@ public class ServerSetupScreen extends Screen {
         serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate);
         serverController.start();
         serverStarted = true;
+        updatePositions();
     }
 
     private InetSocketAddress getAddress() {
