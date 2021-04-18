@@ -147,6 +147,7 @@ public class ConnectScreen extends Screen {
         this.address.setEnabled(false);
         nameField.setEnabled(false);
         this.connect.setText("Disconnect");
+        updatePositions();
         try {
             clientController = new ClientController(new URI("ws://" + this.address.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
             clientController.tryConnect(onCompleted);

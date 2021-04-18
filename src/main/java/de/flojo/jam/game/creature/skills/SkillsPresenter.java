@@ -136,10 +136,11 @@ public class SkillsPresenter {
         moveButton = new Button("Move", Main.GUI_FONT_SMALL);
         moveButton.onClicked(me -> {
             actionController.cancelCurrentOperation();
-            currentCreature.setOnDead(() -> {
-                moveOperationEnded(c, false, new BoardCoordinate(-1, -1));
-                resetButtons();
-            });
+            if (currentCreature != null)
+                currentCreature.setOnDead(() -> {
+                    moveOperationEnded(c, false, new BoardCoordinate(-1, -1));
+                    resetButtons();
+                });
             if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(c, p, t))) {
                 Game.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
@@ -151,7 +152,7 @@ public class SkillsPresenter {
 
     private void skillOperationEnded(Creature c, Button button, Boolean performed, SkillId skillId,
                                      BoardCoordinate target) {
-        if (performed.booleanValue()) {
+        if (performed) {
             c.getAttributes().useAp();
             if (onAction != null)
                 onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);
@@ -170,12 +171,12 @@ public class SkillsPresenter {
 
     private void moveOperationEnded(Creature c, Boolean performed, BoardCoordinate target) {
         final CreatureAttributes attributes = c.getAttributes();
-        if (performed.booleanValue()) {
+        if (performed) {
             attributes.useMp();
             movementBuffer.add(target);
         }
 
-        if ((!performed.booleanValue() || attributes.getMpLeft() <= 0) && !movementBuffer.isEmpty()
+        if ((!performed || attributes.getMpLeft() <= 0) && !movementBuffer.isEmpty()
                 && onAction != null) {
             onAction.onMove(creatureCoordinate, movementBuffer);
             movementBuffer.clear();
