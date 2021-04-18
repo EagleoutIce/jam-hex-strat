@@ -31,22 +31,20 @@ public class GameField implements IRenderable, IProvideContext {
 
     private final String screenName;
 
-    private Board board;
-    private Architect architect;
-    private CreatureFactory factory;
-    private TrapSpawner spawner;
-    private SkillsPresenter presenter;
+    private final Board board;
+    private final Architect architect;
+    private final CreatureFactory factory;
+    private final TrapSpawner spawner;
+    private final SkillsPresenter presenter;
     private PlayerId owner;
 
-    private BuildingPhaseButtonPresenter buildingPhaseButtons;
+    private final BuildingPhaseButtonPresenter buildingPhaseButtons;
 
     private int moneyLeft;
 
     private boolean canBuild = false;
     private boolean ourTurn = false;
     private boolean canDoAction = false;
-
-    // TODO: present our id to the player. present turn etc.
 
     public GameField(final Screen target, final String screenName, PlayerId owner) {
         this.screenName = screenName;

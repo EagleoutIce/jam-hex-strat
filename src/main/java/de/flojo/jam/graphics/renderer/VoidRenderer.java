@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class VoidRenderer implements IRenderData {
 
-    private static VoidRenderer instance = new VoidRenderer();
+    private static final VoidRenderer instance = new VoidRenderer();
 
     private VoidRenderer() {
     }

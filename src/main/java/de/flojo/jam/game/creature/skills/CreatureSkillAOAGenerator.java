@@ -10,7 +10,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class CreatureSkillAOAGenerator {
-
     private CreatureSkillAOAGenerator() {
         throw new UnsupportedOperationException();
     }

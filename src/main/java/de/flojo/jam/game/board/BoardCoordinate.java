@@ -40,9 +40,7 @@ public class BoardCoordinate extends Point {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("(BC@").append(x).append(",").append(y).append(")");
-        return builder.toString();
+        return "(BC@" + x + "," + y + ")";
     }
 
 }

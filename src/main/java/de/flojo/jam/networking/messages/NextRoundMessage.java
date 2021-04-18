@@ -6,7 +6,7 @@ public class NextRoundMessage extends MessageContainer {
 
     private static final long serialVersionUID = -7249229150894475012L;
 
-    private int currentRound;
+    private final int currentRound;
 
     public NextRoundMessage(UUID clientId, int currentRound) {
         this(clientId, currentRound, "");

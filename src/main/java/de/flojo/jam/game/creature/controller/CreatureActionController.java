@@ -25,10 +25,10 @@ public class CreatureActionController {
     private final IProvideEffectContext context;
     private final String screenName;
 
-    private Object selectionLock = new Object();
+    private final Object selectionLock = new Object();
 
     private Creature activeCreature = null;
-    private Set<Tile> possibleTargets;
+    private final Set<Tile> possibleTargets;
     private boolean completed = false;
     private boolean performed = false;
     private BiConsumer<Boolean, BoardCoordinate> onCompleted = null;

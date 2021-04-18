@@ -38,7 +38,7 @@ public class ConnectScreen extends Screen {
     private ClientController clientController;
     private TextFieldComponent nameField;
     private TextFieldComponent portNumber;
-    private TextFieldComponent adress;
+    private TextFieldComponent address;
     private Button connect;
     private boolean connected = false;
 
@@ -99,7 +99,7 @@ public class ConnectScreen extends Screen {
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 200) / 2 - 26);
         nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
-        this.adress.setLocation(Main.INNER_MARGIN + 45d, (height + adress.getHeight()) / 2 - 26);
+        this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight()) / 2 - 26);
         this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
                 height - this.connect.getHeight());
     }
@@ -107,7 +107,7 @@ public class ConnectScreen extends Screen {
     @Override
     protected void initializeComponents() {
         super.initializeComponents();
-        this.connect = new Button("Verbinde", Main.GUI_FONT_SMALL);
+        this.connect = new Button("Connect", Main.GUI_FONT_SMALL);
         this.connect.onClicked(c -> {
             if (connected) {
                 connected = false;
@@ -125,9 +125,9 @@ public class ConnectScreen extends Screen {
         this.portNumber = new TextFieldComponent(0, 0, 100, 70, ServerSetupScreen.DEFAULT_PORT);
         this.portNumber.setFormat("[0-9]{0,4}");
         this.getComponents().add(portNumber);
-        this.adress = new TextFieldComponent(0, 0, 600, 70, "localhost");
-        this.adress.setFormat("[a-zA-Z.0-9]{0,200}");
-        this.getComponents().add(adress);
+        this.address = new TextFieldComponent(0, 0, 600, 70, "localhost");
+        this.address.setFormat("[a-zA-Z.0-9]{0,200}");
+        this.getComponents().add(address);
         nameField = new TextFieldComponent(0, 0, 600, 70, Game.random().choose(RANDOM_NAMES));
         nameField.setFormat(".{0,25}");
         this.getComponents().add(nameField);
@@ -144,11 +144,11 @@ public class ConnectScreen extends Screen {
 
     private void connect(Consumer<Boolean> onCompleted) {
         this.portNumber.setEnabled(false);
-        this.adress.setEnabled(false);
+        this.address.setEnabled(false);
         nameField.setEnabled(false);
-        this.connect.setText("Trenne");
+        this.connect.setText("Disconnect");
         try {
-            clientController = new ClientController(new URI("ws://" + this.adress.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
+            clientController = new ClientController(new URI("ws://" + this.address.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
             clientController.tryConnect(onCompleted);
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -184,9 +184,9 @@ public class ConnectScreen extends Screen {
 
     private void disconnect() {
         this.portNumber.setEnabled(true);
-        this.adress.setEnabled(true);
+        this.address.setEnabled(true);
         nameField.setEnabled(true);
-        this.connect.setText("Verbinde");
+        this.connect.setText("Connect");
         if (clientController != null)
             clientController.close();
         clientController = null;

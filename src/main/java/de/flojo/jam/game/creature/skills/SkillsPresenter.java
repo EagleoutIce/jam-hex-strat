@@ -35,11 +35,11 @@ public class SkillsPresenter {
     private PlayerId playerId;
     private Creature currentCreature;
     private BoardCoordinate creatureCoordinate;
-    private AtomicBoolean enabled = new AtomicBoolean();
+    private final AtomicBoolean enabled = new AtomicBoolean();
     private Button moveButton;
     private Button skipButton;
-    private Map<ICreatureSkill, Button> skillButtons;
-    private List<BoardCoordinate> movementBuffer;
+    private final Map<ICreatureSkill, Button> skillButtons;
+    private final List<BoardCoordinate> movementBuffer;
     private IAction onAction;
 
     public SkillsPresenter(Screen target, Board board, CreatureFactory factory, TrapSpawner traps, PlayerId playerId,

@@ -83,11 +83,9 @@ public class CreatureAttributes {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CreatureAttributes [currentAp=").append(currentAp).append(", currentMp=").append(currentMp)
-                .append(", maxAp=").append(maxAp).append(", maxMp=").append(maxMp).append(", skills=").append(skills)
-                .append("]");
-        return builder.toString();
+        return "CreatureAttributes [currentAp=" + currentAp + ", currentMp=" + currentMp +
+                ", maxAp=" + maxAp + ", maxMp=" + maxMp + ", skills=" + skills +
+                "]";
     }
 
     public void setUsed() {

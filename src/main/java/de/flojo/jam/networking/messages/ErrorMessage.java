@@ -8,11 +8,8 @@ public class ErrorMessage extends MessageContainer {
 
     private static final long serialVersionUID = 7630983891460330082L;
 
-    private ErrorTypeEnum reason;
+    private final ErrorTypeEnum reason;
 
-    public ErrorMessage(UUID clientId, ErrorTypeEnum reason) {
-        this(clientId, reason, "");
-    }
 
     public ErrorMessage(UUID clientId, ErrorTypeEnum reason, String debugMessage) {
         super(MessageTypeEnum.ERROR, clientId, debugMessage);

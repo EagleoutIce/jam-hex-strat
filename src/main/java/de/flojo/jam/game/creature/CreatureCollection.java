@@ -97,7 +97,7 @@ public class CreatureCollection {
         }
     }
 
-    protected boolean remove(Object arg0) {
+    protected boolean remove(Creature arg0) {
         synchronized (collection) {
             return collection.remove(arg0);
         }
@@ -129,9 +129,7 @@ public class CreatureCollection {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CreatureCollection [collection=").append(collection).append("]");
-        return builder.toString();
+        return "CreatureCollection [collection=" + collection + "]";
     }
 
     public List<CreatureJson> getJsonData() {

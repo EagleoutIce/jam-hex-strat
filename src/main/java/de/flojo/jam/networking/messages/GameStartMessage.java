@@ -13,10 +13,9 @@ public class GameStartMessage extends MessageContainer {
 
     private static final long serialVersionUID = -952666793933075961L;
 
-    private TerrainMap terrain;
-    private List<CreatureJson> creatures;
-    private List<TrapJson> traps;
-
+    private final TerrainMap terrain;
+    private final List<CreatureJson> creatures;
+    private final List<TrapJson> traps;
 
     public GameStartMessage(UUID clientId, TerrainMap terrain, CreatureCollection creatures, TrapCollection traps) {
         super(MessageTypeEnum.GAME_START, clientId, "");

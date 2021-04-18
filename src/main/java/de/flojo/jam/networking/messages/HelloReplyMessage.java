@@ -11,8 +11,8 @@ public class HelloReplyMessage extends MessageContainer {
 
     private static final long serialVersionUID = 7630983891460330082L;
 
-    private Terrain terrain;
-    private PlayerId role;
+    private final Terrain terrain;
+    private final PlayerId role;
 
     public HelloReplyMessage(ClientServerConnection connection, Terrain terrain) {
         this(connection.getClientId(), terrain, connection.getRole(), "");

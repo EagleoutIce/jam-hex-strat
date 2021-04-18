@@ -147,8 +147,8 @@ public class Creature implements IRenderable {
         return core.isFlying();
     }
 
-    public boolean isRaised() {
-        return base.getTile().getTerrainType().isRaised();
+    public boolean isNotRaised() {
+        return !base.getTile().getTerrainType().isRaised();
     }
 
     public boolean canDoSomething() {
@@ -165,10 +165,8 @@ public class Creature implements IRenderable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Creature [").append("name=").append(name).append(", position=").append(getCoordinate())
-                .append(", owner=").append(this.core.getOwner()).append("]");
-        return builder.toString();
+        return "Creature [" + "name=" + name + ", position=" + getCoordinate() +
+                ", owner=" + this.core.getOwner() + "]";
     }
 
     public void moribund() {

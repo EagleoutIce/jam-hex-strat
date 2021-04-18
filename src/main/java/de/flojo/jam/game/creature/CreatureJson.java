@@ -9,10 +9,10 @@ public class CreatureJson implements IAmJson {
 
     private static final long serialVersionUID = 2384082420599588581L;
 
-    private String name;
-    private CreatureId id;
-    private BoardCoordinate pos;
-    private PlayerId owner;
+    private final String name;
+    private final CreatureId id;
+    private final BoardCoordinate pos;
+    private final PlayerId owner;
 
     public CreatureJson(final Creature base) {
         this.name = base.getName();

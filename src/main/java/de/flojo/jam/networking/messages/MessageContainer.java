@@ -10,9 +10,9 @@ public class MessageContainer implements IAmJson {
     private static final long serialVersionUID = 45732886383952065L;
 
     private UUID clientId;
-    private MessageTypeEnum type;
-    private long epoch;
-    private String debugMessage;
+    private final MessageTypeEnum type;
+    private final long epoch;
+    private final String debugMessage;
 
 
     private MessageContainer(MessageTypeEnum type, UUID clientId, long epoch, String debugMessage) {

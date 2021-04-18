@@ -6,7 +6,7 @@ public class YouCanBuildMessage extends MessageContainer {
 
     private static final long serialVersionUID = -6643166910354159927L;
 
-    private int moneyLeft;
+    private final int moneyLeft;
 
     public YouCanBuildMessage(UUID clientId, int moneyLeft) {
         this(clientId, moneyLeft, "");

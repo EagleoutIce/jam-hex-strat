@@ -6,8 +6,8 @@ public class Hexagon extends Polygon {
 
     public static final int SIDES = 6;
     private static final long serialVersionUID = 1L;
-    private Point[] points = new Point[SIDES];
-    private Point center = new Point(0, 0);
+    private final Point[] points = new Point[SIDES];
+    private Point center;
     private int radius;
 
     public Hexagon(Point center, int radius) {

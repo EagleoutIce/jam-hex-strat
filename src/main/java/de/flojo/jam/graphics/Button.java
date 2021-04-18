@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
 public class Button extends GuiComponent {
 
     private final Font font;
-    private int margin = 0;
+    private final int margin;
 
     public Button(final String text, Font font) {
         this(0, 0, text, font, 0);

@@ -6,7 +6,7 @@ public enum ErrorTypeEnum {
     ILLEGAL_MESSAGE("The message send was illegal, consult the debugMessage or the logfiles for further information"),
     GENERAL("A generic Error occurred, please consult the logfiles for more Information.");
 
-    private String description;
+    private final String description;
 
     ErrorTypeEnum(String description) {
         this.description = description;

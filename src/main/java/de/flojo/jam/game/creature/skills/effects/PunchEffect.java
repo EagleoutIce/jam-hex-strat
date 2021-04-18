@@ -38,7 +38,7 @@ public class PunchEffect implements IEffectCreature {
             deltaX = delta.x;
             deltaY = delta.y;
             deltaSet = true;
-            effectHitGround = !attacker.isRaised() && !target.isRaised();
+            effectHitGround = attacker.isNotRaised() && target.isNotRaised();
         }
 
         // Peek next tile

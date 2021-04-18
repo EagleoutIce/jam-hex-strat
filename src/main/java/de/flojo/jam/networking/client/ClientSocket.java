@@ -9,7 +9,7 @@ import java.util.logging.Level;
 
 public class ClientSocket extends WebSocketClient {
 
-    private IClientController controller;
+    private final IClientController controller;
 
     public ClientSocket(URI serverUri, IClientController controller) {
         super(serverUri);
@@ -18,7 +18,7 @@ public class ClientSocket extends WebSocketClient {
     }
 
     @Override
-    public void onOpen(ServerHandshake handshakedata) {
+    public void onOpen(ServerHandshake handShakeData) {
         controller.handleOpen();
     }
 

@@ -28,7 +28,7 @@ public class Trap implements Serializable {
     private final PlayerId owner;
 
     private boolean enemyDidUncover = false;
-    private AtomicBoolean triggered = new AtomicBoolean();
+    private final AtomicBoolean triggered = new AtomicBoolean();
 
     public Trap(Board board, PlayerId owner, TrapId id, Tile rootPosition) {
         this.owner = owner;
@@ -134,11 +134,9 @@ public class Trap implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Trap [enemyDidUncover=").append(enemyDidUncover).append(", ghosts=").append(ghosts)
-                .append(", owner=").append(owner).append(", rootPosition=").append(rootPosition).append(", trapId=")
-                .append(trapId).append(", triggered=").append(triggered).append("]");
-        return builder.toString();
+        return "Trap [enemyDidUncover=" + enemyDidUncover + ", ghosts=" + ghosts +
+                ", owner=" + owner + ", rootPosition=" + rootPosition + ", trapId=" +
+                trapId + ", triggered=" + triggered + "]";
     }
 
 }

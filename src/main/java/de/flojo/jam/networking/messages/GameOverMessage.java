@@ -10,7 +10,6 @@ public class GameOverMessage extends MessageContainer {
 
     private final PlayerId winnerId;
 
-
     public GameOverMessage(UUID clientId, PlayerId winnerId) {
         super(MessageTypeEnum.GAME_OVER, clientId, "");
         this.winnerId = winnerId;

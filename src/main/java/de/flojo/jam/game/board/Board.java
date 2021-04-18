@@ -48,10 +48,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private int shiftX;
     private int shiftY;
     private IHighlightMask highlightMask;
-    private AtomicBoolean doHover = new AtomicBoolean(true);
-    private AtomicBoolean showMapDetails = new AtomicBoolean(true);
-    private KeyInputGroup bInputGroupVert = new KeyInputGroup();
-    private KeyInputGroup bInputGroupHor = new KeyInputGroup();
+    private final AtomicBoolean doHover = new AtomicBoolean(true);
+    private final AtomicBoolean showMapDetails = new AtomicBoolean(true);
+    private final KeyInputGroup bInputGroupVert = new KeyInputGroup();
+    private final KeyInputGroup bInputGroupHor = new KeyInputGroup();
 
     public Board(final String terrainPath, final String screenName) {
         this(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, GameField.FIELD_BACKGROUND, terrainPath, screenName);
@@ -312,9 +312,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
         if (highlightTiles.add(targetTile)) {
             IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
-            if (!updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
-                    targetTerrainType.getNode().getPos(), highlightTiles))
-                return false;
+            return updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
+                    targetTerrainType.getNode().getPos(), highlightTiles);
         }
 
         return true;

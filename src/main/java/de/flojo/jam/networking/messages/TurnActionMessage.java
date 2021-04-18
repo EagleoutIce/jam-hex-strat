@@ -11,11 +11,10 @@ public class TurnActionMessage extends MessageContainer {
 
     private static final long serialVersionUID = -2797080689160136480L;
 
-    private ActionType action;
-    private BoardCoordinate from;
-    private List<BoardCoordinate> targets;
-    private SkillId skillId;
-
+    private final ActionType action;
+    private final BoardCoordinate from;
+    private final List<BoardCoordinate> targets;
+    private final SkillId skillId;
 
     public TurnActionMessage(UUID clientId, ActionType action, BoardCoordinate from, List<BoardCoordinate> targets, SkillId skillId) {
         super(MessageTypeEnum.TURN_ACTION, clientId);

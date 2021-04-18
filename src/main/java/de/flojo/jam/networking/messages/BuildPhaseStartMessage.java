@@ -9,19 +9,14 @@ public class BuildPhaseStartMessage extends MessageContainer {
 
     private static final long serialVersionUID = 7630983891460330082L;
 
-    private UUID p1Id;
-    private UUID p2Id;
+    private final UUID p1Id;
+    private final UUID p2Id;
 
-    private String p1Name;
-    private String p2Name;
+    private final String p1Name;
+    private final String p2Name;
 
     public BuildPhaseStartMessage(UUID clientId, PlayerController c) {
         this(clientId, c.getPlayerOne().getClientId(), c.getPlayerTwo().getClientId(), c.getPlayerOne().getClientName(), c.getPlayerTwo().getClientName(), "");
-    }
-
-
-    public BuildPhaseStartMessage(UUID clientId, UUID p1Id, UUID p2Id, String p1Name, String p2Name) {
-        this(clientId, p1Id, p2Id, p1Name, p2Name, "");
     }
 
     public BuildPhaseStartMessage(UUID clientId, UUID p1Id, UUID p2Id, String p1Name, String p2Name, String debugMessage) {
@@ -61,10 +56,8 @@ public class BuildPhaseStartMessage extends MessageContainer {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("GameStartMessage [<container>=").append(super.toString()).append(", p1Id=").append(p1Id).append(", p1Name=").append(p1Name).append(", p2Id=")
-                .append(p2Id).append(", p2Name=").append(p2Name).append("]");
-        return builder.toString();
+        return "GameStartMessage [<container>=" + super.toString() + ", p1Id=" + p1Id + ", p1Name=" + p1Name + ", p2Id=" +
+                p2Id + ", p2Name=" + p2Name + "]";
     }
 
 

@@ -46,13 +46,13 @@ public class EditorScreen extends Screen {
 
     public static final String NAME = "EDITOR";
     Gson gson = new GsonBuilder().setPrettyPrinting().create();
-    private Board board;
-    private CreatureFactory creatureFactory;
-    private TrapSpawner trapSpawner;
-    private SkillsPresenter presenter;
+    private final Board board;
+    private final CreatureFactory creatureFactory;
+    private final TrapSpawner trapSpawner;
+    private final SkillsPresenter presenter;
     private boolean showP1 = true;
     private boolean showP2 = true;
-    private Architect architect;
+    private final Architect architect;
     private TerrainId currentTerrain = TerrainId.T_EMPTY;
     private ISummonCreature currentCreature = null;
     private TrapId currentTrapId = null;
@@ -277,7 +277,7 @@ public class EditorScreen extends Screen {
             both.setColors(Color.WHITE, Color.WHITE.darker());
         });
         both = new Button("Both", Main.GUI_FONT_SMALL);
-        both.onClicked(c -> {//
+        both.onClicked(c -> {
             showP1 = true;
             showP2 = true;
             presenter.setPlayerId(null);
@@ -313,7 +313,7 @@ public class EditorScreen extends Screen {
             return;
         }
         Game.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
-        try (PrintWriter writer = new PrintWriter(new File(chosen))) {
+        try (PrintWriter writer = new PrintWriter(chosen)) {
             writer.println(gson.toJson(board.getTerrainMap().getTerrain()));
         } catch (IOException ex) {
             Game.log().warning(ex.getMessage());
@@ -328,7 +328,7 @@ public class EditorScreen extends Screen {
         }
         Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosen)),
+            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
                     chosen);
             this.board.setTerrainMap(map);
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());

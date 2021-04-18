@@ -26,7 +26,7 @@ public class ImageButton extends ImageComponent {
         super(x, y, width, height, img);
         setText(text);
         this.setFont(font);
-        postsetup();
+        postSetup();
     }
 
 
@@ -37,7 +37,7 @@ public class ImageButton extends ImageComponent {
         FontRenderContext context = new FontRenderContext(new AffineTransform(), true, true);
         Rectangle2D dimRect = font.getStringBounds(text, context);
         this.setDimension(dimRect.getWidth() * 1.15f, dimRect.getHeight());
-        postsetup();
+        postSetup();
     }
 
     public void setEnabledSupplier(BooleanSupplier shouldBeEnabled) {
@@ -52,7 +52,7 @@ public class ImageButton extends ImageComponent {
         }
     }
 
-    private void postsetup() {
+    private void postSetup() {
         this.setImageScaleMode(ImageScaleMode.FIT);
         this.setImageValign(Valign.MIDDLE);
         this.setImageAlign(Align.RIGHT);

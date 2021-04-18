@@ -30,7 +30,7 @@ public class TrapCollection implements Serializable {
     }
 
     public Optional<Trap> get(final BoardCoordinate coordinate) {
-        return search(coordinate, (t, v) -> t.coversTile(v));
+        return search(coordinate, Trap::coversTile);
     }
 
     public Optional<Trap> getRoot(final BoardCoordinate coordinate) {
@@ -64,7 +64,7 @@ public class TrapCollection implements Serializable {
         }
     }
 
-    public boolean contains(final Object o) {
+    public boolean contains(final Trap o) {
         synchronized (collection) {
             return collection.contains(o);
         }
@@ -90,9 +90,7 @@ public class TrapCollection implements Serializable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("TrapCollection [collection=").append(collection).append("]");
-        return builder.toString();
+        return "TrapCollection [collection=" + collection + "]";
     }
 
     public List<TrapJson> getJsonData() {

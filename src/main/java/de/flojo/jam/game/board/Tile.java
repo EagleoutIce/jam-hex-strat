@@ -27,10 +27,10 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     private final String tileLabel;
     private final PlayerId placementOwner;
     private final Color ownerColor;
-    private BoardCoordinate coordinate;
-    private transient TerrainTypeSupplier terrainSupplier;
-    private AtomicBoolean hover = new AtomicBoolean();
-    private AtomicBoolean mark = new AtomicBoolean();
+    private final BoardCoordinate coordinate;
+    private final transient TerrainTypeSupplier terrainSupplier;
+    private final AtomicBoolean hover = new AtomicBoolean();
+    private final AtomicBoolean mark = new AtomicBoolean();
     private Set<Tile> neighbours;
 
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
@@ -135,9 +135,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Tile [coordinate=").append(coordinate).append(", terrainType=").append(getTerrainType()).append("]");
-        return builder.toString();
+        return "Tile [coordinate=" + coordinate + ", terrainType=" + getTerrainType() + "]";
     }
 
     public TerrainTile getTerrainType() {

@@ -17,14 +17,14 @@ public class CreatureCore {
 
     private final PlayerId owner;
     IRenderData renderCore;
-    private IRenderData mainData;
-    private IRenderData dyingData;
+    private final IRenderData mainData;
+    private final IRenderData dyingData;
     private CreatureBase base;
-    private CreatureAttributes attributes;
+    private final CreatureAttributes attributes;
     private boolean isFlying = false;
     private boolean isDead = false;
-    private boolean isOur;
-    private AtomicBoolean highlight = new AtomicBoolean();
+    private final boolean isOur;
+    private final AtomicBoolean highlight = new AtomicBoolean();
 
     public CreatureCore(PlayerId owner, boolean isOur, IRenderData mainData, IRenderData dyingData,
                         CreatureAttributes attributes) {
@@ -90,8 +90,8 @@ public class CreatureCore {
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur) {
             g.setFont(Main.TEXT_NORMAL);
-            final String coords = Integer.toString(getAttributes().getApLeft()) + " / "
-                    + Integer.toString(getAttributes().getMpLeft());
+            final String coords = getAttributes().getApLeft() + " / "
+                    + getAttributes().getMpLeft();
             renderTarget.translate((int) (-TextRenderer.getWidth(g, coords) / 2),
                     (int) (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
             g.setColor(new Color(0f, 0f, 0f, .65f));

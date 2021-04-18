@@ -26,10 +26,10 @@ import java.util.logging.Level;
 
 public class MainGameControl {
 
-    private PlayerController playerController;
-    private ServerController controller;
-    private IProvideContext context;
-    private GameState state;
+    private final PlayerController playerController;
+    private final ServerController controller;
+    private final IProvideContext context;
+    private final GameState state;
 
     public MainGameControl(ServerController controller, IProvideContext context) {
         this.controller = controller;

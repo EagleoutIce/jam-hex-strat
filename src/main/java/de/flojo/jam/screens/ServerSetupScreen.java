@@ -186,16 +186,16 @@ public class ServerSetupScreen extends Screen {
     }
 
     private void startServer() {
-        Game.log().log(Level.INFO, "Starting Server on Port {0}", getAdress());
-        this.startServer.setText("Stopp");
+        Game.log().log(Level.INFO, "Starting Server on Port {0}", getAddress());
+        this.startServer.setText("Stop");
         this.portNumber.setEnabled(false);
         this.loadTerrain.setEnabled(false);
-        serverController = new ServerController(getAdress(), gameField, this::onNetworkUpdate);
+        serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate);
         serverController.start();
         serverStarted = true;
     }
 
-    private InetSocketAddress getAdress() {
+    private InetSocketAddress getAddress() {
         return new InetSocketAddress(Integer.parseInt(this.portNumber.getText()));
     }
 
@@ -205,20 +205,17 @@ public class ServerSetupScreen extends Screen {
         if (data.length == 0)
             return;
 
-        switch (data[0]) {
-            case "STOPPED":
-                stopServer(false);
-                break;
-
-            default:
-                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+        if ("STOPPED".equals(data[0])) {
+            stopServer(false);
+        } else {
+            Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
     private boolean askStupidUserForConfirmationOnExit() {
-        final Object[] options = {"Ja", "Nein"};
+        final Object[] options = {"Yes", "No"};
         final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
-                "Bist du dir sicher, dass du den Server beenden möchtest?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                "Are you sure, that you want to stop the server?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         return n != 0;
     }
 
@@ -226,7 +223,7 @@ public class ServerSetupScreen extends Screen {
     private boolean stopServer(boolean ask) {
         if (ask && this.serverStarted && askStupidUserForConfirmationOnExit())
             return false;
-        Game.log().log(Level.INFO, "Stopping Server on Port {0}", getAdress());
+        Game.log().log(Level.INFO, "Stopping Server on Port {0}", getAddress());
         this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
         this.loadTerrain.setEnabled(true);

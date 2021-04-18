@@ -102,5 +102,4 @@ public class MenuScreen extends Screen {
             button.setEnabled(true);
         });
     }
-
 }

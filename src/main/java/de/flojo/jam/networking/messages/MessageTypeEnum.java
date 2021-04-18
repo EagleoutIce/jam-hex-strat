@@ -23,5 +23,4 @@ public enum MessageTypeEnum {
     public Class<? extends MessageContainer> getTargetClass() {
         return targetClass;
     }
-
 }

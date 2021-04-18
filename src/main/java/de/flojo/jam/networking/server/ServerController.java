@@ -165,7 +165,7 @@ public class ServerController implements IServerController {
         }
 
         final ErrorMessage error = new ErrorMessage(servedByClientId, ErrorTypeEnum.ILLEGAL_MESSAGE,
-                "The Message you send was not in a valid containerformat!");
+                "The Message you send was not in a valid container format!");
         conn.send(error.toJson());
         conn.close(CloseFrame.REFUSE);
     }

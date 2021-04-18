@@ -75,12 +75,10 @@ public class GameScreen extends Screen {
         if (data.length == 0)
             return;
 
-        switch (data[0]) {
-            case "CLOSED":
-                disconnect(false);
-                break;
-            default:
-                Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+        if ("CLOSED".equals(data[0])) {
+            disconnect(false);
+        } else {
+            Game.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
@@ -117,7 +115,7 @@ public class GameScreen extends Screen {
 
         g.setFont(Main.TEXT_STATUS);
         g.setColor(Color.WHITE);
-        final String roundText = "Runde: " + currentRound;
+        final String roundText = "Round: " + currentRound;
         TextRenderer.render(g, roundText,
                 Game.window().getWidth() - 105 - TextRenderer.getWidth(g, roundText) / 2, 38d, true);
         String p1 = ourId.ifOne(">", "") + clientController.getContext().getP1Name();
@@ -232,9 +230,9 @@ public class GameScreen extends Screen {
     }
 
     private boolean askStupidUserForConfirmationOnExit() {
-        final Object[] options = {"Ja", "Nein"};
+        final Object[] options = {"Yes", "No"};
         final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
-                "Bist du dir sicher, dass du dieses sehr gute Spiel verlassen möchtest?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                "Are you sure, that you want to leave the game?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
         return n != 0;
     }
 
@@ -256,7 +254,7 @@ public class GameScreen extends Screen {
 
     public void gameOver(GameOverMessage message) {
         JOptionPane.showMessageDialog(Game.window().getRenderComponent(),
-                "Das Spiel ist vorbei. Gewonnen hat: " + message.getWinnerId());
+                "The game is over. The winner is: " + message.getWinnerId());
     }
 
 }

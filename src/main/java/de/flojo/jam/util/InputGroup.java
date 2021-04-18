@@ -10,7 +10,7 @@ public class InputGroup<T extends Serializable> implements IAmInputGroup<T>, Ser
 
     private static final long serialVersionUID = -4505000699173412556L;
     private final int lockDuration;
-    private AtomicBoolean locked;
+    private final AtomicBoolean locked;
     private T currentOwner = null;
 
 
@@ -26,12 +26,12 @@ public class InputGroup<T extends Serializable> implements IAmInputGroup<T>, Ser
     public boolean tryLock(T owner) {
         synchronized (locked) {
             if (isLocked() && !Objects.equals(owner, currentOwner)) {
-                return false;
+                return true;
             }
             this.locked.set(true);
             this.currentOwner = owner;
             Game.loop().perform(lockDuration, this::unlock);
-            return true;
+            return false;
         }
     }
 

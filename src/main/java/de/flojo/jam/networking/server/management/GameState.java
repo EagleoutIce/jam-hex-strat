@@ -76,7 +76,6 @@ public class GameState {
         this.moneyP2Left -= relative;
     }
 
-
     public void nextPlayer(CreatureCollection collection) {
         if (currentTurn == PlayerId.ONE && collection.p2CanDoSomething()) {
             currentTurn = PlayerId.TWO;

@@ -6,7 +6,7 @@ public class HelloMessage extends MessageContainer {
 
     private static final long serialVersionUID = 7630983891460330082L;
 
-    private String name;
+    private final String name;
 
     public HelloMessage(String name) {
         this(name, "");

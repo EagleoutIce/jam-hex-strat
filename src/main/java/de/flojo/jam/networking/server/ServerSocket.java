@@ -20,7 +20,7 @@ public final class ServerSocket extends WebSocketServer {
     }
 
     public boolean isReady() {
-        return this.isReady();
+        return isReady;
     }
 
     public String socketInfo() {

@@ -10,20 +10,11 @@ import de.gurkenlabs.litiengine.input.Input;
 import java.util.Set;
 
 public class InputController {
-
-
     private static final InputController instance = new InputController();
-
-
-    public InputController() {
-        //
-    }
-
 
     public static InputController get() {
         return instance;
     }
-
 
     public void onKeyPressed(int keyCode, KeyPressedListener eventHandler, String screen) {
         onKeyPressed(keyCode, eventHandler, Set.of(screen));
@@ -41,7 +32,7 @@ public class InputController {
         Input.keyboard().onKeyPressed(keyCode, ke -> {
             if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
                 return;
-            if (!group.tryLock(keyCode))
+            if (group.tryLock(keyCode))
                 return;
             eventHandler.keyPressed(ke);
         });
@@ -88,7 +79,7 @@ public class InputController {
         Input.keyboard().onKeyTyped(keyCode, ke -> {
             if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
                 return;
-            if (!group.tryLock(keyCode))
+            if (group.tryLock(keyCode))
                 return;
             eventHandler.keyTyped(ke);
         });

@@ -11,7 +11,7 @@ public class BuildUpdateMessage extends MessageContainer {
 
     // Da abseits von charakteren nichts verteilt wird, wird auch nur
     // die Karte verteilt
-    private TerrainMap map;
+    private final TerrainMap map;
 
 
     public BuildUpdateMessage(UUID clientId, final TerrainMap map) {
