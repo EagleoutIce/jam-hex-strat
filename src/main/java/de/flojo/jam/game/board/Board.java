@@ -341,8 +341,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 BoardCoordinate coordinate = new BoardCoordinate(col, row);
-                tiles.get(coordinate).renderDecorations(g);
                 traps.getRoot(coordinate).ifPresent(t -> t.renderBaseFor(g, renderOwner));
+                tiles.get(coordinate).renderDecorations(g);
                 factory.get(coordinate).ifPresent(c -> c.render(g));
                 traps.getRoot(coordinate).ifPresent(t -> t.renderTriggerFor(g, renderOwner));
             }
