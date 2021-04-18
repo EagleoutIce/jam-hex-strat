@@ -22,7 +22,7 @@ public class CreatureImp extends Creature {
 	public CreatureImp(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
 		super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase), createImpCore(playerId, normal, dying, isOur));
 		// arrrrgh kill me
-		getAttributes().getSkills().add(new ToggleFly(() -> isFlying() ? "Landen" : "Fliegen", "Wechselt den Flugstatus."));
+		getAttributes().getSkills().add(new ToggleFly(() -> isFlying() ? "Land" : "Fly", "Toggle Flystatus."));
 	}
 
 	private static CreatureCore createImpCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
