@@ -1,7 +1,6 @@
 package de.flojo.jam.game.creature;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -10,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.RenderHint;
@@ -97,7 +97,7 @@ public class CreatureCore {
 				c.y - base.getMovementOffsetY() + base.getTerrainOffsetY());
 		renderCore.render(g, renderTarget, getRenderHints());
 		if (isOur) {
-			g.setFont(g.getFont().deriveFont(Font.PLAIN, 20f));
+			g.setFont(Main.TEXT_NORMAL);
 			final String coords = Integer.toString(getAttributes().getApLeft()) + " / "
 					+ Integer.toString(getAttributes().getMpLeft());
 			renderTarget.translate((int) (-TextRenderer.getWidth(g, coords) / 2),
