@@ -42,10 +42,10 @@ public class ServerController implements IServerController {
     private ServerStateEnum state = ServerStateEnum.OFF;
 
     public ServerController(final InetSocketAddress address, final IProvideContext context,
-                            final INeedUpdates<String> networkUpdateTarget) {
+                            final INeedUpdates<String> networkUpdateTarget, int startMoney) {
         socket = new ServerSocket(address, this);
         playerController = new PlayerController();
-        mGController = new MainGameControl(this, context);
+        mGController = new MainGameControl(this, context, startMoney);
         this.networkUpdateTarget = networkUpdateTarget;
     }
 

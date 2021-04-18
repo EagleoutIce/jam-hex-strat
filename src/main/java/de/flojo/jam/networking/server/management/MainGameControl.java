@@ -35,11 +35,11 @@ public class MainGameControl {
     private final IProvideContext context;
     private final GameState state;
 
-    public MainGameControl(ServerController controller, IProvideContext context) {
+    public MainGameControl(ServerController controller, IProvideContext context, int startMoney) {
         this.controller = controller;
         this.playerController = controller.getPlayerController();
         this.context = context;
-        this.state = new GameState();
+        this.state = new GameState(startMoney);
     }
 
     public TerrainMap getTerrainMap() {

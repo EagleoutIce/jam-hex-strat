@@ -6,17 +6,18 @@ import de.flojo.jam.networking.share.GamePhase;
 import de.gurkenlabs.litiengine.Game;
 
 public class GameState {
-
     int currentRound = 0;
     GamePhase phase = GamePhase.INIT;
 
     PlayerId currentTurn;
 
-    int moneyP1Left = 45;
-    int moneyP2Left = 45;
+    int moneyP1Left;
+    int moneyP2Left;
 
-    public GameState() {
+    public GameState(final int startMoney) {
         currentTurn = Game.random().choose(PlayerId.values());
+        moneyP1Left = startMoney;
+        moneyP2Left = startMoney;
     }
 
 

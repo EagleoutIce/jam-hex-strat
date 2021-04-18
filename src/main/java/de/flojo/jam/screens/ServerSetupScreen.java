@@ -26,8 +26,10 @@ import java.util.logging.Level;
 public class ServerSetupScreen extends Screen {
     public static final String NAME = "Server-Setup";
     public static final String DEFAULT_PORT = "1096";
+    public static final String DEFAULT_START_MONEY = "45";
     private ServerController serverController;
     private TextFieldComponent portNumber;
+    private TextFieldComponent startMoney;
     private Button startServer;
     private Button loadTerrain;
 
@@ -78,7 +80,8 @@ public class ServerSetupScreen extends Screen {
                 15.0 + 2 * g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
                 Game.window().getHeight() - 50d);
-
+        TextRenderer.render(g, "Start Money: ", Main.INNER_MARGIN,
+                Game.window().getHeight() - 80d);
         super.render(g);
     }
 
@@ -98,6 +101,7 @@ public class ServerSetupScreen extends Screen {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
+        this.startMoney.setLocation(Main.INNER_MARGIN + 165d, height - 77d);
         this.startServer.setLocation(width - this.startServer.getWidth() - 0.5 * Main.INNER_MARGIN - 10d, height - this.startServer.getHeight());
         this.loadTerrain.setLocation(width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(), height - this.loadTerrain.getHeight());
         this.p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 23d);
@@ -129,20 +133,23 @@ public class ServerSetupScreen extends Screen {
         this.portNumber = new TextFieldComponent(0, 0, 100, 40, DEFAULT_PORT);
         this.portNumber.setFormat("[0-9]{1,4}");
         this.getComponents().add(portNumber);
+        this.startMoney = new TextFieldComponent(0, 0, 100, 40, DEFAULT_START_MONEY);
+        this.startMoney.setFormat("[0-9]{1,6}");
+        this.getComponents().add(startMoney);
         initShowTeamButtons();
         updatePositions();
     }
 
     private void initShowTeamButtons() {
         p1 = new Button("P1", Main.GUI_FONT_SMALL);
-        p1.onClicked(c -> {//
+        p1.onClicked(c -> {
             gameField.setPlayerId(PlayerId.ONE);
             p1.setColors(Color.GREEN, Color.GREEN.brighter());
             p2.setColors(Color.WHITE, Color.WHITE.darker());
             both.setColors(Color.WHITE, Color.WHITE.darker());
         });
         p2 = new Button("P2", Main.GUI_FONT_SMALL);
-        p2.onClicked(c -> {//
+        p2.onClicked(c -> {
             gameField.setPlayerId(PlayerId.TWO);
             p1.setColors(Color.WHITE, Color.WHITE.darker());
             p2.setColors(Color.GREEN, Color.GREEN.brighter());
@@ -176,7 +183,7 @@ public class ServerSetupScreen extends Screen {
             return;
         Game.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(new File(chosenTerrainPath)),
+            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosenTerrainPath),
                     chosenTerrainPath);
             gameField.updateTerrain(map);
             Game.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", gameField.getTerrainName());
@@ -189,8 +196,9 @@ public class ServerSetupScreen extends Screen {
         Game.log().log(Level.INFO, "Starting Server on Port {0}", getAddress());
         this.startServer.setText("Stop");
         this.portNumber.setEnabled(false);
+        this.startMoney.setEnabled(false);
         this.loadTerrain.setEnabled(false);
-        serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate);
+        serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate, Integer.parseInt(this.startMoney.getText()));
         serverController.start();
         serverStarted = true;
         updatePositions();
@@ -227,6 +235,7 @@ public class ServerSetupScreen extends Screen {
         Game.log().log(Level.INFO, "Stopping Server on Port {0}", getAddress());
         this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
+        this.startMoney.setEnabled(true);
         this.loadTerrain.setEnabled(true);
         if (serverController != null)
             this.serverController.stop();
