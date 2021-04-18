@@ -97,23 +97,23 @@ public class CreatureFactory {
 		return p1 ? id.getP1Image().getImage() : id.getP2Image().getImage();
 	}
 
-	public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId) {
-		return new CreaturePeasant(uniqueName, startBase, pId, creatures, traps, CreatureId.PEASANT.getRenderer(pId),
+	public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+		return new CreaturePeasant(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.PEASANT.getRenderer(pId),
 				getDieAnimation(pId));
 	}
 
-	public Creature summonImp(final String uniqueName, final Tile startBase, final PlayerId pId) {
-		return new CreatureImp(uniqueName, startBase, pId, creatures, traps, CreatureId.IMP.getRenderer(pId),
+	public Creature summonImp(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+		return new CreatureImp(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.IMP.getRenderer(pId),
 				getDieAnimation(pId));
 	}
 
-	public Creature summonElf(final String uniqueName, final Tile startBase, final PlayerId pId) {
-		return new CreatureElf(uniqueName, startBase, pId, creatures, traps, CreatureId.ELF.getRenderer(pId),
+	public Creature summonElf(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+		return new CreatureElf(uniqueName, startBase, pId,isOur, creatures, traps, CreatureId.ELF.getRenderer(pId),
 				getDieAnimation(pId));
 	}
 
-	public Creature summonHalfling(final String uniqueName, final Tile startBase, final PlayerId pId) {
-		return new CreatureHalfling(uniqueName, startBase, pId, creatures, traps, CreatureId.HALFLING.getRenderer(pId),
+	public Creature summonHalfling(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+		return new CreatureHalfling(uniqueName, startBase, pId,isOur, creatures, traps, CreatureId.HALFLING.getRenderer(pId),
 				getDieAnimation(pId));
 	}
 
@@ -165,12 +165,12 @@ public class CreatureFactory {
 		return creatures.noneCanDoSomething();
 	}
 
-	public void updateCreatures(List<CreatureJson> c) {
+	public void updateCreatures(List<CreatureJson> c, PlayerId ourId) {
 		// we cannot reassign to avoid the loss of references
 		this.creatures.clear();
 		for (CreatureJson cJ : c) {
 			getSpell(cJ.getId()).summon(cJ.getName(), board.getTile(cJ.getPos()),
-					cJ.getOwner());
+					cJ.getOwner(), cJ.getOwner() == ourId);
 		}
 		this.selectedCreature = null;
 	}

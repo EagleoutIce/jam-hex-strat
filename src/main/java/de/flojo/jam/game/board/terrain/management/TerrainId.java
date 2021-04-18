@@ -19,7 +19,7 @@ public enum TerrainId {
 		    Arrays.asList(null, TerrainTile.WDL_LEFT_SLAVE_1), //
 		    Arrays.asList(null, null), //
 		    Arrays.asList(null, TerrainTile.WDL_LEFT_SLAVE_2))),
-	    new Point(1, 1)), Color.RED, 8),
+	    new Point(1, 1)), Color.RED, 5),
     T_WDL_RIGHT("Wand-L-Rechts", new TerrainImprint(new TerrainData(//
 	    Arrays.asList(//
 		    Arrays.asList(null, TerrainTile.WDL_RIGHT_WINDOW), //
@@ -28,7 +28,7 @@ public enum TerrainId {
 		    Arrays.asList(TerrainTile.WDL_RIGHT_SLAVE_1, null), //
 		    Arrays.asList(null, null), //
 		    Arrays.asList(TerrainTile.WDL_RIGHT_SLAVE_2, null))),
-	    new Point(0, 1)), Color.RED.darker(), 8),
+	    new Point(0, 1)), Color.RED.darker(), 5),
     T_DEAD_TREE("Baum kahl", TerrainImprint.getSingle(TerrainTile.DEAD_TREE), Color.YELLOW, 1),
     T_DEAD_TREE_B("Baum kahl, B", TerrainImprint.getSingle(TerrainTile.DEAD_TREE_B), Color.YELLOW.darker(), 1),
     T_CART_LEFT("Karren links", new TerrainImprint(new TerrainData(//
@@ -37,14 +37,14 @@ public enum TerrainId {
 		    Arrays.asList(TerrainTile.CAR_LEFT_HANDLES, null), //
 		    Arrays.asList(null, TerrainTile.CART_LEFT) //
 		    )),new Point(1, 2)),
-	    Color.ORANGE, 6),
+	    Color.ORANGE, 3),
     T_CART_RIGHT("Karren rechts", new TerrainImprint(new TerrainData(//
 	    Arrays.asList(//
 		    Arrays.asList(TerrainTile.CART_RIGHT_GHOST, null), //
 		    Arrays.asList(null, TerrainTile.CAR_RIGHT_HANDLES), //
 		    Arrays.asList(TerrainTile.CART_RIGHT, null) //
 		    )),new Point(0, 2)),
-	    Color.ORANGE.darker(), 6);
+	    Color.ORANGE.darker(), 3);
 
     private final TerrainImprint imprint;
     private final Color simpleColor;

@@ -142,7 +142,7 @@ public class MainGameControl {
 
 
 	public void summonCreatureAt(PlayerId player, CreatureId creature, BoardCoordinate position) {
-		getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), getBoard().getTile(position), player);
+		getFactory().getSpell(creature).summon(creature + "_" + UUID.randomUUID(), getBoard().getTile(position), player, true);
 		state.reduceMoney(player, creature.getCost());
 	}
 
@@ -170,6 +170,7 @@ public class MainGameControl {
 					return;
 				}
 				creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
+				creature.getAttributes().useAp();
 				break;
 			case SKIP:
 				creature.skip();
@@ -183,6 +184,7 @@ public class MainGameControl {
 		List<BoardCoordinate> targets = message.getTargets();
 		for (BoardCoordinate target : targets) {
 			CreatureActionController.processMovementBlocking(context.getTraps(), creature, getBoard().getTile(target));
+			creature.getAttributes().useMp();
 		}
 	}
 

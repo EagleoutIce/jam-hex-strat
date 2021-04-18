@@ -18,12 +18,12 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureHalfling extends Creature {
 
-	public CreatureHalfling(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-		super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying));
+	public CreatureHalfling(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying, isOur));
 	}
 
-	private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-		return new CreatureCore(playerId, normal, dying, createHalflingAttributes());
+	private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+		return new CreatureCore(playerId, isOur, normal, dying, createHalflingAttributes());
 	}
 
 	private static CreatureAttributes createHalflingAttributes() {

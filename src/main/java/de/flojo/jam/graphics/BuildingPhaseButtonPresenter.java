@@ -146,7 +146,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 			creatureButtons.add(imgBt);
 			imgBt.onClicked(mce -> {
 				resetSelection();
-				this.currentCreature = (n, t) -> context.getFactory().getSpell(c).summon(c + "_" + n, t, ourId);
+				this.currentCreature = (n, t) -> context.getFactory().getSpell(c).summon(c + "_" + n, t, ourId, true);
 				this.currentCreatureId = c;
 				this.selectionMode = BuildingPhaseSelectionMode.CREATURE;
 

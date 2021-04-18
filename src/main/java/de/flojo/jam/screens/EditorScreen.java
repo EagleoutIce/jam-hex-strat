@@ -399,7 +399,7 @@ public class EditorScreen extends Screen {
 			this.currentTrapId = null;
 
 			this.currentCreature = (n, t) -> creatureFactory.getSpell(creatureId).summon(creatureId + "_" + n, t,
-					p1 ? PlayerId.ONE : PlayerId.TWO);
+					p1 ? PlayerId.ONE : PlayerId.TWO, true);
 			BufferedImage img = creatureFactory.getBufferedImage(creatureId, p1);
 			if (img != null) {
 				Game.window().cursor().setVisible(true);

@@ -156,7 +156,7 @@ public class GameField implements IRenderable, IProvideContext {
 	}
 
 	public void updateCreatures(List<CreatureJson> creatures) {
-		factory.updateCreatures(creatures);
+		factory.updateCreatures(creatures, owner);
 	}
 
 	public void updateTraps(List<TrapJson> traps) {

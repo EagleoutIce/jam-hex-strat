@@ -18,12 +18,12 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreaturePeasant extends Creature {
 
-	public CreaturePeasant(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-		super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying));
+	public CreaturePeasant(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying, isOur));
 	}
 
-	private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-		return new CreatureCore(playerId, normal, dying, createPeasantAttributes());
+	private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+		return new CreatureCore(playerId, isOur, normal, dying, createPeasantAttributes());
 	}
 
 	private static CreatureAttributes createPeasantAttributes() {

@@ -41,7 +41,7 @@ public class SimplePunch implements ICreatureSkill {
 
 	@Override
 	public int getCost() {
-		return 1;
+		return getSkillId().getCost();
 	}
 
 	@Override

@@ -19,14 +19,14 @@ import de.flojo.jam.graphics.renderer.IRenderData;
 
 public class CreatureImp extends Creature {
 
-	public CreatureImp(String name, Tile startBase, PlayerId playerId, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-		super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase), createImpCore(playerId, normal, dying));
+	public CreatureImp(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+		super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase), createImpCore(playerId, normal, dying, isOur));
 		// arrrrgh kill me
 		getAttributes().getSkills().add(new ToggleFly(() -> isFlying() ? "Landen" : "Fliegen", "Wechselt den Flugstatus."));
 	}
 
-	private static CreatureCore createImpCore(PlayerId playerId, IRenderData normal, IRenderData dying) {
-		return new CreatureCore(playerId, normal, dying, createImpAttributes());
+	private static CreatureCore createImpCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+		return new CreatureCore(playerId, isOur, normal, dying, createImpAttributes());
 	}
 
 	private static CreatureAttributes createImpAttributes() {

@@ -112,7 +112,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 		if(mark.get())
 			this.draw(g, 5, MARK_COLOR, true);
 
-		this.draw(g, 4, new Color(0.4f, 0.6f, 0.3f, 0.15f), false);
+		this.draw(g, 3, new Color(0.4f, 0.6f, 0.3f, 0.15f), false);
 		if(showCordData) {
 			g.setColor(Color.WHITE);
 			g.setFont(NUMBER_FONT);
