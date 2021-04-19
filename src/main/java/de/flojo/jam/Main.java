@@ -35,10 +35,11 @@ public class Main {
 
     public static final double INNER_MARGIN = 20d;
     public static final AtomicBoolean toggleMusic = new AtomicBoolean();
-    public static  final Set<Track> TRACKS = Set.of(new LoopedTrack(Resources.sounds().get("audio/background/backD.mp3")),
-            new LoopedTrack(Resources.sounds().get("audio/background/backC.mp3")),
-            new LoopedTrack(Resources.sounds().get("audio/background/backB.mp3")),
-            new LoopedTrack(Resources.sounds().get("audio/background/backA.mp3")));
+    public static  final Set<Track> TRACKS = Set.of(
+            new LoopedTrack(Resources.sounds().get("audio/background/backD.wav")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backC.wav")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backB.wav")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backA.wav")));
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
