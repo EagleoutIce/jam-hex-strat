@@ -10,13 +10,18 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
 import de.gurkenlabs.litiengine.gui.screens.Resolution;
+import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
+import de.gurkenlabs.litiengine.sound.LoopedTrack;
+import de.gurkenlabs.litiengine.sound.Track;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Main {
 
@@ -29,7 +34,11 @@ public class Main {
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
     public static final double INNER_MARGIN = 20d;
-
+    public static final AtomicBoolean toggleMusic = new AtomicBoolean();
+    public static  final Set<Track> TRACKS = Set.of(new LoopedTrack(Resources.sounds().get("audio/background/backD.mp3")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backC.mp3")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backB.mp3")),
+            new LoopedTrack(Resources.sounds().get("audio/background/backA.mp3")));
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
@@ -77,5 +86,16 @@ public class Main {
         Game.screens().add(new ServerSetupScreen());
 
         Game.start();
+
+        Input.keyboard().onKeyTyped(KeyEvent.VK_P, keyEvent -> {
+            if(toggleMusic.get()) {
+                Game.audio().stopMusic();
+                toggleMusic.set(false);
+            } else {
+                Game.audio().playMusic(Game.random().choose(TRACKS));
+                Game.audio().getAllMusic().forEach(m -> m.setVolume(.1f));
+                toggleMusic.set(true);
+            }
+        });
     }
 }

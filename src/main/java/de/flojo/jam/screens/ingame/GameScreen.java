@@ -30,6 +30,8 @@ import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
+import de.gurkenlabs.litiengine.sound.Sound;
+import de.gurkenlabs.litiengine.sound.SoundPlayback;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,6 +49,7 @@ public class GameScreen extends Screen {
     public static final int RIGHT_WIDTH = Math.max(PLAYER_VIEW_TURN_P1.getWidth(), PLAYER_VIEW_TURN_P2.getWidth());
     public static final BufferedImage BUILD_PHASE = Resources.images().get("ui/phasenanzeige_building_phase.png");
     public static final BufferedImage MAIN_PHASE = Resources.images().get("ui/phasenanzeige_main_phase.png");
+    public static final Sound TURN_START = Resources.sounds().get("audio/sound/round_start.wav");
     public static final String NAME = "BUILDPHASE";
     private static final Color P1_COLOR = new Color(45, 173, 215);
     private static final Color P2_COLOR = new Color(141, 45, 215);
@@ -172,7 +175,12 @@ public class GameScreen extends Screen {
     }
 
     public void ourTurn(ItIsYourTurnMessage message) {
+        playTurnPing();
         field.allowOneTurn(this::onTurnSkip, this::onTurnMove, this::onTurnSkill, message);
+    }
+
+    private void playTurnPing() {
+        Game.audio().playSound(TURN_START,false);
     }
 
     private void onTurnSkip(BoardCoordinate creaturePosition) {
