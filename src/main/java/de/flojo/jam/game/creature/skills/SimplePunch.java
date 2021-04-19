@@ -50,7 +50,7 @@ public class SimplePunch implements ICreatureSkill {
     }
 
     @Override
-    public IEffectCreature getEffect(final IProvideEffectContext context) {
+    public IEffectTarget getEffect(final IProvideReadContext context) {
         return new PunchEffect(context, maximumPunchLength);
     }
 
@@ -72,6 +72,11 @@ public class SimplePunch implements ICreatureSkill {
     @Override
     public boolean isRanged() {
         return false;// TODO: for archer
+    }
+
+    @Override
+    public SkillTarget getTarget() {
+        return SkillTarget.CREATURE;
     }
 
     @Override

@@ -54,7 +54,7 @@ public class SkillsPresenter {
         this.skillButtons = new LinkedHashMap<>();
         this.movementBuffer = new ArrayList<>();
         actionController = new CreatureActionController(
-                new DefaultEffectContext(board, factory.getCreatures(), traps.getTraps()), screenName);
+                new DefaultReadContext(board, factory.getCreatures(), traps.getTraps()), screenName);
         Game.window().onResolutionChanged(r -> updatePositions());
         InputController.get().onMoved(this::lockOnMoved, screenName);
     }
@@ -64,9 +64,8 @@ public class SkillsPresenter {
     }
 
     private void updateCreature(Creature c) {
-        if (c == null || !enabled.get()) {
+        if (c == null || !enabled.get())
             return;
-        }
 
         if (c == currentCreature)
             return;
@@ -153,7 +152,7 @@ public class SkillsPresenter {
 
     private void skillOperationEnded(Creature c, Button button, Boolean performed, SkillId skillId,
                                      BoardCoordinate target) {
-        if (performed) {
+        if (Boolean.TRUE.equals(performed)) {
             c.getAttributes().useAp();
             if (onAction != null)
                 onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);

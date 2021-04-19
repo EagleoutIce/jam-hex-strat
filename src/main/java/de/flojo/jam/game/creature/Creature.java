@@ -5,11 +5,12 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
-import de.flojo.jam.game.creature.skills.DefaultEffectContext;
+import de.flojo.jam.game.creature.skills.DefaultReadContext;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
-import de.flojo.jam.game.creature.skills.IProvideEffectContext;
+import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
+import de.flojo.jam.util.IProvideContext;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
@@ -101,14 +102,17 @@ public class Creature implements IRenderable {
     }
 
     public void useSkill(Board board, SkillId wantedSkill, Creature target) {
-        useSkill(new DefaultEffectContext(board, cCollection, tCollection), wantedSkill, target);
+        useSkill(new DefaultReadContext(board, cCollection, tCollection), wantedSkill, target);
     }
 
-    public void useSkill(IProvideEffectContext context, SkillId wantedSkill, Creature target) {
+    public void useSkill(IProvideReadContext context, SkillId wantedSkill, Creature target) {
         this.core.getAttributes().useSkill(context, wantedSkill, this, target);
     }
 
-    public void useSkill(IProvideEffectContext context, ICreatureSkill skill, Creature target) {
+    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Tile target) {
+        this.core.getAttributes().useSkill(context, skill, this, target);
+    }
+    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
 

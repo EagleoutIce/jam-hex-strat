@@ -1,7 +1,6 @@
 package de.flojo.jam.game.creature.skills;
 
 import de.flojo.jam.game.creature.skills.effects.PlantTrapEffect;
-import de.flojo.jam.game.creature.skills.effects.ToggleFlyEffect;
 
 import java.util.function.Supplier;
 
@@ -12,7 +11,7 @@ public class PlantTrap implements ICreatureSkill {
     private final int minRange;
     private final int maxRange;
 
-    public PlantTrap(Supplier<String> nameSupplier, final String description, int minRange, int maxRange) {
+    public PlantTrap(Supplier<String> nameSupplier, int minRange, int maxRange, final String description) {
         this.nameSupplier = nameSupplier;
         this.description = description;
         this.minRange = minRange;
@@ -51,7 +50,7 @@ public class PlantTrap implements ICreatureSkill {
     }
 
     @Override
-    public IEffectCreature getEffect(final IProvideEffectContext context) {
+    public IEffectTarget getEffect(final IProvideReadContext context) {
         return new PlantTrapEffect(context);
     }
 
@@ -73,6 +72,11 @@ public class PlantTrap implements ICreatureSkill {
     @Override
     public boolean isRanged() {
         return false;
+    }
+
+    @Override
+    public SkillTarget getTarget() {
+        return SkillTarget.TILE;
     }
 
     @Override

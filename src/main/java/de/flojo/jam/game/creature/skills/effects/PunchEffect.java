@@ -5,25 +5,24 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
-import de.flojo.jam.game.creature.skills.IEffectCreature;
-import de.flojo.jam.game.creature.skills.IProvideEffectContext;
+import de.flojo.jam.game.creature.skills.IEffectTarget;
+import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStartLogger;
-import de.gurkenlabs.litiengine.Game;
 
 import java.util.Optional;
 import java.util.logging.Level;
 
-public class PunchEffect implements IEffectCreature {
+public class PunchEffect implements IEffectTarget {
 
-    private final IProvideEffectContext context;
+    private final IProvideReadContext context;
     private int powerLeft;
     private boolean deltaSet = false;
     private int deltaX;
     private int deltaY;
     private boolean effectHitGround = false;
 
-    public PunchEffect(IProvideEffectContext context, int totalPower) {
+    public PunchEffect(IProvideReadContext context, int totalPower) {
         this.powerLeft = totalPower;
         this.context = context;
     }

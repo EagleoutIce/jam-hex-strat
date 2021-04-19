@@ -50,7 +50,7 @@ public class ToggleFly implements ICreatureSkill {
     }
 
     @Override
-    public IEffectCreature getEffect(final IProvideEffectContext context) {
+    public IEffectTarget getEffect(final IProvideReadContext context) {
         return new ToggleFlyEffect();
     }
 
@@ -82,5 +82,10 @@ public class ToggleFly implements ICreatureSkill {
     @Override
     public boolean castOnAir() {
         return true;
+    }
+
+    @Override
+    public SkillTarget getTarget() {
+        return SkillTarget.CREATURE;
     }
 }

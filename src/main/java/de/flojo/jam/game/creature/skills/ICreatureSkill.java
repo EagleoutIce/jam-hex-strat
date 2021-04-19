@@ -1,5 +1,7 @@
 package de.flojo.jam.game.creature.skills;
 
+import de.flojo.jam.util.IProvideContext;
+
 public interface ICreatureSkill {
 
     int RANGE_SELF = 0;
@@ -17,7 +19,7 @@ public interface ICreatureSkill {
     boolean doesFriendlyFire();
 
     // called for every target
-    IEffectCreature getEffect(final IProvideEffectContext context);
+    IEffectTarget getEffect(final IProvideReadContext context);
 
     String getDescription();
 
@@ -37,4 +39,6 @@ public interface ICreatureSkill {
     default boolean castOnAir() {
         return false;
     }
+
+    SkillTarget getTarget();
 }

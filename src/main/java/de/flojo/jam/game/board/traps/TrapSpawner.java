@@ -44,6 +44,15 @@ public class TrapSpawner {
     }
 
 
+    public static Trap injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
+        if (traps.get(tile.getCoordinate()).isPresent())
+            return null;
+        Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"), tile);
+        traps.add(trap);
+        HexStartLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
+        return trap;
+    }
+
     public Trap spawnTrap(TrapId id, PlayerId owner, Tile tile) {
         if (traps.get(tile.getCoordinate()).isPresent())
             return null;

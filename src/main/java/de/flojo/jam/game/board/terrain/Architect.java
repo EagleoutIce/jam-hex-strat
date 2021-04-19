@@ -11,7 +11,6 @@ import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStartLogger;
-import de.gurkenlabs.litiengine.Game;
 
 import java.awt.*;
 import java.util.HashMap;

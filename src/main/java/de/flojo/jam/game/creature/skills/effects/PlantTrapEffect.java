@@ -1,20 +1,23 @@
 package de.flojo.jam.game.creature.skills.effects;
 
+import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.traps.TrapId;
+import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.Creature;
-import de.flojo.jam.game.creature.skills.IEffectCreature;
-import de.flojo.jam.game.creature.skills.IProvideEffectContext;
-import de.flojo.jam.game.creature.skills.PlantTrap;
+import de.flojo.jam.game.creature.skills.IEffectTarget;
+import de.flojo.jam.game.creature.skills.IProvideReadContext;
 
-public class PlantTrapEffect implements IEffectCreature {
+public class PlantTrapEffect implements IEffectTarget {
 
-    private final IProvideEffectContext context;
+    private final IProvideReadContext context;
 
-    public PlantTrapEffect(IProvideEffectContext context) {
+    public PlantTrapEffect(IProvideReadContext context) {
         this.context = context;
     }
 
     @Override
-    public void effect(Creature target, Creature attacker) {
+    public void effect(Tile target, Creature attacker) {
         // TODO: ground effect
+        TrapSpawner.injectTrap(TrapId.T_GOBLIN_TRAP, attacker.getOwner(),target, context.getBoard(), context.getTraps());
     }
 }

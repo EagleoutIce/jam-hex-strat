@@ -32,7 +32,7 @@ public class ConnectScreen extends Screen {
             "Vormorgen", "Nachgestern", "Blumenwiese", "Ostfriese", "Sonnenkind", "Mondmöchtegern", "Jarl", "Karl",
             "Schweizer", "Hinterdupfinger", "Der coole", "Der coolere", "Möchtegern", "Möchte-Gern", "Der mit der Macht", "Der mit dem Geld",
             "Pusteblume", "Narzisse", "Jens", "Jakob", "Jerome", "0x12", "Der lustige", "Hammer Hans", "Hyänen Heini", "Steppenjürgen",
-            "Eine Box", "Eine Katze"
+            "Eine Box", "Eine Katze", "Die Rogschie", "Der Tschonny", "Neee", "Jaaaa", "Un", "Lustig", "404", "Spieler A", "Spieler B", "Spieler C", "Spieler D"
     };
     private static final ConnectScreen instance = new ConnectScreen();
     private boolean locked;

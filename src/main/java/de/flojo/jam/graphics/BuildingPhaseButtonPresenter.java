@@ -160,7 +160,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         TrapId[] traps = TrapId.values();
         for (int i = 0; i < traps.length; i++) {
             TrapId t = traps[i];
-
+            if(!t.canBeBuildByPlayer())
+                continue;
             IRenderData trapRenderer = t.getImprint().getNormalRenderer();
             ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, Game.window().getHeight() - i * 80d - 110d,
                     trapRenderer.getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);

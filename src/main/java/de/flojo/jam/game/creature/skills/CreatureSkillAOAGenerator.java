@@ -3,6 +3,7 @@ package de.flojo.jam.game.creature.skills;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.util.HexMaths;
 
@@ -22,14 +23,14 @@ public class CreatureSkillAOAGenerator {
 
         switch (skill.getAOA()) {
             case LINE:
-                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange);
+                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange, skill.getTarget().equals(SkillTarget.TILE));
             default:
             case SINGLE:
                 return Set.of(start);
         }
     }
 
-    private static Set<Tile> getAOALine(Tile start, Board board, CreatureCollection creatures, int minRange, int maxRange) {
+    private static Set<Tile> getAOALine(Tile start, Board board, CreatureCollection creatures, int minRange, int maxRange, boolean emptyOnly) {
         Set<Tile> tiles = new HashSet<>();
         Set<Tile> neighbours = start.getNeighbours();
         for (Tile tile : neighbours) {
@@ -37,6 +38,8 @@ public class CreatureSkillAOAGenerator {
             getAOASingleLine(start, board, creatures, minRange, maxRange, delta.x, delta.y, tiles);
         }
         tiles.remove(start);
+        if(emptyOnly)
+            tiles.removeIf(t -> !t.getTerrainType().equals(TerrainTile.EMPTY));
         return tiles;
     }
 
@@ -56,7 +59,5 @@ public class CreatureSkillAOAGenerator {
             if (creatures.get(current).isPresent())
                 return;
         }
-
     }
-
 }

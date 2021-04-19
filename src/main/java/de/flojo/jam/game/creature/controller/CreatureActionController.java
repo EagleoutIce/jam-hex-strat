@@ -7,9 +7,11 @@ import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.CreatureSkillAOAGenerator;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
-import de.flojo.jam.game.creature.skills.IProvideEffectContext;
+import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.game.creature.skills.SkillId;
+import de.flojo.jam.game.creature.skills.SkillTarget;
 import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 
@@ -23,7 +25,7 @@ import java.util.logging.Level;
 
 public class CreatureActionController {
 
-    private final IProvideEffectContext context;
+    private final IProvideReadContext context;
     private final String screenName;
 
     private final Object selectionLock = new Object();
@@ -36,7 +38,7 @@ public class CreatureActionController {
     private BoardCoordinate clickedOn;
     private CurrentActionType currentActionType = CurrentActionType.MOVEMENT;
 
-    public CreatureActionController(IProvideEffectContext context, final String screenName) {
+    public CreatureActionController(IProvideReadContext context, final String screenName) {
         this.context = context;
         this.screenName = screenName;
         this.possibleTargets = new HashSet<>();
@@ -118,7 +120,7 @@ public class CreatureActionController {
 
         Optional<ICreatureSkill> mayBeSkill = creature.getSkill(skillId);
         if (mayBeSkill.isEmpty()) {
-            HexStartLogger.log().log(Level.WARNING, "Creature {0} does not posess skill {1}", new Object[]{creature, skillId});
+            HexStartLogger.log().log(Level.WARNING, "Creature {0} does not possess skill {1}", new Object[]{creature, skillId});
             return false;
         }
         currentSkill = mayBeSkill.get();
@@ -133,7 +135,6 @@ public class CreatureActionController {
         Tile start = creature.getBase().getTile();
         possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
         possibleTargets.forEach(t -> t.mark(true));
-
         return true;
     }
 
@@ -181,7 +182,7 @@ public class CreatureActionController {
             return;
 
         Point target = me.getPoint();
-        Optional<Tile> mayTile = identifyClickedTileOnValid(target);
+        Optional<Tile> mayTile = identifyClickedOnValidTile(target);
         if (mayTile.isEmpty())
             return;
 
@@ -208,21 +209,29 @@ public class CreatureActionController {
 
     private void performOnClickSkillOn(final Tile tile) {
         Optional<Creature> mayTargetCreature = context.getCreatures().get(tile.getCoordinate());
-        Creature targetCreature;
+        Creature targetCreature = null;
         if (mayTargetCreature.isEmpty()) {
-            if (currentSkill.isRanged()) {
-                // TODO: update creature in direction of aoa
-                targetCreature = null;
-            } else {
-                // no creature no valid click
-                return;
+            if (currentSkill.getTarget() != SkillTarget.TILE) {// perform no tile fun
+                if (!currentSkill.isRanged()) {
+                    // no creature no valid click
+                    return;
+                }
+                // ELSE TODO: update creature in direction of aoa
             }
         } else {
             targetCreature = mayTargetCreature.get();
         }
 
         HexStartLogger.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[]{tile, activeCreature, currentSkill});
-        activeCreature.useSkill(context, currentSkill, targetCreature);
+        if(currentSkill.getTarget().equals(SkillTarget.TILE)) {
+            if(targetCreature != null) {
+                HexStartLogger.log().warning("Target Creature not allowed for Tile");
+                return;
+            }
+            activeCreature.useSkill(context, currentSkill, tile);
+        } else {
+            activeCreature.useSkill(context, currentSkill, targetCreature);
+        }
 
         performed = true;
         completed(false);
@@ -235,7 +244,7 @@ public class CreatureActionController {
         completed(!dies);
     }
 
-    private Optional<Tile> identifyClickedTileOnValid(Point target) {
+    private Optional<Tile> identifyClickedOnValidTile(Point target) {
         for (Tile tile : possibleTargets) {
             if (tile.contains(target))
                 return Optional.of(tile);
