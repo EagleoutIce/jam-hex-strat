@@ -7,6 +7,7 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureJson;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class GameStartMessage extends MessageContainer {
@@ -34,5 +35,19 @@ public class GameStartMessage extends MessageContainer {
 
     public List<TrapJson> getTraps() {
         return traps;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        GameStartMessage that = (GameStartMessage) o;
+        return Objects.equals(getTerrain(), that.getTerrain()) && Objects.equals(getCreatures(), that.getCreatures()) && Objects.equals(getTraps(), that.getTraps());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getTerrain(), getCreatures(), getTraps());
     }
 }

@@ -11,13 +11,15 @@ public class BuildChoice {
     private CreatureId chosenCreature;
     private TrapId chosenTrap;
     private BoardCoordinate selectedPosition;
+    private boolean isGift;
 
     public BuildChoice(TerrainId chosenTerrain, CreatureId chosenCreature, TrapId chosenTrap,
-                       BoardCoordinate selectedPosition) {
+                       BoardCoordinate selectedPosition, boolean isGift) {
         this.chosenTerrain = chosenTerrain;
         this.chosenCreature = chosenCreature;
         this.chosenTrap = chosenTrap;
         this.selectedPosition = selectedPosition;
+        this.isGift = isGift;
     }
 
     public TerrainId getChosenTerrain() {
@@ -50,5 +52,9 @@ public class BuildChoice {
 
     public void setSelectedPosition(BoardCoordinate selectedPosition) {
         this.selectedPosition = selectedPosition;
+    }
+
+    public boolean isGift() {
+        return isGift;
     }
 }

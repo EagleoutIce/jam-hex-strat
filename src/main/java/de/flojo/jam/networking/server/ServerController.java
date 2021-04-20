@@ -114,7 +114,9 @@ public class ServerController implements IServerController {
     private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
                                    final ClientServerConnection connection) {
         HexStartLogger.log().log(Level.FINE, "Received build choice from {0}: {1}", new Object[]{connection, message});
-        if (message.getTerrain() != null) {
+        if(message.isGift()) {
+            mGController.giftRestOfMoney(connection.getRole());
+        } else if (message.getTerrain() != null) {
             // place terrain
             mGController.buildTerrainAt(connection.getRole(), message.getTerrain(), message.getPosition());
         } else if (message.getCreature() != null) {

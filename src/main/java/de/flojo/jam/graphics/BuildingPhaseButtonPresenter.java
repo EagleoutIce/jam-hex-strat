@@ -46,7 +46,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private final List<ImageButton> terrainButtons;
     private final List<ImageButton> creatureButtons;
     private final List<ImageButton> trapButtons;
+    private final Button giftButton;
     private BufferedImage sidebar;
+    private boolean summonedCreature = false;
     private Consumer<BuildChoice> currentBuildConsumer;
 
     private TerrainId currentTerrain = null;
@@ -68,10 +70,23 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         populateCreatureButtons();
         this.trapButtons = new ArrayList<>();
         populateTrapButtons();
+        this.giftButton = new Button("Gift", Main.TEXT_STATUS);
+        setupGiftButton();
         this.currentBuildConsumer = null;
         InputController.get().onMoved(this::lockOnOver, GameScreen.NAME);
         updatePositions();
         Game.window().onResolutionChanged(r -> updatePositions());
+    }
+
+    private void setupGiftButton() {
+        this.giftButton.setLocation(Main.INNER_MARGIN,Game.window().getHeight()-this.giftButton.getHeight()-30d);
+        screen.getComponents().add(this.giftButton);
+        this.giftButton.setEnabled(summonedCreature);
+        this.giftButton.onClicked(c -> {
+            resetSelection();
+            currentBuildConsumer.accept(new BuildChoice(currentTerrain, null, null, null, true));
+        });
+        this.giftButton.prepare();
     }
 
     private void assignSidebar() {
@@ -202,6 +217,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         terrainButtons.forEach(GuiComponent::suspend);
         creatureButtons.forEach(GuiComponent::suspend);
         trapButtons.forEach(GuiComponent::suspend);
+        this.giftButton.suspend();
         screen.getComponents().removeAll(terrainButtons);
         screen.getComponents().removeAll(creatureButtons);
         screen.getComponents().removeAll(trapButtons);
@@ -216,6 +232,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         terrainButtons.forEach(ImageButton::prepare);
         creatureButtons.forEach(ImageButton::prepare);
         trapButtons.forEach(ImageButton::prepare);
+        this.giftButton.setEnabled(summonedCreature);
+        this.giftButton.prepare();
         screen.getComponents().addAll(terrainButtons);
         screen.getComponents().addAll(creatureButtons);
         screen.getComponents().addAll(trapButtons);
@@ -271,7 +289,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
         if (context.getArchitect().placeImprint(t.getCoordinate(), currentTerrain.getImprint())
                 && currentBuildConsumer != null)
-            currentBuildConsumer.accept(new BuildChoice(currentTerrain, null, null, t.getCoordinate()));
+            currentBuildConsumer.accept(new BuildChoice(currentTerrain, null, null, t.getCoordinate(), false));
     }
 
     private void spawnTrap(MouseEvent c) {
@@ -296,7 +314,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
                     && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId, context.getBoard())) {
                 context.getSpawner().spawnTrap(currentTrapId, ourId, t);
-                currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate()));
+                currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
             }
         }
     }
@@ -323,7 +341,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(t.getCoordinate()).isEmpty()
                     && context.getFactory().get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
-                currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate()));
+                summonedCreature = true;
+                currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate(), false));
             }
         }
     }

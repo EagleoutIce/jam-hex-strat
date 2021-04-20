@@ -214,4 +214,9 @@ public class MainGameControl {
         }
     }
 
+    public void giftRestOfMoney(PlayerId player) {
+        int moneyLeft = player.ifOne(state.getMoneyP1Left(), state.getMoneyP2Left());
+        HexStartLogger.log().log(Level.INFO, "Player {0} gifts rest of his money ({1})", new Object[] {player, moneyLeft});
+        state.reduceMoney(player, moneyLeft);
+    }
 }

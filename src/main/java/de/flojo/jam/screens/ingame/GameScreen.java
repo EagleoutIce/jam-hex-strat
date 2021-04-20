@@ -39,10 +39,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.nio.Buffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 public class GameScreen extends Screen {
@@ -51,6 +55,8 @@ public class GameScreen extends Screen {
     public static final int RIGHT_WIDTH = Math.max(PLAYER_VIEW_TURN_P1.getWidth(), PLAYER_VIEW_TURN_P2.getWidth());
     public static final BufferedImage BUILD_PHASE = Resources.images().get("ui/phasenanzeige_building_phase.png");
     public static final BufferedImage MAIN_PHASE = Resources.images().get("ui/phasenanzeige_main_phase.png");
+    public static final BufferedImage WON = Resources.images().get("ui/gewonnen_sign.png");
+    public static final BufferedImage LOST = Resources.images().get("ui/verloren_sign.png");
     public static final Sound TURN_START = Resources.sounds().get("audio/sound/round_start.wav");
     public static final String NAME = "BUILDPHASE";
     private static final Color P1_COLOR = new Color(45, 173, 215);
@@ -62,6 +68,8 @@ public class GameScreen extends Screen {
     private ClientController clientController;
     private int currentRound = 0;
     private boolean locked;
+    private final AtomicBoolean gameOver = new AtomicBoolean();
+    private final AtomicBoolean weWon = new AtomicBoolean();
 
     private GameScreen() {
         super(NAME);
@@ -109,12 +117,13 @@ public class GameScreen extends Screen {
     }
 
     public void buildOne(YouCanBuildMessage message) {
+        playTurnPing();
         field.allowOneBuild(this::onBuild, message.getMoneyLeft());
     }
 
     private void onBuild(BuildChoice choice) {
         clientController.send(new BuildChoiceMessage(null, choice.getSelectedPosition(), choice.getChosenTerrain(),
-                choice.getChosenCreature(), choice.getChosenTrap(), ""));
+                choice.getChosenCreature(), choice.getChosenTrap(), choice.isGift(),  ""));
     }
 
     @Override
@@ -147,7 +156,23 @@ public class GameScreen extends Screen {
         } else if (currentRound > 0) {
             ImageRenderer.render(g, MAIN_PHASE, Game.window().getCenter().getX() - MAIN_PHASE.getWidth() / 2d, 0);
         }
+
+        if(gameOver.get()) {
+            renderGameOverBanner(g);
+        }
+
         super.render(g);
+    }
+
+    private void renderGameOverBanner(Graphics2D g) {
+        final Point2D center = Game.window().getCenter();
+        final boolean won = weWon.get();
+        final BufferedImage banner = won ? WON : LOST;
+        final double x = center.getX()-banner.getWidth()/2d;
+        final double y = center.getY()+banner.getHeight()/2d;
+        ImageRenderer.render(g, WON, x, y);
+        TextRenderer.render(g, won ? "Victory" : "Loose",
+                x, y-50d, true);
     }
 
 
@@ -293,8 +318,8 @@ public class GameScreen extends Screen {
     }
 
     public void gameOver(GameOverMessage message) {
-        JOptionPane.showMessageDialog(Game.window().getRenderComponent(),
-                "The game is over. The winner is: " + message.getWinnerId());
+        gameOver.set(true);
+        weWon.set(Objects.equals(ourId,message.getWinnerId()));
     }
 
 }
