@@ -7,7 +7,7 @@ import de.gurkenlabs.litiengine.sound.SoundEngine;
 
 public class SoundPoolPlayGroup {
     private SFXPlayback currently;
-    private static final float DEFAULT_VOLUME = .5f;
+    private static final float DEFAULT_VOLUME = .35f;
 
     public void play(Sound sound) {
         play(sound, DEFAULT_VOLUME);
