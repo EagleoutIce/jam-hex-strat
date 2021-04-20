@@ -106,7 +106,8 @@ public class CreatureCore {
         return isFlying;
     }
 
-    public void toggleFly() {
+    public boolean toggleFly() {
         this.isFlying = !this.isFlying;
+        return this.isFlying;
     }
 }

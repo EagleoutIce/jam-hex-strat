@@ -51,7 +51,7 @@ public class ToggleFly implements ICreatureSkill {
 
     @Override
     public IEffectTarget getEffect(final IProvideReadContext context) {
-        return new ToggleFlyEffect();
+        return new ToggleFlyEffect(context);
     }
 
     @Override
