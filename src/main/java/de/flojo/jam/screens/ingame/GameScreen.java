@@ -105,7 +105,7 @@ public class GameScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
-        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> disconnect(true), ConnectScreen.NAME);
+        InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> disconnect(true), GameScreen.NAME);
     }
 
     public void buildOne(YouCanBuildMessage message) {
