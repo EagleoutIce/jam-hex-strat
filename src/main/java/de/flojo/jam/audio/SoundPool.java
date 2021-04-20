@@ -1,6 +1,5 @@
 package de.flojo.jam.audio;
 
-import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.sound.Sound;
 
 import java.util.Optional;
