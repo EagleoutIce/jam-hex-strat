@@ -169,10 +169,12 @@ public class GameScreen extends Screen {
         final boolean won = weWon.get();
         final BufferedImage banner = won ? WON : LOST;
         final double x = center.getX()-banner.getWidth()/2d;
-        final double y = center.getY()+banner.getHeight()/2d;
-        ImageRenderer.render(g, WON, x, y);
-        TextRenderer.render(g, won ? "Victory" : "Loose",
-                x, y-50d, true);
+        final double y = center.getY()-banner.getHeight()/2d;
+        ImageRenderer.render(g, banner, x, y);
+        final String text = won ? "Victory" : "Loose";
+        g.setFont(Main.GUI_FONT_LARGE);
+        TextRenderer.render(g, text,
+                center.getX() - TextRenderer.getWidth(g,text)/2d, center.getY()+(won ? 30d : 20d), true);
     }
 
 
@@ -207,7 +209,7 @@ public class GameScreen extends Screen {
     }
 
     private void playTurnPing() {
-        Game.audio().playSound(TURN_START,false);
+        new Thread(() -> Game.audio().playSound(TURN_START,false)).start();
     }
 
     private void onTurnSkip(BoardCoordinate creaturePosition) {

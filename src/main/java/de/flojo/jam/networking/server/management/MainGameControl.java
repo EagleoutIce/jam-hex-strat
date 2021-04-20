@@ -155,27 +155,31 @@ public class MainGameControl {
         state.reduceMoney(player, trap.getCost());
     }
 
-    public void performAction(TurnActionMessage message) {
+    // NOTE: Thread return is for the server and should probably be optimized
+    public Optional<Thread> performAction(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
             HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
-            return;
+            return Optional.empty();
         }
         final Creature creature = mayCreature.get();
 
         switch (message.getAction()) {
             case MOVEMENT:
-                new Thread(() -> processMovement(message, creature)).start();
-                break;
+                Thread moveThread = new Thread(() -> processMovement(message, creature));
+                moveThread.start();
+                return Optional.of(moveThread);
             case SKILL:
-                new Thread(() -> processSkill(message, creature)).start();
-                break;
+                Thread skillThread = new Thread(() -> processSkill(message, creature));
+                skillThread.start();
+                return Optional.of(skillThread);
             case SKIP:
                 creature.skip();
                 break;
             default:
             case NONE:
         }
+        return Optional.empty();
     }
 
     private void processSkill(TurnActionMessage message, Creature creature) {

@@ -27,6 +27,7 @@ import org.java_websocket.framing.CloseFrame;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -139,7 +140,16 @@ public class ServerController implements IServerController {
         HexStartLogger.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
             return;
-        mGController.performAction(message);
+        Optional<Thread> mayThread = mGController.performAction(message);
+        mayThread.ifPresent(t -> {
+            HexStartLogger.log().log(Level.FINE, "Server waits on the completion of action initiated by {0}", message.toJson());
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                HexStartLogger.log().log(Level.SEVERE, "Interrupted on wait", e);
+                Thread.currentThread().interrupt();
+            }
+        });
         // Maybe make a new message to avoid wrong sending?
         // or introduce a private signature?
         playerController.getOtherPlayer(connection.getRole()).send(message);

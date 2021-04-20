@@ -34,6 +34,7 @@ public class Main {
     public static final BufferedImage ICON = Resources.images().get("icon.png");
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
+    public static final Font GUI_FONT_LARGE = GUI_FONT.deriveFont(75f);
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
     public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
