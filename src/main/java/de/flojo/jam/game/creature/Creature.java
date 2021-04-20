@@ -1,5 +1,6 @@
 package de.flojo.jam.game.creature;
 
+import de.flojo.jam.audio.SoundPoolPlayGroup;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
@@ -21,6 +22,7 @@ import java.util.Optional;
 public class Creature implements IRenderable {
 
     protected static final int DIE_DURATION = 1200;
+    public static final SoundPoolPlayGroup soundPlayGroup = new SoundPoolPlayGroup();
     private final String name;
     private final CreatureId creatureId;
     private final CreatureBase base;

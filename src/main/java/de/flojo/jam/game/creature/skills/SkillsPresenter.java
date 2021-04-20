@@ -81,6 +81,7 @@ public class SkillsPresenter {
             return;
 
         currentCreature = c;
+        currentCreature.getCreatureId().getSoundPool().play();
         creatureCoordinate = new BoardCoordinate(currentCreature.getCoordinate());
         currentCreature.highlight();
         setupMoveButton(c);
