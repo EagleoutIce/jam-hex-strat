@@ -1,5 +1,6 @@
 package de.flojo.jam;
 
+import de.flojo.jam.audio.BackgroundMusic;
 import de.flojo.jam.audio.NamedTrack;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
@@ -38,12 +39,6 @@ public class Main {
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
     public static final double INNER_MARGIN = 20d;
-    public static final AtomicBoolean toggleMusic = new AtomicBoolean();
-    public static  final Set<NamedTrack> TRACKS = Set.of(
-            new NamedTrack("audio/background/backD.wav", "Track D"),
-            new NamedTrack("audio/background/backC.wav", "Track C"),
-            new NamedTrack("audio/background/backB.wav", "Track B"),
-            new NamedTrack("audio/background/backA.wav", "Track A"));
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
@@ -92,37 +87,7 @@ public class Main {
 
         Game.start();
 
-        Input.keyboard().onKeyTyped(KeyEvent.VK_P, keyEvent -> {
-            if(toggleMusic.get()) {
-                Game.audio().stopMusic();
-                toggleMusic.set(false);
-            } else {
-                playNewBackgroundMusic();
-            }
-        });
+        BackgroundMusic.getInstance().enable();
     }
 
-    private static void playNewBackgroundMusic() {
-        new Thread(Main::asyncStartBackgroundMusic).start();
-    }
-
-    private static void asyncStartBackgroundMusic() {
-        final NamedTrack track = Game.random().choose(TRACKS);
-        HexStartLogger.log().log(Level.INFO,"Playing track: {0}", track.getName());
-        final MusicPlayback playing = Game.audio().playMusic(track);
-        playing.addSoundPlaybackListener(new SoundPlaybackListener() {
-            @Override
-            public void cancelled(SoundEvent event) {
-                SoundPlaybackListener.super.cancelled(event);
-            }
-
-            @Override
-            public void finished(SoundEvent event) {
-                SoundPlaybackListener.super.finished(event);
-                playNewBackgroundMusic();
-            }
-        });
-        Game.audio().getAllMusic().forEach(m -> m.setVolume(.1f));
-        toggleMusic.set(true);
-    }
 }
