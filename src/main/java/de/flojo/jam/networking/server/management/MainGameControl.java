@@ -2,6 +2,7 @@ package de.flojo.jam.networking.server.management;
 
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
+import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
@@ -11,6 +12,8 @@ import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
+import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
@@ -165,19 +168,41 @@ public class MainGameControl {
                 new Thread(() -> processMovement(message, creature)).start();
                 break;
             case SKILL:
-                Optional<Creature> mayTarget = getFactory().get(message.getTarget());
-                if (mayTarget.isEmpty()) {
-                    HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target was no creature in: {0}", message.toJson());
-                    return;
-                }
-                creature.useSkill(getBoard(), message.getSkillId(), mayTarget.get());
-                creature.getAttributes().useAp();
+                new Thread(() -> processSkill(message, creature)).start();
                 break;
             case SKIP:
                 creature.skip();
                 break;
             default:
             case NONE:
+        }
+    }
+
+    private void processSkill(TurnActionMessage message, Creature creature) {
+        SkillId skillId = message.getSkillId();
+        Optional<ICreatureSkill> maySkill = creature.getSkill(skillId);
+        if(maySkill.isEmpty()) {
+            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{ message.toJson(), creature });
+            return;
+        }
+        ICreatureSkill skill = maySkill.get();
+        switch (skill.getTarget()) {
+            case CREATURE:
+                Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());
+                if (mayTargetCreature.isEmpty()) {
+                    HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
+                    return;
+                }
+                creature.useSkill(getBoard(), skill, mayTargetCreature.get());
+                creature.getAttributes().useAp(skill.getCost());
+                break;
+            case TILE:
+                Tile targetTile = getBoard().getTile(message.getTarget());
+                creature.useSkill(getBoard(), skill, targetTile);
+                creature.getAttributes().useAp(skill.getCost());
+                break;
+            default:
+                HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
         }
     }
 

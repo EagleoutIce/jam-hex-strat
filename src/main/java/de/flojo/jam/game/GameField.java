@@ -131,6 +131,8 @@ public class GameField implements IRenderable, IProvideContext {
             canBuild = false;
             onChoice.accept(b);
             buildingPhaseButtons.disable();
+            if(b.getChosenCreature() != null)
+                b.getChosenCreature().getSoundPool().play();
             ourTurn = false;
             buildingPhaseButtons.setCurrentBuildConsumer(null);
         });

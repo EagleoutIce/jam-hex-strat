@@ -118,6 +118,13 @@ public class Creature implements IRenderable {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
 
+    public void useSkill(Board board, ICreatureSkill skill, Tile target) {
+        useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
+    }
+    public void useSkill(Board board, ICreatureSkill skill, Creature target) {
+        useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
+    }
+
     public Object moveLock() {
         return base.getTargetLocationReachedLock();
     }

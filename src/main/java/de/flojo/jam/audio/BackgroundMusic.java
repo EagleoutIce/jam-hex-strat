@@ -1,6 +1,5 @@
 package de.flojo.jam.audio;
 
-import de.flojo.jam.Main;
 import de.flojo.jam.util.HexStartLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.input.Input;

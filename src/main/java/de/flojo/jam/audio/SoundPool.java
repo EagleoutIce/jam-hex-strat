@@ -8,7 +8,7 @@ public interface SoundPool<T extends Sound> {
     Optional<T> get();
 
     default void play() {
-        get().ifPresent(getGroup()::play);
+        new Thread(() -> get().ifPresent(getGroup()::play)).start();
     }
 
     SoundPoolPlayGroup getGroup();
