@@ -1,12 +1,15 @@
 package de.flojo.jam.game.creature;
 
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.util.HexStartLogger;
 import de.flojo.jam.util.IProvideContext;
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -15,11 +18,11 @@ public class CreatureAttributes {
 
     private final int maxMp;
     private final int maxAp;
-    private final Set<ICreatureSkill> skills;
+    private final Set<AbstractSkill> skills;
     private int currentMp;
     private int currentAp;
 
-    public CreatureAttributes(int mp, int ap, Set<ICreatureSkill> skills) {
+    public CreatureAttributes(int mp, int ap, Set<AbstractSkill> skills) {
         this.maxMp = this.currentMp = mp;
         this.maxAp = this.currentAp = ap;
         this.skills = skills;
@@ -61,29 +64,29 @@ public class CreatureAttributes {
         return true;
     }
 
-    public Set<ICreatureSkill> getSkills() {
+    public Set<AbstractSkill> getSkills() {
         return skills;
     }
 
-    public Optional<ICreatureSkill> getSkill(SkillId wantedSkill) {
-        for (ICreatureSkill skill : skills) {
-            if (skill.getSkillId() == wantedSkill) {
+    public Optional<AbstractSkill> getSkill(JsonDataOfSkill wantedSkill) {
+        for (AbstractSkill skill : skills) {
+            if (wantedSkill.equals(skill)) {
                 return Optional.of(skill);
             }
         }
         return Optional.empty();
     }
 
-    public void useSkill(IProvideReadContext context, SkillId wantedSkill, Creature attacker, Creature target) {
+    public void useSkill(IProvideReadContext context, JsonDataOfSkill wantedSkill, Creature attacker, Creature target) {
         getSkill(wantedSkill).ifPresentOrElse(s -> useSkill(context, s, attacker, target), //
                 () -> HexStartLogger.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
     }
 
-    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Creature attacker, Creature target) {
+    public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature attacker, Creature target) {
         skill.getEffect(context).effect(target, attacker);
     }
 
-    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Creature attacker, Tile target) {
+    public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature attacker, Tile target) {
         skill.getEffect(context).effect(target, attacker);
     }
 

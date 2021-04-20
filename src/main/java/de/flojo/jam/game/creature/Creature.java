@@ -7,9 +7,11 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.DefaultReadContext;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.IProvideContext;
@@ -104,25 +106,25 @@ public class Creature implements IRenderable {
         this.base.render(g);
     }
 
-    public void useSkill(Board board, SkillId wantedSkill, Creature target) {
+    public void useSkill(Board board, JsonDataOfSkill wantedSkill, Creature target) {
         useSkill(new DefaultReadContext(board, cCollection, tCollection), wantedSkill, target);
     }
 
-    public void useSkill(IProvideReadContext context, SkillId wantedSkill, Creature target) {
+    public void useSkill(IProvideReadContext context, JsonDataOfSkill wantedSkill, Creature target) {
         this.core.getAttributes().useSkill(context, wantedSkill, this, target);
     }
 
-    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Tile target) {
+    public void useSkill(IProvideReadContext context, AbstractSkill skill, Tile target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
-    public void useSkill(IProvideReadContext context, ICreatureSkill skill, Creature target) {
+    public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
 
-    public void useSkill(Board board, ICreatureSkill skill, Tile target) {
+    public void useSkill(Board board, AbstractSkill skill, Tile target) {
         useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
     }
-    public void useSkill(Board board, ICreatureSkill skill, Creature target) {
+    public void useSkill(Board board, AbstractSkill skill, Creature target) {
         useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
     }
 
@@ -146,7 +148,7 @@ public class Creature implements IRenderable {
         return this.core.getAttributes();
     }
 
-    public Optional<ICreatureSkill> getSkill(SkillId wantedSkill) {
+    public Optional<AbstractSkill> getSkill(JsonDataOfSkill wantedSkill) {
         return this.core.getAttributes().getSkill(wantedSkill);
     }
 

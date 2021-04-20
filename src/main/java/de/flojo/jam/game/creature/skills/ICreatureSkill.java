@@ -1,7 +1,5 @@
 package de.flojo.jam.game.creature.skills;
 
-import de.flojo.jam.util.IProvideContext;
-
 public interface ICreatureSkill {
 
     int RANGE_SELF = 0;
@@ -40,5 +38,5 @@ public interface ICreatureSkill {
         return false;
     }
 
-    SkillTarget getTarget();
+    TargetOfSkill getTarget();
 }

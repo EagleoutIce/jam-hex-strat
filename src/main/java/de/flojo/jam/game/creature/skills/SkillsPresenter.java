@@ -34,7 +34,7 @@ public class SkillsPresenter {
     private final TrapSpawner traps;
     private final CreatureActionController actionController;
     private final AtomicBoolean enabled = new AtomicBoolean();
-    private final Map<ICreatureSkill, Button> skillButtons;
+    private final Map<AbstractSkill, Button> skillButtons;
     private final List<BoardCoordinate> movementBuffer;
     private PlayerId playerId;
     private Creature currentCreature;
@@ -97,21 +97,23 @@ public class SkillsPresenter {
     }
 
     private void setupSkillButtons(Creature c) {
-        for (ICreatureSkill skill : c.getAttributes().getSkills()) {
+        for (AbstractSkill skill : c.getAttributes().getSkills()) {
             Button bt = setupSkillButton(c, skill);
             bt.prepare();
             skillButtons.put(skill, bt);
         }
     }
 
-    private Button setupSkillButton(Creature c, ICreatureSkill skill) {
-        Button bt = new Button(skill.getName(), Main.GUI_FONT_SMALL);
+    private Button setupSkillButton(Creature c, AbstractSkill skill) {
+        Button bt = new Button(skill.getNameWithFallback(), Main.GUI_FONT_SMALL);
         bt.setEnabled(c.canCastSkill(skill));
         bt.onClicked(me -> {
             actionController.cancelCurrentOperation();
+            if(currentCreature == null)
+                return;
             currentCreature.setOnDead(this::resetButtons);
-            if (actionController.requestSkillFor(currentCreature, skill.getSkillId(),
-                    (p, t) -> skillOperationEnded(c, bt, p, skill.getSkillId(), t))) {
+            if (actionController.requestSkillFor(currentCreature, skill,
+                    (p, t) -> skillOperationEnded(c, bt, p, skill, t))) {
                 HexStartLogger.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                 bt.setEnabled(false);
                 skipButton.setEnabled(false);
@@ -151,8 +153,10 @@ public class SkillsPresenter {
         moveButton.prepare();
     }
 
-    private void skillOperationEnded(Creature c, Button button, Boolean performed, SkillId skillId,
+    private void skillOperationEnded(Creature c, Button button, Boolean performed, AbstractSkill skillId,
                                      BoardCoordinate target) {
+        if(skipButton != null)
+            skipButton.setEnabled(true);
         if (Boolean.TRUE.equals(performed)) {
             c.getAttributes().useAp();
             if (onAction != null)
@@ -162,15 +166,17 @@ public class SkillsPresenter {
     }
 
     private void updateSkillButtonStates(Creature c) {
-        for (Map.Entry<ICreatureSkill, Button> btpair : skillButtons.entrySet()) {
+        for (Map.Entry<AbstractSkill, Button> btpair : skillButtons.entrySet()) {
             if (btpair.getValue() != null) {
                 btpair.getValue().setEnabled(c.canCastSkill(btpair.getKey()));
-                btpair.getValue().setText(btpair.getKey().getName());
+                btpair.getValue().setText(btpair.getKey().getNameWithFallback());
             }
         }
     }
 
     private void moveOperationEnded(Creature c, Boolean performed, BoardCoordinate target) {
+        if(skipButton != null)
+            skipButton.setEnabled(true);
         if(c == null) {
             movementBuffer.clear();
             return;

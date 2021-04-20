@@ -12,6 +12,7 @@ import de.flojo.jam.game.creature.IAction;
 import de.flojo.jam.game.creature.IActionMove;
 import de.flojo.jam.game.creature.IActionSkill;
 import de.flojo.jam.game.creature.IActionSkip;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
@@ -181,7 +182,7 @@ public class GameField implements IRenderable, IProvideContext {
             }
 
             @Override
-            public void onSkill(BoardCoordinate from, BoardCoordinate target, SkillId skillId) {
+            public void onSkill(BoardCoordinate from, BoardCoordinate target, JsonDataOfSkill skillId) {
                 skill.onSkill(from, target, skillId);
                 cleanup();
             }

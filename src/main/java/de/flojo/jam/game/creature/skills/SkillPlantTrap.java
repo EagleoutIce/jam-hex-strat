@@ -1,21 +1,13 @@
 package de.flojo.jam.game.creature.skills;
 
-import de.flojo.jam.game.creature.skills.effects.PunchEffect;
+import de.flojo.jam.game.creature.skills.effects.PlantTrapEffect;
 
-public class SimplePunch implements ICreatureSkill {
+import java.util.function.Supplier;
 
-    private final int maximumPunchLength;
-    private final String name;
-    private final String description;
-    private final int minRange;
-    private final int maxRange;
+public class SkillPlantTrap extends AbstractSkill {
 
-    public SimplePunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description) {
-        this.maximumPunchLength = maximumPunchLength;
-        this.name = name;
-        this.description = description;
-        this.minRange = minRange;
-        this.maxRange = maxRange;
+    public SkillPlantTrap(Supplier<String> nameSupplier, int minRange, int maxRange, final String description) {
+        super(1, minRange, maxRange, 0, nameSupplier, description, SkillId.PLANT_TRAP);
     }
 
     @Override
@@ -46,12 +38,12 @@ public class SimplePunch implements ICreatureSkill {
 
     @Override
     public boolean doesFriendlyFire() {
-        return true;
+        return false;
     }
 
     @Override
     public IEffectTarget getEffect(final IProvideReadContext context) {
-        return new PunchEffect(context, maximumPunchLength);
+        return new PlantTrapEffect(context);
     }
 
     @Override
@@ -61,27 +53,27 @@ public class SimplePunch implements ICreatureSkill {
 
     @Override
     public String getName() {
-        return name;
+        return getNameWithFallback();
     }
 
     @Override
     public SkillId getSkillId() {
-        return SkillId.SIMPLE_PUNCH;
+        return skillId;
     }
 
     @Override
     public boolean isRanged() {
-        return false;// TODO: for archer
+        return false;
     }
 
     @Override
-    public SkillTarget getTarget() {
-        return SkillTarget.CREATURE;
+    public TargetOfSkill getTarget() {
+        return TargetOfSkill.TILE;
     }
 
     @Override
     public int bonusOnRaised() {
-        return 1;
+        return bonusOnRaised;
     }
 
 }

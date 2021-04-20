@@ -25,8 +25,10 @@ public class ToggleFlyEffect implements IEffectTarget {
         if (!nowFlying) {
             // Check if the creature landed on a mine:
             Optional<Trap> mayTrap = context.getTraps().get(target.getCoordinate());
-
-            mayTrap.ifPresent(trap -> new Thread(() -> trapExecution(target, trap)).start());
+            mayTrap.ifPresent(trap -> {
+                target.moribund();
+                new Thread(() -> trapExecution(target, trap)).start();
+            });
         }
     }
 

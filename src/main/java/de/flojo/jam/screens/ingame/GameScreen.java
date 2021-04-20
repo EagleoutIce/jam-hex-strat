@@ -10,7 +10,9 @@ import de.flojo.jam.game.creature.ActionType;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.client.ClientController;
@@ -33,7 +35,6 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
-import de.gurkenlabs.litiengine.sound.SoundPlayback;
 
 import javax.swing.*;
 import java.awt.*;
@@ -41,7 +42,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -174,7 +174,7 @@ public class GameScreen extends Screen {
         final String text = won ? "Victory" : "Loose";
         g.setFont(Main.GUI_FONT_LARGE);
         TextRenderer.render(g, text,
-                center.getX() - TextRenderer.getWidth(g,text)/2d, center.getY()+(won ? 30d : 20d), true);
+                center.getX() - TextRenderer.getWidth(g,text)/2d, center.getY()+(won ? 43d : 18d), true);
     }
 
 
@@ -222,7 +222,7 @@ public class GameScreen extends Screen {
         clientController.send(new TurnActionMessage(null, ActionType.MOVEMENT, from, moveTargets, null));
     }
 
-    private void onTurnSkill(BoardCoordinate from, BoardCoordinate target, SkillId skill) {
+    private void onTurnSkill(BoardCoordinate from, BoardCoordinate target, JsonDataOfSkill skill) {
         HexStartLogger.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[]{from, target, skill});
         clientController.send(new TurnActionMessage(null, ActionType.SKILL, from, List.of(target), skill));
     }
@@ -252,13 +252,13 @@ public class GameScreen extends Screen {
     }
 
     private void processSkill(TurnActionMessage message, Creature creature) {
-        SkillId skillId = message.getSkillId();
-        Optional<ICreatureSkill> maySkill = creature.getSkill(skillId);
+        JsonDataOfSkill skillId = message.getSkillData();
+        Optional<AbstractSkill> maySkill = creature.getSkill(skillId);
         if(maySkill.isEmpty()) {
             HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{ message.toJson(), creature });
             return;
         }
-        ICreatureSkill skill = maySkill.get();
+        AbstractSkill skill = maySkill.get();
         switch (skill.getTarget()) {
             case CREATURE:
                 Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());

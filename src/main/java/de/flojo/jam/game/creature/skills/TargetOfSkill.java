@@ -1,5 +1,5 @@
 package de.flojo.jam.game.creature.skills;
 
-public enum SkillTarget {
+public enum TargetOfSkill {
     TILE, CREATURE
 }

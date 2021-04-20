@@ -5,13 +5,14 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.board.traps.TrapCollection;
 import de.flojo.jam.game.creature.Creature;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.CreatureSkillAOAGenerator;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
-import de.flojo.jam.game.creature.skills.SkillTarget;
+import de.flojo.jam.game.creature.skills.TargetOfSkill;
 import de.flojo.jam.util.HexStartLogger;
-import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 
@@ -34,7 +35,7 @@ public class CreatureActionController {
     private boolean completed = false;
     private boolean performed = false;
     private BiConsumer<Boolean, BoardCoordinate> onCompleted = null;
-    private ICreatureSkill currentSkill = null;
+    private AbstractSkill currentSkill = null;
     private BoardCoordinate clickedOn;
     private CurrentActionType currentActionType = CurrentActionType.MOVEMENT;
 
@@ -54,10 +55,14 @@ public class CreatureActionController {
     }
 
     public static void awaitMovementComplete(Creature target) {
+        awaitMovementComplete(target, 20);
+
+    }
+    public static void awaitMovementComplete(Creature target, int msTimeout) {
         synchronized (target.moveLock()) {
             while (!target.getBase().moveTargetIsReached()) {
                 try {
-                    target.moveLock().wait();
+                    target.moveLock().wait(msTimeout);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                     Thread.currentThread().interrupt();
@@ -77,6 +82,7 @@ public class CreatureActionController {
     }
 
     private static void triggerTrap(Creature creature, Trap trap) {
+        creature.moribund();
         CreatureActionController.awaitMovementCompleteAsync(creature, () -> {
             trap.trigger();
             sleep(trap.getAnimationCooldown());
@@ -107,9 +113,9 @@ public class CreatureActionController {
         return !t.getTerrainType().blocksWalking() && context.getCreatures().get(t.getCoordinate()).isEmpty();
     }
 
-    public boolean requestSkillFor(Creature creature, SkillId skillId, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
+    public boolean requestSkillFor(Creature creature, JsonDataOfSkill skillData, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
         if (activeCreature != null) {
-            HexStartLogger.log().log(Level.WARNING, "Ignored Operation-Skill ({2}) request for {0} as there was anther active Creature ({1})", new Object[]{creature, activeCreature, skillId});
+            HexStartLogger.log().log(Level.WARNING, "Ignored Operation-Skill ({2}) request for {0} as there was anther active Creature ({1})", new Object[]{creature, activeCreature, skillData});
             return false;
         }
 
@@ -118,9 +124,9 @@ public class CreatureActionController {
         if (creature.getAttributes().getApLeft() <= 0)
             return false;
 
-        Optional<ICreatureSkill> mayBeSkill = creature.getSkill(skillId);
+        Optional<AbstractSkill> mayBeSkill = creature.getSkill(skillData);
         if (mayBeSkill.isEmpty()) {
-            HexStartLogger.log().log(Level.WARNING, "Creature {0} does not possess skill {1}", new Object[]{creature, skillId});
+            HexStartLogger.log().log(Level.WARNING, "Creature {0} does not possess skill {1}", new Object[]{creature, skillData});
             return false;
         }
         currentSkill = mayBeSkill.get();
@@ -211,7 +217,7 @@ public class CreatureActionController {
         Optional<Creature> mayTargetCreature = context.getCreatures().get(tile.getCoordinate());
         Creature targetCreature = null;
         if (mayTargetCreature.isEmpty()) {
-            if (currentSkill.getTarget() != SkillTarget.TILE) {// perform no tile fun
+            if (currentSkill.getTarget() != TargetOfSkill.TILE) {// perform no tile fun
                 if (!currentSkill.isRanged()) {
                     // no creature no valid click
                     return;
@@ -223,7 +229,7 @@ public class CreatureActionController {
         }
 
         HexStartLogger.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[]{tile, activeCreature, currentSkill});
-        if(currentSkill.getTarget().equals(SkillTarget.TILE)) {
+        if(currentSkill.getTarget().equals(TargetOfSkill.TILE)) {
             if(targetCreature != null) {
                 HexStartLogger.log().warning("Target Creature not allowed for Tile");
                 return;

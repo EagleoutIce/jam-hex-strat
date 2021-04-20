@@ -8,8 +8,9 @@ import de.flojo.jam.game.creature.CreatureBase;
 import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
-import de.flojo.jam.game.creature.skills.SimplePunch;
+import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
@@ -27,8 +28,8 @@ public class CreatureElf extends Creature {
     }
 
     private static CreatureAttributes createElfAttributes() {
-        Set<ICreatureSkill> skills = new LinkedHashSet<>();
-        skills.add(new SimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit dem Elfenbogen."));
+        Set<AbstractSkill> skills = new LinkedHashSet<>();
+        skills.add(new SkillSimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit dem Elfenbogen."));
         // TODO: arrows
         return new CreatureAttributes(4, 1, skills);
     }

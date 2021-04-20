@@ -2,6 +2,7 @@ package de.flojo.jam.game.creature;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.player.PlayerId;
 
 import java.util.ArrayList;
@@ -141,10 +142,18 @@ public class CreatureCollection {
     }
 
     public boolean p1CanDoSomething() {
+        // check if there is any creature in action currently and wait for it
+        waitBlockingForAllCreatureBasesToReachTarget();
         return collection.stream().filter(c -> c.getOwner() == PlayerId.ONE).anyMatch(Creature::canDoSomething);
     }
 
+    private void waitBlockingForAllCreatureBasesToReachTarget() {
+        collection.stream().filter(c -> !c.getBase().moveTargetIsReached()).forEach(c -> CreatureActionController.awaitMovementComplete(c, 1000));
+    }
+
     public boolean p2CanDoSomething() {
+        // check if there is any creature in action currently and wait for it
+        waitBlockingForAllCreatureBasesToReachTarget();
         return collection.stream().filter(c -> c.getOwner() == PlayerId.TWO).anyMatch(Creature::canDoSomething);
     }
 }

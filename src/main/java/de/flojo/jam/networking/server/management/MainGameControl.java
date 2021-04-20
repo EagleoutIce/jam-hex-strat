@@ -12,7 +12,9 @@ import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
+import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.messages.GameStartMessage;
@@ -183,13 +185,13 @@ public class MainGameControl {
     }
 
     private void processSkill(TurnActionMessage message, Creature creature) {
-        SkillId skillId = message.getSkillId();
-        Optional<ICreatureSkill> maySkill = creature.getSkill(skillId);
+        JsonDataOfSkill skillId = message.getSkillData();
+        Optional<AbstractSkill> maySkill = creature.getSkill(skillId);
         if(maySkill.isEmpty()) {
             HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{ message.toJson(), creature });
             return;
         }
-        ICreatureSkill skill = maySkill.get();
+        AbstractSkill skill = maySkill.get();
         switch (skill.getTarget()) {
             case CREATURE:
                 Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());

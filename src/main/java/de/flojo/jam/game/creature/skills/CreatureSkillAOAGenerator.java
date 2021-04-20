@@ -23,7 +23,7 @@ public class CreatureSkillAOAGenerator {
 
         switch (skill.getAOA()) {
             case LINE:
-                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange, skill.getTarget().equals(SkillTarget.TILE));
+                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange, skill.getTarget().equals(TargetOfSkill.TILE));
             default:
             case SINGLE:
                 return Set.of(start);

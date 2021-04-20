@@ -4,18 +4,10 @@ import de.flojo.jam.game.creature.skills.effects.ToggleFlyEffect;
 
 import java.util.function.Supplier;
 
-public class ToggleFly implements ICreatureSkill {
+public class SkillToggleFly extends AbstractSkill {
 
-    private final Supplier<String> nameSupplier;
-    private final String description;
-    private final int minRange;
-    private final int maxRange;
-
-    public ToggleFly(Supplier<String> nameSupplier, final String description) {
-        this.nameSupplier = nameSupplier;
-        this.description = description;
-        this.minRange = ICreatureSkill.RANGE_SELF;
-        this.maxRange = ICreatureSkill.RANGE_SELF;
+    public SkillToggleFly(Supplier<String> nameSupplier, final String description) {
+        super(1, ICreatureSkill.RANGE_SELF, ICreatureSkill.RANGE_SELF, 0, nameSupplier, description, SkillId.TOGGLE_FLY);
     }
 
     @Override
@@ -61,12 +53,12 @@ public class ToggleFly implements ICreatureSkill {
 
     @Override
     public String getName() {
-        return nameSupplier.get();
+        return getNameWithFallback();
     }
 
     @Override
     public SkillId getSkillId() {
-        return SkillId.TOGGLE_FLY;
+        return skillId;
     }
 
     @Override
@@ -76,7 +68,7 @@ public class ToggleFly implements ICreatureSkill {
 
     @Override
     public int bonusOnRaised() {
-        return 0;
+        return bonusOnRaised;
     }
 
     @Override
@@ -85,7 +77,7 @@ public class ToggleFly implements ICreatureSkill {
     }
 
     @Override
-    public SkillTarget getTarget() {
-        return SkillTarget.CREATURE;
+    public TargetOfSkill getTarget() {
+        return TargetOfSkill.CREATURE;
     }
 }

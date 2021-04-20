@@ -140,16 +140,7 @@ public class ServerController implements IServerController {
         HexStartLogger.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
             return;
-        Optional<Thread> mayThread = mGController.performAction(message);
-        mayThread.ifPresent(t -> {
-            HexStartLogger.log().log(Level.FINE, "Server waits on the completion of action initiated by {0}", message.toJson());
-            try {
-                t.join();
-            } catch (InterruptedException e) {
-                HexStartLogger.log().log(Level.SEVERE, "Interrupted on wait", e);
-                Thread.currentThread().interrupt();
-            }
-        });
+        mGController.performAction(message);
         // Maybe make a new message to avoid wrong sending?
         // or introduce a private signature?
         playerController.getOtherPlayer(connection.getRole()).send(message);
