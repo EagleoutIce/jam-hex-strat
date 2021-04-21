@@ -2,14 +2,10 @@ package de.flojo.jam.game.creature;
 
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
-import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
-import de.flojo.jam.util.HexStartLogger;
-import de.flojo.jam.util.IProvideContext;
+import de.flojo.jam.util.HexStratLogger;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
@@ -79,7 +75,7 @@ public class CreatureAttributes {
 
     public void useSkill(IProvideReadContext context, JsonDataOfSkill wantedSkill, Creature attacker, Creature target) {
         getSkill(wantedSkill).ifPresentOrElse(s -> useSkill(context, s, attacker, target), //
-                () -> HexStartLogger.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
+                () -> HexStratLogger.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
     }
 
     public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature attacker, Creature target) {

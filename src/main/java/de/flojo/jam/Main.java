@@ -1,31 +1,21 @@
 package de.flojo.jam;
 
 import de.flojo.jam.audio.BackgroundMusic;
-import de.flojo.jam.audio.NamedTrack;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.screens.ServerSetupScreen;
 import de.flojo.jam.screens.ingame.GameScreen;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
 import de.gurkenlabs.litiengine.gui.GuiProperties;
 import de.gurkenlabs.litiengine.gui.screens.Resolution;
-import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
-import de.gurkenlabs.litiengine.sound.LoopedTrack;
-import de.gurkenlabs.litiengine.sound.MusicPlayback;
-import de.gurkenlabs.litiengine.sound.SoundEvent;
-import de.gurkenlabs.litiengine.sound.SoundPlaybackListener;
-import de.gurkenlabs.litiengine.sound.Track;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
-import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 public class Main {
@@ -40,6 +30,7 @@ public class Main {
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
 
     public static final double INNER_MARGIN = 20d;
+
     public static void main(String[] args) {
 
         Game.setInfo("info.xml");
@@ -69,7 +60,7 @@ public class Main {
 
         Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
             System.err.println("Mimimi do this with a stream");
-            HexStartLogger.log().severe(ex.getMessage());
+            HexStratLogger.log().severe(ex.getMessage());
             ex.printStackTrace();
         });
 

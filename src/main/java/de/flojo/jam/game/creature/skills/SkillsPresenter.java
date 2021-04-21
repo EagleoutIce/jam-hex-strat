@@ -11,7 +11,9 @@ import de.flojo.jam.game.creature.IAction;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.graphics.ISingleActionPresenter;
+import de.flojo.jam.graphics.SingleSkillPresenter;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
@@ -34,7 +36,7 @@ public class SkillsPresenter {
     private final TrapSpawner traps;
     private final CreatureActionController actionController;
     private final AtomicBoolean enabled = new AtomicBoolean();
-    private final Map<AbstractSkill, Button> skillButtons;
+    private final Map<AbstractSkill, GuiComponent> skillPresenter;
     private final List<BoardCoordinate> movementBuffer;
     private PlayerId playerId;
     private Creature currentCreature;
@@ -51,7 +53,7 @@ public class SkillsPresenter {
         this.traps = traps;
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
-        this.skillButtons = new LinkedHashMap<>();
+        this.skillPresenter = new LinkedHashMap<>();
         this.movementBuffer = new ArrayList<>();
         actionController = new CreatureActionController(
                 new DefaultReadContext(board, factory.getCreatures(), traps.getTraps()), screenName);
@@ -92,34 +94,35 @@ public class SkillsPresenter {
 
         target.getComponents().add(moveButton);
         target.getComponents().add(skipButton);
-        target.getComponents().addAll(skillButtons.values());
+        target.getComponents().addAll(skillPresenter.values());
         updatePositions();
     }
 
     private void setupSkillButtons(Creature c) {
         for (AbstractSkill skill : c.getAttributes().getSkills()) {
-            Button bt = setupSkillButton(c, skill);
-            bt.prepare();
-            skillButtons.put(skill, bt);
+            GuiComponent component = setupSkillButton(c, skill);
+            component.prepare();
+            skillPresenter.put(skill, component);
         }
     }
 
-    private Button setupSkillButton(Creature c, AbstractSkill skill) {
-        Button bt = new Button(skill.getNameWithFallback(), Main.GUI_FONT_SMALL);
-        bt.setEnabled(c.canCastSkill(skill));
-        bt.onClicked(me -> {
+    private GuiComponent setupSkillButton(Creature c, AbstractSkill skill) {
+        SingleSkillPresenter presenter = ISingleActionPresenter.producePresenter(skill);
+        GuiComponent presenterComponent = presenter.get();
+        presenterComponent.setEnabled(c.canCastSkill(skill));
+        presenterComponent.onClicked(me -> {
             actionController.cancelCurrentOperation();
-            if(currentCreature == null)
+            if (currentCreature == null)
                 return;
             currentCreature.setOnDead(this::resetButtons);
             if (actionController.requestSkillFor(currentCreature, skill,
-                    (p, t) -> skillOperationEnded(c, bt, p, skill, t))) {
-                HexStartLogger.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
-                bt.setEnabled(false);
+                    (p, t) -> skillOperationEnded(c, presenter, p, t))) {
+                HexStratLogger.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
+                presenterComponent.setEnabled(false);
                 skipButton.setEnabled(false);
             }
         });
-        return bt;
+        return presenterComponent;
     }
 
     private void setupSkipButton() {
@@ -145,7 +148,7 @@ public class SkillsPresenter {
                     resetButtons();
                 });
             if (actionController.requestMoveFor(currentCreature, (p, t) -> moveOperationEnded(c, p, t))) {
-                HexStartLogger.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
+                HexStratLogger.log().log(Level.INFO, "Movement-Request for: {0} has been initiated.", currentCreature);
                 moveButton.setEnabled(false);
                 skipButton.setEnabled(false);
             }
@@ -153,31 +156,32 @@ public class SkillsPresenter {
         moveButton.prepare();
     }
 
-    private void skillOperationEnded(Creature c, Button button, Boolean performed, AbstractSkill skillId,
-                                     BoardCoordinate target) {
-        if(skipButton != null)
+    private void skillOperationEnded(Creature c, SingleSkillPresenter presenter, Boolean performed, BoardCoordinate target) {
+        if (skipButton != null)
             skipButton.setEnabled(true);
         if (Boolean.TRUE.equals(performed)) {
             c.getAttributes().useAp();
             if (onAction != null)
-                onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, skillId);
+                onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, presenter.getSkill());
         }
         updateSkillButtonStates(c);
     }
 
     private void updateSkillButtonStates(Creature c) {
-        for (Map.Entry<AbstractSkill, Button> btpair : skillButtons.entrySet()) {
-            if (btpair.getValue() != null) {
-                btpair.getValue().setEnabled(c.canCastSkill(btpair.getKey()));
-                btpair.getValue().setText(btpair.getKey().getNameWithFallback());
+        for (Map.Entry<AbstractSkill, GuiComponent> gcPair : skillPresenter.entrySet()) {
+            if (gcPair.getValue() != null) {
+                gcPair.getValue().setEnabled(c.canCastSkill(gcPair.getKey()));
+                // TODO: update so that does not do this with a Image Button
+                if (gcPair.getValue() instanceof Button)
+                    gcPair.getValue().setText(gcPair.getKey().getNameWithFallback());
             }
         }
     }
 
     private void moveOperationEnded(Creature c, Boolean performed, BoardCoordinate target) {
-        if(skipButton != null)
+        if (skipButton != null)
             skipButton.setEnabled(true);
-        if(c == null) {
+        if (c == null) {
             movementBuffer.clear();
             return;
         }
@@ -215,8 +219,8 @@ public class SkillsPresenter {
         if (intersectsWith(moveButton, p) || intersectsWith(skipButton, p)) {
             return true;
         }
-        for (Button button : skillButtons.values()) {
-            if (intersectsWith(button, p))
+        for (GuiComponent component : skillPresenter.values()) {
+            if (intersectsWith(component, p))
                 return true;
         }
         return false;
@@ -238,10 +242,10 @@ public class SkillsPresenter {
         double mw = moveButton.getWidth();
         double offCounter = Main.INNER_MARGIN + mw;
         moveButton.setLocation(width - offCounter, height - 90d);
-        for (Button button : skillButtons.values()) {
-            button.setEnabled(attributes.getApLeft() > 0);
-            offCounter += button.getWidth() + 10;
-            button.setLocation(width - offCounter, height - 90d);
+        for (GuiComponent component : skillPresenter.values()) {
+            component.setEnabled(attributes.getApLeft() > 0);
+            offCounter += component.getWidth() + 10;
+            component.setLocation(width - offCounter, height - 40d - component.getHeight());
         }
 
         skipButton.setLocation(width - offCounter - skipButton.getWidth() - 10, height - 90d);
@@ -252,15 +256,15 @@ public class SkillsPresenter {
     }
 
     private void resetButtons() {
-        skillButtons.values().forEach(GuiComponent::suspend);
-        target.getComponents().removeAll(skillButtons.values());
+        skillPresenter.values().forEach(GuiComponent::suspend);
+        target.getComponents().removeAll(skillPresenter.values());
         if (moveButton != null)
             moveButton.suspend();
         if (skipButton != null)
             skipButton.suspend();
         target.getComponents().remove(moveButton);
         target.getComponents().remove(skipButton);
-        skillButtons.clear();
+        skillPresenter.clear();
         moveButton = null;
         skipButton = null;
         if (currentCreature != null) {

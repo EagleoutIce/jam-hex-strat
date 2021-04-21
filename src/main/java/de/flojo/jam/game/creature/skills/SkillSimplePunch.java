@@ -9,16 +9,6 @@ public class SkillSimplePunch extends AbstractSkill {
     }
 
     @Override
-    public int getMinRange() {
-        return minRange;
-    }
-
-    @Override
-    public int getMaxRange() {
-        return maxRange;
-    }
-
-    @Override
     public int getRadius() {
         return 1; // aoe field
     }
@@ -27,11 +17,6 @@ public class SkillSimplePunch extends AbstractSkill {
     @Override
     public CreatureSkillAOA getAOA() {
         return CreatureSkillAOA.LINE;
-    }
-
-    @Override
-    public int getCost() {
-        return getSkillId().getCost();
     }
 
     @Override
@@ -45,21 +30,6 @@ public class SkillSimplePunch extends AbstractSkill {
     }
 
     @Override
-    public String getDescription() {
-        return description;
-    }
-
-    @Override
-    public String getName() {
-        return getNameWithFallback();
-    }
-
-    @Override
-    public SkillId getSkillId() {
-        return skillId;
-    }
-
-    @Override
     public boolean isRanged() {
         return false;// TODO: for archer
     }
@@ -67,11 +37,6 @@ public class SkillSimplePunch extends AbstractSkill {
     @Override
     public TargetOfSkill getTarget() {
         return TargetOfSkill.CREATURE;
-    }
-
-    @Override
-    public int bonusOnRaised() {
-        return bonusOnRaised;
     }
 
     @Override

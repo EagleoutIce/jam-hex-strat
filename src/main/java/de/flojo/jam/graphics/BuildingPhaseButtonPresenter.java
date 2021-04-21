@@ -79,7 +79,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void setupGiftButton() {
-        this.giftButton.setLocation(Main.INNER_MARGIN,Game.window().getHeight()-this.giftButton.getHeight()-50d);
+        this.giftButton.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - this.giftButton.getHeight() - 50d);
         screen.getComponents().add(this.giftButton);
         this.giftButton.setEnabled(summonedCreature);
         this.giftButton.onClicked(c -> {
@@ -175,7 +175,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         TrapId[] traps = TrapId.values();
         for (int i = 0; i < traps.length; i++) {
             TrapId t = traps[i];
-            if(!t.canBeBuildByPlayer())
+            if (!t.canBeBuildByPlayer())
                 continue;
             IRenderData trapRenderer = t.getImprint().getNormalRenderer();
             ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, Game.window().getHeight() - i * 80d - 110d,

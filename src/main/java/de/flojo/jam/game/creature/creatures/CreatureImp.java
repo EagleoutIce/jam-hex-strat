@@ -9,7 +9,6 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
-import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.creature.skills.SkillToggleFly;
 import de.flojo.jam.game.player.PlayerId;

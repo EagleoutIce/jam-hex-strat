@@ -1,8 +1,7 @@
 package de.flojo.jam.game.board.terrain.management;
 
 import de.flojo.jam.game.board.terrain.TerrainTile;
-import de.flojo.jam.util.HexStartLogger;
-import de.gurkenlabs.litiengine.Game;
+import de.flojo.jam.util.HexStratLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,12 +33,12 @@ public class TerrainData extends ArrayList<List<TerrainTile>> {
 
     public TerrainTile getTerrainAt(int x, int y) {
         if (isEmpty() || y < 0 || y >= size()) {
-            HexStartLogger.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[]{x, y});
+            HexStratLogger.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[]{x, y});
             return TerrainTile.EMPTY;
         }
         List<TerrainTile> tl = get(y);
         if (tl == null || tl.isEmpty() || x < 0 || x >= tl.size()) {
-            HexStartLogger.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[]{x, y});
+            HexStratLogger.log().log(Level.WARNING, "Requested: {0}/{1} but had no terrain data", new Object[]{x, y});
             return TerrainTile.EMPTY;
         }
         return tl.get(x);
@@ -47,17 +46,17 @@ public class TerrainData extends ArrayList<List<TerrainTile>> {
 
     public void setTerrainAt(int x, int y, TerrainTile newType) {
         if (isEmpty() || y < 0 || y >= size()) {
-            HexStartLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
+            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
             return;
         }
         List<TerrainTile> tl = get(y);
         if (tl == null || tl.isEmpty() || x < 0 || x >= tl.size()) {
-            HexStartLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
+            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
             return;
         }
         TerrainTile old = tl.set(x, newType);
         if (old != newType) {
-            HexStartLogger.log().log(Level.INFO, "Set Tile at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
+            HexStratLogger.log().log(Level.INFO, "Set Tile at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
         }
     }
 

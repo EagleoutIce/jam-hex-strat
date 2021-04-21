@@ -7,13 +7,13 @@ import java.util.function.Supplier;
 
 public class JsonDataOfSkill implements IAmJson {
     protected final int maximumEffectLength;
-    private final transient Supplier<String> nameSupplier;
-    private String name = null;
-    protected final transient  String description;
+    protected final transient String description;
     protected final int minRange;
     protected final int maxRange;
     protected final SkillId skillId;
     protected final int bonusOnRaised;
+    private final transient Supplier<String> nameSupplier;
+    private String name = null;
 
     public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final Supplier<String> nameSupplier, final String description, SkillId skillId) {
         this.maximumEffectLength = maximumEffectLength;
@@ -27,7 +27,7 @@ public class JsonDataOfSkill implements IAmJson {
     }
 
     public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final String name, final String description, SkillId skillId) {
-        this(maximumEffectLength, minRange, maxRange,bonusOnRaised, () -> name, description, skillId);
+        this(maximumEffectLength, minRange, maxRange, bonusOnRaised, () -> name, description, skillId);
     }
 
     protected String getNameWithFallback() {

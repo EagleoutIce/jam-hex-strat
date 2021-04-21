@@ -11,9 +11,7 @@ import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
-import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.client.ClientController;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
@@ -27,7 +25,7 @@ import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.util.BuildChoice;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
@@ -63,13 +61,13 @@ public class GameScreen extends Screen {
     private static final Color P2_COLOR = new Color(141, 45, 215);
     private static final GameScreen instance = new GameScreen();
     private static final int MAX_NAME_LENGTH = 7;
+    private final AtomicBoolean gameOver = new AtomicBoolean();
+    private final AtomicBoolean weWon = new AtomicBoolean();
     GameField field;
     private PlayerId ourId;
     private ClientController clientController;
     private int currentRound = 0;
     private boolean locked;
-    private final AtomicBoolean gameOver = new AtomicBoolean();
-    private final AtomicBoolean weWon = new AtomicBoolean();
 
     private GameScreen() {
         super(NAME);
@@ -91,7 +89,7 @@ public class GameScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
-        HexStartLogger.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
+        HexStratLogger.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
 
         if (data.length == 0)
             return;
@@ -99,7 +97,7 @@ public class GameScreen extends Screen {
         if ("CLOSED".equals(data[0])) {
             disconnect(false);
         } else {
-            HexStartLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+            HexStratLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
@@ -123,7 +121,7 @@ public class GameScreen extends Screen {
 
     private void onBuild(BuildChoice choice) {
         clientController.send(new BuildChoiceMessage(null, choice.getSelectedPosition(), choice.getChosenTerrain(),
-                choice.getChosenCreature(), choice.getChosenTrap(), choice.isGift(),  ""));
+                choice.getChosenCreature(), choice.getChosenTrap(), choice.isGift(), ""));
     }
 
     @Override
@@ -157,7 +155,7 @@ public class GameScreen extends Screen {
             ImageRenderer.render(g, MAIN_PHASE, Game.window().getCenter().getX() - MAIN_PHASE.getWidth() / 2d, 0);
         }
 
-        if(gameOver.get()) {
+        if (gameOver.get()) {
             renderGameOverBanner(g);
         }
 
@@ -168,13 +166,13 @@ public class GameScreen extends Screen {
         final Point2D center = Game.window().getCenter();
         final boolean won = weWon.get();
         final BufferedImage banner = won ? WON : LOST;
-        final double x = center.getX()-banner.getWidth()/2d;
-        final double y = center.getY()-banner.getHeight()/2d;
+        final double x = center.getX() - banner.getWidth() / 2d;
+        final double y = center.getY() - banner.getHeight() / 2d;
         ImageRenderer.render(g, banner, x, y);
         final String text = won ? "Victory" : "Loose";
         g.setFont(Main.GUI_FONT_LARGE);
         TextRenderer.render(g, text,
-                center.getX() - TextRenderer.getWidth(g,text)/2d, center.getY()+(won ? 43d : 18d), true);
+                center.getX() - TextRenderer.getWidth(g, text) / 2d, center.getY() + (won ? 43d : 18d), true);
     }
 
 
@@ -209,28 +207,28 @@ public class GameScreen extends Screen {
     }
 
     private void playTurnPing() {
-        new Thread(() -> Game.audio().playSound(TURN_START,false)).start();
+        new Thread(() -> Game.audio().playSound(TURN_START, false)).start();
     }
 
     private void onTurnSkip(BoardCoordinate creaturePosition) {
-        HexStartLogger.log().log(Level.INFO, "Skip for creature on {0}", creaturePosition);
+        HexStratLogger.log().log(Level.INFO, "Skip for creature on {0}", creaturePosition);
         clientController.send(new TurnActionMessage(null, ActionType.SKIP, creaturePosition, null, null));
     }
 
     private void onTurnMove(BoardCoordinate from, List<BoardCoordinate> moveTargets) {
-        HexStartLogger.log().log(Level.INFO, "Move from {0} to {1}", new Object[]{from, moveTargets});
+        HexStratLogger.log().log(Level.INFO, "Move from {0} to {1}", new Object[]{from, moveTargets});
         clientController.send(new TurnActionMessage(null, ActionType.MOVEMENT, from, moveTargets, null));
     }
 
     private void onTurnSkill(BoardCoordinate from, BoardCoordinate target, JsonDataOfSkill skill) {
-        HexStartLogger.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[]{from, target, skill});
+        HexStratLogger.log().log(Level.INFO, "Skill {2} from {0}, targeting: {1}", new Object[]{from, target, skill});
         clientController.send(new TurnActionMessage(null, ActionType.SKILL, from, List.of(target), skill));
     }
 
     public void performTurn(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
-            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
+            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
                     message.toJson());
             return;
         }
@@ -254,8 +252,8 @@ public class GameScreen extends Screen {
     private void processSkill(TurnActionMessage message, Creature creature) {
         JsonDataOfSkill skillId = message.getSkillData();
         Optional<AbstractSkill> maySkill = creature.getSkill(skillId);
-        if(maySkill.isEmpty()) {
-            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{ message.toJson(), creature });
+        if (maySkill.isEmpty()) {
+            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{message.toJson(), creature});
             return;
         }
         AbstractSkill skill = maySkill.get();
@@ -263,7 +261,7 @@ public class GameScreen extends Screen {
             case CREATURE:
                 Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());
                 if (mayTargetCreature.isEmpty()) {
-                    HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
+                    HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), skill, mayTargetCreature.get());
@@ -275,14 +273,14 @@ public class GameScreen extends Screen {
                 creature.getAttributes().useAp(skill.getCost());
                 break;
             default:
-                HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
+                HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
         }
     }
 
     private void processMovement(TurnActionMessage message, final Creature creature) {
         List<BoardCoordinate> targets = message.getTargets();
         for (BoardCoordinate target : targets) {
-            HexStartLogger.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
+            HexStratLogger.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
                     new Object[]{target, targets, creature});
             CreatureActionController.processMovementBlocking(field.getTraps(), creature, getBoard().getTile(target));
         }
@@ -321,7 +319,7 @@ public class GameScreen extends Screen {
 
     public void gameOver(GameOverMessage message) {
         gameOver.set(true);
-        weWon.set(Objects.equals(ourId,message.getWinnerId()));
+        weWon.set(Objects.equals(ourId, message.getWinnerId()));
     }
 
 }

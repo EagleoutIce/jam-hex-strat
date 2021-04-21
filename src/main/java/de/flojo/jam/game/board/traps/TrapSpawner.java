@@ -1,15 +1,13 @@
 package de.flojo.jam.game.board.traps;
 
-import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
-import de.gurkenlabs.litiengine.Game;
 
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -32,6 +30,15 @@ public class TrapSpawner {
         InputController.get().onClicked(this::setActiveTrap, screen);
     }
 
+    public static Trap injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
+        if (traps.get(tile.getCoordinate()).isPresent())
+            return null;
+        Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"), tile);
+        traps.add(trap);
+        HexStratLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
+        return trap;
+    }
+
     private void setActiveTrap(MouseEvent c) {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
@@ -40,17 +47,7 @@ public class TrapSpawner {
         Trap oldTrap = selectedTrap;
         this.selectedTrap = traps.getHighlighted().orElse(null);
         if (oldTrap != selectedTrap)
-            HexStartLogger.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
-    }
-
-
-    public static Trap injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
-        if (traps.get(tile.getCoordinate()).isPresent())
-            return null;
-        Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"), tile);
-        traps.add(trap);
-        HexStartLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
-        return trap;
+            HexStratLogger.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
     }
 
     public Trap spawnTrap(TrapId id, PlayerId owner, Tile tile) {
@@ -58,7 +55,7 @@ public class TrapSpawner {
             return null;
         Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"), tile);
         traps.add(trap);
-        HexStartLogger.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
+        HexStratLogger.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"", new Object[]{id, tile, owner});
         return trap;
     }
 

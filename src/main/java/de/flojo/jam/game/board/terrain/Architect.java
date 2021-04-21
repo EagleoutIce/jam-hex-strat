@@ -10,7 +10,7 @@ import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -65,7 +65,7 @@ public class Architect {
         if (targetTile != null && targetTileType.equals(TerrainTile.EMPTY) && notAgainstOtherPlacements(targetTile)) {
             targetTiles.put(targetTile, type);
         } else {// invalid as too close to border
-            HexStartLogger.log().log(Level.WARNING, "Tried to place {0} on field {1} for {2} but was: {3}",
+            HexStratLogger.log().log(Level.WARNING, "Tried to place {0} on field {1} for {2} but was: {3}",
                     new Object[]{type, effectiveCoordinate, imprint.getData(), targetTile});
             return false;
         }
@@ -115,7 +115,7 @@ public class Architect {
                         targetTile.getTerrainType().getNode().getPos(), targetTiles);
             }
         } else {// invalid as too close to border
-            HexStartLogger.log().log(Level.WARNING, "Tried to remove {0} on field {1} for {2} but expected: {3}",
+            HexStratLogger.log().log(Level.WARNING, "Tried to remove {0} on field {1} for {2} but expected: {3}",
                     new Object[]{targetTile, effectiveCoordinate, imprint.getData(), type});
             return false;
         }

@@ -10,6 +10,8 @@ public interface ICreatureSkill {
 
     int getRadius();
 
+    int getMaximumEffectLength();
+
     CreatureSkillAOA getAOA();
 
     int getCost();

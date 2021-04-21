@@ -13,9 +13,7 @@ import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
-import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.networking.messages.GameStartMessage;
 import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
@@ -25,7 +23,7 @@ import de.flojo.jam.networking.messages.YouCanBuildMessage;
 import de.flojo.jam.networking.server.ClientServerConnection;
 import de.flojo.jam.networking.server.PlayerController;
 import de.flojo.jam.networking.server.ServerController;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.IProvideContext;
 import de.gurkenlabs.litiengine.Game;
 
@@ -66,7 +64,7 @@ public class MainGameControl {
                 .getPlayer(state.getCurrentTurn());
         currentPlayer.send(new YouCanBuildMessage(null,
                 state.getCurrentTurn().ifOne(state.getMoneyP1Left(), state.getMoneyP2Left())));
-        HexStartLogger.log().log(Level.INFO, "Sending build request to {0}.", currentPlayer);
+        HexStratLogger.log().log(Level.INFO, "Sending build request to {0}.", currentPlayer);
     }
 
     public void buildTerrainAt(PlayerId player, TerrainId terrain, BoardCoordinate position) {
@@ -118,7 +116,7 @@ public class MainGameControl {
         ClientServerConnection currentPlayer = controller.getPlayerController()
                 .getPlayer(state.getCurrentTurn());
         currentPlayer.send(new ItIsYourTurnMessage(null));
-        HexStartLogger.log().log(Level.INFO, "Sending game-turn request to {0}.", currentPlayer);
+        HexStratLogger.log().log(Level.INFO, "Sending game-turn request to {0}.", currentPlayer);
     }
 
     private void nextRound() {
@@ -161,7 +159,7 @@ public class MainGameControl {
     public Optional<Thread> performAction(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
-            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
+            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
             return Optional.empty();
         }
         final Creature creature = mayCreature.get();
@@ -187,8 +185,8 @@ public class MainGameControl {
     private void processSkill(TurnActionMessage message, Creature creature) {
         JsonDataOfSkill skillId = message.getSkillData();
         Optional<AbstractSkill> maySkill = creature.getSkill(skillId);
-        if(maySkill.isEmpty()) {
-            HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{ message.toJson(), creature });
+        if (maySkill.isEmpty()) {
+            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{message.toJson(), creature});
             return;
         }
         AbstractSkill skill = maySkill.get();
@@ -196,7 +194,7 @@ public class MainGameControl {
             case CREATURE:
                 Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());
                 if (mayTargetCreature.isEmpty()) {
-                    HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
+                    HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), skill, mayTargetCreature.get());
@@ -208,7 +206,7 @@ public class MainGameControl {
                 creature.getAttributes().useAp(skill.getCost());
                 break;
             default:
-                HexStartLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
+                HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
         }
     }
 
@@ -222,7 +220,7 @@ public class MainGameControl {
 
     public void giftRestOfMoney(PlayerId player) {
         int moneyLeft = player.ifOne(state.getMoneyP1Left(), state.getMoneyP2Left());
-        HexStartLogger.log().log(Level.INFO, "Player {0} gifts rest of his money ({1})", new Object[] {player, moneyLeft});
+        HexStratLogger.log().log(Level.INFO, "Player {0} gifts rest of his money ({1})", new Object[]{player, moneyLeft});
         state.reduceMoney(player, moneyLeft);
     }
 }

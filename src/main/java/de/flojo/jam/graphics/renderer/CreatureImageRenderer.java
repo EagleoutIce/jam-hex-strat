@@ -1,5 +1,6 @@
 package de.flojo.jam.graphics.renderer;
 
+import de.flojo.jam.util.ImageUtil;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.resources.Resources;
 
@@ -7,7 +8,6 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.RescaleOp;
 
 public class CreatureImageRenderer implements IRenderData {
     public static final String FLY_LILA = "creatures/effects/fliegen_overlay_lila.png";
@@ -37,20 +37,11 @@ public class CreatureImageRenderer implements IRenderData {
         generateImageVariants();
     }
 
-    private static RescaleOp modifyRGBA(float r, float g, float b, float a) {
-        return new RescaleOp(new float[]{r, g, b, a}, new float[4], null);
-    }
-
-    public static boolean isTransparent(BufferedImage image, int x, int y) {
-        int pixel = image.getRGB(x, y);
-        return (pixel >> 24) == 0x00;
-    }
-
     private void generateImageVariants() {
-        modifyRGBA(0.6f, 0.6f, 0.6f, 1).filter(image, darkerImage);
-        modifyRGBA(1.36f, 1.36f, 1.36f, 1).filter(image, highlightImage);
-        modifyRGBA(0.8f, 0.8f, 0.8f, 1).filter(image, darkerHighlightImage);
-        modifyRGBA(1.2f, 1.2f, 1.2f, 1).filter(image, markImage);
+        ImageUtil.modifyRGBA(image, darkerImage, 0.6f, 0.6f, 0.6f, 1);
+        ImageUtil.modifyRGBA(image, highlightImage, 1.36f, 1.36f, 1.36f, 1);
+        ImageUtil.modifyRGBA(image, darkerHighlightImage, 0.8f, 0.8f, 0.8f, 1);
+        ImageUtil.modifyRGBA(image, markImage, 1.2f, 1.2f, 1.2f, 1);
     }
 
     @Override

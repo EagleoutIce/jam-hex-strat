@@ -1,7 +1,6 @@
 package de.flojo.jam.util;
 
 import de.flojo.jam.game.board.BoardCoordinate;
-import de.gurkenlabs.litiengine.Game;
 
 import java.util.logging.Level;
 
@@ -42,10 +41,10 @@ public class HexMaths {
             if (dY < 0) {
                 return new BoardCoordinate(dX, -1);
             } else if (dY == 0) {
-                HexStartLogger.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0} to b {1}", new Object[]{a, t});
+                HexStratLogger.log().log(Level.SEVERE, "dX > 0 && dY == 0 steppe from a {0} to b {1}", new Object[]{a, t});
             }
         } else if (dY == 0) {
-            HexStartLogger.log().log(Level.SEVERE, "dX < 0 && dY == 0 steppe from a {0} to b {1}", new Object[]{a, t});
+            HexStratLogger.log().log(Level.SEVERE, "dX < 0 && dY == 0 steppe from a {0} to b {1}", new Object[]{a, t});
         } else if (dY < 0) {
             return new BoardCoordinate(mY == 0 ? -1 : 1, dY);
         }

@@ -3,7 +3,6 @@ package de.flojo.jam.networking.messages;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.creature.ActionType;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
 
 import java.util.List;
 import java.util.Objects;

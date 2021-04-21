@@ -7,6 +7,7 @@ import java.util.concurrent.TimeoutException;
 
 public class Back2Future<T> implements Future<T> {
     private final T value;
+
     public Back2Future(T value) {
         this.value = value;
     }

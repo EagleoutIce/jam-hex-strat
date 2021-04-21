@@ -1,6 +1,6 @@
 package de.flojo.jam.audio;
 
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.sound.MusicPlayback;
@@ -15,21 +15,24 @@ import java.util.logging.Level;
 
 public class BackgroundMusic {
 
-    private static final BackgroundMusic instance = new BackgroundMusic();
     public static final AtomicBoolean toggleMusic = new AtomicBoolean();
-
-    public static  final Set<NamedTrack> TRACKS = Set.of(
+    public static final Set<NamedTrack> TRACKS = Set.of(
             new NamedTrack("audio/background/backD.wav", "Track D"),
             new NamedTrack("audio/background/backC.wav", "Track C"),
             new NamedTrack("audio/background/backB.wav", "Track B"),
             new NamedTrack("audio/background/backA.wav", "Track A"));
+    private static final BackgroundMusic instance = new BackgroundMusic();
 
     private BackgroundMusic() {
     }
 
+    public static BackgroundMusic getInstance() {
+        return instance;
+    }
+
     public void enable() {
         Input.keyboard().onKeyTyped(KeyEvent.VK_P, keyEvent -> {
-            if(toggleMusic.get()) {
+            if (toggleMusic.get()) {
                 Game.audio().stopMusic();
                 toggleMusic.set(false);
             } else {
@@ -42,17 +45,13 @@ public class BackgroundMusic {
         throw new OperationNotSupportedException();
     }
 
-    public static BackgroundMusic getInstance() {
-        return instance;
-    }
-
     public void playNewBackgroundMusic() {
         new Thread(this::asyncStartBackgroundMusic).start();
     }
 
     private void asyncStartBackgroundMusic() {
         final NamedTrack track = Game.random().choose(TRACKS);
-        HexStartLogger.log().log(Level.INFO,"Playing track: {0}", track.getName());
+        HexStratLogger.log().log(Level.INFO, "Playing track: {0}", track.getName());
         final MusicPlayback playing = Game.audio().playMusic(track);
         playing.addSoundPlaybackListener(new SoundPlaybackListener() {
             @Override

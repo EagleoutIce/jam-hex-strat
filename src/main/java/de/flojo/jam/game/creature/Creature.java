@@ -12,9 +12,7 @@ import de.flojo.jam.game.creature.skills.DefaultReadContext;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.player.PlayerId;
-import de.flojo.jam.util.IProvideContext;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
@@ -24,8 +22,8 @@ import java.util.Optional;
 // compound of base and core; mostly delegates
 public class Creature implements IRenderable {
 
-    protected static final int DIE_DURATION = 1200;
     public static final SoundPoolPlayGroup soundPlayGroup = new SoundPoolPlayGroup(BackgroundMusic.toggleMusic::get);
+    protected static final int DIE_DURATION = 1200;
     private final String name;
     private final CreatureId creatureId;
     private final CreatureBase base;
@@ -117,6 +115,7 @@ public class Creature implements IRenderable {
     public void useSkill(IProvideReadContext context, AbstractSkill skill, Tile target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
+
     public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }
@@ -124,6 +123,7 @@ public class Creature implements IRenderable {
     public void useSkill(Board board, AbstractSkill skill, Tile target) {
         useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
     }
+
     public void useSkill(Board board, AbstractSkill skill, Creature target) {
         useSkill(new DefaultReadContext(board, cCollection, tCollection), skill, target);
     }

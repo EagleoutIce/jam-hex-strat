@@ -13,7 +13,6 @@ import de.flojo.jam.game.creature.IActionMove;
 import de.flojo.jam.game.creature.IActionSkill;
 import de.flojo.jam.game.creature.IActionSkip;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
-import de.flojo.jam.game.creature.skills.SkillId;
 import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.BuildingPhaseButtonPresenter;
@@ -132,7 +131,7 @@ public class GameField implements IRenderable, IProvideContext {
             canBuild = false;
             onChoice.accept(b);
             buildingPhaseButtons.disable();
-            if(b.getChosenCreature() != null)
+            if (b.getChosenCreature() != null)
                 b.getChosenCreature().getSoundPool().play();
             ourTurn = false;
             buildingPhaseButtons.setCurrentBuildConsumer(null);

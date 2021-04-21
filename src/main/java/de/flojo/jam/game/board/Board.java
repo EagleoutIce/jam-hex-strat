@@ -10,7 +10,7 @@ import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
@@ -81,7 +81,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         setupResizeListener();
         initialShifts();
         highlightMask = SimpleHighlighter.get();
-        HexStartLogger.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
+        HexStratLogger.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
         setupInput();
     }
 

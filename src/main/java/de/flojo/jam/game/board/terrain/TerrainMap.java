@@ -7,7 +7,7 @@ import com.google.gson.JsonSyntaxException;
 import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainData;
 import de.flojo.jam.util.HexMaths;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 
@@ -56,7 +56,7 @@ public class TerrainMap implements Serializable {
             System.exit(1);
         }
         if (terrain == null) {
-            HexStartLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
+            HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
             terrain = new Terrain(terrainPath, new TerrainData(h));
         }
         final TerrainData data = terrain.getData();
@@ -71,7 +71,7 @@ public class TerrainMap implements Serializable {
                 line.add(TerrainTile.EMPTY);
             }
         }
-        HexStartLogger.log().log(Level.INFO, "Loaded TerrainMap: {0}", terrain);
+        HexStratLogger.log().log(Level.INFO, "Loaded TerrainMap: {0}", terrain);
     }
 
     public TerrainTile getTerrainAt(int x, int y) {

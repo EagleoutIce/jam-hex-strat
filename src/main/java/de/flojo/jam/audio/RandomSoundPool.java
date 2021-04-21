@@ -1,7 +1,7 @@
 package de.flojo.jam.audio;
 
 import de.flojo.jam.util.Back2Future;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
@@ -21,10 +21,6 @@ public class RandomSoundPool implements SoundPool<Sound> {
     private final Set<Future<Sound>> futureSounds;
     private final SoundPoolPlayGroup group;
 
-    private static Future<Sound> loadSound(String s) {
-        return Resources.sounds().getAsync(s);
-    }
-
     public RandomSoundPool(SoundPoolPlayGroup group, String soundPrefix, String soundPostfix, int rangeStart, int rangeEnd) {
         this.group = group;
         this.futureSounds = IntStream.range(rangeStart, rangeEnd).mapToObj(i -> soundPrefix + i + soundPostfix).map(RandomSoundPool::loadSound).collect(Collectors.toUnmodifiableSet());
@@ -40,6 +36,9 @@ public class RandomSoundPool implements SoundPool<Sound> {
         this.futureSounds = sounds.stream().map(Back2Future::new).collect(Collectors.toUnmodifiableSet());
     }
 
+    private static Future<Sound> loadSound(String s) {
+        return Resources.sounds().getAsync(s);
+    }
 
     @Override
     public Optional<Sound> get() {
@@ -48,7 +47,7 @@ public class RandomSoundPool implements SoundPool<Sound> {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ExecutionException | TimeoutException e) {
-            HexStartLogger.log().log(Level.WARNING,"Waiting on future sound",e);
+            HexStratLogger.log().log(Level.WARNING, "Waiting on future sound", e);
         }
         return Optional.empty();
     }

@@ -8,11 +8,12 @@ import de.gurkenlabs.litiengine.sound.SoundEngine;
 import java.util.function.Supplier;
 
 public class SoundPoolPlayGroup {
+    private static final float DEFAULT_VOLUME = .35f;
     private SFXPlayback currently;
     private Supplier<Boolean> bindPlaySupplier = null;
-    private static final float DEFAULT_VOLUME = .35f;
 
-    public SoundPoolPlayGroup() { }
+    public SoundPoolPlayGroup() {
+    }
 
     public SoundPoolPlayGroup(Supplier<Boolean> bindPlaySupplier) {
         this.bindPlaySupplier = bindPlaySupplier;
@@ -23,10 +24,10 @@ public class SoundPoolPlayGroup {
     }
 
     public void play(Sound sound, float volume) {
-        if(Boolean.FALSE.equals(bindPlaySupplier.get())) {
+        if (Boolean.FALSE.equals(bindPlaySupplier.get())) {
             return;
         }
-        if(currently != null)
+        if (currently != null)
             currently.cancel();
         currently = Game.audio().playSound(sound, false, SoundEngine.DEFAULT_MAX_DISTANCE, volume);
     }

@@ -7,7 +7,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.networking.server.ServerController;
 import de.flojo.jam.util.FileHelper;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -181,19 +181,19 @@ public class ServerSetupScreen extends Screen {
     private void loadCurrentTerrain() {
         if (chosenTerrainPath == null)
             return;
-        HexStartLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
+        HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
         try {
             TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosenTerrainPath),
                     chosenTerrainPath);
             gameField.updateTerrain(map);
-            HexStartLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", gameField.getTerrainName());
+            HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", gameField.getTerrainName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
     }
 
     private void startServer() {
-        HexStartLogger.log().log(Level.INFO, "Starting Server on Port {0}", getAddress());
+        HexStratLogger.log().log(Level.INFO, "Starting Server on Port {0}", getAddress());
         this.startServer.setText("Stop");
         this.portNumber.setEnabled(false);
         this.startMoney.setEnabled(false);
@@ -209,7 +209,7 @@ public class ServerSetupScreen extends Screen {
     }
 
     private void onNetworkUpdate(String... data) {
-        HexStartLogger.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
+        HexStratLogger.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
 
         if (data.length == 0)
             return;
@@ -217,7 +217,7 @@ public class ServerSetupScreen extends Screen {
         if ("STOPPED".equals(data[0])) {
             stopServer(false);
         } else {
-            HexStartLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
+            HexStratLogger.log().log(Level.WARNING, "Unknown Data on first Element? ({0})", data[0]);
         }
     }
 
@@ -232,7 +232,7 @@ public class ServerSetupScreen extends Screen {
     private boolean stopServer(boolean ask) {
         if (ask && this.serverStarted && askStupidUserForConfirmationOnExit())
             return false;
-        HexStartLogger.log().log(Level.INFO, "Stopping Server on Port {0}", getAddress());
+        HexStratLogger.log().log(Level.INFO, "Stopping Server on Port {0}", getAddress());
         this.startServer.setText("Start");
         this.portNumber.setEnabled(true);
         this.startMoney.setEnabled(true);

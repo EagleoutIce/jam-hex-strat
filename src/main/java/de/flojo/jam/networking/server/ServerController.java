@@ -19,15 +19,13 @@ import de.flojo.jam.networking.messages.MessageTypeEnum;
 import de.flojo.jam.networking.messages.TurnActionMessage;
 import de.flojo.jam.networking.server.management.MainGameControl;
 import de.flojo.jam.networking.server.management.ServerStateEnum;
-import de.flojo.jam.util.HexStartLogger;
+import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.IProvideContext;
-import de.gurkenlabs.litiengine.Game;
 import org.java_websocket.WebSocket;
 import org.java_websocket.framing.CloseFrame;
 
 import java.net.InetSocketAddress;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,7 +51,7 @@ public class ServerController implements IServerController {
 
     @Override
     public void handleCloseFor(final WebSocket conn, final int code, final String reason, final boolean remote) {
-        HexStartLogger.log().log(Level.INFO, "Closed connection with {0} with code {1} and reason {2} (remote: {3})",
+        HexStratLogger.log().log(Level.INFO, "Closed connection with {0} with code {1} and reason {2} (remote: {3})",
                 new Object[]{conn, code, reason, remote});
         executorService.execute(() -> {
             playerController.removePlayer(conn);
@@ -65,7 +63,7 @@ public class ServerController implements IServerController {
 
     @Override
     public void handleMessage(final WebSocket conn, final String message) {
-        HexStartLogger.log().log(Level.INFO, "Got Message: \"{0}\" from {1}", new Object[]{message, conn});
+        HexStratLogger.log().log(Level.INFO, "Got Message: \"{0}\" from {1}", new Object[]{message, conn});
         executorService.execute(() -> processMessage(conn, message));
     }
 
@@ -114,8 +112,8 @@ public class ServerController implements IServerController {
 
     private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
                                    final ClientServerConnection connection) {
-        HexStartLogger.log().log(Level.FINE, "Received build choice from {0}: {1}", new Object[]{connection, message});
-        if(message.isGift()) {
+        HexStratLogger.log().log(Level.FINE, "Received build choice from {0}: {1}", new Object[]{connection, message});
+        if (message.isGift()) {
             mGController.giftRestOfMoney(connection.getRole());
         } else if (message.getTerrain() != null) {
             // place terrain
@@ -125,7 +123,7 @@ public class ServerController implements IServerController {
         } else if (message.getTrap() != null) {
             mGController.spawnTrapAt(connection.getRole(), message.getTrap(), message.getPosition());
         } else {
-            HexStartLogger.log().log(Level.SEVERE, "No build-choice from {0}: {1}.", new Object[]{connection, message});
+            HexStratLogger.log().log(Level.SEVERE, "No build-choice from {0}: {1}.", new Object[]{connection, message});
         }
 
         playerController.sendBoth(new BuildUpdateMessage(null, mGController.getTerrainMap()));
@@ -137,7 +135,7 @@ public class ServerController implements IServerController {
 
     private void handleTurnAction(final TurnActionMessage message, final WebSocket conn,
                                   final ClientServerConnection connection) {
-        HexStartLogger.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
+        HexStratLogger.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
             return;
         mGController.performAction(message);
@@ -150,7 +148,7 @@ public class ServerController implements IServerController {
 
     private void handleHello(final HelloMessage message, final WebSocket conn,
                              final ClientServerConnection csConnection) throws IllegalMessageException, NameNotAvailableException {
-        HexStartLogger.log().log(Level.FINE, "Received hello: {0}", message);
+        HexStratLogger.log().log(Level.FINE, "Received hello: {0}", message);
         if (csConnection != null)
             throw new IllegalMessageException("You have already sent a Hello-Message");
 
@@ -172,7 +170,7 @@ public class ServerController implements IServerController {
 
     private void handleNullTypeOnContainer(final WebSocket conn, final ClientServerConnection connection,
                                            final String message) {
-        HexStartLogger.log().log(Level.WARNING, "The Message: \"{0}\" was not in a valid container format!", message);
+        HexStratLogger.log().log(Level.WARNING, "The Message: \"{0}\" was not in a valid container format!", message);
         UUID servedByClientId;
         if (connection == null) {
             servedByClientId = null;
@@ -187,7 +185,7 @@ public class ServerController implements IServerController {
     }
 
     private void sendErrorMessageToDealWithHandlerException(final WebSocket conn, final HandlerException ex) {
-        HexStartLogger.log().log(Level.SEVERE, "Error while handling: {0} ({1}).",
+        HexStratLogger.log().log(Level.SEVERE, "Error while handling: {0} ({1}).",
                 new Object[]{ex.getError(), ex.getMessage()});
         final ClientServerConnection connection = conn.getAttachment();
         UUID servedByClientId;
@@ -203,7 +201,7 @@ public class ServerController implements IServerController {
 
     @Override
     public void handleOpenFor(final WebSocket conn) {
-        HexStartLogger.log().log(Level.INFO, "Connected: {0}", new Object[]{conn});
+        HexStratLogger.log().log(Level.INFO, "Connected: {0}", new Object[]{conn});
     }
 
     public PlayerController getPlayerController() {

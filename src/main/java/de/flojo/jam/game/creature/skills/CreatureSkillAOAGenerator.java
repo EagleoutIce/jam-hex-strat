@@ -38,7 +38,7 @@ public class CreatureSkillAOAGenerator {
             getAOASingleLine(start, board, creatures, minRange, maxRange, delta.x, delta.y, tiles);
         }
         tiles.remove(start);
-        if(emptyOnly)
+        if (emptyOnly)
             tiles.removeIf(t -> !t.getTerrainType().equals(TerrainTile.EMPTY));
         return tiles;
     }

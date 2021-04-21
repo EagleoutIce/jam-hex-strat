@@ -8,16 +8,12 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 // TODO: polish this dirty fun :)
-public class HexStartLogger {
-    private static final Logger log = Logger.getLogger(HexStartLogger.class.getName());
+public class HexStratLogger {
+    private static final Logger log = Logger.getLogger(HexStratLogger.class.getName());
+    private static final HexStratLogger HEX_START_LOGGER = new HexStratLogger();
     private final Logger logger;
-    private static final HexStartLogger HEX_START_LOGGER = new HexStartLogger();
 
-    public static Logger log() {
-        return HEX_START_LOGGER.logger;
-    }
-
-    private HexStartLogger() {
+    private HexStratLogger() {
         LogManager.getLogManager().reset();
         logger = Logger.getLogger("");
         try {
@@ -32,5 +28,9 @@ public class HexStartLogger {
         } catch (Exception exception) {
             log.log(Level.SEVERE, exception.getMessage(), exception);
         }
+    }
+
+    public static Logger log() {
+        return HEX_START_LOGGER.logger;
     }
 }

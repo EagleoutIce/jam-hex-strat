@@ -9,7 +9,6 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
-import de.flojo.jam.game.creature.skills.ICreatureSkill;
 import de.flojo.jam.game.creature.skills.SkillPlantTrap;
 import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.player.PlayerId;
@@ -31,7 +30,7 @@ public class CreatureGoblin extends Creature {
     private static CreatureAttributes createPeasantAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillSimplePunch(1, 0, 1, "Punch (1)", "Goblin knows his self-defense"));
-        skills.add(new SkillPlantTrap(() -> "Plant Trap", 0,1,"Plant a trap"));
+        skills.add(new SkillPlantTrap(() -> "Plant Trap", 0, 1, "Plant a trap"));
         return new CreatureAttributes(3, 1, skills);
     }
 }

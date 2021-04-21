@@ -1,42 +1,33 @@
 package de.flojo.jam.graphics;
 
+import de.flojo.jam.util.ImageUtil;
 import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Valign;
 import de.gurkenlabs.litiengine.gui.ImageComponent;
 import de.gurkenlabs.litiengine.gui.ImageScaleMode;
-import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.*;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.function.BooleanSupplier;
 
 public class ImageButton extends ImageComponent {
 
     private BooleanSupplier shouldBeEnabled = null;
-
-    public ImageButton(final String path, final String text, Font font) {
-        this(0, 0, Resources.images().get(path), text, font);
-    }
-
+    private BufferedImage enabled;
+    private BufferedImage disabled;
 
     public ImageButton(double width, double height, double x, double y, final BufferedImage img, final String text, Font font) {
         super(x, y, width, height, img);
+        this.enabled = img;
+        BufferedImage couldBeDisabled;
+        try {
+            couldBeDisabled = ImageUtil.modifyRGBA(this.enabled, 0.3f, 0.3f, 0.3f, 1);
+        } catch (IllegalArgumentException ex) {
+            couldBeDisabled = null;
+        }
+        disabled = couldBeDisabled;
         setText(text);
         this.setFont(font);
-        postSetup();
-    }
-
-
-    public ImageButton(double x, double y, final BufferedImage img, final String text, Font font) {
-        super(x, y, img);
-        setText(text);
-        this.setFont(font);
-        FontRenderContext context = new FontRenderContext(new AffineTransform(), true, true);
-        Rectangle2D dimRect = font.getStringBounds(text, context);
-        this.setDimension(dimRect.getWidth() * 1.15f, dimRect.getHeight());
         postSetup();
     }
 
@@ -50,6 +41,21 @@ public class ImageButton extends ImageComponent {
         if (shouldBeEnabled != null) {
             this.setEnabled(shouldBeEnabled.getAsBoolean());
         }
+        updateEnabledImageState();
+    }
+
+    private void updateEnabledImageState() {
+        if (this.isEnabled()) {
+            this.setImage(enabled);
+        } else if (disabled != null) {
+            this.setImage(disabled);
+        }
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        updateEnabledImageState();
     }
 
     private void postSetup() {
