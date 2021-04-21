@@ -42,10 +42,6 @@ public class CreatureAttributes {
         return currentAp;
     }
 
-    public boolean useAp() {
-        return useAp(1);
-    }
-
     public boolean useAp(int n) {
         if (this.currentAp <= 0)
             return false;

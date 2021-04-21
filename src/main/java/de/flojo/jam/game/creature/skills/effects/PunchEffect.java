@@ -1,5 +1,6 @@
 package de.flojo.jam.game.creature.skills.effects;
 
+import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.traps.Trap;
@@ -85,8 +86,8 @@ public class PunchEffect implements IEffectTarget {
         target.moribund();
         awaitMovementCompletion(target);
         target.getBase().moveOutFieldRaw(
-                (int) (target.getBase().getTile().getCenter().getX() + deltaX * Tile.DEFAULT_RADIUS * 1.25),
-                target.getBase().getTile().getCenter().getY() + deltaY * Tile.DEFAULT_RADIUS);
+                (int) (target.getBase().getTile().getShiftedCenter().getX() + Board.zoom*deltaX * Tile.DEFAULT_RADIUS * 1.25),
+                target.getBase().getTile().getShiftedCenter().getY() + Board.zoom*deltaY * Tile.DEFAULT_RADIUS);
         awaitMovementCompletion(target);
         target.die();
     }

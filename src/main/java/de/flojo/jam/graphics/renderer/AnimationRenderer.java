@@ -1,5 +1,6 @@
 package de.flojo.jam.graphics.renderer;
 
+import de.flojo.jam.game.board.Board;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
@@ -46,7 +47,7 @@ public class AnimationRenderer implements IRenderData {
             lighterOperation.filter(spriteImage, currentImg);
             lastFrameUpdate = Game.time().now();
         }
-        ImageRenderer.render(g, currentImg, pos.getX() + offsetX, pos.getY() + offsetY);
+        ImageRenderer.renderScaled(g, currentImg, pos.getX() + Board.zoom * offsetX, pos.getY() + Board.zoom * offsetY, Board.zoom , Board.zoom);
     }
 
     @Override
@@ -61,7 +62,7 @@ public class AnimationRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + offsetX), (int) (pos.getY() + offsetY), sWidth, sHeight);
+        return new Rectangle((int) (pos.getX() + Board.zoom * offsetX), (int) (pos.getY() + Board.zoom * offsetY), (int)(Board.zoom * sWidth), (int)(Board.zoom * sHeight));
     }
 
     @Override

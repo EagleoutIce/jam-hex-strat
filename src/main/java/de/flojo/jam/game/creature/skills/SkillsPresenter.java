@@ -172,7 +172,7 @@ public class SkillsPresenter {
             skipSkill.setEnabled(true);
         presenter.update(c);
         if (Boolean.TRUE.equals(performed)) {
-            c.getAttributes().useAp();
+            c.getAttributes().useAp(presenter.getSkill().getCost());
             if (onAction != null)
                 onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, presenter.getSkill());
         }
