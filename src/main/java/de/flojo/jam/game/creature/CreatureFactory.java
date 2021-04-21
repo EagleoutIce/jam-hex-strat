@@ -8,6 +8,7 @@ import de.flojo.jam.game.creature.creatures.CreatureElf;
 import de.flojo.jam.game.creature.creatures.CreatureGoblin;
 import de.flojo.jam.game.creature.creatures.CreatureHalfling;
 import de.flojo.jam.game.creature.creatures.CreatureImp;
+import de.flojo.jam.game.creature.creatures.CreatureLizard;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
@@ -86,6 +87,8 @@ public class CreatureFactory {
                 return this::summonHalfling;
             case GOBLIN:
                 return this::summonGoblin;
+            case LIZARD:
+                return this::summonLizard;
             default:
             case NONE:
                 return null;
@@ -120,6 +123,11 @@ public class CreatureFactory {
 
     public Creature summonGoblin(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
         return new CreatureGoblin(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.GOBLIN.getRenderer(pId),
+                getDieAnimation(pId));
+    }
+
+    public Creature summonLizard(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+        return new CreatureLizard(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.LIZARD.getRenderer(pId),
                 getDieAnimation(pId));
     }
 

@@ -42,10 +42,18 @@ public enum CreatureId {
     ),
     GOBLIN("Goblin", 8, //
             new CreatureImageRenderer("creatures/goblin_blau.png", "creatures/goblin_blau_glow.png", CreatureImageRenderer.FLY_BLAU,
-                    -76 / 2.3d, -97 / 1.30d), //
+                    -76 / 2.1d, -97 / 1.30d), //
             new CreatureImageRenderer("creatures/goblin_lila.png", "creatures/goblin_lila_glow.png", CreatureImageRenderer.FLY_LILA,
-                    -74 / 1.92d, -97 / 1.32d),
+                    -74 / 1.95d, -97 / 1.32d),
             new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/goblin_ton_", ".ogg", 1, 6)
+    ),
+    LIZARD("Lizard", 6, //
+            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png", CreatureImageRenderer.FLY_LILA, -87d / 1.7,
+                    -102 / 1.27d), //
+            new CreatureImageRenderer("creatures/echse_lila.png", "creatures/echse_lila_glow.png", CreatureImageRenderer.FLY_BLAU,
+                    -87d / 2.3, -102 / 1.27d),
+            new NoSoundPool()
+            // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
     );
 
     private final String name;
