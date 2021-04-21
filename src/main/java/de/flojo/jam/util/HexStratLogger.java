@@ -16,6 +16,7 @@ public class HexStratLogger {
     private HexStratLogger() {
         LogManager.getLogManager().reset();
         logger = Logger.getLogger("");
+        logger.setLevel(Level.INFO);
         try {
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.ALL);

@@ -20,7 +20,7 @@ public class SingleSkillPresenter implements ISingleActionPresenter {
     public SingleSkillPresenter(AbstractSkill skill) {
         this.skill = skill;
         final String searchPath = getPath(skill);
-        HexStratLogger.log().log(Level.FINE, "Searching Skill-Presenter Image: {0}", searchPath);
+        HexStratLogger.log().log(Level.INFO, "Searching Skill-Presenter Image: {0} (no force)", searchPath);
         try {
             image = Resources.images().get(searchPath);
         } catch (ResourceLoadException ignored) {

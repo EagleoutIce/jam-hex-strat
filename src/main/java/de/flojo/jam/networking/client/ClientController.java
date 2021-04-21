@@ -144,7 +144,7 @@ public class ClientController implements IClientController {
     @Override
     public void send(MessageContainer message) {
         message.setClientId(context.getMyId());
-        HexStratLogger.log().log(Level.FINE, "Sending: {0}", message.toJson());
+        HexStratLogger.log().log(Level.INFO, "Sending: {0}", message.toJson());
         socket.send(message.toJson());
     }
 

@@ -89,7 +89,7 @@ public class GameScreen extends Screen {
     }
 
     void onNetworkUpdate(String... data) {
-        HexStratLogger.log().log(Level.FINE, "Got notified! ({0})", Arrays.toString(data));
+        HexStratLogger.log().log(Level.INFO, "Got notified! ({0})", Arrays.toString(data));
 
         if (data.length == 0)
             return;

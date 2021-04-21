@@ -13,8 +13,8 @@ import java.util.function.BooleanSupplier;
 public class ImageButton extends ImageComponent {
 
     private BooleanSupplier shouldBeEnabled = null;
-    private BufferedImage enabled;
-    private BufferedImage disabled;
+    private final BufferedImage enabled;
+    private final BufferedImage disabled;
 
     public ImageButton(double width, double height, double x, double y, final BufferedImage img, final String text, Font font) {
         super(x, y, width, height, img);

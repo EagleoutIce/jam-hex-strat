@@ -112,7 +112,7 @@ public class ServerController implements IServerController {
 
     private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
                                    final ClientServerConnection connection) {
-        HexStratLogger.log().log(Level.FINE, "Received build choice from {0}: {1}", new Object[]{connection, message});
+        HexStratLogger.log().log(Level.INFO, "Received build choice from {0}: {1}", new Object[]{connection, message});
         if (message.isGift()) {
             mGController.giftRestOfMoney(connection.getRole());
         } else if (message.getTerrain() != null) {
@@ -135,7 +135,7 @@ public class ServerController implements IServerController {
 
     private void handleTurnAction(final TurnActionMessage message, final WebSocket conn,
                                   final ClientServerConnection connection) {
-        HexStratLogger.log().log(Level.FINE, "Received turn action from {0}: {1}", new Object[]{connection, message});
+        HexStratLogger.log().log(Level.INFO, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
             return;
         mGController.performAction(message);
@@ -148,7 +148,7 @@ public class ServerController implements IServerController {
 
     private void handleHello(final HelloMessage message, final WebSocket conn,
                              final ClientServerConnection csConnection) throws IllegalMessageException, NameNotAvailableException {
-        HexStratLogger.log().log(Level.FINE, "Received hello: {0}", message);
+        HexStratLogger.log().log(Level.INFO, "Received hello: {0}", message);
         if (csConnection != null)
             throw new IllegalMessageException("You have already sent a Hello-Message");
 

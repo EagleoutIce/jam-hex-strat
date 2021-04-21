@@ -66,21 +66,27 @@ public class SkillsPresenter {
     }
 
     private void updateCreature(Creature c) {
-        if (c == null || !enabled.get())
+        if (c == null || !enabled.get()) {
+            HexStratLogger.log().log(Level.INFO, "Deny for null or disabled ({0})", c);
             return;
+        }
 
-        if (c == currentCreature)
+        if (c == currentCreature) {
+            HexStratLogger.log().log(Level.INFO, "Deny for current creature ({0})", c);
             return;
+        }
 
         if (!movementBuffer.isEmpty()) {
+            // HexStratLogger.log().log(Level.INFO, "Deny for unfinished move buffer ({0}; {1})", new Object[] {c, movementBuffer});
             moveOperationEnded(currentCreature, false, new BoardCoordinate(-1, -1));
-            return;
         }
 
         resetButtons();
 
-        if (this.playerId != null && c.getOwner() != this.playerId)
+        if (this.playerId != null && c.getOwner() != this.playerId) {
+            HexStratLogger.log().log(Level.INFO, "Deny for unmet player lock ({0}; {1}; {2})", new Object[] {c, this.playerId, c.getOwner()});
             return;
+        }
 
         currentCreature = c;
         currentCreature.getCreatureId().getSoundPool().play();
