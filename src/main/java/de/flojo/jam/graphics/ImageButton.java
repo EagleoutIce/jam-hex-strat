@@ -12,12 +12,19 @@ import java.util.function.BooleanSupplier;
 
 public class ImageButton extends ImageComponent {
 
-    private final BufferedImage enabled;
-    private final BufferedImage disabled;
+    private BufferedImage enabled;
+    private BufferedImage disabled;
     private BooleanSupplier shouldBeEnabled = null;
 
     public ImageButton(double width, double height, double x, double y, final BufferedImage img, final String text, Font font) {
         super(x, y, width, height, img);
+        updateImage(img);
+        setText(text);
+        this.setFont(font);
+        postSetup();
+    }
+
+    public void updateImage(BufferedImage img) {
         this.enabled = img;
         BufferedImage couldBeDisabled;
         try {
@@ -26,9 +33,7 @@ public class ImageButton extends ImageComponent {
             couldBeDisabled = null;
         }
         disabled = couldBeDisabled;
-        setText(text);
-        this.setFont(font);
-        postSetup();
+        this.setImage(enabled);
     }
 
     public void setEnabledSupplier(BooleanSupplier shouldBeEnabled) {
