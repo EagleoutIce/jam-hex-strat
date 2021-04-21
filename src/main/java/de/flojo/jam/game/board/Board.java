@@ -406,7 +406,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final String str = "F11 for help.";
         g.setFont(Main.TEXT_NORMAL);
         g.setColor(Color.YELLOW);
-        TextRenderer.render(g, str, Game.window().getWidth()-TextRenderer.getWidth(g, str)-10, Game.window().getHeight()-TextRenderer.getHeight(g, str)-18);
+        TextRenderer.render(g, str, Game.window().getWidth()-TextRenderer.getWidth(g, str)-15, Game.window().getHeight()-TextRenderer.getHeight(g, str)-25);
     }
 
 }
