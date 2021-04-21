@@ -1,5 +1,6 @@
 package de.flojo.jam.graphics.renderer;
 
+import de.flojo.jam.game.board.Board;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.resources.Resources;
 
@@ -59,8 +60,7 @@ public class SimpleImageRenderer implements IRenderData {
                 break;
 
         }
-        ImageRenderer.render(g, renderImage, pos.getX() + offsetX, pos.getY() + offsetY);
-
+        ImageRenderer.renderScaled(g, renderImage, pos.getX() + Board.zoom*offsetX , pos.getY() + Board.zoom*offsetY, Board.zoom, Board.zoom);
     }
 
     @Override
@@ -75,7 +75,7 @@ public class SimpleImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + offsetX), (int) (pos.getY() + offsetY), image.getWidth(), image.getHeight());
+        return new Rectangle((int) (pos.getX() + Board.zoom*offsetX), (int) (pos.getY() + Board.zoom*offsetY), (int)(Board.zoom*image.getWidth()), (int)(Board.zoom*image.getHeight()));
     }
 
     @Override

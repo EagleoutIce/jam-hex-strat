@@ -1,6 +1,7 @@
 package de.flojo.jam.game.creature;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.RenderHint;
@@ -84,21 +85,22 @@ public class CreatureCore {
     }
 
     protected void render(Graphics2D g) {
-        final Point c = base.getTile().getCenter();
-        final Point renderTarget = new Point(c.x - base.getMovementOffsetX(),
-                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY());
+        final Tile ourTile = base.getTile();
+        final Point c = ourTile.getCenter();
+        final Point renderTarget = new Point(c.x - base.getMovementOffsetX() + ourTile.getShiftX(),
+                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur) {
             g.setFont(Main.TEXT_NORMAL);
-            final String coords = getAttributes().getApLeft() + " / "
+            final String apInformation = getAttributes().getApLeft() + " / "
                     + getAttributes().getMpLeft();
-            renderTarget.translate((int) (-TextRenderer.getWidth(g, coords) / 2),
+            renderTarget.translate((int) (-TextRenderer.getWidth(g, apInformation) / 2),
                     (int) (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
             g.setColor(new Color(0f, 0f, 0f, .65f));
-            Rectangle2D bound = TextRenderer.getBounds(g, coords);
+            Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
             ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3, (int) bound.getWidth() + 6, (int) bound.getHeight() + 6), renderTarget);
             g.setColor(Color.ORANGE);
-            TextRenderer.render(g, coords, renderTarget);
+            TextRenderer.render(g, apInformation, renderTarget);
         }
     }
 

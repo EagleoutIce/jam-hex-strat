@@ -21,4 +21,5 @@ public class ImageUtil {
         int pixel = image.getRGB(x, y);
         return (pixel >> 24) == 0x00;
     }
+
 }

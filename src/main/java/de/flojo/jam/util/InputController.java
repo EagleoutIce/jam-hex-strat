@@ -7,6 +7,7 @@ import de.gurkenlabs.litiengine.input.IMouse.MouseClickedListener;
 import de.gurkenlabs.litiengine.input.IMouse.MouseMovedListener;
 import de.gurkenlabs.litiengine.input.Input;
 
+import java.awt.event.MouseWheelListener;
 import java.util.Set;
 
 public class InputController {
@@ -85,4 +86,11 @@ public class InputController {
         });
     }
 
+    public void onWheelMoved(MouseWheelListener eventHandler, Set<String> screens) {
+        Input.mouse().onWheelMoved(ke -> {
+            if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
+                return;
+            eventHandler.mouseWheelMoved(ke);
+        });
+    }
 }

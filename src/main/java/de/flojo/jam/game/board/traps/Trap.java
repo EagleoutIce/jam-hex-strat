@@ -104,7 +104,7 @@ public class Trap implements Serializable {
     public void renderBaseFor(Graphics2D g, PlayerId id) {
         if (id != null && id != owner && !enemyDidUncover)
             return;
-        getImprint().getNormalRenderer().render(g, rootPosition.getCenter(), isHovered());
+        getImprint().getNormalRenderer().render(g, rootPosition.getShiftedCenter(), isHovered());
     }
 
     public void renderTriggerFor(Graphics2D g, PlayerId id) {
@@ -112,7 +112,7 @@ public class Trap implements Serializable {
             return;
         if (!triggered.get())
             return;
-        getImprint().getTriggeredRenderer().render(g, rootPosition.getCenter(), isHovered());
+        getImprint().getTriggeredRenderer().render(g, rootPosition.getShiftedCenter(), isHovered());
     }
 
     public BoardCoordinate getCoordinate() {

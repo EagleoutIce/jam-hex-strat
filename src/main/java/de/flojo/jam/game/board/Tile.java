@@ -10,6 +10,7 @@ import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -32,9 +33,12 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     private final AtomicBoolean hover = new AtomicBoolean();
     private final AtomicBoolean mark = new AtomicBoolean();
     private Set<Tile> neighbours;
-
+    private final int origX;
+    private final int origY;
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
+        this.origX = x;
+        this.origY = y;
         this.coordinate = coordinate;
         this.terrainSupplier = type;
         this.placementOwner = DefaultBoardMask.get().getOwner(coordinate);
@@ -110,27 +114,31 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
         if (showCordData) {
             g.setColor(Color.WHITE);
             g.setFont(NUMBER_FONT);
-            TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2, getCenter().y + TextRenderer.getHeight(g, tileLabel) * 0.15);
+            TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2 + getShiftX(), getCenter().y + TextRenderer.getHeight(g, tileLabel) * 0.15 + getShiftY());
         }
+    }
+
+    public void updateZoom(float newZoom) {
+        this.setRadius((int) (DEFAULT_RADIUS * newZoom));
+        this.setCenter((int)(origX*newZoom), (int)(origY*newZoom));
     }
 
     @Override
     public void renderDecorations(Graphics2D g) {
         TerrainTile tt = terrainSupplier.getTerrainAt(coordinate);
         if (tt != null)
-            tt.render(g, getCenter(), getHint());
+            tt.render(g, getShiftedCenter(), getHint());
+    }
+
+    public Point2D getShiftedCenter() {
+        final Point2D center = getCenter();
+        return new Point((int)(center.getX() + getShiftX()), (int)(center.getY() + getShiftY()));
     }
 
     private RenderHint getHint() {
         if (hover.get())
             return RenderHint.HOVER;
         return mark.get() ? RenderHint.MARKED : RenderHint.NORMAL;
-    }
-
-    @Override
-    public void move(int rx, int ry) {
-        super.move(rx, ry);
-        // TODO: other stuff on zoom?
     }
 
     @Override
