@@ -106,22 +106,22 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private void updateBoardPosition() {
         if (Game.window().getHeight() - shiftY >= zoom * (background.getHeight() - PAN_SPEED)) {
-            final int offset = getBackgroundOffsetPosY();
+            final float offset = getBackgroundOffsetPosY();
             move(0, offset - shiftY);
         }
 
         if (Game.window().getWidth() - shiftX >= zoom * (background.getWidth() - PAN_SPEED)) {
-            final int offset = getBackgroundOffsetPosX();
+            final float offset = getBackgroundOffsetPosX();
             move(offset - shiftX, 0);
         }
     }
 
-    private int getBackgroundOffsetPosX() {
-        return (int) (Math.min(0, Game.window().getWidth() - zoom * (background.getWidth() - PAN_SPEED)));
+    private float getBackgroundOffsetPosX() {
+        return Math.min(0, Game.window().getWidth() - zoom * (background.getWidth() - PAN_SPEED));
     }
 
-    private int getBackgroundOffsetPosY() {
-        return (int) (Math.min(0, Game.window().getHeight() - zoom * (background.getHeight() - PAN_SPEED)));
+    private float getBackgroundOffsetPosY() {
+        return Math.min(0, Game.window().getHeight() - zoom * (background.getHeight() - PAN_SPEED));
     }
 
     private Point getTilesUpperLeft() {
@@ -177,14 +177,13 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     // yes ... yes... post patches :)
     @SuppressWarnings("java:S2696")
     private void updateForZoom(float newZoom) {
-        /*
-        float deltaX = (newZoom-zoom)*background.getWidth();
-        float deltaY = (newZoom-zoom)*background.getHeight();
-        move(-deltaX, -deltaY);
-        */
+        final float oldZoom = zoom;
         zoom = newZoom;
-        updateBoardPosition();
         tiles.values().forEach(t -> t.updateZoom(newZoom));
+        float deltaX = (newZoom-oldZoom)*background.getWidth();
+        float deltaY = (newZoom-oldZoom)*background.getHeight();
+        move(-deltaX/2, -deltaY/2);
+        updateBoardPosition();
     }
 
     private void toggleDataView() {
@@ -254,10 +253,12 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
 
-    public void move(final float rx, final float ry) {
-        this.shiftX += rx;
-        this.shiftY += ry;
-        tiles.forEach((c, t) -> t.move(rx, ry));
+    public void move(float rx, float ry) {
+        final float tx = (shiftX + rx > 0) ? 0 : rx;
+        final float ty = (shiftY + ry > 0) ? 0 : ry;
+        this.shiftX += tx;
+        this.shiftY += ty;
+        tiles.forEach((c, t) -> t.move(tx, ty));
     }
 
     public Tile findTile(final Point position) {
