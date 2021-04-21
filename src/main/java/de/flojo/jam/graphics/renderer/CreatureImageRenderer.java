@@ -51,7 +51,7 @@ public class CreatureImageRenderer implements IRenderData {
         for (RenderHint hint : hints) {
             switch (hint) {
                 case GLOW:
-                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + Board.zoom*(offsetX - GLOW_OFFSET_X), pos.getY() + Board.zoom*(offsetY - GLOW_OFFSET_Y), Board.zoom, Board.zoom);
+                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + Board.zoom * (offsetX - GLOW_OFFSET_X), pos.getY() + Board.zoom * (offsetY - GLOW_OFFSET_Y), Board.zoom, Board.zoom);
                     continue;
                 case HOVER:
                     renderImage = highlightImage;
@@ -72,7 +72,7 @@ public class CreatureImageRenderer implements IRenderData {
 
             }
             // TODO: zoom shift
-            ImageRenderer.renderScaled(g, renderImage, pos.getX() + Board.zoom*(offsetX), pos.getY() + Board.zoom*(offsetY), Board.zoom, Board.zoom);
+            ImageRenderer.renderScaled(g, renderImage, pos.getX() + Board.zoom * (offsetX), pos.getY() + Board.zoom * (offsetY), Board.zoom, Board.zoom);
         }
 
     }
@@ -89,7 +89,7 @@ public class CreatureImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.zoom*(offsetX)), (int) (pos.getY() + Board.zoom*(offsetY)), (int)(Board.zoom*image.getWidth()), (int)(Board.zoom*image.getHeight()));
+        return new Rectangle((int) (pos.getX() + Board.zoom * (offsetX)), (int) (pos.getY() + Board.zoom * (offsetY)), (int) (Board.zoom * image.getWidth()), (int) (Board.zoom * image.getHeight()));
     }
 
     @Override

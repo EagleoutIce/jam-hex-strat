@@ -84,7 +84,7 @@ public class SkillsPresenter {
         resetButtons();
 
         if (this.playerId != null && c.getOwner() != this.playerId) {
-            HexStratLogger.log().log(Level.INFO, "Deny for unmet player lock ({0}; {1}; {2})", new Object[] {c, this.playerId, c.getOwner()});
+            HexStratLogger.log().log(Level.INFO, "Deny for unmet player lock ({0}; {1}; {2})", new Object[]{c, this.playerId, c.getOwner()});
             return;
         }
 

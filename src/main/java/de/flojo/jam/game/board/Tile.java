@@ -32,9 +32,10 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     private final transient TerrainTypeSupplier terrainSupplier;
     private final AtomicBoolean hover = new AtomicBoolean();
     private final AtomicBoolean mark = new AtomicBoolean();
-    private Set<Tile> neighbours;
     private final int origX;
     private final int origY;
+    private Set<Tile> neighbours;
+
     public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
         this.origX = x;
@@ -120,7 +121,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     public void updateZoom(float newZoom) {
         this.setRadius((int) (DEFAULT_RADIUS * newZoom));
-        this.setCenter((int)(origX*newZoom), (int)(origY*newZoom));
+        this.setCenter((int) (origX * newZoom), (int) (origY * newZoom));
     }
 
     @Override
@@ -132,7 +133,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     public Point2D getShiftedCenter() {
         final Point2D center = getCenter();
-        return new Point((int)(center.getX() + getShiftX()), (int)(center.getY() + getShiftY()));
+        return new Point((int) (center.getX() + getShiftX()), (int) (center.getY() + getShiftY()));
     }
 
     private RenderHint getHint() {
@@ -149,5 +150,4 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     public TerrainTile getTerrainType() {
         return terrainSupplier.getTerrainAt(coordinate);
     }
-
 }

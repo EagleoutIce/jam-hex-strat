@@ -9,8 +9,8 @@ public class Hexagon extends Polygon {
     private final Point[] points = new Point[SIDES];
     private Point center;
     private int radius;
-    private int shiftX=0;
-    private int shiftY=0;
+    private int shiftX = 0;
+    private int shiftY = 0;
 
     public Hexagon(Point center, int radius) {
         npoints = SIDES;
@@ -74,6 +74,12 @@ public class Hexagon extends Polygon {
         return center;
     }
 
+    public void setCenter(Point center) {
+        this.center = center;
+
+        updatePoints();
+    }
+
     public int getShiftX() {
         return shiftX;
     }
@@ -82,13 +88,7 @@ public class Hexagon extends Polygon {
         return shiftY;
     }
 
-    public void setCenter(Point center) {
-        this.center = center;
-
-        updatePoints();
-    }
-
-    public void move(int rx, int ry) {
+    public void move(float rx, float ry) {
         this.shiftX += rx;
         this.shiftY += ry;
         updatePoints();
@@ -101,7 +101,7 @@ public class Hexagon extends Polygon {
     public synchronized void updatePoints() {
         for (int p = 0; p < SIDES; p++) {
             double angle = findAngle((double) p / SIDES);
-            Point point = findPoint((int) center.getX()+shiftX, (int) center.getY()+shiftY, radius, angle);
+            Point point = findPoint((int) center.getX() + shiftX, (int) center.getY() + shiftY, radius, angle);
             xpoints[p] = point.x;
             ypoints[p] = point.y;
             points[p] = point;

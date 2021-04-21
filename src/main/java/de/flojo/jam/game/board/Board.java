@@ -11,7 +11,6 @@ import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStratLogger;
-import de.flojo.jam.util.ImageUtil;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
@@ -39,6 +38,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public static final int PADDING = 0;
     private static final long serialVersionUID = 6531704891590315776L;
     private static final int PAN_SPEED = 3;
+    public static float zoom = 1f;
     private final transient BufferedImage background;
     private final String screenName;
     private final int width;
@@ -54,7 +54,6 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private TerrainMap terrainMap;
     private int shiftX;
     private int shiftY;
-    public static float zoom = 1f;
     private IHighlightMask highlightMask;
 
     public Board(final String terrainPath, final String screenName) {
@@ -82,7 +81,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         tilesUpperLeft = getTilesUpperLeft();
         setupTiles();
         setupResizeListener();
-        initialShifts();
+        initialBoardShift();
         highlightMask = SimpleHighlighter.get();
         HexStratLogger.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
         setupInput();
@@ -96,9 +95,9 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         this.terrainMap = terrainMap;
     }
 
-    private void initialShifts() {
-        move(getBackgroundOffsetPosX() / 2, 0);
-        move(0, getBackgroundOffsetPosY() / 2);
+    private void initialBoardShift() {
+        move(getBackgroundOffsetPosX() / 2f, 0);
+        move(0, getBackgroundOffsetPosY() / 2f);
     }
 
     private void setupResizeListener() {
@@ -106,35 +105,35 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void updateBoardPosition() {
-        if (Game.window().getHeight() - shiftY >= zoom*(background.getHeight() - PAN_SPEED)) {
+        if (Game.window().getHeight() - shiftY >= zoom * (background.getHeight() - PAN_SPEED)) {
             final int offset = getBackgroundOffsetPosY();
             move(0, offset - shiftY);
         }
 
-        if (Game.window().getWidth() - shiftX >= zoom*(background.getWidth() - PAN_SPEED)) {
+        if (Game.window().getWidth() - shiftX >= zoom * (background.getWidth() - PAN_SPEED)) {
             final int offset = getBackgroundOffsetPosX();
             move(offset - shiftX, 0);
         }
     }
 
     private int getBackgroundOffsetPosX() {
-        return (int)(Math.min(0, Game.window().getWidth() - zoom*(background.getWidth() - PAN_SPEED)));
+        return (int) (Math.min(0, Game.window().getWidth() - zoom * (background.getWidth() - PAN_SPEED)));
     }
 
     private int getBackgroundOffsetPosY() {
-        return (int)(Math.min(0, Game.window().getHeight() - zoom*(background.getHeight() - PAN_SPEED)));
+        return (int) (Math.min(0, Game.window().getHeight() - zoom * (background.getHeight() - PAN_SPEED)));
     }
 
     private Point getTilesUpperLeft() {
-        final double topWidth = zoom*(Tile.getWidth() - 2 * Tile.getSegmentWidth()); // ----
-        final double startX = freeSpaceVertical(topWidth) / 2 + zoom*(Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
+        final double topWidth = zoom * (Tile.getWidth() - 2 * Tile.getSegmentWidth()); // ----
+        final double startX = freeSpaceVertical(topWidth) / 2 + zoom * (Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
         // centered
-        final double startY = zoom*(background.getHeight() / 2d - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4);
+        final double startY = zoom * (background.getHeight() / 2d - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4);
         return new Point((int) startX, (int) startY);
     }
 
     private double freeSpaceVertical(final double topWidth) {
-        return zoom*(background.getWidth()
+        return zoom * (background.getWidth()
                 - (HexMaths.effectiveWidth(width) * Tile.getWidth() + (HexMaths.effectiveWidth(width) - 1) * topWidth));
     }
 
@@ -154,22 +153,22 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void doZoom(MouseWheelEvent e) {
-        if(e.getWheelRotation() < 0)
+        if (e.getWheelRotation() < 0)
             zoomIn();
         else zoomOut();
     }
 
     private void zoomIn() {
-        final float newZoom = Math.min(1.35f,zoom+.025f);
-        if(newZoom != zoom) {
+        final float newZoom = Math.min(1.35f, zoom + .025f);
+        if (newZoom != zoom) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
         }
     }
 
     private void zoomOut() {
-        final float newZoom = Math.max(1,zoom-.025f);
-        if(newZoom != zoom) {
+        final float newZoom = Math.max(1, zoom - .025f);
+        if (newZoom != zoom) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
         }
@@ -178,9 +177,14 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     // yes ... yes... post patches :)
     @SuppressWarnings("java:S2696")
     private void updateForZoom(float newZoom) {
-            zoom = newZoom;
-            updateBoardPosition();
-            tiles.values().forEach(t -> t.updateZoom(newZoom));
+        /*
+        float deltaX = (newZoom-zoom)*background.getWidth();
+        float deltaY = (newZoom-zoom)*background.getHeight();
+        move(-deltaX, -deltaY);
+        */
+        zoom = newZoom;
+        updateBoardPosition();
+        tiles.values().forEach(t -> t.updateZoom(newZoom));
     }
 
     private void toggleDataView() {
@@ -188,30 +192,30 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void cameraPanRight() {
-        if (Game.window().getWidth() - shiftX < zoom*(background.getWidth() - PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move((int)(-zoom*PAN_SPEED), 0));
-            shiftX -= zoom*PAN_SPEED;
+        if (Game.window().getWidth() - shiftX < zoom * (background.getWidth() - PAN_SPEED)) {
+            tiles.forEach((c, h) -> h.move(-zoom * PAN_SPEED, 0));
+            shiftX -= zoom * PAN_SPEED;
         }
     }
 
     private void cameraPanDown() {
-        if (Game.window().getHeight() - shiftY < zoom*(background.getHeight() - PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move(0, (int) (-zoom*PAN_SPEED)));
-            shiftY -= zoom*PAN_SPEED;
+        if (Game.window().getHeight() - shiftY < zoom * (background.getHeight() - PAN_SPEED)) {
+            tiles.forEach((c, h) -> h.move(0, -zoom * PAN_SPEED));
+            shiftY -= zoom * PAN_SPEED;
         }
     }
 
     private void cameraPanLeft() {
-        if (shiftX <= zoom*-PAN_SPEED) {
-            tiles.forEach((c, h) -> h.move((int) (zoom*PAN_SPEED), 0));
-            shiftX += zoom*PAN_SPEED;
+        if (shiftX <= zoom * -PAN_SPEED) {
+            tiles.forEach((c, h) -> h.move(zoom * PAN_SPEED, 0));
+            shiftX += zoom * PAN_SPEED;
         }
     }
 
     private void cameraPanUp() {
-        if (shiftY <= zoom*-PAN_SPEED) {
-            shiftY += zoom*PAN_SPEED;
-            tiles.forEach((c, h) -> h.move(0, (int) (zoom*PAN_SPEED)));
+        if (shiftY <= zoom * -PAN_SPEED) {
+            shiftY += zoom * PAN_SPEED;
+            tiles.forEach((c, h) -> h.move(0, zoom * PAN_SPEED));
         }
     }
 
@@ -249,11 +253,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         }
     }
 
-    public void move(final double rx, final double ry) {
-        move((int) rx, (int)ry);
-    }
 
-    public void move(final int rx, final int ry) {
+    public void move(final float rx, final float ry) {
         this.shiftX += rx;
         this.shiftY += ry;
         tiles.forEach((c, t) -> t.move(rx, ry));
