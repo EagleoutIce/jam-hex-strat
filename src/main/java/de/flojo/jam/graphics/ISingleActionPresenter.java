@@ -10,9 +10,9 @@ public interface ISingleActionPresenter {
     char SPACE_CHAR = '_';
 
     static SingleSkillPresenter producePresenter(AbstractSkill skill, Creature creature) {
-        if(skill.getSkillId().equals(SkillId.TOGGLE_FLY))
-            return new SingleFlySkillPresenter(skill,creature);
-        else return new SingleSkillPresenter(skill,creature);
+        if (skill.getSkillId().equals(SkillId.TOGGLE_FLY))
+            return new SingleFlySkillPresenter(skill, creature);
+        else return new SingleSkillPresenter(skill, creature);
     }
 
     void update(Creature c);

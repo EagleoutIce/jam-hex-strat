@@ -73,7 +73,7 @@ public class ConnectScreen extends Screen {
                 (Game.window().getHeight() + portNumber.getHeight() + 350) / 2);
 
         TextRenderer.render(g, "Adr.: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight()+200) / 2);
+                (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
 
         TextRenderer.render(g, "Name: ", Main.INNER_MARGIN,
                 (Game.window().getHeight() + portNumber.getHeight() + 500) / 2);
@@ -91,7 +91,7 @@ public class ConnectScreen extends Screen {
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
         if (connected) {
-            if(clientController.isConnected()) {
+            if (clientController.isConnected()) {
                 switchToGameScreen();
             } else {
                 HexStratLogger.log().info("Disconnecting previews connection");
@@ -106,7 +106,7 @@ public class ConnectScreen extends Screen {
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 350) / 2 - 28);
         nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 500) / 2 - 28);
-        this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight()+200) / 2 - 28);
+        this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight() + 200) / 2 - 28);
         this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
                 height - this.connect.getHeight());
     }

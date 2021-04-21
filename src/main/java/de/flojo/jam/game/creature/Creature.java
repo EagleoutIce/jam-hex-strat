@@ -24,8 +24,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Creature implements IRenderable {
 
     public static final SoundPoolPlayGroup soundPlayGroup = new SoundPoolPlayGroup(BackgroundMusic.toggleMusic::get);
-    protected static final int DIE_DURATION = 1200;
     public static final AtomicBoolean showMpAp = new AtomicBoolean(true);
+    protected static final int DIE_DURATION = 1200;
     private final String name;
     private final CreatureId creatureId;
     private final CreatureBase base;

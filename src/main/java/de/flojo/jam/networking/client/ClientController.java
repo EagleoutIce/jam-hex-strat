@@ -23,9 +23,9 @@ public class ClientController implements IClientController {
     private final ClientSender sender;
     private final ClientSocket socket;
     private final ClientContext context;
+    boolean connected = false;
     private boolean isReady;
     private INeedUpdates<String> onConnectionStateUpdate;
-    boolean connected = false;
 
     // NOTE: We do not care about the state update safety... cause i have time
     // problems :D
@@ -162,7 +162,7 @@ public class ClientController implements IClientController {
             return socket.getRemoteSocketAddress().toString();
         return "Not connected";
     }
-    
+
     public boolean isConnected() {
         return connected;
     }

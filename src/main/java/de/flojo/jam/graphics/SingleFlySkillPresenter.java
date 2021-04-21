@@ -12,7 +12,7 @@ public class SingleFlySkillPresenter extends SingleSkillPresenter {
     private static final BufferedImage LAND = Resources.images().get("skills/toggle_fly/land.png");
 
     public SingleFlySkillPresenter(AbstractSkill skill, Creature c) {
-        super(skill,c);
+        super(skill, c);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class SingleFlySkillPresenter extends SingleSkillPresenter {
 
     @Override
     public void update(Creature c) {
-        if(component instanceof ImageButton) {
+        if (component instanceof ImageButton) {
             if (c.isFlying())
                 ((ImageButton) component).updateImage(LAND);
             else

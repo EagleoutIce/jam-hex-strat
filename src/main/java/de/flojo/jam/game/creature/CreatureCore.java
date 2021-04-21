@@ -95,7 +95,7 @@ public class CreatureCore {
             g.setFont(Main.TEXT_NORMAL);
             final String apInformation = getAttributes().getApLeft() + " / "
                     + getAttributes().getMpLeft();
-            renderTarget.setLocation(renderTarget.getX () + (-TextRenderer.getWidth(g, apInformation) / 2),
+            renderTarget.setLocation(renderTarget.getX() + (-TextRenderer.getWidth(g, apInformation) / 2),
                     renderTarget.getY() + (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
             g.setColor(new Color(0f, 0f, 0f, .65f));
             Rectangle2D bound = TextRenderer.getBounds(g, apInformation);

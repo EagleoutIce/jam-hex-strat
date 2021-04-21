@@ -16,7 +16,6 @@ import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
-import de.gurkenlabs.litiengine.GameWindow;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -191,15 +190,16 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final float oldZoom = zoom;
         zoom = newZoom;
         tiles.values().parallelStream().forEach(t -> t.updateZoom(newZoom));
-        float deltaX = (newZoom-oldZoom)*background.getWidth();
-        float deltaY = (newZoom-oldZoom)*background.getHeight();
-        move(-deltaX/2, -deltaY/2);
+        float deltaX = (newZoom - oldZoom) * background.getWidth();
+        float deltaY = (newZoom - oldZoom) * background.getHeight();
+        move(-deltaX / 2, -deltaY / 2);
         updateBoardPosition();
     }
 
     private void toggleDataView() {
         showMapDetails.set(!showMapDetails.get());
     }
+
     private void toggleApMpView() {
         Creature.showMpAp.set(!Creature.showMpAp.get());
     }
@@ -406,7 +406,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final String str = "F11 for help.";
         g.setFont(Main.TEXT_NORMAL);
         g.setColor(Color.YELLOW);
-        TextRenderer.render(g, str, Game.window().getWidth()-TextRenderer.getWidth(g, str)-15, Game.window().getHeight()-TextRenderer.getHeight(g, str)-25);
+        TextRenderer.render(g, str, Game.window().getWidth() - TextRenderer.getWidth(g, str) - 15, Game.window().getHeight() - TextRenderer.getHeight(g, str) - 25);
     }
 
 }

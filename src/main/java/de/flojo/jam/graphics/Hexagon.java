@@ -102,9 +102,9 @@ public class Hexagon extends Polygon {
     public synchronized void updatePoints() {
         for (int p = 0; p < SIDES; p++) {
             double angle = findAngle((double) p / SIDES);
-            Point2D point = findPoint( center.getX() + shiftX,  center.getY() + shiftY, radius, angle);
-            xpoints[p] = (int)point.getX();
-            ypoints[p] = (int)point.getY();
+            Point2D point = findPoint(center.getX() + shiftX, center.getY() + shiftY, radius, angle);
+            xpoints[p] = (int) point.getX();
+            ypoints[p] = (int) point.getY();
             points[p] = point;
         }
         super.invalidate();

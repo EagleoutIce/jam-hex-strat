@@ -9,6 +9,7 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
+import de.flojo.jam.game.creature.skills.SkillMultiPunch;
 import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
@@ -28,8 +29,9 @@ public class CreatureHalfling extends Creature {
 
     private static CreatureAttributes createHalflingAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
-        skills.add(new SkillSimplePunch(1, 0, 1, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
-        return new CreatureAttributes(3, 1, skills);
+        skills.add(new SkillSimplePunch(1, 0, 2, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
+        skills.add(new SkillMultiPunch(2, 0, 1, "Grand Slam", "Wenn man sich einfach fallen lässt."));
+        return new CreatureAttributes(3, 2, skills);
     }
 
 }
