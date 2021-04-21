@@ -116,7 +116,7 @@ public class SkillsPresenter {
     }
 
     private GuiComponent setupSkillButton(Creature c, AbstractSkill skill) {
-        SingleSkillPresenter presenter = ISingleActionPresenter.producePresenter(skill);
+        SingleSkillPresenter presenter = ISingleActionPresenter.producePresenter(skill, c);
         GuiComponent presenterComponent = presenter.get();
         presenterComponent.setEnabled(c.canCastSkill(skill));
         presenterComponent.onClicked(me -> {
@@ -131,6 +131,7 @@ public class SkillsPresenter {
                 skipSkill.setEnabled(false);
             }
         });
+        presenter.update(c);
         return presenterComponent;
     }
 
@@ -169,6 +170,7 @@ public class SkillsPresenter {
     private void skillOperationEnded(Creature c, SingleSkillPresenter presenter, Boolean performed, BoardCoordinate target) {
         if (skipSkill != null)
             skipSkill.setEnabled(true);
+        presenter.update(c);
         if (Boolean.TRUE.equals(performed)) {
             c.getAttributes().useAp();
             if (onAction != null)

@@ -1,6 +1,7 @@
 package de.flojo.jam.graphics;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
@@ -13,13 +14,13 @@ import java.util.logging.Level;
 public class SingleSkillPresenter implements ISingleActionPresenter {
 
     public static final String IMAGE_FILE_FORMAT = ".png";
-    private final AbstractSkill skill;
-    private final GuiComponent component;
-    private BufferedImage image;
+    protected final AbstractSkill skill;
+    protected final GuiComponent component;
+    protected BufferedImage image;
 
-    public SingleSkillPresenter(AbstractSkill skill) {
+    public SingleSkillPresenter(AbstractSkill skill, Creature c) {
         this.skill = skill;
-        final String searchPath = getPath(skill);
+        final String searchPath = getPath(skill, c);
         HexStratLogger.log().log(Level.INFO, "Searching Skill-Presenter Image: {0} (no force)", searchPath);
         try {
             image = Resources.images().get(searchPath);
@@ -33,9 +34,10 @@ public class SingleSkillPresenter implements ISingleActionPresenter {
             component = new ImageButton(70, 70, 0, 0, image, "", Main.GUI_FONT_SMALL);
         }
 
+        update(c);
     }
 
-    public static String getPath(AbstractSkill skill) {
+    public String getPath(AbstractSkill skill, Creature c) {
         final String base = skill.getSkillId().getImgBaseName();
         // TODO: use path
         return "skills/" + base + "/" + base + SPACE_CHAR + skill.getCost() +
@@ -45,6 +47,8 @@ public class SingleSkillPresenter implements ISingleActionPresenter {
     public GuiComponent get() {
         return component;
     }
+
+    public void update(Creature c) { }
 
     @Override
     public boolean hasImage() {
