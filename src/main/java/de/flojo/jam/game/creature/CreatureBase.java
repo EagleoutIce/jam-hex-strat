@@ -30,20 +30,20 @@ public class CreatureBase implements IRenderable {
         core.setBase(this);
     }
 
-    public void moveOutFieldRaw(int x, int y) {
-        movementOffsetX += x - position.getCenter().x;
-        movementOffsetY += y - position.getCenter().y;
+    public void moveOutFieldRaw(double x, double y) {
+        movementOffsetX += x - position.getCenter().getX();
+        movementOffsetY += y - position.getCenter().getY();
         deltaX = Math.abs(0.06 * movementOffsetX);
         deltaY = Math.abs(0.06 * movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
         resetTerrainOffset = true;
         // we keep the old coordinate so the figure will get still drawn
-        position = new Tile(position.getCoordinate(), position.getCenter().x + movementOffsetX,
-                position.getCenter().y + movementOffsetY, c -> TerrainTile.EMPTY);
+        position = new Tile(position.getCoordinate(), position.getCenter().getX() + movementOffsetX,
+                position.getCenter().getY() + movementOffsetY, c -> TerrainTile.EMPTY);
     }
 
     public void move(Tile target) {
-        movementOffsetX += target.getCenter().x - position.getCenter().x;
-        movementOffsetY += target.getCenter().y - position.getCenter().y;
+        movementOffsetX += target.getCenter().getX() - position.getCenter().getX();
+        movementOffsetY += target.getCenter().getY() - position.getCenter().getY();
         deltaX = Math.abs(0.06 * movementOffsetX);
         deltaY = Math.abs(0.06 * movementOffsetY) + (movementOffsetY < 0 ? 1 : 0); // rundungs "ditsch" :D
         updateTerrainOffset(target);

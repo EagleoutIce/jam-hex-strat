@@ -32,11 +32,11 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     private final transient TerrainTypeSupplier terrainSupplier;
     private final AtomicBoolean hover = new AtomicBoolean();
     private final AtomicBoolean mark = new AtomicBoolean();
-    private final int origX;
-    private final int origY;
+    private final double origX;
+    private final double origY;
     private Set<Tile> neighbours;
 
-    public Tile(BoardCoordinate coordinate, int x, int y, TerrainTypeSupplier type) {
+    public Tile(BoardCoordinate coordinate, double x, double y, TerrainTypeSupplier type) {
         super(x, y, DEFAULT_RADIUS);
         this.origX = x;
         this.origY = y;
@@ -115,13 +115,13 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
         if (showCordData) {
             g.setColor(Color.WHITE);
             g.setFont(NUMBER_FONT);
-            TextRenderer.render(g, tileLabel, getCenter().x - TextRenderer.getWidth(g, tileLabel) / 2 + getShiftX(), getCenter().y + TextRenderer.getHeight(g, tileLabel) * 0.15 + getShiftY());
+            TextRenderer.render(g, tileLabel, getCenter().getX() - TextRenderer.getWidth(g, tileLabel) / 2 + getShiftX(), getCenter().getY() + TextRenderer.getHeight(g, tileLabel) * 0.15 + getShiftY());
         }
     }
 
     public void updateZoom(float newZoom) {
         this.setRadius((int) (DEFAULT_RADIUS * newZoom));
-        this.setCenter((int) (origX * newZoom), (int) (origY * newZoom));
+        this.setCenter(origX * newZoom, origY * newZoom);
     }
 
     @Override

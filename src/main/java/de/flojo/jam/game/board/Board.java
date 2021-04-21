@@ -159,7 +159,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void zoomIn() {
-        final float newZoom = Math.min(1.35f, zoom + .025f);
+        final float newZoom = Math.min(1.75f, zoom + .075f);
         if (newZoom != zoom) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
@@ -167,7 +167,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void zoomOut() {
-        final float newZoom = Math.max(1, zoom - .025f);
+        final float newZoom = Math.max(1, zoom - .075f);
         if (newZoom != zoom) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
@@ -179,7 +179,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private void updateForZoom(float newZoom) {
         final float oldZoom = zoom;
         zoom = newZoom;
-        tiles.values().forEach(t -> t.updateZoom(newZoom));
+        tiles.values().parallelStream().forEach(t -> t.updateZoom(newZoom));
         float deltaX = (newZoom-oldZoom)*background.getWidth();
         float deltaY = (newZoom-oldZoom)*background.getHeight();
         move(-deltaX/2, -deltaY/2);
@@ -258,7 +258,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final float ty = (shiftY + ry > 0) ? 0 : ry;
         this.shiftX += tx;
         this.shiftY += ty;
-        tiles.forEach((c, t) -> t.move(tx, ty));
+        tiles.values().parallelStream().forEach(t -> t.move(tx, ty));
     }
 
     public Tile findTile(final Point position) {

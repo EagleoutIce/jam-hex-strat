@@ -9,6 +9,7 @@ import de.gurkenlabs.litiengine.graphics.ShapeRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -86,16 +87,16 @@ public class CreatureCore {
 
     protected void render(Graphics2D g) {
         final Tile ourTile = base.getTile();
-        final Point c = ourTile.getCenter();
-        final Point renderTarget = new Point(c.x - base.getMovementOffsetX() + ourTile.getShiftX(),
-                c.y - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
+        final Point2D c = ourTile.getCenter();
+        final Point2D renderTarget = new Point2D.Double(c.getX() - base.getMovementOffsetX() + ourTile.getShiftX(),
+                c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur) {
             g.setFont(Main.TEXT_NORMAL);
             final String apInformation = getAttributes().getApLeft() + " / "
                     + getAttributes().getMpLeft();
-            renderTarget.translate((int) (-TextRenderer.getWidth(g, apInformation) / 2),
-                    (int) (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
+            renderTarget.setLocation(renderTarget.getX () + (-TextRenderer.getWidth(g, apInformation) / 2),
+                    renderTarget.getY() + (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
             g.setColor(new Color(0f, 0f, 0f, .65f));
             Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
             ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3, (int) bound.getWidth() + 6, (int) bound.getHeight() + 6), renderTarget);

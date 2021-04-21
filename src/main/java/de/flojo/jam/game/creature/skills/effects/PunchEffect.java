@@ -85,8 +85,8 @@ public class PunchEffect implements IEffectTarget {
         target.moribund();
         awaitMovementCompletion(target);
         target.getBase().moveOutFieldRaw(
-                (int) (target.getBase().getTile().getCenter().x + deltaX * Tile.DEFAULT_RADIUS * 1.25),
-                target.getBase().getTile().getCenter().y + deltaY * Tile.DEFAULT_RADIUS);
+                (int) (target.getBase().getTile().getCenter().getX() + deltaX * Tile.DEFAULT_RADIUS * 1.25),
+                target.getBase().getTile().getCenter().getY() + deltaY * Tile.DEFAULT_RADIUS);
         awaitMovementCompletion(target);
         target.die();
     }
