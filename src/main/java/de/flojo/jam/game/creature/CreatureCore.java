@@ -91,7 +91,7 @@ public class CreatureCore {
         final Point2D renderTarget = new Point2D.Double(c.getX() - base.getMovementOffsetX() + ourTile.getShiftX(),
                 c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
-        if (isOur) {
+        if (isOur && Creature.showMpAp.get()) {
             g.setFont(Main.TEXT_NORMAL);
             final String apInformation = getAttributes().getApLeft() + " / "
                     + getAttributes().getMpLeft();

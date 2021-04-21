@@ -24,7 +24,7 @@ import java.util.logging.Level;
 
 public class ConnectScreen extends Screen {
     public static final String NAME = "Game-Connect";
-    private static final BufferedImage background = Resources.images().get("painted03.jpeg");
+    private static final BufferedImage background = Resources.images().get("main_background.png");
     private static final String[] RANDOM_NAMES = new String[]{
             "PeterMeter", "Pain Gain", "H4ns3l", "Joseph", "Achtung Butter!", "Hallo Mami",
             "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
@@ -61,7 +61,7 @@ public class ConnectScreen extends Screen {
         }
         ImageRenderer.render(g, background, 0, 0);
         // render info
-        g.setColor(Color.WHITE);
+        g.setColor(new Color(5, 2, 1));
         g.setFont(Main.GUI_FONT);
         int largeHeight = g.getFontMetrics().getHeight();
         TextRenderer.render(g, "Connection Menu", Main.INNER_MARGIN, 7.0 + largeHeight);
@@ -70,13 +70,13 @@ public class ConnectScreen extends Screen {
         TextRenderer.render(g, "Connection status: " + getConnectStatus(), Main.INNER_MARGIN,
                 15.0 + g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
+                (Game.window().getHeight() + portNumber.getHeight() + 350) / 2);
 
         TextRenderer.render(g, "Adr.: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight()) / 2);
+                (Game.window().getHeight() + portNumber.getHeight()+200) / 2);
 
         TextRenderer.render(g, "Name: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 400) / 2);
+                (Game.window().getHeight() + portNumber.getHeight() + 500) / 2);
 
         super.render(g);
     }
@@ -90,17 +90,23 @@ public class ConnectScreen extends Screen {
         super.prepare();
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
-        if (connected)
-            switchToGameScreen();
+        if (connected) {
+            if(clientController.isConnected()) {
+                switchToGameScreen();
+            } else {
+                HexStratLogger.log().info("Disconnecting previews connection");
+                disconnect();
+            }
+        }
         InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), ConnectScreen.NAME);
     }
 
     private void updatePositions() {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
-        this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 200) / 2 - 26);
-        nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 400) / 2 - 26);
-        this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight()) / 2 - 26);
+        this.portNumber.setLocation(Main.INNER_MARGIN + 70d, (height + portNumber.getHeight() + 350) / 2 - 28);
+        nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 500) / 2 - 28);
+        this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight()+200) / 2 - 28);
         this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
                 height - this.connect.getHeight());
     }
@@ -125,12 +131,15 @@ public class ConnectScreen extends Screen {
         // pos will be recalculated
         this.portNumber = new TextFieldComponent(0, 0, 100, 70, ServerSetupScreen.DEFAULT_PORT);
         this.portNumber.setFormat("[0-9]{0,4}");
+        this.portNumber.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(portNumber);
         this.address = new TextFieldComponent(0, 0, 600, 70, "localhost");
         this.address.setFormat("[a-zA-Z.0-9]{0,200}");
+        this.address.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(address);
         nameField = new TextFieldComponent(0, 0, 600, 70, Game.random().choose(RANDOM_NAMES));
         nameField.setFormat(".{0,25}");
+        this.nameField.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(nameField);
         updatePositions();
     }
@@ -148,10 +157,15 @@ public class ConnectScreen extends Screen {
         this.address.setEnabled(false);
         nameField.setEnabled(false);
         this.connect.setText("Disconnect");
+        this.connect.setEnabled(false);
         updatePositions();
         try {
             clientController = new ClientController(new URI("ws://" + this.address.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
-            clientController.tryConnect(onCompleted);
+            clientController.tryConnect(b -> {
+                this.connect.setEnabled(true);
+                updatePositions();
+                onCompleted.accept(b);
+            });
         } catch (URISyntaxException e) {
             e.printStackTrace();
             // just to be sure
@@ -192,6 +206,7 @@ public class ConnectScreen extends Screen {
         if (clientController != null)
             clientController.close();
         clientController = null;
+        updatePositions();
     }
 
     private void changeScreen(final String name) {

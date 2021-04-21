@@ -18,12 +18,14 @@ import de.gurkenlabs.litiengine.graphics.IRenderable;
 
 import java.awt.*;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 // compound of base and core; mostly delegates
 public class Creature implements IRenderable {
 
     public static final SoundPoolPlayGroup soundPlayGroup = new SoundPoolPlayGroup(BackgroundMusic.toggleMusic::get);
     protected static final int DIE_DURATION = 1200;
+    public static final AtomicBoolean showMpAp = new AtomicBoolean(true);
     private final String name;
     private final CreatureId creatureId;
     private final CreatureBase base;

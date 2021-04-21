@@ -247,14 +247,14 @@ public class SkillsPresenter {
         int height = Game.window().getHeight();
         double mw = moveButton.getWidth();
         double offCounter = Main.INNER_MARGIN + mw;
-        moveButton.setLocation(width - offCounter, height - 90d);
+        moveButton.setLocation(width - offCounter, height - 100d);
         for (GuiComponent component : skillPresenter.values()) {
             component.setEnabled(attributes.getApLeft() > 0);
             offCounter += component.getWidth() + 10;
-            component.setLocation(width - offCounter, height - 40d - component.getHeight());
+            component.setLocation(width - offCounter, height - 50d - component.getHeight());
         }
 
-        skipButton.setLocation(width - offCounter - skipButton.getWidth() - 10, height - 90d);
+        skipButton.setLocation(width - offCounter - skipButton.getWidth() - 10, height - 100d);
     }
 
     private boolean notActive() {

@@ -347,10 +347,10 @@ public class EditorScreen extends Screen {
     }
 
     private void updatePositions() {
-        newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 90d);
-        saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 90d);
+        newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 100d);
+        saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 100d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
-                Game.window().getHeight() - 90d);
+                Game.window().getHeight() - 100d);
         int width = Game.window().getWidth();
         p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 18d);
         p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);

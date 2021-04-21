@@ -25,6 +25,7 @@ public class ClientController implements IClientController {
     private final ClientContext context;
     private boolean isReady;
     private INeedUpdates<String> onConnectionStateUpdate;
+    boolean connected = false;
 
     // NOTE: We do not care about the state update safety... cause i have time
     // problems :D
@@ -64,6 +65,7 @@ public class ClientController implements IClientController {
     public void handleOpen() {
         synchronized (readyLock) {
             isReady = true;
+            connected = true;
             readyLock.notifyAll();
         }
     }
@@ -71,6 +73,7 @@ public class ClientController implements IClientController {
     @Override
     public void handleClose(int code, String reason, boolean remote) {
         HexStratLogger.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}", new Object[]{code, reason, remote});
+        connected = false;
         // do nothing else?
         if (onConnectionStateUpdate != null)
             onConnectionStateUpdate.call("CLOSED");
@@ -135,6 +138,7 @@ public class ClientController implements IClientController {
 
     public void close() {
         socket.close();
+        connected = false;
     }
 
     public ClientSender getSender() {
@@ -158,6 +162,9 @@ public class ClientController implements IClientController {
             return socket.getRemoteSocketAddress().toString();
         return "Not connected";
     }
-
+    
+    public boolean isConnected() {
+        return connected;
+    }
 
 }

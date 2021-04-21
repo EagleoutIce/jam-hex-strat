@@ -1,5 +1,6 @@
 package de.flojo.jam.game.board;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.highlighting.IHighlightMask;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
@@ -7,6 +8,7 @@ import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.traps.TrapSpawner;
+import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
@@ -14,11 +16,14 @@ import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.KeyInputGroup;
 import de.gurkenlabs.litiengine.Game;
+import de.gurkenlabs.litiengine.GameWindow;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
+import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -148,8 +153,14 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         InputController.get().onKeyPressed(KeyEvent.VK_A, e -> cameraPanLeft(), Set.of(screenName), bInputGroupHor);
         InputController.get().onKeyPressed(KeyEvent.VK_S, e -> cameraPanDown(), Set.of(screenName), bInputGroupVert);
         InputController.get().onKeyPressed(KeyEvent.VK_D, e -> cameraPanRight(), Set.of(screenName), bInputGroupHor);
-        InputController.get().onKeyTyped(KeyEvent.VK_M, e -> toggleDataView(), Set.of(screenName), bInputGroupHor);
+        InputController.get().onKeyTyped(KeyEvent.VK_M, e -> toggleDataView(), Set.of(screenName));
+        InputController.get().onKeyTyped(KeyEvent.VK_C, e -> toggleApMpView(), Set.of(screenName));
+        InputController.get().onKeyTyped(KeyEvent.VK_F11, e -> showHelp(), Set.of(screenName));
         InputController.get().onWheelMoved(this::doZoom, Set.of(screenName));
+    }
+
+    private void showHelp() {
+        JOptionPane.showMessageDialog(null, "Use W, A, S and D to control map movement. Use M to toggle map and C to toggle character information, P to toggle Audio. Use the mouse wheel for zoom.", "Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void doZoom(MouseWheelEvent e) {
@@ -188,6 +199,9 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private void toggleDataView() {
         showMapDetails.set(!showMapDetails.get());
+    }
+    private void toggleApMpView() {
+        Creature.showMpAp.set(!Creature.showMpAp.get());
     }
 
     private void cameraPanRight() {
@@ -389,6 +403,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
                 traps.getRoot(coordinate).ifPresent(t -> t.renderTriggerFor(g, renderOwner));
             }
         }
+        final String str = "F11 for help.";
+        g.setFont(Main.TEXT_NORMAL);
+        g.setColor(Color.YELLOW);
+        TextRenderer.render(g, str, Game.window().getWidth()-TextRenderer.getWidth(g, str)-10, Game.window().getHeight()-TextRenderer.getHeight(g, str)-18);
     }
 
 }

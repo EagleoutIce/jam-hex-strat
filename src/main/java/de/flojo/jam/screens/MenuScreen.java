@@ -14,7 +14,7 @@ import java.util.Objects;
 
 public class MenuScreen extends Screen {
     public static final String NAME = "MENU";
-    private static final BufferedImage background = Resources.images().get("painted03.jpeg");
+    private static final BufferedImage background = Resources.images().get("main_background.png");
     private Button startGame;
     private Button showEditor;
     private Button showServer;
@@ -69,17 +69,17 @@ public class MenuScreen extends Screen {
     protected void initializeComponents() {
         super.initializeComponents();
         this.startGame = new Button("PLAY GAME", Main.GUI_FONT_SMALL);
-        this.startGame.setColors(new Color(185, 45, 131), new Color(199, 104, 153));
+        this.startGame.setColors(new Color(149, 161, 119), new Color(116, 125, 92));
         this.startGame.onClicked(e -> changeScreen(ConnectScreen.NAME, this.startGame));
         this.getComponents().add(this.startGame);
 
         this.showEditor = new Button("Editor", Main.GUI_FONT_SMALL.deriveFont(28f));
-        this.showEditor.setColors(new Color(214, 65, 5), new Color(241, 138, 124));
+        this.showEditor.setColors(new Color(250, 232, 122), new Color(177, 172, 110));
         this.showEditor.onClicked(e -> changeScreen(EditorScreen.NAME, this.showEditor));
         this.getComponents().add(this.showEditor);
 
         this.showServer = new Button("Server", Main.GUI_FONT_SMALL.deriveFont(28f));
-        this.showServer.setColors(new Color(214, 65, 5), new Color(241, 138, 124));
+        this.showServer.setColors(new Color(250, 232, 122), new Color(177, 172, 110));
         this.showServer.onClicked(e -> changeScreen(ServerSetupScreen.NAME, this.showServer));
         this.getComponents().add(this.showServer);
 
