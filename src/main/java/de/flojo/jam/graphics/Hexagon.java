@@ -7,13 +7,13 @@ public class Hexagon extends Polygon {
 
     public static final int SIDES = 6;
     private static final long serialVersionUID = 1L;
-    private final Point2D[] points = new Point2D[SIDES];
-    private Point2D center;
+    private final Point2D[] points = new Point2D.Double[SIDES];
+    private Point2D.Double center;
     private int radius;
-    private float shiftX = 0;
-    private float shiftY = 0;
+    private int shiftX = 0;
+    private int shiftY = 0;
 
-    public Hexagon(Point2D center, int radius) {
+    public Hexagon(Point2D.Double center, int radius) {
         npoints = SIDES;
         xpoints = new int[SIDES];
         ypoints = new int[SIDES];
@@ -75,16 +75,16 @@ public class Hexagon extends Polygon {
         return center;
     }
 
-    public void setCenter(Point2D center) {
+    public void setCenter(Point2D.Double center) {
         this.center = center;
         updatePoints();
     }
 
-    public float getShiftX() {
+    public int getShiftX() {
         return shiftX;
     }
 
-    public float getShiftY() {
+    public int getShiftY() {
         return shiftY;
     }
 
