@@ -23,7 +23,7 @@ public class SingleMovePresenter implements ISingleActionPresenter {
             Resources.images().get("skills/move/move_more.png")
     };
 
-    private static final ImageButton component = new ImageButton(70, 70, 0, 0, Resources.images().get("skills/move/move_1.png"), "", Main.GUI_FONT_SMALL);
+    private static final ImageButton component = new ImageButton(107.5, 50, 0, 0, Resources.images().get("skills/move/move_1.png"), "", Main.GUI_FONT_SMALL);
 
     public SingleMovePresenter(Creature c) {
         update(c);

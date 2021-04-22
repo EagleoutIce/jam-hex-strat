@@ -255,15 +255,16 @@ public class SkillsPresenter {
         int width = Game.window().getWidth();
         int height = Game.window().getHeight();
         double mw = movementSkill.getWidth();
-        double offCounter = Main.INNER_MARGIN + mw;
-        movementSkill.setLocation(width - offCounter, height - movementSkill.getHeight() - 60d);
+        double offCounter = Main.INNER_MARGIN + mw + 10;
+        skipSkill.setLocation(width - offCounter, height - skipSkill.getHeight() - 60d);
+        movementSkill.setLocation(width - offCounter -  skipSkill.getWidth() - 10, height - movementSkill.getHeight() - 60d);
+        offCounter += skipSkill.getWidth() + 10;
         for (GuiComponent component : skillPresenters.values()) {
             component.setEnabled(attributes.getApLeft() > 0);
             offCounter += component.getWidth() + 10;
-            component.setLocation(width - offCounter, height - 60d - component.getHeight());
+            component.setLocation(width - offCounter - 10, height - 60d - component.getHeight());
         }
 
-        skipSkill.setLocation(width - offCounter - skipSkill.getWidth() - 10, height - skipSkill.getHeight() - 60d);
     }
 
     private boolean notActive() {
