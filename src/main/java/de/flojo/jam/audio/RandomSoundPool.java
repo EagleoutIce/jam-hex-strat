@@ -23,7 +23,7 @@ public class RandomSoundPool implements SoundPool<Sound> {
 
     public RandomSoundPool(SoundPoolPlayGroup group, String soundPrefix, String soundPostfix, int rangeStart, int rangeEnd) {
         this.group = group;
-        this.futureSounds = IntStream.range(rangeStart, rangeEnd).mapToObj(i -> soundPrefix + i + soundPostfix).map(RandomSoundPool::loadSound).collect(Collectors.toUnmodifiableSet());
+        this.futureSounds = IntStream.range(rangeStart, rangeEnd+1).mapToObj(i -> soundPrefix + i + soundPostfix).map(RandomSoundPool::loadSound).collect(Collectors.toUnmodifiableSet());
     }
 
     public RandomSoundPool(SoundPoolPlayGroup group, String... sounds) {
