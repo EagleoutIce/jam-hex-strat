@@ -48,10 +48,10 @@ public enum CreatureId {
             new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/goblin_ton_", ".ogg", 1, 6)
     ),
     LIZARD("Lizard", 6, //
-            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png", CreatureImageRenderer.FLY_BLAU, -87d / 1.7,
-                    -102 / 1.27d), //
+            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png", CreatureImageRenderer.FLY_BLAU, -314d / 1.7,
+                    -369 / 1.27d), //
             new CreatureImageRenderer("creatures/echse_lila.png", "creatures/echse_lila_glow.png", CreatureImageRenderer.FLY_LILA,
-                    -87d / 2.3, -102 / 1.27d),
+                    -314d / 2.3, -369 / 1.27d),
             new NoSoundPool()
             // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
     ),

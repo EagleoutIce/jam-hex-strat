@@ -20,7 +20,7 @@ import java.util.logging.Level;
 
 public class Main {
 
-    public static final BufferedImage DEFAULT_CURSOR = Resources.images().get("cursor.png");
+    public static final Image DEFAULT_CURSOR = Resources.images().get("cursor.png").getScaledInstance(30,30, Image.SCALE_SMOOTH);
     public static final BufferedImage ICON = Resources.images().get("icon.png");
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
