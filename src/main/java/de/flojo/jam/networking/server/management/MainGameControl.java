@@ -156,30 +156,30 @@ public class MainGameControl {
     }
 
     // NOTE: Thread return is for the server and should probably be optimized
-    public Optional<Thread> performAction(TurnActionMessage message) {
+    public void performAction(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
             HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
-            return Optional.empty();
+            return;
         }
         final Creature creature = mayCreature.get();
 
         switch (message.getAction()) {
             case MOVEMENT:
+                creature.getAttributes().useMp(message.getTargets().size());
                 Thread moveThread = new Thread(() -> processMovement(message, creature));
                 moveThread.start();
-                return Optional.of(moveThread);
+                return;
             case SKILL:
                 Thread skillThread = new Thread(() -> processSkill(message, creature));
                 skillThread.start();
-                return Optional.of(skillThread);
+                return;
             case SKIP:
                 creature.skip();
                 break;
             default:
             case NONE:
         }
-        return Optional.empty();
     }
 
     private void processSkill(TurnActionMessage message, Creature creature) {
@@ -197,13 +197,13 @@ public class MainGameControl {
                     HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
                     return;
                 }
-                creature.useSkill(getBoard(), skill, mayTargetCreature.get());
                 creature.getAttributes().useAp(skill.getCost());
+                creature.useSkill(getBoard(), skill, mayTargetCreature.get());
                 break;
             case TILE:
                 Tile targetTile = getBoard().getTile(message.getTarget());
-                creature.useSkill(getBoard(), skill, targetTile);
                 creature.getAttributes().useAp(skill.getCost());
+                creature.useSkill(getBoard(), skill, targetTile);
                 break;
             default:
                 HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
@@ -214,7 +214,6 @@ public class MainGameControl {
         List<BoardCoordinate> targets = message.getTargets();
         for (BoardCoordinate target : targets) {
             CreatureActionController.processMovementBlocking(context.getTraps(), creature, getBoard().getTile(target));
-            creature.getAttributes().useMp();
         }
     }
 
