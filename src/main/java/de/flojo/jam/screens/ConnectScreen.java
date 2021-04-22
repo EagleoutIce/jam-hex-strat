@@ -216,8 +216,8 @@ public class ConnectScreen extends Screen {
         Game.window().cursor().set(Main.DEFAULT_CURSOR);
 
         this.locked = true;
-        Game.window().getRenderComponent().fadeOut(650);
-        Game.loop().perform(950, () -> {
+        Game.window().getRenderComponent().fadeOut(450);
+        Game.loop().perform(450, () -> {
             Game.screens().display(name);
             Game.window().getRenderComponent().fadeIn(650);
             this.locked = false;

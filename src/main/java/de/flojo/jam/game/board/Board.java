@@ -201,8 +201,11 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         } else {
             HexStratLogger.log().log(Level.INFO, "Custom reset zoom for {0} != {1}", new Object[]{thisZoom, getZoom()});
             thisZoom = 1f;
+            float deltaX = (1f - getZoom()) * background.getWidth()*BACKGROUND_ZOOM_FACTOR;
+            float deltaY = (1f - getZoom()) * background.getHeight()*BACKGROUND_ZOOM_FACTOR;
             setZoom(1f);
             tiles.values().parallelStream().forEach(t -> t.updateZoom(getZoom()));
+            tiles.values().parallelStream().forEach(t -> t.move(-deltaX/8,deltaY/10));
             updateBoardPosition();
             // TODO: fix this
         }

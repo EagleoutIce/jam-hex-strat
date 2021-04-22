@@ -94,8 +94,8 @@ public class MenuScreen extends Screen {
 
         this.locked = true;
         button.setEnabled(false);
-        Game.window().getRenderComponent().fadeOut(650);
-        Game.loop().perform(950, () -> {
+        Game.window().getRenderComponent().fadeOut(450);
+        Game.loop().perform(450, () -> {
             Game.screens().display(name);
             Game.window().getRenderComponent().fadeIn(650);
             this.locked = false;
