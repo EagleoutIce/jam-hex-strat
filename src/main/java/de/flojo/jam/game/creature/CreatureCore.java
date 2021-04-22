@@ -97,10 +97,17 @@ public class CreatureCore {
                     + getAttributes().getMpLeft();
             renderTarget.setLocation(renderTarget.getX() + (-TextRenderer.getWidth(g, apInformation) / 2),
                     renderTarget.getY() + (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
-            g.setColor(new Color(0f, 0f, 0f, .65f));
+            final Color sc;
+            if (base.getTile().isMarked() || highlight.get()) {
+                g.setColor(new Color(.96f, .97f, .96f, .85f));
+                sc = Color.BLACK;
+            } else {
+                g.setColor(new Color(0f, 0f, 0f, .65f));
+                sc = Color.ORANGE;
+            }
             Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
             ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3, (int) bound.getWidth() + 6, (int) bound.getHeight() + 6), renderTarget);
-            g.setColor(Color.ORANGE);
+            g.setColor(sc);
             TextRenderer.render(g, apInformation, renderTarget);
         }
     }
