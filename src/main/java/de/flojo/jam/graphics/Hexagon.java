@@ -10,8 +10,8 @@ public class Hexagon extends Polygon {
     private final Point2D[] points = new Point2D[SIDES];
     private Point2D center;
     private int radius;
-    private int shiftX = 0;
-    private int shiftY = 0;
+    private float shiftX = 0;
+    private float shiftY = 0;
 
     public Hexagon(Point2D center, int radius) {
         npoints = SIDES;
@@ -77,15 +77,14 @@ public class Hexagon extends Polygon {
 
     public void setCenter(Point2D center) {
         this.center = center;
-
         updatePoints();
     }
 
-    public int getShiftX() {
+    public float getShiftX() {
         return shiftX;
     }
 
-    public int getShiftY() {
+    public float getShiftY() {
         return shiftY;
     }
 

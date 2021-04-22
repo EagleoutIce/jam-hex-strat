@@ -47,7 +47,7 @@ public class AnimationRenderer implements IRenderData {
             lighterOperation.filter(spriteImage, currentImg);
             lastFrameUpdate = Game.time().now();
         }
-        ImageRenderer.renderScaled(g, currentImg, pos.getX() + Board.zoom * offsetX, pos.getY() + Board.zoom * offsetY, Board.zoom , Board.zoom);
+        ImageRenderer.renderScaled(g, currentImg, pos.getX() + Board.getZoom() * offsetX, pos.getY() + Board.getZoom() * offsetY, Board.getZoom(), Board.getZoom());
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AnimationRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.zoom * offsetX), (int) (pos.getY() + Board.zoom * offsetY), (int)(Board.zoom * sWidth), (int)(Board.zoom * sHeight));
+        return new Rectangle((int) (pos.getX() + Board.getZoom() * offsetX), (int) (pos.getY() + Board.getZoom() * offsetY), (int)(Board.getZoom() * sWidth), (int)(Board.getZoom() * sHeight));
     }
 
     @Override

@@ -99,12 +99,6 @@ public class CreatureFactory {
         }
     }
 
-    public BufferedImage getBufferedImage(final CreatureId id, final boolean p1) {
-        if (id == CreatureId.NONE)
-            return null;
-        return p1 ? id.getP1Image().getImage() : id.getP2Image().getImage();
-    }
-
     public Image getScaledImage(final CreatureId id, final boolean p1) {
         if (id == CreatureId.NONE)
             return null;

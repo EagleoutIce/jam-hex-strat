@@ -92,6 +92,7 @@ public class ServerSetupScreen extends Screen {
         Game.window().onResolutionChanged(r -> updatePositions());
         Game.loop().perform(100, this::updatePositions);
         gameField = new GameField(this, ServerSetupScreen.NAME, null);
+        gameField.getBoard().resetZoom();
         InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> {
             if (stopServer(true)) changeScreen(MenuScreen.NAME);
         }, ServerSetupScreen.NAME);

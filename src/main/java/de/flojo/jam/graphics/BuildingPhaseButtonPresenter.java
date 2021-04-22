@@ -110,7 +110,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
 
             ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
-                    t.getImprint().getBaseResource(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
+                    t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
@@ -190,7 +190,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
                 TrapImprint imprint = t.getImprint();
                 Game.window().cursor().setVisible(true);
-                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImage());
+                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImageScaled());
                 context.getBoard().setHighlightMask(new ImprintHighlighter(imprint));
                 Game.window().cursor().showDefaultCursor();
             });

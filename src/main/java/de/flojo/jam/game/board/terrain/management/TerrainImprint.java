@@ -2,6 +2,7 @@ package de.flojo.jam.game.board.terrain.management;
 
 import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.board.terrain.TerrainTile;
+import de.flojo.jam.graphics.renderer.IRenderData;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -31,8 +32,12 @@ public class TerrainImprint extends Imprint<TerrainTile> {
         return baseType.getRenderer().hasImage();
     }
 
-    public BufferedImage getBaseResource() {
-        return baseType.getRenderer().getImage();
+    public Image getBaseResource() {
+        return baseType.getRenderer().getImageScaled();
+    }
+
+    public IRenderData getRenderer() {
+        return baseType.getRenderer();
     }
 
 }

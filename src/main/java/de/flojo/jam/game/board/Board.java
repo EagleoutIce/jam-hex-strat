@@ -42,7 +42,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public static final int PADDING = 0;
     private static final long serialVersionUID = 6531704891590315776L;
     private static final int PAN_SPEED = 3;
-    public static float zoom = 1f;
+    private static float zoom = 1f;
+    private float thisZoom = 1f;
     private final transient BufferedImage background;
     public static final float BACKGROUND_ZOOM_FACTOR = .5f;
     private final String screenName;
@@ -92,6 +93,14 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         setupInput();
     }
 
+    public static float getZoom() {
+        return zoom;
+    }
+
+    public static void setZoom(float zoom) {
+        Board.zoom = zoom;
+    }
+
     public TerrainMap getTerrainMap() {
         return terrainMap;
     }
@@ -110,35 +119,35 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void updateBoardPosition() {
-        if (Game.window().getHeight() - shiftY >= zoom * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
+        if (Game.window().getHeight() - shiftY >= getZoom() * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
             final float offset = getBackgroundOffsetPosY();
             move(0, offset - shiftY);
         }
 
-        if (Game.window().getWidth() - shiftX >= zoom * (background.getWidth()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
+        if (Game.window().getWidth() - shiftX >= getZoom() * (background.getWidth()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
             final float offset = getBackgroundOffsetPosX();
             move(offset - shiftX, 0);
         }
     }
 
     private float getBackgroundOffsetPosX() {
-        return Math.min(0, Game.window().getWidth() - zoom * (background.getWidth()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
+        return Math.min(0, Game.window().getWidth() - getZoom() * (background.getWidth()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
     }
 
     private float getBackgroundOffsetPosY() {
-        return Math.min(0, Game.window().getHeight() - zoom * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
+        return Math.min(0, Game.window().getHeight() - getZoom() * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
     }
 
     private Point getTilesUpperLeft() {
-        final double topWidth = zoom * (Tile.getWidth() - 2 * Tile.getSegmentWidth()); // ----
-        final double startX = freeSpaceVertical(topWidth) / 2 + zoom * (Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
+        final double topWidth = getZoom() * (Tile.getWidth() - 2 * Tile.getSegmentWidth()); // ----
+        final double startX = freeSpaceVertical(topWidth) / 2 + getZoom() * (Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
         // centered
-        final double startY = zoom * (background.getHeight() / 2d*BACKGROUND_ZOOM_FACTOR - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4);
+        final double startY = getZoom() * (background.getHeight() / 2d*BACKGROUND_ZOOM_FACTOR - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4);
         return new Point((int) startX, (int) startY);
     }
 
     private double freeSpaceVertical(final double topWidth) {
-        return zoom * (background.getWidth()*BACKGROUND_ZOOM_FACTOR
+        return getZoom() * (background.getWidth()*BACKGROUND_ZOOM_FACTOR
                 - (HexMaths.effectiveWidth(width) * Tile.getWidth() + (HexMaths.effectiveWidth(width) - 1) * topWidth));
     }
 
@@ -170,26 +179,40 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void zoomIn() {
-        final float newZoom = Math.min(2.5f, zoom + .075f);
-        if (newZoom != zoom) {
+        final float newZoom = Math.min(2.5f, getZoom() + .075f);
+        if (newZoom != getZoom()) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
         }
     }
 
     private void zoomOut() {
-        final float newZoom = Math.max(1, zoom - .075f);
-        if (newZoom != zoom) {
+        final float newZoom = Math.max(1, getZoom() - .075f);
+        if (newZoom != getZoom()) {
             HexStratLogger.log().log(Level.INFO, "Zoom in: {0}", newZoom);
             updateForZoom(newZoom);
         }
     }
 
+    public void resetZoom() {
+        if(thisZoom == getZoom()) {
+            HexStratLogger.log().info("Reset Zoom to 1f");
+            updateForZoom(1f);
+        } else {
+            HexStratLogger.log().log(Level.INFO, "Custom reset zoom for {0} != {1}", new Object[]{thisZoom, getZoom()});
+            thisZoom = 1f;
+            setZoom(1f);
+            tiles.values().parallelStream().forEach(t -> t.updateZoom(getZoom()));
+            updateBoardPosition();
+            // TODO: fix this
+        }
+    }
+
     // yes ... yes... post patches :)
-    @SuppressWarnings("java:S2696")
     private void updateForZoom(float newZoom) {
-        final float oldZoom = zoom;
-        zoom = newZoom;
+        final float oldZoom = getZoom();
+        setZoom(newZoom);
+        thisZoom = newZoom;
         tiles.values().parallelStream().forEach(t -> t.updateZoom(newZoom));
         float deltaX = (newZoom - oldZoom) * background.getWidth()*BACKGROUND_ZOOM_FACTOR;
         float deltaY = (newZoom - oldZoom) * background.getHeight()*BACKGROUND_ZOOM_FACTOR;
@@ -206,30 +229,30 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void cameraPanRight() {
-        if (Game.window().getWidth() - shiftX < zoom * (background.getWidth() *BACKGROUND_ZOOM_FACTOR- PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move(-zoom * PAN_SPEED, 0));
-            shiftX -= zoom * PAN_SPEED;
+        if (Game.window().getWidth() - shiftX < getZoom() * (background.getWidth() *BACKGROUND_ZOOM_FACTOR- PAN_SPEED)) {
+            tiles.forEach((c, h) -> h.move(-getZoom() * PAN_SPEED, 0));
+            shiftX -= getZoom() * PAN_SPEED;
         }
     }
 
     private void cameraPanDown() {
-        if (Game.window().getHeight() - shiftY < zoom * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move(0, -zoom * PAN_SPEED));
-            shiftY -= zoom * PAN_SPEED;
+        if (Game.window().getHeight() - shiftY < getZoom() * (background.getHeight()*BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
+            tiles.forEach((c, h) -> h.move(0, -getZoom() * PAN_SPEED));
+            shiftY -= getZoom() * PAN_SPEED;
         }
     }
 
     private void cameraPanLeft() {
-        if (shiftX <= zoom * -PAN_SPEED) {
-            tiles.forEach((c, h) -> h.move(zoom * PAN_SPEED, 0));
-            shiftX += zoom * PAN_SPEED;
+        if (shiftX <= getZoom() * -PAN_SPEED) {
+            tiles.forEach((c, h) -> h.move(getZoom() * PAN_SPEED, 0));
+            shiftX += getZoom() * PAN_SPEED;
         }
     }
 
     private void cameraPanUp() {
-        if (shiftY <= zoom * -PAN_SPEED) {
-            shiftY += zoom * PAN_SPEED;
-            tiles.forEach((c, h) -> h.move(0, zoom * PAN_SPEED));
+        if (shiftY <= getZoom() * -PAN_SPEED) {
+            shiftY += getZoom() * PAN_SPEED;
+            tiles.forEach((c, h) -> h.move(0, getZoom() * PAN_SPEED));
         }
     }
 
@@ -271,8 +294,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     public void move(float rx, float ry) {
         final float tx = (shiftX + rx > 0) ? 0 : rx;
         final float ty = (shiftY + ry > 0) ? 0 : ry;
-        this.shiftX += tx;
-        this.shiftY += ty;
+        shiftX += tx;
+        shiftY += ty;
         tiles.values().parallelStream().forEach(t -> t.move(tx, ty));
     }
 
@@ -379,7 +402,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     @Override
     public void render(final Graphics2D g) {
-        ImageRenderer.renderScaled(g, background, shiftX, shiftY, zoom*BACKGROUND_ZOOM_FACTOR, zoom*BACKGROUND_ZOOM_FACTOR);
+        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() *BACKGROUND_ZOOM_FACTOR, getZoom() *BACKGROUND_ZOOM_FACTOR);
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 
@@ -391,7 +414,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     public void jointRender(final Graphics2D g, PlayerId renderOwner, CreatureFactory factory, TrapSpawner traps) {
-        ImageRenderer.renderScaled(g, background, shiftX, shiftY, zoom*BACKGROUND_ZOOM_FACTOR, zoom*BACKGROUND_ZOOM_FACTOR);
+        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() *BACKGROUND_ZOOM_FACTOR, getZoom() *BACKGROUND_ZOOM_FACTOR);
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 

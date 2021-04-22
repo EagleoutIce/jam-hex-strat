@@ -69,7 +69,11 @@ public class SimpleImageRenderer implements IRenderData {
                 break;
 
         }
-        ImageRenderer.renderScaled(g, renderImage, pos.getX() + Board.zoom * offsetX, pos.getY() + Board.zoom * offsetY, Board.zoom, Board.zoom);
+        ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY, scale(), scale());
+    }
+
+    private float scale() {
+        return Board.getZoom() * scale;
     }
 
     @Override
@@ -89,7 +93,7 @@ public class SimpleImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.zoom * offsetX), (int) (pos.getY() + Board.zoom * offsetY), (int) (Board.zoom * image.getWidth()), (int) (Board.zoom * image.getHeight()));
+        return new Rectangle((int) (pos.getX() + scale() * offsetX), (int) (pos.getY() + scale() * offsetY), (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
     }
 
     @Override

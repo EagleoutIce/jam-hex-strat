@@ -111,6 +111,7 @@ public class GameScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
+        field.getBoard().resetZoom();
         InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> disconnect(true), GameScreen.NAME);
     }
 

@@ -109,6 +109,7 @@ public class EditorScreen extends Screen {
     @Override
     public void prepare() {
         super.prepare();
+        board.resetZoom();
 
         // TODO: maybe group reset?
         trapSpawner.removeAll();
@@ -420,7 +421,7 @@ public class EditorScreen extends Screen {
 
                 TrapImprint imprint = t.getImprint();
                 Game.window().cursor().setVisible(true);
-                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImage());
+                Game.window().cursor().set(t.getImprint().getNormalRenderer().getImageScaled());
                 // TODO: maybe make more efficient?
                 board.setHighlightMask(new ImprintHighlighter(imprint));
                 Game.window().cursor().showDefaultCursor();
