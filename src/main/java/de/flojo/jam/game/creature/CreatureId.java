@@ -48,10 +48,18 @@ public enum CreatureId {
             new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/goblin_ton_", ".ogg", 1, 6)
     ),
     LIZARD("Lizard", 6, //
-            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png", CreatureImageRenderer.FLY_LILA, -87d / 1.7,
+            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png", CreatureImageRenderer.FLY_BLAU, -87d / 1.7,
                     -102 / 1.27d), //
-            new CreatureImageRenderer("creatures/echse_lila.png", "creatures/echse_lila_glow.png", CreatureImageRenderer.FLY_BLAU,
+            new CreatureImageRenderer("creatures/echse_lila.png", "creatures/echse_lila_glow.png", CreatureImageRenderer.FLY_LILA,
                     -87d / 2.3, -102 / 1.27d),
+            new NoSoundPool()
+            // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
+    ),
+    OGER("Oger", 9, //
+            new CreatureImageRenderer("creatures/oger_blau.png", "creatures/oger_blau_glow.png", CreatureImageRenderer.FLY_BLAU, -329d / 1.7,
+                    -421 / 1.27d, .23f), //
+            new CreatureImageRenderer("creatures/oger_lila.png", "creatures/oger_lila_glow.png", CreatureImageRenderer.FLY_LILA,
+                    -329d / 2.3, -421 / 1.27d,.24f),
             new NoSoundPool()
             // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
     );

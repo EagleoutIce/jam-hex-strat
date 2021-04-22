@@ -29,7 +29,9 @@ public class CreatureElf extends Creature {
     private static CreatureAttributes createElfAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillSimplePunch(2, 1, 3, "Ein mega Schuss", "Ein einfacher Schuss mit dem Elfenbogen."));
+        skills.add(new SkillSimplePunch(1, 1, Integer.MAX_VALUE, "Sniper", "Ein scharfer Schuss.", 2));
+        // TODO: make snipe more expensive
         // TODO: arrows
-        return new CreatureAttributes(4, 1, skills);
+        return new CreatureAttributes(4, 2, skills);
     }
 }

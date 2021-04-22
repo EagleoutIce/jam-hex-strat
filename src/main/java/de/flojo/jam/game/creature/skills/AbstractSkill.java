@@ -6,12 +6,12 @@ import java.util.function.Supplier;
 
 public abstract class AbstractSkill extends JsonDataOfSkill implements IAmJson, ICreatureSkill {
 
-    AbstractSkill(int maximumEffectLength, int minRange, int maxRange, int bonusOnRaised, Supplier<String> nameSupplier, String description, SkillId skillId) {
-        super(maximumEffectLength, minRange, maxRange, bonusOnRaised, nameSupplier, description, skillId);
+    AbstractSkill(int maximumEffectLength, int minRange, int maxRange, int bonusOnRaised, Supplier<String> nameSupplier, String description, SkillId skillId, final int cost) {
+        super(maximumEffectLength, minRange, maxRange, bonusOnRaised, nameSupplier, description, skillId, cost);
     }
 
-    AbstractSkill(int maximumEffectLength, int minRange, int maxRange, int bonusOnRaised, String name, String description, SkillId skillId) {
-        super(maximumEffectLength, minRange, maxRange, bonusOnRaised, name, description, skillId);
+    AbstractSkill(int maximumEffectLength, int minRange, int maxRange, int bonusOnRaised, String name, String description, SkillId skillId, final int cost) {
+        super(maximumEffectLength, minRange, maxRange, bonusOnRaised, name, description, skillId, cost);
     }
 
     @Override
@@ -49,8 +49,4 @@ public abstract class AbstractSkill extends JsonDataOfSkill implements IAmJson, 
         return description;
     }
 
-    @Override
-    public int getCost() {
-        return getSkillId().getCost();
-    }
 }

@@ -5,7 +5,11 @@ import de.flojo.jam.game.creature.skills.effects.PunchEffect;
 public class SkillSimplePunch extends AbstractSkill {
 
     public SkillSimplePunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description) {
-        super(maximumPunchLength, minRange, maxRange, 1, name, description, SkillId.SIMPLE_PUNCH);
+        this(maximumPunchLength, minRange, maxRange, name, description, 1);
+    }
+
+    public SkillSimplePunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description, final int cost) {
+        super(maximumPunchLength, minRange, maxRange, 1, name, description, SkillId.SIMPLE_PUNCH, cost);
     }
 
     @Override

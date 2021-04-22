@@ -154,7 +154,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 this.currentCreatureId = c;
                 this.selectionMode = BuildingPhaseSelectionMode.CREATURE;
 
-                BufferedImage img = context.getFactory().getBufferedImage(c, ourId.ifOne(true, false));
+                Image img = context.getFactory().getScaledImage(c, ourId.ifOne(true, false));
                 if (img != null) {
                     Game.window().cursor().setVisible(true);
                     Game.window().cursor().set(img);

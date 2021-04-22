@@ -13,9 +13,10 @@ public class JsonDataOfSkill implements IAmJson {
     protected final SkillId skillId;
     protected final int bonusOnRaised;
     private final transient Supplier<String> nameSupplier;
+    private final int cost;
     private String name = null;
 
-    public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final Supplier<String> nameSupplier, final String description, SkillId skillId) {
+    public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final Supplier<String> nameSupplier, final String description, SkillId skillId, final int cost) {
         this.maximumEffectLength = maximumEffectLength;
         this.nameSupplier = nameSupplier;
         this.name = getNameWithFallback();
@@ -24,10 +25,11 @@ public class JsonDataOfSkill implements IAmJson {
         this.maxRange = maxRange;
         this.skillId = skillId;
         this.bonusOnRaised = bonusOnRaised;
+        this.cost = cost;
     }
 
-    public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final String name, final String description, SkillId skillId) {
-        this(maximumEffectLength, minRange, maxRange, bonusOnRaised, () -> name, description, skillId);
+    public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange, final int bonusOnRaised, final String name, final String description, SkillId skillId, final int cost) {
+        this(maximumEffectLength, minRange, maxRange, bonusOnRaised, () -> name, description, skillId, cost);
     }
 
     protected String getNameWithFallback() {
@@ -40,29 +42,36 @@ public class JsonDataOfSkill implements IAmJson {
         return IAmJson.super.toJson();
     }
 
+
+    public int getCost() {
+        return cost;
+    }
+
     @Override
     public String toString() {
-        return "SkillData{" +
+        return "JsonDataOfSkill{" +
                 "maximumEffectLength=" + maximumEffectLength +
-                ", name='" + getNameWithFallback() + '\'' +
                 ", description='" + description + '\'' +
                 ", minRange=" + minRange +
                 ", maxRange=" + maxRange +
+                ", skillId=" + skillId +
+                ", bonusOnRaised=" + bonusOnRaised +
+                ", nameSupplier=" + nameSupplier +
+                ", cost=" + cost +
+                ", name='" + name + '\'' +
                 '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof JsonDataOfSkill)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         JsonDataOfSkill that = (JsonDataOfSkill) o;
-        return maximumEffectLength == that.maximumEffectLength && minRange == that.minRange && maxRange == that.maxRange && bonusOnRaised == that.bonusOnRaised && skillId == that.skillId;
+        return maximumEffectLength == that.maximumEffectLength && minRange == that.minRange && maxRange == that.maxRange && bonusOnRaised == that.bonusOnRaised && getCost() == that.getCost() && skillId == that.skillId;
     }
-    // && Objects.equals(nameSupplier.get(), that.nameSupplier.get());
 
     @Override
     public int hashCode() {
-        return Objects.hash(maximumEffectLength, minRange, maxRange, skillId, bonusOnRaised);
+        return Objects.hash(maximumEffectLength, minRange, maxRange, skillId, bonusOnRaised, getCost());
     }
-
 }

@@ -9,6 +9,7 @@ import de.flojo.jam.game.creature.creatures.CreatureGoblin;
 import de.flojo.jam.game.creature.creatures.CreatureHalfling;
 import de.flojo.jam.game.creature.creatures.CreatureImp;
 import de.flojo.jam.game.creature.creatures.CreatureLizard;
+import de.flojo.jam.game.creature.creatures.CreatureOger;
 import de.flojo.jam.game.creature.creatures.CreaturePeasant;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.AnimationRenderer;
@@ -18,6 +19,7 @@ import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
 import de.gurkenlabs.litiengine.resources.Resources;
 
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.List;
@@ -89,6 +91,8 @@ public class CreatureFactory {
                 return this::summonGoblin;
             case LIZARD:
                 return this::summonLizard;
+            case OGER:
+                return this::summonOger;
             default:
             case NONE:
                 return null;
@@ -99,6 +103,12 @@ public class CreatureFactory {
         if (id == CreatureId.NONE)
             return null;
         return p1 ? id.getP1Image().getImage() : id.getP2Image().getImage();
+    }
+
+    public Image getScaledImage(final CreatureId id, final boolean p1) {
+        if (id == CreatureId.NONE)
+            return null;
+        return p1 ? id.getP1Image().getImageScaled() : id.getP2Image().getImageScaled();
     }
 
     public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
@@ -128,6 +138,11 @@ public class CreatureFactory {
 
     public Creature summonLizard(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
         return new CreatureLizard(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.LIZARD.getRenderer(pId),
+                getDieAnimation(pId));
+    }
+
+    public Creature summonOger(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
+        return new CreatureOger(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.OGER.getRenderer(pId),
                 getDieAnimation(pId));
     }
 

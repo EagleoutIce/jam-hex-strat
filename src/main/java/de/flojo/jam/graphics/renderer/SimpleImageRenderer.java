@@ -1,6 +1,7 @@
 package de.flojo.jam.graphics.renderer;
 
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.util.ImageUtil;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.resources.Resources;
 
@@ -13,14 +14,22 @@ import java.awt.image.RescaleOp;
 public class SimpleImageRenderer implements IRenderData {
     protected final double offsetX;
     protected final double offsetY;
+    protected final float scale;
     private final BufferedImage image;
+    private final Image scaledImage;
     private final BufferedImage highlightImage;
     private final BufferedImage markImage;
 
     public SimpleImageRenderer(final String path, final double offsetX, final double offsetY) {
+        this(path, offsetX, offsetY, 1f);
+    }
+
+    public SimpleImageRenderer(final String path, final double offsetX, final double offsetY, final float scale) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+        this.scale = scale;
         this.image = Resources.images().get(path);
+        scaledImage = ImageUtil.scale(image, scale);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         generateImageVariants();
@@ -71,6 +80,11 @@ public class SimpleImageRenderer implements IRenderData {
     @Override
     public BufferedImage getImage() {
         return image;
+    }
+
+    @Override
+    public Image getImageScaled() {
+        return scaledImage;
     }
 
     @Override

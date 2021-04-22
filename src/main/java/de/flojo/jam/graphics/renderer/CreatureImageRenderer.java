@@ -16,6 +16,7 @@ public class CreatureImageRenderer implements IRenderData {
     private static final int GLOW_OFFSET_X = 10;
     private static final int GLOW_OFFSET_Y = 10;
     private final BufferedImage image;
+    private final Image prescaled;
     private final double offsetX;
     private final double offsetY;
     private final BufferedImage highlightImage;
@@ -24,15 +25,22 @@ public class CreatureImageRenderer implements IRenderData {
     private final BufferedImage markImage;
     private final BufferedImage glowImage;
     private final BufferedImage flyImage;
+    private final float internalScale;
 
     public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX, final double offsetY) {
+        this(path, glowPath, flyPath, offsetX, offsetY, 1f);
+    }
+
+    public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX, final double offsetY, final float internalScale) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
+        this.internalScale = internalScale;
         this.image = Resources.images().get(path);
         darkerImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        prescaled = ImageUtil.scale(image, internalScale);
         glowImage = Resources.images().get(glowPath);
         flyImage = Resources.images().get(flyPath);
         generateImageVariants();
@@ -45,13 +53,17 @@ public class CreatureImageRenderer implements IRenderData {
         ImageUtil.modifyRGBA(image, markImage, 1.2f, 1.2f, 1.2f, 1);
     }
 
+    private float scale() {
+        return Board.zoom * internalScale;
+    }
+
     @Override
     public void render(final Graphics2D g, final Point2D pos, RenderHint... hints) {
         BufferedImage renderImage;
         for (RenderHint hint : hints) {
             switch (hint) {
                 case GLOW:
-                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + Board.zoom * (offsetX - GLOW_OFFSET_X), pos.getY() + Board.zoom * (offsetY - GLOW_OFFSET_Y), Board.zoom, Board.zoom);
+                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + scale() * (offsetX - GLOW_OFFSET_X), pos.getY() + scale() * (offsetY - GLOW_OFFSET_Y), scale(), scale());
                     continue;
                 case HOVER:
                     renderImage = highlightImage;
@@ -71,10 +83,8 @@ public class CreatureImageRenderer implements IRenderData {
                     break;
 
             }
-            // TODO: zoom shift
-            ImageRenderer.renderScaled(g, renderImage, pos.getX() + Board.zoom * (offsetX), pos.getY() + Board.zoom * (offsetY), Board.zoom, Board.zoom);
+            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * (offsetX), pos.getY() + scale() * (offsetY), scale(), scale());
         }
-
     }
 
     @Override
@@ -88,8 +98,13 @@ public class CreatureImageRenderer implements IRenderData {
     }
 
     @Override
+    public Image getImageScaled() {
+        return prescaled;
+    }
+
+    @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.zoom * (offsetX)), (int) (pos.getY() + Board.zoom * (offsetY)), (int) (Board.zoom * image.getWidth()), (int) (Board.zoom * image.getHeight()));
+        return new Rectangle((int) (pos.getX() + scale() * (offsetX)), (int) (pos.getY() + scale() * (offsetY)), (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
     }
 
     @Override

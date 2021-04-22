@@ -32,6 +32,11 @@ public class VoidRenderer implements IRenderData {
     }
 
     @Override
+    public Image getImageScaled() {
+        return null;
+    }
+
+    @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
         return new Rectangle((int) pos.getX(), (int) pos.getY(), 0, 0);
     }

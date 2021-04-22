@@ -1,15 +1,12 @@
 package de.flojo.jam.game.creature.skills;
 
-import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.effects.MultiPunchEffect;
-import de.flojo.jam.game.creature.skills.effects.PunchEffect;
 
-import java.util.Set;
 
 public class SkillMultiPunch extends AbstractSkill {
 
-    public SkillMultiPunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description) {
-        super(maximumPunchLength, minRange, maxRange, 0, name, description, SkillId.MULTI_PUNCH);
+    public SkillMultiPunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description, final int cost) {
+        super(maximumPunchLength, minRange, maxRange, 0, name, description, SkillId.MULTI_PUNCH, cost);
     }
 
     @Override

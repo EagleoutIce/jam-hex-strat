@@ -61,6 +61,11 @@ public class AnimationRenderer implements IRenderData {
     }
 
     @Override
+    public Image getImageScaled() {
+        return currentImg;// TODO: apply to scale
+    }
+
+    @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
         return new Rectangle((int) (pos.getX() + Board.zoom * offsetX), (int) (pos.getY() + Board.zoom * offsetY), (int)(Board.zoom * sWidth), (int)(Board.zoom * sHeight));
     }
