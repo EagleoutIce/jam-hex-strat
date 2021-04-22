@@ -13,10 +13,10 @@ import java.awt.image.BufferedImage;
 public class CreatureImageRenderer implements IRenderData {
     public static final String FLY_LILA = "creatures/effects/fliegen_overlay_lila.png";
     public static final String FLY_BLAU = "creatures/effects/fliegen_overlay_blau.png";
-    private static final int GLOW_OFFSET_X = 10;
-    private static final int GLOW_OFFSET_Y = 10;
+    private static final double GLOW_OFFSET_X = 1/11d;
+    private static final double GLOW_OFFSET_Y = 1/11d;
     private final BufferedImage image;
-    private final Image prescaled;
+    private final Image scaledImage;
     private final double offsetX;
     private final double offsetY;
     private final BufferedImage highlightImage;
@@ -40,7 +40,7 @@ public class CreatureImageRenderer implements IRenderData {
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
-        prescaled = ImageUtil.scale(image, internalScale);
+        scaledImage = ImageUtil.scale(image, internalScale);
         glowImage = Resources.images().get(glowPath);
         flyImage = Resources.images().get(flyPath);
         generateImageVariants();
@@ -63,7 +63,7 @@ public class CreatureImageRenderer implements IRenderData {
         for (RenderHint hint : hints) {
             switch (hint) {
                 case GLOW:
-                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + scale() * (offsetX - GLOW_OFFSET_X), pos.getY() + scale() * (offsetY - GLOW_OFFSET_Y), scale(), scale());
+                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + scale() * (offsetX - glowImage.getWidth() * GLOW_OFFSET_X), pos.getY() + scale() * (offsetY - glowImage.getHeight() * GLOW_OFFSET_Y), scale(), scale());
                     continue;
                 case HOVER:
                     renderImage = highlightImage;
@@ -81,9 +81,8 @@ public class CreatureImageRenderer implements IRenderData {
                 case NORMAL:
                     renderImage = image;
                     break;
-
             }
-            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * (offsetX), pos.getY() + scale() * (offsetY), scale(), scale());
+            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY, scale(), scale());
         }
     }
 
@@ -99,7 +98,7 @@ public class CreatureImageRenderer implements IRenderData {
 
     @Override
     public Image getImageScaled() {
-        return prescaled;
+        return scaledImage;
     }
 
     @Override
