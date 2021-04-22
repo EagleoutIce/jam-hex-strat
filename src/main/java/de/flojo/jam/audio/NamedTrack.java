@@ -20,7 +20,7 @@ public class NamedTrack extends SinglePlayTrack {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof NamedTrack)) return false;
         if (!super.equals(o)) return false;
         NamedTrack sounds = (NamedTrack) o;
         return Objects.equals(getName(), sounds.getName());

@@ -16,7 +16,7 @@ public class PlayerController {
         // do nothing?
     }
 
-    public ClientServerConnection getConnection(WebSocket conn) {
+    public synchronized ClientServerConnection getConnection(WebSocket conn) {
         if (playerOne != null && Objects.equals(playerOne.getConnection(), conn)) {
             return playerOne;
         }
@@ -26,8 +26,8 @@ public class PlayerController {
         return null;
     }
 
-    public boolean addPlayer(ClientServerConnection connection) throws NameNotAvailableException {
-        if (connection == null) return false;
+    public synchronized void addPlayer(ClientServerConnection connection) throws NameNotAvailableException {
+        if (connection == null) return;
         if (playerOne == null) {
             playerOne = connection;
             connection.setRole(PlayerId.ONE);
@@ -37,18 +37,15 @@ public class PlayerController {
 
             playerTwo = connection;
             connection.setRole(PlayerId.TWO);
-        } else {
-            return false;
         }
-        return true;
     }
 
-    public boolean removePlayer(WebSocket connection) {
-        return removePlayer(getConnection(connection));
+    public void removePlayer(WebSocket connection) {
+        removePlayer(getConnection(connection));
     }
 
-    public boolean removePlayer(ClientServerConnection connection) {
-        if (connection == null) return false;
+    public synchronized void removePlayer(ClientServerConnection connection) {
+        if (connection == null) return;
         if (Objects.equals(playerOne, connection)) {
             // shift one down
             playerOne = playerTwo;
@@ -59,10 +56,7 @@ public class PlayerController {
         } else if (Objects.equals(playerTwo, connection)) {
             connection.setRole(null);
             playerTwo = null;
-        } else {
-            return false;
         }
-        return true;
     }
 
     public boolean ready() {
@@ -88,11 +82,11 @@ public class PlayerController {
         playerTwo.send(message);
     }
 
-    public ClientServerConnection getPlayer(PlayerId owner) {
+    public synchronized ClientServerConnection getPlayer(PlayerId owner) {
         return owner.ifOne(playerOne, playerTwo);
     }
 
-    public ClientServerConnection getOtherPlayer(PlayerId owner) {
+    public synchronized ClientServerConnection getOtherPlayer(PlayerId owner) {
         return owner.ifTwo(playerOne, playerTwo);
     }
 

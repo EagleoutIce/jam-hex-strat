@@ -61,8 +61,7 @@ public enum CreatureId {
                     -421 / 1.27d, Main.DEFAULT_INTERNAL_SCALE), //
             new CreatureImageRenderer("creatures/oger_lila.png", "creatures/oger_lila_glow.png", CreatureImageRenderer.FLY_LILA,
                     -329d / 2.3, -421 / 1.27d, Main.DEFAULT_INTERNAL_SCALE),
-            new NoSoundPool()
-            // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
+            new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/oger_ton_", ".ogg", 1, 6)
     );
 
     private final String name;

@@ -8,7 +8,7 @@ import de.gurkenlabs.litiengine.sound.SoundEngine;
 import java.util.function.Supplier;
 
 public class SoundPoolPlayGroup {
-    private static final float DEFAULT_VOLUME = .35f;
+    private static final float DEFAULT_VOLUME = .45f;
     private SFXPlayback currently;
     private Supplier<Boolean> bindPlaySupplier = null;
 

@@ -65,7 +65,7 @@ public class BackgroundMusic {
                 playNewBackgroundMusic();
             }
         });
-        Game.audio().getAllMusic().forEach(m -> m.setVolume(.1f));
+        Game.audio().getAllMusic().forEach(m -> m.setVolume(.08f));
         toggleMusic.set(true);
     }
 }
