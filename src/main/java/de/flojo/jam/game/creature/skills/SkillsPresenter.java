@@ -259,8 +259,9 @@ public class SkillsPresenter {
         skipSkill.setLocation(width - offCounter, height - skipSkill.getHeight() - 60d);
         movementSkill.setLocation(width - offCounter -  skipSkill.getWidth() - 10, height - movementSkill.getHeight() - 60d);
         offCounter += skipSkill.getWidth() + 10;
-        for (GuiComponent component : skillPresenters.values()) {
-            component.setEnabled(attributes.getApLeft() > 0);
+        for (Map.Entry<AbstractSkill, GuiComponent> skillPair : skillPresenters.entrySet()) {
+            final GuiComponent component = skillPair.getValue();
+            component.setEnabled(currentCreature.canCastSkill(skillPair.getKey()));
             offCounter += component.getWidth() + 10;
             component.setLocation(width - offCounter - 10, height - 60d - component.getHeight());
         }

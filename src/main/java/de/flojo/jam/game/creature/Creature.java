@@ -181,12 +181,6 @@ public class Creature implements IRenderable {
         return creatureId;
     }
 
-    @Override
-    public String toString() {
-        return "Creature [" + "name=" + name + ", position=" + getCoordinate() +
-                ", owner=" + this.core.getOwner() + "]";
-    }
-
     public void moribund() {
         moribund = true;
     }
@@ -198,5 +192,16 @@ public class Creature implements IRenderable {
     public boolean canCastSkill(ICreatureSkill skill) {
         final boolean canCastFly = this.isFlying() && skill.castOnAir() || !this.isFlying() && skill.castOnGround();
         return this.getAttributes().getApLeft() >= skill.getCost() && canCastFly;
+    }
+
+    @Override
+    public String toString() {
+        return "Creature{" +
+                "name='" + name + '\'' +
+                ", creatureId=" + creatureId +
+                ", base=" + base +
+                ", core=" + core +
+                ", moribund=" + moribund +
+                '}';
     }
 }

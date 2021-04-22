@@ -120,4 +120,16 @@ public class CreatureCore {
         this.isFlying = !this.isFlying;
         return this.isFlying;
     }
+
+    @Override
+    public String toString() {
+        return "CreatureCore{" +
+                "owner=" + owner +
+                ", attributes=" + attributes +
+                ", isOur=" + isOur +
+                ", highlight=" + highlight +
+                ", isFlying=" + isFlying +
+                ", isDead=" + isDead +
+                '}';
+    }
 }

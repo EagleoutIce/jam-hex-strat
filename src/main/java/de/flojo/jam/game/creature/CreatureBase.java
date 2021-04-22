@@ -119,4 +119,17 @@ public class CreatureBase implements IRenderable {
         return terrainOffsetY;
     }
 
+    @Override
+    public String toString() {
+        return "CreatureBase{" +
+                "position=" + position +
+                ", movementOffsetX=" + movementOffsetX +
+                ", movementOffsetY=" + movementOffsetY +
+                ", deltaX=" + deltaX +
+                ", deltaY=" + deltaY +
+                ", terrainOffsetY=" + terrainOffsetY +
+                ", resetTerrainOffset=" + resetTerrainOffset +
+                ", locked=" + locked +
+                '}';
+    }
 }
