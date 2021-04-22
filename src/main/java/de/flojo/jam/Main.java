@@ -21,14 +21,14 @@ import java.util.logging.Level;
 public class Main {
 
     public static final Image DEFAULT_CURSOR = Resources.images().get("cursor.png").getScaledInstance(30,30, Image.SCALE_SMOOTH);
-    public static final BufferedImage ICON = Resources.images().get("icon.png");
+    public static final Image ICON = Resources.images().get("icon.png").getScaledInstance(42,42,Image.SCALE_SMOOTH);
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);
     public static final Font GUI_FONT_LARGE = GUI_FONT.deriveFont(75f);
     public static final Font GUI_FONT_SMALL = GUI_FONT.deriveFont(48f);
     public static final Font TEXT_STATUS = GUI_FONT.deriveFont(25f);
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
-
+    public static final float DEFAULT_INTERNAL_SCALE = .26f;
     public static final double INNER_MARGIN = 20d;
 
     public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class Main {
         Arrays.stream(Game.log().getHandlers()).forEach(h -> h.setLevel(Level.ALL));
         Game.graphics().setBaseRenderScale(3.0f);
 
-        Game.window().setTitle("Super duper game");
+        Game.window().setTitle("Hex-Strat");
 
         Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
             System.err.println("Mimimi do this with a stream");

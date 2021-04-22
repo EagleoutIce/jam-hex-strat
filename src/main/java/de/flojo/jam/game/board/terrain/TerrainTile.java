@@ -1,5 +1,6 @@
 package de.flojo.jam.game.board.terrain;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.PushDirection;
 import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
 import de.flojo.jam.game.board.terrain.management.TerrainImprintNodeMap;
@@ -16,7 +17,7 @@ public enum TerrainTile {
             PushDirection.NONE, VoidRenderer.get()), //
     // dos not blick los or punch as it raised and we include a raised switch
     GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false, true, 2,
-            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -288 / 2.1d, -319 / 1.33, .24f)), //
+            PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -288 / 2.1d, -319 / 1.33, Main.DEFAULT_INTERNAL_SCALE)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true, true,
             true, false, -1, PushDirection.NONE,
@@ -47,7 +48,7 @@ public enum TerrainTile {
             -1, PushDirection.NONE, new SimpleImageRenderer("tiles/baum_kahl_variante_b.png", -89 / 2d, -149 / 1.55d)), //
     //
     CART_LEFT("Kaputter Wagen nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 2), true, true, true,
-            false, -1, PushDirection.NONE, new SimpleImageRenderer("tiles/karren_links.png", -142 / 1.25d, -75 / 1.1d)), //
+            false, -1, PushDirection.NONE, new SimpleImageRenderer("tiles/karren_links.png", -569 / 1.25d, -303 / 1.1d, .25f)), //
     CART_LEFT_GHOST("Kaputter Wagen nach links:Geister", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 1, 0), true,
             true, true, false, -1, PushDirection.NONE, VoidRenderer.get()),
     CAR_LEFT_HANDLES("Kaputter Wagen nach links:Griffe", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_LEFT, 0, 1), true,
@@ -55,7 +56,7 @@ public enum TerrainTile {
     //
     CART_RIGHT("Kaputter Wagen nach rechts", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 2), true, true,
             true, false, -1, PushDirection.NONE,
-            new SimpleImageRenderer("tiles/karren_rechts.png", -142 / 4.85d, -75 / 1.1d)), //
+            new SimpleImageRenderer("tiles/karren_rechts.png", -569 / 4.85d, -303 / 1.1d, .25f)), //
     CART_RIGHT_GHOST("Kaputter Wagen nach rechts:Geister", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 0, 0),
             true, true, true, false, -1, PushDirection.NONE, VoidRenderer.get()),
     CAR_RIGHT_HANDLES("Kaputter Wagen nach rechts:Griffe", new TerrainImprintNodeMap(TerrainIdConstants.T_CART_RIGHT, 1, 1),
