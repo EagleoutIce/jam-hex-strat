@@ -33,6 +33,7 @@ public class SingleMovePresenter implements ISingleActionPresenter {
         final int left = c.getAttributes().getMpLeft();
         if (left >= 10) component.updateImage(MOVES[10]);
         else if (left >= 0) component.updateImage(MOVES[left]);
+        component.setEnabled(left > 0);
     }
 
     @Override
