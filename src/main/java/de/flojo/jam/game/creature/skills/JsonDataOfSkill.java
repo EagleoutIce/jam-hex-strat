@@ -65,7 +65,7 @@ public class JsonDataOfSkill implements IAmJson {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof JsonDataOfSkill)) return false;
         JsonDataOfSkill that = (JsonDataOfSkill) o;
         return maximumEffectLength == that.maximumEffectLength && minRange == that.minRange && maxRange == that.maxRange && bonusOnRaised == that.bonusOnRaised && getCost() == that.getCost() && skillId == that.skillId;
     }
