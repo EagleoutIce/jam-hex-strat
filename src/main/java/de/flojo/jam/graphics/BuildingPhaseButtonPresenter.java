@@ -1,6 +1,7 @@
 package de.flojo.jam.graphics;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainTile;
@@ -315,14 +316,17 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         if (t == null)
             return;
 
-        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
-                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
-                                                        context.getBoard())) {
-                context.getSpawner().spawnTrap(currentTrapId, ourId, t);
-                currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
-            }
+        if ((c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) && trapCanBePlacedHere(
+                t)) {
+            context.getSpawner().spawnTrap(currentTrapId, ourId, t);
+            currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
         }
+    }
+
+    private boolean trapCanBePlacedHere(final Tile t) {
+        return t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
+                && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
+                                                    context.getBoard());
     }
 
 
@@ -344,15 +348,18 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         final var t = context.getBoard().findTile(p);
         if (t == null)
             return;
-        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
-                    t.getCoordinate()).isEmpty()
-                    && context.getFactory().get(t.getCoordinate()).isEmpty()) {
-                currentCreature.summon(UUID.randomUUID().toString(), t);
-                summonedCreature = true;
-                currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate(), false));
-            }
+        if ((c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) && creatureCanBeSummonedHere(
+                t)) {
+            currentCreature.summon(UUID.randomUUID().toString(), t);
+            summonedCreature = true;
+            currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate(), false));
         }
+    }
+
+    private boolean creatureCanBeSummonedHere(final Tile t) {
+        return !t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
+                t.getCoordinate()).isEmpty()
+                && context.getFactory().get(t.getCoordinate()).isEmpty();
     }
 
     @Override
