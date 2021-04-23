@@ -4,7 +4,6 @@ import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
-import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.creature.ActionType;
 import de.flojo.jam.game.creature.Creature;

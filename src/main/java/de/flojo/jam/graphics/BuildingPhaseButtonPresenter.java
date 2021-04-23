@@ -1,7 +1,6 @@
 package de.flojo.jam.graphics;
 
 import de.flojo.jam.Main;
-import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainTile;
@@ -114,8 +113,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
 
             final var imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
-                                                t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()),
-                                                Main.TEXT_NORMAL);
+                                              t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()),
+                                              Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
@@ -149,8 +148,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
             IRenderData creatureRenderer = c.getRenderer(ourId);
             final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
-                                                creatureRenderer.getImage(), Integer.toString(c.getCost()),
-                                                Main.TEXT_NORMAL);
+                                              creatureRenderer.getImage(), Integer.toString(c.getCost()),
+                                              Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             creatureButtons.add(imgBt);
@@ -185,9 +184,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
             IRenderData trapRenderer = t.getImprint().getNormalRenderer();
             final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85,
-                                                Game.window().getHeight() - i * 80d - 110d,
-                                                trapRenderer.getImage(), Integer.toString(t.getCost()),
-                                                Main.TEXT_NORMAL);
+                                              Game.window().getHeight() - i * 80d - 110d,
+                                              trapRenderer.getImage(), Integer.toString(t.getCost()),
+                                              Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             trapButtons.add(imgBt);
@@ -316,17 +315,16 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         if (t == null)
             return;
 
-        if (shouldSpawnTrap(c, t)) {
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
+                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
+                                                        context.getBoard())) {
                 context.getSpawner().spawnTrap(currentTrapId, ourId, t);
                 currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
+            }
         }
     }
 
-    private boolean shouldSpawnTrap(final MouseEvent c, final Tile t) {
-        return c.getButton() == MouseEvent.BUTTON1 || ((c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) && ((t.getTerrainType() == TerrainTile.EMPTY) && context.getFactory().get(
-                t.getCoordinate()).isEmpty()  && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
-                                                    context.getBoard())));
-    }
 
     private void summonCreature(MouseEvent c) {
         if (this.selectionMode != BuildingPhaseSelectionMode.CREATURE || context.getArchitect() == null) {
@@ -346,16 +344,15 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         final var t = context.getBoard().findTile(p);
         if (t == null)
             return;
-        if (shouldSummonCreature(c, t)) {
+        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
+            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
+                    t.getCoordinate()).isEmpty()
+                    && context.getFactory().get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
                 summonedCreature = true;
                 currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate(), false));
             }
         }
-
-    private boolean shouldSummonCreature(final MouseEvent c, final Tile t) {
-        return (c.getButton() == MouseEvent.BUTTON1) || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK && !t.getTerrainType().blocksWalking() && ourId == t.getPlacementOwner() && context.getTraps().get(
-                t.getCoordinate()).isEmpty() && context.getFactory().get(t.getCoordinate()).isEmpty();
     }
 
     @Override

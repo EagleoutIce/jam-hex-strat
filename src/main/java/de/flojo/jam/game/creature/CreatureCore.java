@@ -1,7 +1,6 @@
 package de.flojo.jam.game.creature;
 
 import de.flojo.jam.Main;
-import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.RenderHint;
