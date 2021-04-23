@@ -18,19 +18,26 @@ import java.util.Set;
 
 public class CreaturePeasant extends Creature {
 
-    public CreaturePeasant(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase), createPeasantCore(playerId, normal, dying, isOur));
+    public CreaturePeasant(String name, Tile startBase, PlayerId playerId, boolean isOur,
+                           CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal,
+                           IRenderData dying) {
+        super(CreatureId.PEASANT, name, cCollection, tCollection, new CreatureBase(startBase),
+              createPeasantCore(playerId, normal, dying, isOur));
     }
 
-    private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+    private static CreatureCore createPeasantCore(PlayerId playerId, IRenderData normal, IRenderData dying,
+                                                  boolean isOur) {
         return new CreatureCore(playerId, isOur, normal, dying, createPeasantAttributes());
     }
 
     private static CreatureAttributes createPeasantAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
-        skills.add(new SkillSimplePunch(3, 0, 1, "Punch (3)", "Ein starker Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
-        skills.add(new SkillSimplePunch(2, 0, 1, "Punch (2)", "Ein normaler Hieb mit der Harke, der den Gegner bis zu zwei Felder näher ans Jenseits befördert."));
-        skills.add(new SkillSimplePunch(1, 0, 2, "Punch (1)", "Ein weiter Hieb mit der Harke, der den Gegner ein Feld näher ans Jenseits befördert."));
+        skills.add(new SkillSimplePunch(3, 0, 1, "Punch (3)",
+                                        "Ein starker Hieb mit der Harke, der den Gegner bis zu drei Felder näher ans Jenseits befördert."));
+        skills.add(new SkillSimplePunch(2, 0, 1, "Punch (2)",
+                                        "Ein normaler Hieb mit der Harke, der den Gegner bis zu zwei Felder näher ans Jenseits befördert."));
+        skills.add(new SkillSimplePunch(1, 0, 2, "Punch (1)",
+                                        "Ein weiter Hieb mit der Harke, der den Gegner ein Feld näher ans Jenseits befördert."));
         return new CreatureAttributes(4, 1, skills);
     }
 }

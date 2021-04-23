@@ -5,7 +5,9 @@ import de.flojo.jam.util.ImageUtil;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -27,11 +29,13 @@ public class CreatureImageRenderer implements IRenderData {
     private final BufferedImage flyImage;
     private final float internalScale;
 
-    public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX, final double offsetY) {
+    public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX,
+                                 final double offsetY) {
         this(path, glowPath, flyPath, offsetX, offsetY, 1f);
     }
 
-    public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX, final double offsetY, final float internalScale) {
+    public CreatureImageRenderer(final String path, final String glowPath, final String flyPath, final double offsetX,
+                                 final double offsetY, final float internalScale) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.internalScale = internalScale;
@@ -63,7 +67,10 @@ public class CreatureImageRenderer implements IRenderData {
         for (RenderHint hint : hints) {
             switch (hint) {
                 case GLOW:
-                    ImageRenderer.renderScaled(g, glowImage, pos.getX() + scale() * (offsetX - glowImage.getWidth() * GLOW_OFFSET_X), pos.getY() + scale() * (offsetY - glowImage.getHeight() * GLOW_OFFSET_Y), scale(), scale());
+                    ImageRenderer.renderScaled(g, glowImage,
+                                               pos.getX() + scale() * (offsetX - glowImage.getWidth() * GLOW_OFFSET_X),
+                                               pos.getY() + scale() * (offsetY - glowImage.getHeight() * GLOW_OFFSET_Y),
+                                               scale(), scale());
                     continue;
                 case HOVER:
                     renderImage = highlightImage;
@@ -82,7 +89,8 @@ public class CreatureImageRenderer implements IRenderData {
                     renderImage = image;
                     break;
             }
-            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY, scale(), scale());
+            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY,
+                                       scale(), scale());
         }
     }
 
@@ -103,7 +111,8 @@ public class CreatureImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + scale() * (offsetX)), (int) (pos.getY() + scale() * (offsetY)), (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
+        return new Rectangle((int) (pos.getX() + scale() * (offsetX)), (int) (pos.getY() + scale() * (offsetY)),
+                             (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
     }
 
     @Override

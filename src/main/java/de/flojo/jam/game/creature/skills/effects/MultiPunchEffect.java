@@ -25,14 +25,16 @@ public class MultiPunchEffect implements IEffectTarget {
 
     @Override
     public void effect(Creature target, Creature attacker) {
-        Set<Tile> targetTiles = CreatureSkillAOAGenerator.getAOA(skill, context.getBoard().getTile(attacker.getCoordinate()), context.getBoard(), context.getCreatures());
+        Set<Tile> targetTiles = CreatureSkillAOAGenerator.getAOA(skill,
+                                                                 context.getBoard().getTile(attacker.getCoordinate()),
+                                                                 context.getBoard(), context.getCreatures());
         Set<Creature> allTargets = new HashSet<>();
         for (Tile targetTile : targetTiles) {
             Optional<Creature> mayCreature = context.getCreatures().get(targetTile.getCoordinate());
             mayCreature.ifPresent(allTargets::add);
         }
         allTargets.forEach(c ->
-                new Thread(() -> new PunchEffect(context, powerLeft).effect(c, attacker)).start());
+                                   new Thread(() -> new PunchEffect(context, powerLeft).effect(c, attacker)).start());
     }
 
 }

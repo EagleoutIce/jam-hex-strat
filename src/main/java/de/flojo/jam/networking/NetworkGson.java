@@ -25,7 +25,8 @@ public class NetworkGson {
 
     @SuppressWarnings("unchecked")
     public static <T extends MessageContainer> T getMessage(String json) {
-        final MessageContainer container = Objects.requireNonNull(getContainer(json), "The container wasn't valid for: " + json);
+        final MessageContainer container = Objects.requireNonNull(getContainer(json),
+                                                                  "The container wasn't valid for: " + json);
         return (T) gson().fromJson(json, container.getType().getTargetClass());
     }
 

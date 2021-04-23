@@ -10,7 +10,8 @@ public class SkillPlantTrap extends AbstractSkill {
         this(nameSupplier, minRange, maxRange, description, 1);
     }
 
-    public SkillPlantTrap(Supplier<String> nameSupplier, int minRange, int maxRange, final String description, final int cost) {
+    public SkillPlantTrap(Supplier<String> nameSupplier, int minRange, int maxRange, final String description,
+                          final int cost) {
         super(1, minRange, maxRange, 0, nameSupplier, description, SkillId.PLANT_TRAP, cost);
     }
 

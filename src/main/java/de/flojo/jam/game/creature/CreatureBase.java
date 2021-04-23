@@ -4,7 +4,7 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 
 public class CreatureBase implements IRenderable {
 
@@ -38,7 +38,7 @@ public class CreatureBase implements IRenderable {
         resetTerrainOffset = true;
         // we keep the old coordinate so the figure will get still drawn
         position = new Tile(position.getCoordinate(), position.getShiftedCenter().getX() + movementOffsetX,
-                position.getShiftedCenter().getY() + movementOffsetY, c -> TerrainTile.EMPTY);
+                            position.getShiftedCenter().getY() + movementOffsetY, c -> TerrainTile.EMPTY);
     }
 
     public void move(Tile target) {

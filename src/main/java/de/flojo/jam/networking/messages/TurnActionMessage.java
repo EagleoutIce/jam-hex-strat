@@ -17,7 +17,8 @@ public class TurnActionMessage extends MessageContainer {
     private final List<BoardCoordinate> targets;
     private final JsonDataOfSkill skillId;
 
-    public TurnActionMessage(UUID clientId, ActionType action, BoardCoordinate from, List<BoardCoordinate> targets, JsonDataOfSkill skillId) {
+    public TurnActionMessage(UUID clientId, ActionType action, BoardCoordinate from, List<BoardCoordinate> targets,
+                             JsonDataOfSkill skillId) {
         super(MessageTypeEnum.TURN_ACTION, clientId);
         this.action = action;
         this.from = from;
@@ -51,7 +52,8 @@ public class TurnActionMessage extends MessageContainer {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         TurnActionMessage that = (TurnActionMessage) o;
-        return getAction() == that.getAction() && Objects.equals(getFrom(), that.getFrom()) && Objects.equals(getTargets(), that.getTargets()) && Objects.equals(skillId, that.skillId);
+        return getAction() == that.getAction() && Objects.equals(getFrom(), that.getFrom()) && Objects.equals(
+                getTargets(), that.getTargets()) && Objects.equals(skillId, that.skillId);
     }
 
     @Override

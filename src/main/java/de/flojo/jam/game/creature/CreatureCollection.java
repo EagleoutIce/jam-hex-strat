@@ -148,7 +148,8 @@ public class CreatureCollection {
     }
 
     private void waitBlockingForAllCreatureBasesToReachTarget() {
-        collection.stream().filter(c -> !c.getBase().moveTargetIsReached()).forEach(c -> CreatureActionController.awaitMovementComplete(c, 1000));
+        collection.stream().filter(c -> !c.getBase().moveTargetIsReached()).forEach(
+                c -> CreatureActionController.awaitMovementComplete(c, 1000));
     }
 
     public boolean p2CanDoSomething() {

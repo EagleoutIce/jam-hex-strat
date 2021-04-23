@@ -18,8 +18,10 @@ import java.util.Set;
 
 public class CreatureElf extends Creature {
 
-    public CreatureElf(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.ELF, name, cCollection, tCollection, new CreatureBase(startBase), createElfCore(playerId, normal, dying, isOur));
+    public CreatureElf(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection,
+                       TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(CreatureId.ELF, name, cCollection, tCollection, new CreatureBase(startBase),
+              createElfCore(playerId, normal, dying, isOur));
     }
 
     private static CreatureCore createElfCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {

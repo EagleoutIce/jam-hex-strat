@@ -8,7 +8,9 @@ import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.ShapeRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -89,14 +91,15 @@ public class CreatureCore {
         final Tile ourTile = base.getTile();
         final Point2D c = ourTile.getCenter();
         final Point2D renderTarget = new Point2D.Double(c.getX() - base.getMovementOffsetX() + ourTile.getShiftX(),
-                c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
+                                                        c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur && Creature.showMpAp.get()) {
             g.setFont(Main.TEXT_NORMAL);
             final String apInformation = getAttributes().getApLeft() + " / "
                     + getAttributes().getMpLeft();
             renderTarget.setLocation(renderTarget.getX() + (-TextRenderer.getWidth(g, apInformation) / 2),
-                    renderTarget.getY() + (-renderCore.getEffectiveRectangle(renderTarget).getHeight()) + 10);
+                                     renderTarget.getY() + (-renderCore.getEffectiveRectangle(
+                                             renderTarget).getHeight()) + 10);
             final Color sc;
             if (base.getTile().isMarked() || highlight.get()) {
                 g.setColor(new Color(.96f, .97f, .96f, .85f));
@@ -106,7 +109,9 @@ public class CreatureCore {
                 sc = Color.ORANGE;
             }
             Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
-            ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3, (int) bound.getWidth() + 6, (int) bound.getHeight() + 6), renderTarget);
+            ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3,
+                                                  (int) bound.getWidth() + 6, (int) bound.getHeight() + 6),
+                                 renderTarget);
             g.setColor(sc);
             TextRenderer.render(g, apInformation, renderTarget);
         }

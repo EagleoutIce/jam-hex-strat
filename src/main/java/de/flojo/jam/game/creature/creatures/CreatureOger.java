@@ -18,11 +18,14 @@ import java.util.Set;
 
 public class CreatureOger extends Creature {
 
-    public CreatureOger(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.OGER, name, cCollection, tCollection, new CreatureBase(startBase), createOgerCore(playerId, normal, dying, isOur));
+    public CreatureOger(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection,
+                        TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(CreatureId.OGER, name, cCollection, tCollection, new CreatureBase(startBase),
+              createOgerCore(playerId, normal, dying, isOur));
     }
 
-    private static CreatureCore createOgerCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+    private static CreatureCore createOgerCore(PlayerId playerId, IRenderData normal, IRenderData dying,
+                                               boolean isOur) {
         return new CreatureCore(playerId, isOur, normal, dying, createOgerAttributes());
     }
 

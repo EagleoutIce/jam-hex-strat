@@ -6,7 +6,8 @@ import de.gurkenlabs.litiengine.Valign;
 import de.gurkenlabs.litiengine.gui.ImageComponent;
 import de.gurkenlabs.litiengine.gui.ImageScaleMode;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.util.function.BooleanSupplier;
 
@@ -16,7 +17,8 @@ public class ImageButton extends ImageComponent {
     private BufferedImage disabled;
     private BooleanSupplier shouldBeEnabled = null;
 
-    public ImageButton(double width, double height, double x, double y, final BufferedImage img, final String text, Font font) {
+    public ImageButton(double width, double height, double x, double y, final BufferedImage img, final String text,
+                       Font font) {
         super(x, y, width, height, img);
         updateImage(img);
         setText(text);

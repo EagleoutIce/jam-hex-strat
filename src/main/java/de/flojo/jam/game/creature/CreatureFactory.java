@@ -19,7 +19,7 @@ import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
@@ -31,9 +31,11 @@ import java.util.logging.Level;
 public class CreatureFactory {
 
     private static final Spritesheet S_CREATURE_P1_DIEING = Resources.spritesheets()
-            .load("creatures/animations/creature_die_p1.png", 128, 128);
+                                                                     .load("creatures/animations/creature_die_p1.png",
+                                                                           128, 128);
     private static final Spritesheet S_CREATURE_P2_DIEING = Resources.spritesheets()
-            .load("creatures/animations/creature_die_p2.png", 128, 128);
+                                                                     .load("creatures/animations/creature_die_p2.png",
+                                                                           128, 128);
     private final CreatureCollection creatures;
     private final TrapCollection traps;
     private final Board board;
@@ -50,7 +52,7 @@ public class CreatureFactory {
     // new one for each
     private IRenderData getDieAnimation(final PlayerId playerId) {
         return new AnimationRenderer(playerId.ifOne(S_CREATURE_P1_DIEING, S_CREATURE_P2_DIEING),
-                Creature.DIE_DURATION / 25, -128 / 2d, -128 / 1.325d);
+                                     Creature.DIE_DURATION / 25, -128 / 2d, -128 / 1.325d);
     }
 
     // maybe allow more?
@@ -104,39 +106,47 @@ public class CreatureFactory {
         return p1 ? id.getP1Image().getImageScaled() : id.getP2Image().getImageScaled();
     }
 
-    public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
-        return new CreaturePeasant(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.PEASANT.getRenderer(pId),
-                getDieAnimation(pId));
+    public Creature summonPeasant(final String uniqueName, final Tile startBase, final PlayerId pId,
+                                  final boolean isOur) {
+        return new CreaturePeasant(uniqueName, startBase, pId, isOur, creatures, traps,
+                                   CreatureId.PEASANT.getRenderer(pId),
+                                   getDieAnimation(pId));
     }
 
     public Creature summonImp(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
         return new CreatureImp(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.IMP.getRenderer(pId),
-                getDieAnimation(pId));
+                               getDieAnimation(pId));
     }
 
     public Creature summonElf(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
         return new CreatureElf(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.ELF.getRenderer(pId),
-                getDieAnimation(pId));
+                               getDieAnimation(pId));
     }
 
-    public Creature summonHalfling(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
-        return new CreatureHalfling(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.HALFLING.getRenderer(pId),
-                getDieAnimation(pId));
+    public Creature summonHalfling(final String uniqueName, final Tile startBase, final PlayerId pId,
+                                   final boolean isOur) {
+        return new CreatureHalfling(uniqueName, startBase, pId, isOur, creatures, traps,
+                                    CreatureId.HALFLING.getRenderer(pId),
+                                    getDieAnimation(pId));
     }
 
-    public Creature summonGoblin(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
-        return new CreatureGoblin(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.GOBLIN.getRenderer(pId),
-                getDieAnimation(pId));
+    public Creature summonGoblin(final String uniqueName, final Tile startBase, final PlayerId pId,
+                                 final boolean isOur) {
+        return new CreatureGoblin(uniqueName, startBase, pId, isOur, creatures, traps,
+                                  CreatureId.GOBLIN.getRenderer(pId),
+                                  getDieAnimation(pId));
     }
 
-    public Creature summonLizard(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
-        return new CreatureLizard(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.LIZARD.getRenderer(pId),
-                getDieAnimation(pId));
+    public Creature summonLizard(final String uniqueName, final Tile startBase, final PlayerId pId,
+                                 final boolean isOur) {
+        return new CreatureLizard(uniqueName, startBase, pId, isOur, creatures, traps,
+                                  CreatureId.LIZARD.getRenderer(pId),
+                                  getDieAnimation(pId));
     }
 
     public Creature summonOger(final String uniqueName, final Tile startBase, final PlayerId pId, final boolean isOur) {
         return new CreatureOger(uniqueName, startBase, pId, isOur, creatures, traps, CreatureId.OGER.getRenderer(pId),
-                getDieAnimation(pId));
+                                getDieAnimation(pId));
     }
 
     public void removeCreature(final Tile onBase) {
@@ -192,7 +202,7 @@ public class CreatureFactory {
         this.creatures.clear();
         for (CreatureJson cJ : c) {
             getSpell(cJ.getId()).summon(cJ.getName(), board.getTile(cJ.getPos()),
-                    cJ.getOwner(), cJ.getOwner() == ourId);
+                                        cJ.getOwner(), cJ.getOwner() == ourId);
         }
         this.selectedCreature = null;
     }

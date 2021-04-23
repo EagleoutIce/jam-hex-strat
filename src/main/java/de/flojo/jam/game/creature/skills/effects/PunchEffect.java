@@ -53,8 +53,9 @@ public class PunchEffect implements IEffectTarget {
         }
 
         if (terrainBlocksPunch(punchTarget)) {
-            HexStratLogger.log().log(Level.INFO, "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
-                    new Object[]{deltaX, deltaY, target.getName(), punchTarget});
+            HexStratLogger.log().log(Level.INFO,
+                                     "Push for dx/dy: {0}/{1} stopped for {2} at {3} as it blocks punching.",
+                                     new Object[]{deltaX, deltaY, target.getName(), punchTarget});
             return;
         }
 

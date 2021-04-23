@@ -1,6 +1,6 @@
 package de.flojo.jam.game.board.highlighting;
 
-import java.awt.*;
+import java.awt.Point;
 
 public final class SimpleHighlighter implements IHighlightMask {
     private static final long serialVersionUID = -4881823468464682506L;

@@ -41,16 +41,19 @@ public class TrapData extends ArrayList<List<TrapTile>> {
 
     public void setTrapTileAt(int x, int y, TrapTile newType) {
         if (isEmpty() || y < 0 || y >= size()) {
-            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
+            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!",
+                                     new Object[]{x, y, newType});
             return;
         }
         List<TrapTile> tl = get(y);
         if (tl == null || tl.isEmpty() || x < 0 || x >= tl.size()) {
-            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!", new Object[]{x, y, newType});
+            HexStratLogger.log().log(Level.WARNING, "Wanted to set: {2} on {0}/{1} but not on grid!",
+                                     new Object[]{x, y, newType});
             return;
         }
         TrapTile old = tl.set(x, newType);
-        HexStratLogger.log().log(Level.INFO, "Set Trap at {0}/{1}, which was {2} to {3}", new Object[]{x, y, old, newType});
+        HexStratLogger.log().log(Level.INFO, "Set Trap at {0}/{1}, which was {2} to {3}",
+                                 new Object[]{x, y, old, newType});
     }
 
     public int getWidth() {

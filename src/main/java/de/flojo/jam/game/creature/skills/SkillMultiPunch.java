@@ -5,7 +5,8 @@ import de.flojo.jam.game.creature.skills.effects.MultiPunchEffect;
 
 public class SkillMultiPunch extends AbstractSkill {
 
-    public SkillMultiPunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name, final String description, final int cost) {
+    public SkillMultiPunch(final int maximumPunchLength, final int minRange, final int maxRange, final String name,
+                           final String description, final int cost) {
         super(maximumPunchLength, minRange, maxRange, 0, name, description, SkillId.MULTI_PUNCH, cost);
     }
 

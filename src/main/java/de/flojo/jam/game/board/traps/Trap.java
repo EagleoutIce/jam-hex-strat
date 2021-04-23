@@ -7,7 +7,8 @@ import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -43,7 +44,8 @@ public class Trap implements Serializable {
         for (int y = 0; y < data.getHeight(); y++) {
             for (int x = 0; x < data.getHeight(); x++) {
                 if (imprint.isSet(x, y)) {
-                    BoardCoordinate effectiveCoordinate = pos.getCoordinate().translateRelativeX(x - anchor.x, y - anchor.y);
+                    BoardCoordinate effectiveCoordinate = pos.getCoordinate().translateRelativeX(x - anchor.x,
+                                                                                                 y - anchor.y);
                     ghosts.add(board.getTile(effectiveCoordinate));
                 }
             }

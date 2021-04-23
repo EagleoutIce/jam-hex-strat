@@ -13,7 +13,8 @@ import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.net.URI;
@@ -68,15 +69,15 @@ public class ConnectScreen extends Screen {
 
         g.setFont(Main.TEXT_STATUS);
         TextRenderer.render(g, "Connection status: " + getConnectStatus(), Main.INNER_MARGIN,
-                15.0 + g.getFontMetrics().getHeight() + largeHeight);
+                            15.0 + g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 350) / 2);
+                            (Game.window().getHeight() + portNumber.getHeight() + 350) / 2);
 
         TextRenderer.render(g, "Adr.: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
+                            (Game.window().getHeight() + portNumber.getHeight() + 200) / 2);
 
         TextRenderer.render(g, "Name: ", Main.INNER_MARGIN,
-                (Game.window().getHeight() + portNumber.getHeight() + 500) / 2);
+                            (Game.window().getHeight() + portNumber.getHeight() + 500) / 2);
 
         super.render(g);
     }
@@ -108,7 +109,7 @@ public class ConnectScreen extends Screen {
         nameField.setLocation(Main.INNER_MARGIN + 55d, (height + nameField.getHeight() + 500) / 2 - 28);
         this.address.setLocation(Main.INNER_MARGIN + 45d, (height + address.getHeight() + 200) / 2 - 28);
         this.connect.setLocation(width - this.connect.getWidth() - 0.5 * Main.INNER_MARGIN,
-                height - this.connect.getHeight());
+                                 height - this.connect.getHeight());
     }
 
     @Override
@@ -160,7 +161,8 @@ public class ConnectScreen extends Screen {
         this.connect.setEnabled(false);
         updatePositions();
         try {
-            clientController = new ClientController(new URI("ws://" + this.address.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
+            clientController = new ClientController(
+                    new URI("ws://" + this.address.getText() + ":" + this.portNumber.getText()), this::onNetworkUpdate);
             clientController.tryConnect(b -> {
                 this.connect.setEnabled(true);
                 updatePositions();

@@ -1,6 +1,7 @@
 package de.flojo.jam.game.board.imprints;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.List;

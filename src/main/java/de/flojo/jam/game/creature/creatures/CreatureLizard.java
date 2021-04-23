@@ -18,11 +18,14 @@ import java.util.Set;
 
 public class CreatureLizard extends Creature {
 
-    public CreatureLizard(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.LIZARD, name, cCollection, tCollection, new CreatureBase(startBase), createLizardCore(playerId, normal, dying, isOur));
+    public CreatureLizard(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection,
+                          TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(CreatureId.LIZARD, name, cCollection, tCollection, new CreatureBase(startBase),
+              createLizardCore(playerId, normal, dying, isOur));
     }
 
-    private static CreatureCore createLizardCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+    private static CreatureCore createLizardCore(PlayerId playerId, IRenderData normal, IRenderData dying,
+                                                 boolean isOur) {
         return new CreatureCore(playerId, isOur, normal, dying, createLizardAttributes());
     }
 

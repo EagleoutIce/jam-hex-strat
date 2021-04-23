@@ -11,7 +11,7 @@ import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

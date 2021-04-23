@@ -1,6 +1,9 @@
 package de.flojo.jam.graphics;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.geom.Point2D;
 
 public class Hexagon extends Polygon {

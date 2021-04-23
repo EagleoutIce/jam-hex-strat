@@ -1,6 +1,6 @@
 package de.flojo.jam.game.board.imprints;
 
-import java.awt.*;
+import java.awt.Point;
 
 public abstract class ImprintNodeMap<T> implements ImprintNode<T> {
 

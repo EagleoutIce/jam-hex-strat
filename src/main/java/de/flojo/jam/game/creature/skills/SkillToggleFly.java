@@ -11,7 +11,8 @@ public class SkillToggleFly extends AbstractSkill {
     }
 
     public SkillToggleFly(Supplier<String> nameSupplier, final String description, final int cost) {
-        super(1, ICreatureSkill.RANGE_SELF, ICreatureSkill.RANGE_SELF, 0, nameSupplier, description, SkillId.TOGGLE_FLY, cost);
+        super(1, ICreatureSkill.RANGE_SELF, ICreatureSkill.RANGE_SELF, 0, nameSupplier, description, SkillId.TOGGLE_FLY,
+              cost);
     }
 
     @Override

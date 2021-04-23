@@ -5,7 +5,9 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.Spritesheet;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -43,11 +45,13 @@ public class AnimationRenderer implements IRenderData {
             currentIndex = Math.min(currentIndex + 1, totalFrameCount - 1);
             BufferedImage spriteImage = spritesheet.getSprite(this.currentIndex);
             currentImg = new BufferedImage(sWidth, sHeight, BufferedImage.TYPE_INT_ARGB);
-            RescaleOp lighterOperation = new RescaleOp(new float[]{1f, 1f, 1f, (1 - 0.5f * currentIndex / (float) totalFrameCount)}, new float[4], null);
+            RescaleOp lighterOperation = new RescaleOp(
+                    new float[]{1f, 1f, 1f, (1 - 0.5f * currentIndex / (float) totalFrameCount)}, new float[4], null);
             lighterOperation.filter(spriteImage, currentImg);
             lastFrameUpdate = Game.time().now();
         }
-        ImageRenderer.renderScaled(g, currentImg, pos.getX() + Board.getZoom() * offsetX, pos.getY() + Board.getZoom() * offsetY, Board.getZoom(), Board.getZoom());
+        ImageRenderer.renderScaled(g, currentImg, pos.getX() + Board.getZoom() * offsetX,
+                                   pos.getY() + Board.getZoom() * offsetY, Board.getZoom(), Board.getZoom());
     }
 
     @Override
@@ -67,7 +71,9 @@ public class AnimationRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.getZoom() * offsetX), (int) (pos.getY() + Board.getZoom() * offsetY), (int) (Board.getZoom() * sWidth), (int) (Board.getZoom() * sHeight));
+        return new Rectangle((int) (pos.getX() + Board.getZoom() * offsetX),
+                             (int) (pos.getY() + Board.getZoom() * offsetY), (int) (Board.getZoom() * sWidth),
+                             (int) (Board.getZoom() * sHeight));
     }
 
     @Override

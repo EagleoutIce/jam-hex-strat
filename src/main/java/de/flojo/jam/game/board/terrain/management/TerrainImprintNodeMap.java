@@ -3,7 +3,7 @@ package de.flojo.jam.game.board.terrain.management;
 import de.flojo.jam.game.board.imprints.ImprintNodeMap;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class TerrainImprintNodeMap extends ImprintNodeMap<TerrainTile> {
     public TerrainImprintNodeMap(String supplierName, int x, int y) {

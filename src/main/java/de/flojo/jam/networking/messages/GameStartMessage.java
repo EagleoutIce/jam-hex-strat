@@ -43,7 +43,9 @@ public class GameStartMessage extends MessageContainer {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         GameStartMessage that = (GameStartMessage) o;
-        return Objects.equals(getTerrain(), that.getTerrain()) && Objects.equals(getCreatures(), that.getCreatures()) && Objects.equals(getTraps(), that.getTraps());
+        return Objects.equals(getTerrain(), that.getTerrain()) && Objects.equals(getCreatures(),
+                                                                                 that.getCreatures()) && Objects.equals(
+                getTraps(), that.getTraps());
     }
 
     @Override

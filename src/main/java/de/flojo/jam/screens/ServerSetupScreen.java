@@ -14,8 +14,9 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -71,17 +72,17 @@ public class ServerSetupScreen extends Screen {
         g.setFont(Main.GUI_FONT);
         int largeHeight = g.getFontMetrics().getHeight();
         TextRenderer.render(g, "Server-Configuration", Main.INNER_MARGIN,
-                7.0 + largeHeight);
+                            7.0 + largeHeight);
 
         g.setFont(Main.TEXT_STATUS);
         TextRenderer.render(g, "Server status: " + serverStatus(), Main.INNER_MARGIN,
-                15.0 + g.getFontMetrics().getHeight() + largeHeight);
+                            15.0 + g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Players: " + playerStatus(), Main.INNER_MARGIN,
-                15.0 + 2 * g.getFontMetrics().getHeight() + largeHeight);
+                            15.0 + 2 * g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
-                Game.window().getHeight() - 50d);
+                            Game.window().getHeight() - 50d);
         TextRenderer.render(g, "Start Money: ", Main.INNER_MARGIN,
-                Game.window().getHeight() - 80d);
+                            Game.window().getHeight() - 80d);
         super.render(g);
     }
 
@@ -103,8 +104,11 @@ public class ServerSetupScreen extends Screen {
         final double width = Game.window().getResolution().getWidth();
         this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
         this.startMoney.setLocation(Main.INNER_MARGIN + 165d, height - 77d);
-        this.startServer.setLocation(width - this.startServer.getWidth() - 0.5 * Main.INNER_MARGIN - 10d, height - this.startServer.getHeight());
-        this.loadTerrain.setLocation(width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(), height - this.loadTerrain.getHeight());
+        this.startServer.setLocation(width - this.startServer.getWidth() - 0.5 * Main.INNER_MARGIN - 10d,
+                                     height - this.startServer.getHeight());
+        this.loadTerrain.setLocation(
+                width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(),
+                height - this.loadTerrain.getHeight());
         this.p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 23d);
         this.p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 23d);
         this.both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 23d);
@@ -184,8 +188,9 @@ public class ServerSetupScreen extends Screen {
             return;
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosenTerrainPath),
-                    chosenTerrainPath);
+            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT,
+                                            new FileInputStream(chosenTerrainPath),
+                                            chosenTerrainPath);
             gameField.updateTerrain(map);
             HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", gameField.getTerrainName());
         } catch (FileNotFoundException e) {
@@ -199,7 +204,8 @@ public class ServerSetupScreen extends Screen {
         this.portNumber.setEnabled(false);
         this.startMoney.setEnabled(false);
         this.loadTerrain.setEnabled(false);
-        serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate, Integer.parseInt(this.startMoney.getText()));
+        serverController = new ServerController(getAddress(), gameField, this::onNetworkUpdate,
+                                                Integer.parseInt(this.startMoney.getText()));
         serverController.start();
         serverStarted = true;
         updatePositions();
@@ -225,7 +231,9 @@ public class ServerSetupScreen extends Screen {
     private boolean askStupidUserForConfirmationOnExit() {
         final Object[] options = {"Yes", "No"};
         final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
-                "Are you sure, that you want to stop the server?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                                                   "Are you sure, that you want to stop the server?", null,
+                                                   JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                                                   options, options[1]);
         return n != 0;
     }
 

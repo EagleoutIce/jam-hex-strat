@@ -44,7 +44,8 @@ public class CreatureAttributes {
 
     public boolean useAp(int n) {
         if (this.currentAp < n) {
-            HexStratLogger.log().log(Level.WARNING, "Capping AP usage req: {0}, pres: {1}", new Object[]{n, this.currentAp});
+            HexStratLogger.log().log(Level.WARNING, "Capping AP usage req: {0}, pres: {1}",
+                                     new Object[]{n, this.currentAp});
             this.currentAp = 0;
             return false;
         }
@@ -55,7 +56,8 @@ public class CreatureAttributes {
 
     public boolean useMp(int n) {
         if (this.currentMp < n) {
-            HexStratLogger.log().log(Level.WARNING, "Capping MP usage req: {0}, pres: {1}", new Object[]{n, this.currentMp});
+            HexStratLogger.log().log(Level.WARNING, "Capping MP usage req: {0}, pres: {1}",
+                                     new Object[]{n, this.currentMp});
             this.currentMp = 0;
             return false;
         }
@@ -82,7 +84,9 @@ public class CreatureAttributes {
 
     public void useSkill(IProvideReadContext context, JsonDataOfSkill wantedSkill, Creature attacker, Creature target) {
         getSkill(wantedSkill).ifPresentOrElse(s -> useSkill(context, s, attacker, target), //
-                () -> HexStratLogger.log().log(Level.SEVERE, "Requested Skill {0} but not found.", wantedSkill));
+                                              () -> HexStratLogger.log().log(Level.SEVERE,
+                                                                             "Requested Skill {0} but not found.",
+                                                                             wantedSkill));
     }
 
     public void useSkill(IProvideReadContext context, AbstractSkill skill, Creature attacker, Creature target) {

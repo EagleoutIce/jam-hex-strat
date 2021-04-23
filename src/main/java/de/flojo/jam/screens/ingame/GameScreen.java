@@ -34,8 +34,9 @@ import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -122,7 +123,8 @@ public class GameScreen extends Screen {
 
     private void onBuild(BuildChoice choice) {
         clientController.send(new BuildChoiceMessage(null, choice.getSelectedPosition(), choice.getChosenTerrain(),
-                choice.getChosenCreature(), choice.getChosenTrap(), choice.isGift(), ""));
+                                                     choice.getChosenCreature(), choice.getChosenTrap(),
+                                                     choice.isGift(), ""));
     }
 
     @Override
@@ -132,13 +134,14 @@ public class GameScreen extends Screen {
         field.render(g);
         PlayerId turnPlayerId = field.isOurTurn() ? ourId : ourId.other();
 
-        ImageRenderer.render(g, turnPlayerId.ifOne(PLAYER_VIEW_TURN_P1, PLAYER_VIEW_TURN_P2), Game.window().getWidth() - (double) RIGHT_WIDTH, 0);
+        ImageRenderer.render(g, turnPlayerId.ifOne(PLAYER_VIEW_TURN_P1, PLAYER_VIEW_TURN_P2),
+                             Game.window().getWidth() - (double) RIGHT_WIDTH, 0);
 
         g.setFont(Main.TEXT_STATUS);
         g.setColor(Color.WHITE);
         final String roundText = "Round: " + currentRound;
         TextRenderer.render(g, roundText,
-                Game.window().getWidth() - 105 - TextRenderer.getWidth(g, roundText) / 2, 38d, true);
+                            Game.window().getWidth() - 105 - TextRenderer.getWidth(g, roundText) / 2, 38d, true);
         String p1 = ourId.ifOne(">", "") + clientController.getContext().getP1Name();
         p1 = p1.substring(0, Math.min(p1.length(), MAX_NAME_LENGTH)) + (p1.length() > MAX_NAME_LENGTH ? "..." : "");
         String p2 = ourId.ifTwo(">", "") + clientController.getContext().getP2Name();
@@ -173,7 +176,8 @@ public class GameScreen extends Screen {
         final String text = won ? "Victory" : "Loose";
         g.setFont(Main.GUI_FONT_LARGE);
         TextRenderer.render(g, text,
-                center.getX() - TextRenderer.getWidth(g, text) / 2d, center.getY() + (won ? 43d : 18d), true);
+                            center.getX() - TextRenderer.getWidth(g, text) / 2d, center.getY() + (won ? 43d : 18d),
+                            true);
     }
 
 
@@ -229,8 +233,9 @@ public class GameScreen extends Screen {
     public void performTurn(TurnActionMessage message) {
         Optional<Creature> mayCreature = getFactory().get(message.getFrom());
         if (mayCreature.isEmpty()) {
-            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}",
-                    message.toJson());
+            HexStratLogger.log().log(Level.SEVERE,
+                                     "ActionMessage could not be performed, as no performer was found in: {0}",
+                                     message.toJson());
             return;
         }
         final Creature creature = mayCreature.get();
@@ -254,7 +259,9 @@ public class GameScreen extends Screen {
         JsonDataOfSkill skillId = message.getSkillData();
         Optional<AbstractSkill> maySkill = creature.getSkill(skillId);
         if (maySkill.isEmpty()) {
-            HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}", new Object[]{message.toJson(), creature});
+            HexStratLogger.log().log(Level.SEVERE,
+                                     "ActionMessage could not be performed, as creature {1} does not possess skill requested by: {0}",
+                                     new Object[]{message.toJson(), creature});
             return;
         }
         AbstractSkill skill = maySkill.get();
@@ -262,7 +269,9 @@ public class GameScreen extends Screen {
             case CREATURE:
                 Optional<Creature> mayTargetCreature = getFactory().get(message.getTarget());
                 if (mayTargetCreature.isEmpty()) {
-                    HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}", message.toJson());
+                    HexStratLogger.log().log(Level.SEVERE,
+                                             "ActionMessage could not be performed, as skill target needed to be, but was no creature in: {0}",
+                                             message.toJson());
                     return;
                 }
                 creature.useSkill(getBoard(), skill, mayTargetCreature.get());
@@ -274,7 +283,9 @@ public class GameScreen extends Screen {
                 creature.getAttributes().useAp(skill.getCost());
                 break;
             default:
-                HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}", new Object[]{message.toJson(), skill.getTarget()});
+                HexStratLogger.log().log(Level.SEVERE,
+                                         "ActionMessage could not be performed, as skill target-type was invalid ({1}): {0}",
+                                         new Object[]{message.toJson(), skill.getTarget()});
         }
     }
 
@@ -282,7 +293,7 @@ public class GameScreen extends Screen {
         List<BoardCoordinate> targets = message.getTargets();
         for (BoardCoordinate target : targets) {
             HexStratLogger.log().log(Level.INFO, "Animating move to: {0} (int: {1}); for {2}",
-                    new Object[]{target, targets, creature});
+                                     new Object[]{target, targets, creature});
             CreatureActionController.processMovementBlocking(field.getTraps(), creature, getBoard().getTile(target));
         }
     }
@@ -298,7 +309,9 @@ public class GameScreen extends Screen {
     private boolean askStupidUserForConfirmationOnExit() {
         final Object[] options = {"Yes", "No"};
         final int n = JOptionPane.showOptionDialog(Game.window().getRenderComponent(),
-                "Are you sure, that you want to leave the game?", null, JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[1]);
+                                                   "Are you sure, that you want to leave the game?", null,
+                                                   JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+                                                   options, options[1]);
         return n != 0;
     }
 

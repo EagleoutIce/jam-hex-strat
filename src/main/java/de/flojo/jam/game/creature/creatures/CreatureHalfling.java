@@ -19,17 +19,22 @@ import java.util.Set;
 
 public class CreatureHalfling extends Creature {
 
-    public CreatureHalfling(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase), createHalflingCore(playerId, normal, dying, isOur));
+    public CreatureHalfling(String name, Tile startBase, PlayerId playerId, boolean isOur,
+                            CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal,
+                            IRenderData dying) {
+        super(CreatureId.HALFLING, name, cCollection, tCollection, new CreatureBase(startBase),
+              createHalflingCore(playerId, normal, dying, isOur));
     }
 
-    private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying, boolean isOur) {
+    private static CreatureCore createHalflingCore(PlayerId playerId, IRenderData normal, IRenderData dying,
+                                                   boolean isOur) {
         return new CreatureCore(playerId, isOur, normal, dying, createHalflingAttributes());
     }
 
     private static CreatureAttributes createHalflingAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
-        skills.add(new SkillSimplePunch(1, 0, 2, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
+        skills.add(
+                new SkillSimplePunch(1, 0, 2, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
         skills.add(new SkillMultiPunch(2, 0, 1, "Grand Slam", "Wenn man sich einfach fallen lässt.", 2));
         return new CreatureAttributes(3, 2, skills);
     }

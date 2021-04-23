@@ -22,8 +22,10 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.input.Input;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JOptionPane;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
@@ -131,16 +133,19 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private float getBackgroundOffsetPosX() {
-        return Math.min(0, Game.window().getWidth() - getZoom() * (background.getWidth() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
+        return Math.min(0,
+                        Game.window().getWidth() - getZoom() * (background.getWidth() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
     }
 
     private float getBackgroundOffsetPosY() {
-        return Math.min(0, Game.window().getHeight() - getZoom() * (background.getHeight() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
+        return Math.min(0,
+                        Game.window().getHeight() - getZoom() * (background.getHeight() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED));
     }
 
     private Point getTilesUpperLeft() {
         final double topWidth = getZoom() * (Tile.getWidth() - 2 * Tile.getSegmentWidth()); // ----
-        final double startX = freeSpaceVertical(topWidth) / 2 + getZoom() * (Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
+        final double startX = freeSpaceVertical(
+                topWidth) / 2 + getZoom() * (Tile.getWidth() / 2 - 1.33 * Tile.getSegmentWidth()); // drawn
         // centered
         final double startY = getZoom() * (background.getHeight() / 2d * BACKGROUND_ZOOM_FACTOR - height / 4d * Tile.getHeight() + Tile.getHeight() / 2.4);
         return new Point((int) startX, (int) startY);
@@ -169,7 +174,9 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     private void showHelp() {
-        JOptionPane.showMessageDialog(null, "Use W, A, S and D to control map movement. Use M to toggle map and C to toggle character information, P to toggle Audio. Use the mouse wheel for zoom.", "Help", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null,
+                                      "Use W, A, S and D to control map movement. Use M to toggle map and C to toggle character information, P to toggle Audio. Use the mouse wheel for zoom.",
+                                      "Help", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void doZoom(MouseWheelEvent e) {
@@ -272,7 +279,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private void populateNeighbours() {
         for (final Tile tile : tiles.values()) {
             final Set<Tile> neighbours = tiles.values().stream().filter(tile::isNeighbour)
-                    .collect(Collectors.toCollection(HashSet::new));
+                                              .collect(Collectors.toCollection(HashSet::new));
             tile.setNeighbours(neighbours);
         }
     }
@@ -288,7 +295,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
                 final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
                 tiles.put(new BoardCoordinate(col, row), new Tile(new BoardCoordinate(col, row), (int) x, (int) y,
-                        c -> terrainMap.getTerrainAt(c.x, c.y)));
+                                                                  c -> terrainMap.getTerrainAt(c.x, c.y)));
             }
         }
     }
@@ -397,7 +404,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         if (highlightTiles.add(targetTile)) {
             IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
             return updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
-                    targetTerrainType.getNode().getPos(), highlightTiles);
+                                               targetTerrainType.getNode().getPos(), highlightTiles);
         }
 
         return true;
@@ -405,7 +412,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     @Override
     public void render(final Graphics2D g) {
-        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() * BACKGROUND_ZOOM_FACTOR, getZoom() * BACKGROUND_ZOOM_FACTOR);
+        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() * BACKGROUND_ZOOM_FACTOR,
+                                   getZoom() * BACKGROUND_ZOOM_FACTOR);
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 
@@ -417,7 +425,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     public void jointRender(final Graphics2D g, PlayerId renderOwner, CreatureFactory factory, TrapSpawner traps) {
-        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() * BACKGROUND_ZOOM_FACTOR, getZoom() * BACKGROUND_ZOOM_FACTOR);
+        ImageRenderer.renderScaled(g, background, shiftX, shiftY, getZoom() * BACKGROUND_ZOOM_FACTOR,
+                                   getZoom() * BACKGROUND_ZOOM_FACTOR);
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 
@@ -433,7 +442,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final String str = "F11 for help.";
         g.setFont(Main.TEXT_NORMAL);
         g.setColor(Color.YELLOW);
-        TextRenderer.render(g, str, Game.window().getWidth() - TextRenderer.getWidth(g, str) - 15, Game.window().getHeight() - TextRenderer.getHeight(g, str) - 25);
+        TextRenderer.render(g, str, Game.window().getWidth() - TextRenderer.getWidth(g, str) - 15,
+                            Game.window().getHeight() - TextRenderer.getHeight(g, str) - 25);
     }
 
 }

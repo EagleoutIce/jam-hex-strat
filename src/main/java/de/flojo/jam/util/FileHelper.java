@@ -1,6 +1,7 @@
 package de.flojo.jam.util;
 
-import java.awt.*;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.nio.file.Paths;
 
 public class FileHelper {

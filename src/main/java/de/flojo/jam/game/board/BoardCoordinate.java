@@ -1,6 +1,6 @@
 package de.flojo.jam.game.board;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class BoardCoordinate extends Point {
 

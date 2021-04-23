@@ -52,7 +52,7 @@ public class ServerController implements IServerController {
     @Override
     public void handleCloseFor(final WebSocket conn, final int code, final String reason, final boolean remote) {
         HexStratLogger.log().log(Level.INFO, "Closed connection with {0} with code {1} and reason {2} (remote: {3})",
-                new Object[]{conn, code, reason, remote});
+                                 new Object[]{conn, code, reason, remote});
         executorService.execute(() -> {
             playerController.removePlayer(conn);
             if (state != ServerStateEnum.WAITING_FOR_PLAYERS) {
@@ -73,8 +73,8 @@ public class ServerController implements IServerController {
         if (connection != null && container != null
                 && (!Objects.equals(container.getClientId(), connection.getClientId()))) {
             throw new IllegalMessageException("The uuid you sent (" + container.getClientId()
-                    + ") differs from the one you got with the Hello-Reply (" + connection.getClientId()
-                    + "). This is fatal and probably totally your fault.");
+                                                      + ") differs from the one you got with the Hello-Reply (" + connection.getClientId()
+                                                      + "). This is fatal and probably totally your fault.");
         }
         return container;
     }
@@ -178,14 +178,14 @@ public class ServerController implements IServerController {
         }
 
         final var error = new ErrorMessage(servedByClientId, ErrorTypeEnum.ILLEGAL_MESSAGE,
-                "The Message you send was not in a valid container format!");
+                                           "The Message you send was not in a valid container format!");
         conn.send(error.toJson());
         conn.close(CloseFrame.REFUSE);
     }
 
     private void sendErrorMessageToDealWithHandlerException(final WebSocket conn, final HandlerException ex) {
         HexStratLogger.log().log(Level.SEVERE, "Error while handling: {0} ({1}).",
-                new Object[]{ex.getError(), ex.getMessage()});
+                                 new Object[]{ex.getError(), ex.getMessage()});
         final ClientServerConnection connection = conn.getAttachment();
         UUID servedByClientId;
         if (connection == null) { // Bounce-Back to sender!

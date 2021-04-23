@@ -27,7 +27,10 @@ import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.util.Imaging;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -39,7 +42,7 @@ import java.util.function.Consumer;
 public class BuildingPhaseButtonPresenter implements IRenderable {
 
     public static final BufferedImage MONEY_SYMBOL = Imaging.scale(Resources.images().get("ui/money.png"), 30, 30,
-            true);
+                                                                   true);
     private final PlayerId ourId;
     private final IProvideContext context;
     private final Screen screen;
@@ -90,7 +93,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void assignSidebar() {
-        sidebar = Resources.images().get(this.ourId == null ? "ui/sidebar_player1.png" : this.ourId.ifOne("ui/sidebar_player1.png", "ui/sidebar_player2.png"));
+        sidebar = Resources.images().get(
+                this.ourId == null ? "ui/sidebar_player1.png" : this.ourId.ifOne("ui/sidebar_player1.png",
+                                                                                 "ui/sidebar_player2.png"));
     }
 
     private void lockOnOver(MouseEvent me) {
@@ -110,7 +115,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
 
             ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
-                    t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
+                                                t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()),
+                                                Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
@@ -144,7 +150,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 continue;
             IRenderData creatureRenderer = c.getRenderer(ourId);
             ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
-                    creatureRenderer.getImage(), Integer.toString(c.getCost()), Main.TEXT_NORMAL);
+                                                creatureRenderer.getImage(), Integer.toString(c.getCost()),
+                                                Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             creatureButtons.add(imgBt);
@@ -178,8 +185,10 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             if (!t.canBeBuildByPlayer())
                 continue;
             IRenderData trapRenderer = t.getImprint().getNormalRenderer();
-            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, Game.window().getHeight() - i * 80d - 110d,
-                    trapRenderer.getImage(), Integer.toString(t.getCost()), Main.TEXT_NORMAL);
+            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85,
+                                                Game.window().getHeight() - i * 80d - 110d,
+                                                trapRenderer.getImage(), Integer.toString(t.getCost()),
+                                                Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             trapButtons.add(imgBt);
@@ -312,7 +321,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
 
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
             if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
-                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId, context.getBoard())) {
+                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
+                                                        context.getBoard())) {
                 context.getSpawner().spawnTrap(currentTrapId, ourId, t);
                 currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
             }
@@ -338,7 +348,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(t.getCoordinate()).isEmpty()
+            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
+                    t.getCoordinate()).isEmpty()
                     && context.getFactory().get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
                 summonedCreature = true;
@@ -357,7 +368,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         final String money = Integer.toString(context.getMoneyLeft());
         TextRenderer.render(g, money, 110d, 43d - TextRenderer.getHeight(g, money) / 2d);
         ImageRenderer.render(g, MONEY_SYMBOL, 40d + MONEY_SYMBOL.getWidth() / 2d,
-                43d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
+                             43d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
     }
 
     private enum BuildingPhaseSelectionMode {

@@ -32,7 +32,10 @@ import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.input.Input;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -211,7 +214,8 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (!t.getTerrainType().blocksWalking() && (getFakeId() == null || getFakeId() == t.getPlacementOwner()) && trapSpawner.get(t.getCoordinate()).isEmpty()
+            if (!t.getTerrainType().blocksWalking() && (getFakeId() == null || getFakeId() == t.getPlacementOwner()) && trapSpawner.get(
+                    t.getCoordinate()).isEmpty()
                     && creatureFactory.get(t.getCoordinate()).isEmpty()) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
             }
@@ -333,9 +337,10 @@ public class EditorScreen extends Screen {
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
             TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
-                    chosen);
+                                            chosen);
             this.board.setTerrainMap(map);
-            HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"", board.getTerrainMap().getTerrain().getName());
+            HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"",
+                                     board.getTerrainMap().getTerrain().getName());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return;
@@ -350,7 +355,7 @@ public class EditorScreen extends Screen {
         newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 100d);
         saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 100d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
-                Game.window().getHeight() - 100d);
+                              Game.window().getHeight() - 100d);
         int width = Game.window().getWidth();
         p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 18d);
         p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);
@@ -383,7 +388,8 @@ public class EditorScreen extends Screen {
             this.currentTrapId = null;
 
             this.currentCreature = (n, t) -> creatureFactory.getSpell(creatureId).summon(creatureId + "_" + n, t,
-                    p1 ? PlayerId.ONE : PlayerId.TWO, true);
+                                                                                         p1 ? PlayerId.ONE : PlayerId.TWO,
+                                                                                         true);
             Image img = creatureFactory.getScaledImage(creatureId, p1);
             if (img != null) {
                 Game.window().cursor().setVisible(true);
@@ -410,7 +416,7 @@ public class EditorScreen extends Screen {
             TrapId t = traps[i];
 
             ImageButton imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
-                    t.getName(), Main.TEXT_NORMAL);
+                                                t.getName(), Main.TEXT_NORMAL);
             imgBt.setTextAlign(Align.RIGHT);
             trapButtons.add(imgBt);
             imgBt.onClicked(c -> {
@@ -436,7 +442,7 @@ public class EditorScreen extends Screen {
             TerrainId t = terrains[i];
 
             ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
-                    t.getName(), Main.TEXT_NORMAL);
+                                                t.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;

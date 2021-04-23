@@ -16,7 +16,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 

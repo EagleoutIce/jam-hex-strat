@@ -13,13 +13,16 @@ import de.gurkenlabs.litiengine.gui.GuiProperties;
 import de.gurkenlabs.litiengine.gui.screens.Resolution;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
 import java.util.Arrays;
 import java.util.logging.Level;
 
 public class Main {
 
-    public static final Image DEFAULT_CURSOR = Resources.images().get("cursor.png").getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+    public static final Image DEFAULT_CURSOR = Resources.images().get("cursor.png").getScaledInstance(30, 30,
+                                                                                                      Image.SCALE_SMOOTH);
     public static final Image ICON = Resources.images().get("icon.png").getScaledInstance(42, 42, Image.SCALE_SMOOTH);
 
     public static final Font GUI_FONT = Resources.fonts().get("FFF_Tusj.ttf", 64f);

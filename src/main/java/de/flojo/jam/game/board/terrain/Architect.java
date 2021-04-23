@@ -12,7 +12,7 @@ import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStratLogger;
 
-import java.awt.*;
+import java.awt.Point;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -56,24 +56,26 @@ public class Architect {
     }
 
     private boolean processSingleTileForImprint(BoardCoordinate at, TerrainImprint imprint,
-                                                final Map<Tile, TerrainTile> targetTiles, int x, int y, TerrainTile type) {
+                                                final Map<Tile, TerrainTile> targetTiles, int x, int y,
+                                                TerrainTile type) {
         // transform target in boardCoordinates
         BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - imprint.getAnchor().x,
-                y - imprint.getAnchor().y);
+                                                                    y - imprint.getAnchor().y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
         final TerrainTile targetTileType = targetTile == null ? null : targetTile.getTerrainType();
         if (targetTile != null && targetTileType.equals(TerrainTile.EMPTY) && notAgainstOtherPlacements(targetTile)) {
             targetTiles.put(targetTile, type);
         } else {// invalid as too close to border
             HexStratLogger.log().log(Level.WARNING, "Tried to place {0} on field {1} for {2} but was: {3}",
-                    new Object[]{type, effectiveCoordinate, imprint.getData(), targetTile});
+                                     new Object[]{type, effectiveCoordinate, imprint.getData(), targetTile});
             return false;
         }
         return true;
     }
 
     private boolean notAgainstOtherPlacements(Tile tile) {
-        return notAgainstPlayer(tile) && factory.get(tile.getCoordinate()).isEmpty() && spawner.get(tile.getCoordinate()).isEmpty();
+        return notAgainstPlayer(tile) && factory.get(tile.getCoordinate()).isEmpty() && spawner.get(
+                tile.getCoordinate()).isEmpty();
     }
 
     private boolean notAgainstPlayer(Tile tile) {
@@ -103,7 +105,8 @@ public class Architect {
     }
 
     private boolean processSingleTileForImprintRemoval(BoardCoordinate at, TerrainImprint imprint,
-                                                       final Set<Tile> targetTiles, int x, int y, TerrainTile type, Point anchor) {
+                                                       final Set<Tile> targetTiles, int x, int y, TerrainTile type,
+                                                       Point anchor) {
         BoardCoordinate effectiveCoordinate = at.translateRelativeX(x - anchor.x, y - anchor.y);
         final Tile targetTile = board.getTile(effectiveCoordinate);
         final TerrainTile targetTileType = targetTile == null ? null : targetTile.getTerrainType();
@@ -111,12 +114,12 @@ public class Architect {
             if (targetTiles.add(targetTile) && targetTileType != TerrainTile.EMPTY) {
                 // recursive delete
                 return deleteImprintRecursion(targetTile.getCoordinate(),
-                        targetTile.getTerrainType().getNode().getImprint(),
-                        targetTile.getTerrainType().getNode().getPos(), targetTiles);
+                                              targetTile.getTerrainType().getNode().getImprint(),
+                                              targetTile.getTerrainType().getNode().getPos(), targetTiles);
             }
         } else {// invalid as too close to border
             HexStratLogger.log().log(Level.WARNING, "Tried to remove {0} on field {1} for {2} but expected: {3}",
-                    new Object[]{targetTile, effectiveCoordinate, imprint.getData(), type});
+                                     new Object[]{targetTile, effectiveCoordinate, imprint.getData(), type});
             return false;
         }
         return true;

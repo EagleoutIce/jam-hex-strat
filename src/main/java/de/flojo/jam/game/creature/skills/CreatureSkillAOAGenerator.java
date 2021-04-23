@@ -23,14 +23,16 @@ public class CreatureSkillAOAGenerator {
 
         switch (skill.getAOA()) {
             case LINE:
-                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange, skill.getTarget().equals(TargetOfSkill.TILE));
+                return getAOALine(start, board, creatures, skill.getMinRange(), maxRange,
+                                  skill.getTarget().equals(TargetOfSkill.TILE));
             default:
             case SINGLE:
                 return Set.of(start);
         }
     }
 
-    private static Set<Tile> getAOALine(Tile start, Board board, CreatureCollection creatures, int minRange, int maxRange, boolean emptyOnly) {
+    private static Set<Tile> getAOALine(Tile start, Board board, CreatureCollection creatures, int minRange,
+                                        int maxRange, boolean emptyOnly) {
         Set<Tile> tiles = new HashSet<>();
         Set<Tile> neighbours = start.getNeighbours();
         for (Tile tile : neighbours) {
@@ -44,7 +46,8 @@ public class CreatureSkillAOAGenerator {
     }
 
     // TODO: make more efficient / elegant?
-    private static void getAOASingleLine(Tile start, Board board, CreatureCollection creatures, int minRange, int maxRange, int dx, int dy, Set<Tile> tiles) {
+    private static void getAOASingleLine(Tile start, Board board, CreatureCollection creatures, int minRange,
+                                         int maxRange, int dx, int dy, Set<Tile> tiles) {
         // start will never be included :D
         BoardCoordinate current = start.getCoordinate();
         for (int i = 0; i < maxRange; i++) {

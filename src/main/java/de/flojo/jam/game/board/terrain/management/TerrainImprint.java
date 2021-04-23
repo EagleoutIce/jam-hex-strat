@@ -4,7 +4,8 @@ import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
-import java.awt.*;
+import java.awt.Image;
+import java.awt.Point;
 
 public class TerrainImprint extends Imprint<TerrainTile> {
 

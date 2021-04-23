@@ -19,8 +19,10 @@ import java.util.Set;
 
 public class CreatureImp extends Creature {
 
-    public CreatureImp(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection, TrapCollection tCollection, IRenderData normal, IRenderData dying) {
-        super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase), createImpCore(playerId, normal, dying, isOur));
+    public CreatureImp(String name, Tile startBase, PlayerId playerId, boolean isOur, CreatureCollection cCollection,
+                       TrapCollection tCollection, IRenderData normal, IRenderData dying) {
+        super(CreatureId.IMP, name, cCollection, tCollection, new CreatureBase(startBase),
+              createImpCore(playerId, normal, dying, isOur));
         // arrrrgh kill me
         getAttributes().getSkills().add(new SkillToggleFly(() -> isFlying() ? "Land" : "Fly", "Toggle Flystatus."));
     }

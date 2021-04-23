@@ -8,7 +8,8 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Objects;
 
@@ -38,13 +39,13 @@ public class MenuScreen extends Screen {
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT);
         TextRenderer.render(g, info1, Game.window().getWidth() - TextRenderer.getWidth(g, info1) - 25,
-                7.0 + g.getFontMetrics().getHeight());
+                            7.0 + g.getFontMetrics().getHeight());
 
         final String info2 = "A strategy game. With hex tiles";
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT_SMALL);
         TextRenderer.render(g, info2, Game.window().getWidth() - TextRenderer.getWidth(g, info2) - 25,
-                25.0 + 2 * g.getFontMetrics().getHeight());
+                            25.0 + 2 * g.getFontMetrics().getHeight());
         super.render(g);
     }
 
@@ -60,9 +61,9 @@ public class MenuScreen extends Screen {
         final double height = Game.window().getResolution().getHeight();
         this.startGame.setLocation(x - this.startGame.getWidth() / 2, height - this.startGame.getHeight() - 10);
         this.showEditor.setLocation(x - this.showEditor.getWidth() / 2d - 75d,
-                height - this.startGame.getHeight() - this.showEditor.getHeight() - 20);
+                                    height - this.startGame.getHeight() - this.showEditor.getHeight() - 20);
         this.showServer.setLocation(x - this.showServer.getWidth() / 2d + 75d,
-                height - this.startGame.getHeight() - this.showServer.getHeight() - 20);
+                                    height - this.startGame.getHeight() - this.showServer.getHeight() - 20);
     }
 
     @Override

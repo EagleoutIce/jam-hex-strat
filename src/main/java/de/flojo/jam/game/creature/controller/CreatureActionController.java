@@ -14,7 +14,7 @@ import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.Game;
 
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.HashSet;
 import java.util.Optional;
@@ -112,9 +112,12 @@ public class CreatureActionController {
         return !t.getTerrainType().blocksWalking() && context.getCreatures().get(t.getCoordinate()).isEmpty();
     }
 
-    public boolean requestSkillFor(Creature creature, JsonDataOfSkill skillData, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
+    public boolean requestSkillFor(Creature creature, JsonDataOfSkill skillData,
+                                   BiConsumer<Boolean, BoardCoordinate> onCompleted) {
         if (activeCreature != null) {
-            HexStratLogger.log().log(Level.WARNING, "Ignored Operation-Skill ({2}) request for {0} as there was anther active Creature ({1})", new Object[]{creature, activeCreature, skillData});
+            HexStratLogger.log().log(Level.WARNING,
+                                     "Ignored Operation-Skill ({2}) request for {0} as there was anther active Creature ({1})",
+                                     new Object[]{creature, activeCreature, skillData});
             return false;
         }
 
@@ -125,7 +128,8 @@ public class CreatureActionController {
 
         Optional<AbstractSkill> mayBeSkill = creature.getSkill(skillData);
         if (mayBeSkill.isEmpty()) {
-            HexStratLogger.log().log(Level.WARNING, "Creature {0} does not possess skill {1}", new Object[]{creature, skillData});
+            HexStratLogger.log().log(Level.WARNING, "Creature {0} does not possess skill {1}",
+                                     new Object[]{creature, skillData});
             return false;
         }
         currentSkill = mayBeSkill.get();
@@ -138,14 +142,17 @@ public class CreatureActionController {
         possibleTargets.clear();
 
         Tile start = creature.getBase().getTile();
-        possibleTargets.addAll(CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
+        possibleTargets.addAll(
+                CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
         possibleTargets.forEach(t -> t.mark(true));
         return true;
     }
 
     public boolean requestMoveFor(Creature creature, BiConsumer<Boolean, BoardCoordinate> onCompleted) {
         if (activeCreature != null) {
-            HexStratLogger.log().log(Level.WARNING, "Ignored Operation-Movement request for {0} as there was another active Creature ({1})", new Object[]{creature, activeCreature});
+            HexStratLogger.log().log(Level.WARNING,
+                                     "Ignored Operation-Movement request for {0} as there was another active Creature ({1})",
+                                     new Object[]{creature, activeCreature});
             return false;
         } else if (creature == null) {
             Game.log().severe("Requested Operation-Movement for null creature!");
@@ -207,7 +214,9 @@ public class CreatureActionController {
     }
 
     private void errorOnClickOnUnknownActionType(Tile tile) {
-        HexStratLogger.log().log(Level.INFO, "Clicked on: {0} with ({1}). But the current Action type ({2}) has no performer attached.", new Object[]{tile, activeCreature, currentActionType});
+        HexStratLogger.log().log(Level.INFO,
+                                 "Clicked on: {0} with ({1}). But the current Action type ({2}) has no performer attached.",
+                                 new Object[]{tile, activeCreature, currentActionType});
         performed = false;
         completed(false);
     }
@@ -227,7 +236,8 @@ public class CreatureActionController {
             targetCreature = mayTargetCreature.get();
         }
 
-        HexStratLogger.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})", new Object[]{tile, activeCreature, currentSkill});
+        HexStratLogger.log().log(Level.INFO, "Casting Skill {2} on: {0} with ({1})",
+                                 new Object[]{tile, activeCreature, currentSkill});
         if (currentSkill.getTarget().equals(TargetOfSkill.TILE)) {
             if (targetCreature != null) {
                 HexStratLogger.log().warning("Target Creature not allowed for Tile");
@@ -276,7 +286,8 @@ public class CreatureActionController {
         boolean didPerform = performed;
         reset();
         // redo movement request if mp left
-        if (didPerform && allowRedoMovement && storedCreature != null && !requestMoveFor(storedCreature, storeOnComplete))
+        if (didPerform && allowRedoMovement && storedCreature != null && !requestMoveFor(storedCreature,
+                                                                                         storeOnComplete))
             storedCreature.unsetHighlight(); // just to be sure
     }
 

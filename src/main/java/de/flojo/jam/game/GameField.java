@@ -23,7 +23,7 @@ import de.flojo.jam.util.InputController;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;

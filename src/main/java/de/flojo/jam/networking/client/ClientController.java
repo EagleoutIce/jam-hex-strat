@@ -44,7 +44,7 @@ public class ClientController implements IClientController {
             synchronized (readyLock) {
                 for (var attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
                     HexStratLogger.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})",
-                            new Object[]{attempts, MAX_WAIT_INTERVAL});
+                                             new Object[]{attempts, MAX_WAIT_INTERVAL});
                     try {
                         readyLock.wait(500);
                     } catch (InterruptedException e) {
@@ -53,7 +53,8 @@ public class ClientController implements IClientController {
                     }
                 }
                 if (!isReady) {
-                    HexStratLogger.log().log(Level.SEVERE, "Was not able to establish a connection. Waited {0} times.", MAX_WAIT_INTERVAL);
+                    HexStratLogger.log().log(Level.SEVERE, "Was not able to establish a connection. Waited {0} times.",
+                                             MAX_WAIT_INTERVAL);
                 }
                 onCompleted.accept(isReady);
             }
@@ -72,7 +73,8 @@ public class ClientController implements IClientController {
 
     @Override
     public void handleClose(int code, String reason, boolean remote) {
-        HexStratLogger.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}", new Object[]{code, reason, remote});
+        HexStratLogger.log().log(Level.INFO, "Connection closed for {0} with reason \"{1}\". Remote: {2}",
+                                 new Object[]{code, reason, remote});
         connected = false;
         // do nothing else?
         if (onConnectionStateUpdate != null)
@@ -127,7 +129,8 @@ public class ClientController implements IClientController {
                 GameScreen.get().gameOver(NetworkGson.getMessage(message));
                 break;
             default:
-                HexStratLogger.log().log(Level.WARNING, "There was no handler for: {0} ({1}).", new Object[]{type, message});
+                HexStratLogger.log().log(Level.WARNING, "There was no handler for: {0} ({1}).",
+                                         new Object[]{type, message});
         }
     }
 

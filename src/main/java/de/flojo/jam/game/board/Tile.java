@@ -9,7 +9,10 @@ import de.flojo.jam.graphics.Hexagon;
 import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -115,7 +118,9 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
         if (showCordData) {
             g.setColor(Color.WHITE);
             g.setFont(NUMBER_FONT);
-            TextRenderer.render(g, tileLabel, getCenter().getX() - TextRenderer.getWidth(g, tileLabel) / 2 + getShiftX(), getCenter().getY() + TextRenderer.getHeight(g, tileLabel) * 0.15 + getShiftY());
+            TextRenderer.render(g, tileLabel,
+                                getCenter().getX() - TextRenderer.getWidth(g, tileLabel) / 2 + getShiftX(),
+                                getCenter().getY() + TextRenderer.getHeight(g, tileLabel) * 0.15 + getShiftY());
         }
     }
 

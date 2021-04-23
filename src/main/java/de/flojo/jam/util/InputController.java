@@ -29,7 +29,8 @@ public class InputController {
         });
     }
 
-    public void onKeyPressed(int keyCode, KeyPressedListener eventHandler, Set<String> screens, InputGroup<Integer> group) {
+    public void onKeyPressed(int keyCode, KeyPressedListener eventHandler, Set<String> screens,
+                             InputGroup<Integer> group) {
         Input.keyboard().onKeyPressed(keyCode, ke -> {
             if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
                 return;

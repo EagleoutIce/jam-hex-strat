@@ -7,6 +7,7 @@ import java.util.logging.Level;
 
 public interface IEffectCreature {
     default void effect(Creature target, Creature attacker) {
-        HexStratLogger.log().log(Level.SEVERE, "Unsupported effect target with {0} for attacker {1}", new Object[]{target, attacker});
+        HexStratLogger.log().log(Level.SEVERE, "Unsupported effect target with {0} for attacker {1}",
+                                 new Object[]{target, attacker});
     }
 }

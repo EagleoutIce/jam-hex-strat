@@ -5,7 +5,7 @@ import de.flojo.jam.game.board.traps.management.TrapData;
 import de.flojo.jam.game.board.traps.management.TrapTile;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
-import java.awt.*;
+import java.awt.Point;
 
 public class TrapImprint extends Imprint<TrapTile> {
 

@@ -16,10 +16,12 @@ public class BuildPhaseStartMessage extends MessageContainer {
     private final String p2Name;
 
     public BuildPhaseStartMessage(UUID clientId, PlayerController c) {
-        this(clientId, c.getPlayerOne().getClientId(), c.getPlayerTwo().getClientId(), c.getPlayerOne().getClientName(), c.getPlayerTwo().getClientName(), "");
+        this(clientId, c.getPlayerOne().getClientId(), c.getPlayerTwo().getClientId(), c.getPlayerOne().getClientName(),
+             c.getPlayerTwo().getClientName(), "");
     }
 
-    public BuildPhaseStartMessage(UUID clientId, UUID p1Id, UUID p2Id, String p1Name, String p2Name, String debugMessage) {
+    public BuildPhaseStartMessage(UUID clientId, UUID p1Id, UUID p2Id, String p1Name, String p2Name,
+                                  String debugMessage) {
         super(MessageTypeEnum.BUILD_START, clientId, debugMessage);
         this.p1Id = p1Id;
         this.p2Id = p2Id;

@@ -1,6 +1,8 @@
 package de.flojo.jam.graphics.renderer;
 
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;

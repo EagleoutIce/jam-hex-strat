@@ -55,10 +55,11 @@ public class MessageContainer implements IAmJson {
     }
 
     /**
-     * Equals conflicting with contract as it does ignore the date comparison -- the
-     * standard locks it down to seconds-precision and we do not care about it.
+     * Equals conflicting with contract as it does ignore the date comparison -- the standard locks it down to
+     * seconds-precision and we do not care about it.
      *
      * @param obj Obj to compare to
+     *
      * @return Equality-Relation with weakened contract
      */
     @Override
@@ -79,7 +80,7 @@ public class MessageContainer implements IAmJson {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("MessageContainer [clientId=").append(clientId).append(", debugMessage=").append(debugMessage)
-                .append(", epoch=").append(epoch).append(", type=").append(type).append("]");
+               .append(", epoch=").append(epoch).append(", type=").append(type).append("]");
         return builder.toString();
     }
 }

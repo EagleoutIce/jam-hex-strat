@@ -21,7 +21,7 @@ import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -87,7 +87,8 @@ public class SkillsPresenter {
         resetButtons();
 
         if (this.playerId != null && c.getOwner() != this.playerId) {
-            HexStratLogger.log().log(Level.INFO, "Deny for unmet player lock ({0}; {1}; {2})", new Object[]{c, this.playerId, c.getOwner()});
+            HexStratLogger.log().log(Level.INFO, "Deny for unmet player lock ({0}; {1}; {2})",
+                                     new Object[]{c, this.playerId, c.getOwner()});
             return;
         }
 
@@ -125,7 +126,7 @@ public class SkillsPresenter {
                 return;
             currentCreature.setOnDead(this::resetButtons);
             if (actionController.requestSkillFor(currentCreature, skill,
-                    (p, t) -> skillOperationEnded(c, presenter, p, t))) {
+                                                 (p, t) -> skillOperationEnded(c, presenter, p, t))) {
                 HexStratLogger.log().log(Level.INFO, "Skill-Request for: {0} has been initiated.", currentCreature);
                 presenterComponent.setEnabled(false);
                 skipSkill.setEnabled(false);
@@ -167,7 +168,8 @@ public class SkillsPresenter {
         movementSkill.prepare();
     }
 
-    private void skillOperationEnded(Creature c, SingleSkillPresenter presenter, Boolean performed, BoardCoordinate target) {
+    private void skillOperationEnded(Creature c, SingleSkillPresenter presenter, Boolean performed,
+                                     BoardCoordinate target) {
         if (skipSkill != null)
             skipSkill.setEnabled(true);
         presenter.update(c);
@@ -257,7 +259,8 @@ public class SkillsPresenter {
         double mw = movementSkill.getWidth();
         double offCounter = Main.INNER_MARGIN + mw + 10;
         skipSkill.setLocation(width - offCounter, height - skipSkill.getHeight() - 60d);
-        movementSkill.setLocation(width - offCounter - skipSkill.getWidth() - 10, height - movementSkill.getHeight() - 60d);
+        movementSkill.setLocation(width - offCounter - skipSkill.getWidth() - 10,
+                                  height - movementSkill.getHeight() - 60d);
         offCounter += skipSkill.getWidth() + 10;
         for (Map.Entry<AbstractSkill, GuiComponent> skillPair : skillPresenters.entrySet()) {
             final GuiComponent component = skillPair.getValue();
