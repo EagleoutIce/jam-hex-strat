@@ -44,7 +44,7 @@ public class CreatureAttributes {
 
     public boolean useAp(int n) {
         if (this.currentAp < n) {
-            HexStratLogger.log().log(Level.WARNING, "Capping AP usage req: {0}, pres: {1}", new Object[] {n, this.currentAp});
+            HexStratLogger.log().log(Level.WARNING, "Capping AP usage req: {0}, pres: {1}", new Object[]{n, this.currentAp});
             this.currentAp = 0;
             return false;
         }
@@ -55,13 +55,14 @@ public class CreatureAttributes {
 
     public boolean useMp(int n) {
         if (this.currentMp < n) {
-            HexStratLogger.log().log(Level.WARNING, "Capping MP usage req: {0}, pres: {1}", new Object[] {n, this.currentMp});
+            HexStratLogger.log().log(Level.WARNING, "Capping MP usage req: {0}, pres: {1}", new Object[]{n, this.currentMp});
             this.currentMp = 0;
             return false;
         }
         this.currentMp -= n;
         return true;
     }
+
     public boolean useMp() {
         return useMp(1);
     }

@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
 public class CreatureImageRenderer implements IRenderData {
     public static final String FLY_LILA = "creatures/effects/fliegen_overlay_lila.png";
     public static final String FLY_BLAU = "creatures/effects/fliegen_overlay_blau.png";
-    private static final double GLOW_OFFSET_X = 1/11d;
-    private static final double GLOW_OFFSET_Y = 1/12d;
+    private static final double GLOW_OFFSET_X = 1 / 11d;
+    private static final double GLOW_OFFSET_Y = 1 / 12d;
     private final BufferedImage image;
     private final Image scaledImage;
     private final double offsetX;

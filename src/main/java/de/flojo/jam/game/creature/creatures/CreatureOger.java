@@ -10,7 +10,6 @@ import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.SkillMultiPunch;
-import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 

@@ -32,7 +32,7 @@ public class MultiPunchEffect implements IEffectTarget {
             mayCreature.ifPresent(allTargets::add);
         }
         allTargets.forEach(c ->
-               new Thread(() -> new PunchEffect(context, powerLeft).effect(c, attacker)).start());
+                new Thread(() -> new PunchEffect(context, powerLeft).effect(c, attacker)).start());
     }
 
 }

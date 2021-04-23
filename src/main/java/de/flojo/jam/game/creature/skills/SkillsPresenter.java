@@ -257,7 +257,7 @@ public class SkillsPresenter {
         double mw = movementSkill.getWidth();
         double offCounter = Main.INNER_MARGIN + mw + 10;
         skipSkill.setLocation(width - offCounter, height - skipSkill.getHeight() - 60d);
-        movementSkill.setLocation(width - offCounter -  skipSkill.getWidth() - 10, height - movementSkill.getHeight() - 60d);
+        movementSkill.setLocation(width - offCounter - skipSkill.getWidth() - 10, height - movementSkill.getHeight() - 60d);
         offCounter += skipSkill.getWidth() + 10;
         for (Map.Entry<AbstractSkill, GuiComponent> skillPair : skillPresenters.entrySet()) {
             final GuiComponent component = skillPair.getValue();

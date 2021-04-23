@@ -15,6 +15,7 @@ public interface IRenderData {
     boolean hasImage();
 
     BufferedImage getImage();
+
     Image getImageScaled();
 
     double getOffsetX();

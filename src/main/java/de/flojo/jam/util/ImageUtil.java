@@ -1,7 +1,5 @@
 package de.flojo.jam.util;
 
-import de.flojo.jam.graphics.renderer.RenderHint;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
@@ -26,6 +24,6 @@ public class ImageUtil {
     }
 
     public static Image scale(BufferedImage image, float scale) {
-        return image.getScaledInstance((int)(image.getWidth() * scale), (int)(image.getHeight() * scale), Image.SCALE_SMOOTH);
+        return image.getScaledInstance((int) (image.getWidth() * scale), (int) (image.getHeight() * scale), Image.SCALE_SMOOTH);
     }
 }
