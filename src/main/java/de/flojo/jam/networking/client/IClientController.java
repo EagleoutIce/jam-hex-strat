@@ -9,7 +9,6 @@ public interface IClientController {
 
     void handleMessage(String message);
 
-    // TODO: split to sender?
     void send(MessageContainer message);
 
     ClientContext getContext();

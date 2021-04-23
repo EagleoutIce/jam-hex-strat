@@ -48,9 +48,6 @@ public class SingleSkillPresenter implements ISingleActionPresenter {
         return component;
     }
 
-    public void update(Creature c) {
-    }
-
     @Override
     public boolean hasImage() {
         return image != null;

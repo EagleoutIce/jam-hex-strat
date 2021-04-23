@@ -48,10 +48,6 @@ public class GameState {
         return currentTurn;
     }
 
-    public void flipCurrentTurn() {
-        this.currentTurn = currentTurn.ifOne(PlayerId.TWO, PlayerId.ONE);
-    }
-
     public int getMoneyP1Left() {
         return moneyP1Left;
     }

@@ -162,16 +162,16 @@ public class MainGameControl {
             HexStratLogger.log().log(Level.SEVERE, "ActionMessage could not be performed, as no performer was found in: {0}", message.toJson());
             return;
         }
-        final Creature creature = mayCreature.get();
+        final var creature = mayCreature.get();
 
         switch (message.getAction()) {
             case MOVEMENT:
                 creature.getAttributes().useMp(message.getTargets().size());
-                Thread moveThread = new Thread(() -> processMovement(message, creature));
+                final var moveThread = new Thread(() -> processMovement(message, creature));
                 moveThread.start();
                 return;
             case SKILL:
-                Thread skillThread = new Thread(() -> processSkill(message, creature));
+                final var skillThread = new Thread(() -> processSkill(message, creature));
                 skillThread.start();
                 return;
             case SKIP:
@@ -201,7 +201,7 @@ public class MainGameControl {
                 creature.useSkill(getBoard(), skill, mayTargetCreature.get());
                 break;
             case TILE:
-                Tile targetTile = getBoard().getTile(message.getTarget());
+                final var targetTile = getBoard().getTile(message.getTarget());
                 creature.getAttributes().useAp(skill.getCost());
                 creature.useSkill(getBoard(), skill, targetTile);
                 break;

@@ -29,6 +29,7 @@ public class SingleMovePresenter implements ISingleActionPresenter {
         update(c);
     }
 
+    @Override
     public void update(Creature c) {
         final int left = c.getAttributes().getMpLeft();
         if (left >= 10) component.updateImage(MOVES[10]);

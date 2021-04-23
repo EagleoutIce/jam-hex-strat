@@ -11,11 +11,6 @@ import java.util.UUID;
 
 public class ClientServerConnection implements Serializable {
 
-    /**
-     * The probably more readable constant for 'no connection'.
-     * <b>DO NOT CHANGE!</b>
-     */
-    public static final ClientServerConnection VOID_CONNECTION = new ClientServerConnection(null, null, null);
     private static final long serialVersionUID = -7696855335934225575L;
     private final UUID clientId;
     private final String clientName;

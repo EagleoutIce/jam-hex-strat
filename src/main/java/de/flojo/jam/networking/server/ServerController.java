@@ -79,7 +79,6 @@ public class ServerController implements IServerController {
         return container;
     }
 
-    // TODO: maybe "round data" on every nextRound?
     private void processMessage(final WebSocket conn, final String message) {
         final ClientServerConnection connection = conn.getAttachment();
         try {
@@ -96,10 +95,10 @@ public class ServerController implements IServerController {
                     handleHello(NetworkGson.getMessage(message), conn, connection);
                     break;
                 case BUILD_CHOICE:
-                    handleBuildChoice(NetworkGson.getMessage(message), conn, connection);
+                    handleBuildChoice(NetworkGson.getMessage(message), connection);
                     break;
                 case TURN_ACTION:
-                    handleTurnAction(NetworkGson.getMessage(message), conn, connection);
+                    handleTurnAction(NetworkGson.getMessage(message), connection);
                     break;
                 default:
                     throw new IllegalMessageException("There was no handler for: " + type + " (" + message + ")");
@@ -110,7 +109,7 @@ public class ServerController implements IServerController {
         }
     }
 
-    private void handleBuildChoice(final BuildChoiceMessage message, final WebSocket conn,
+    private void handleBuildChoice(final BuildChoiceMessage message,
                                    final ClientServerConnection connection) {
         HexStratLogger.log().log(Level.INFO, "Received build choice from {0}: {1}", new Object[]{connection, message});
         if (message.isGift()) {
@@ -133,7 +132,7 @@ public class ServerController implements IServerController {
         }
     }
 
-    private void handleTurnAction(final TurnActionMessage message, final WebSocket conn,
+    private void handleTurnAction(final TurnActionMessage message,
                                   final ClientServerConnection connection) {
         HexStratLogger.log().log(Level.INFO, "Received turn action from {0}: {1}", new Object[]{connection, message});
         if (connection == null)
@@ -152,7 +151,7 @@ public class ServerController implements IServerController {
         if (csConnection != null)
             throw new IllegalMessageException("You have already sent a Hello-Message");
 
-        final ClientServerConnection newConnection = new ClientServerConnection(conn, message);
+        final var newConnection = new ClientServerConnection(conn, message);
         playerController.addPlayer(newConnection);
         conn.setAttachment(newConnection);
         conn.send(new HelloReplyMessage(newConnection, mGController.getTerrain()).toJson());
@@ -178,7 +177,7 @@ public class ServerController implements IServerController {
             servedByClientId = connection.getClientId();
         }
 
-        final ErrorMessage error = new ErrorMessage(servedByClientId, ErrorTypeEnum.ILLEGAL_MESSAGE,
+        final var error = new ErrorMessage(servedByClientId, ErrorTypeEnum.ILLEGAL_MESSAGE,
                 "The Message you send was not in a valid container format!");
         conn.send(error.toJson());
         conn.close(CloseFrame.REFUSE);
@@ -194,7 +193,7 @@ public class ServerController implements IServerController {
         } else {
             servedByClientId = connection.getClientId();
         }
-        final ErrorMessage error = new ErrorMessage(servedByClientId, ex.getError(), ex.getMessage());
+        final var error = new ErrorMessage(servedByClientId, ex.getError(), ex.getMessage());
         conn.send(error.toJson());
         conn.close(CloseFrame.REFUSE);
     }
@@ -228,14 +227,13 @@ public class ServerController implements IServerController {
     public void gameOver() {
         // analyze winner
         final PlayerId winner = mGController.getWinner().orElse(null);
-        // !No Present banner
         // send
         sendGameOver(winner);
-        // ?stopchange?
+        // ?stop change?
     }
 
     public void sendGameOver(final PlayerId winnerId) {
-        final GameOverMessage gameOverMessage = new GameOverMessage(null, winnerId);
+        final var gameOverMessage = new GameOverMessage(null, winnerId);
         playerController.sendBoth(gameOverMessage);
     }
 

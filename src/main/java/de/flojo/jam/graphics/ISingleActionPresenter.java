@@ -15,8 +15,7 @@ public interface ISingleActionPresenter {
         else return new SingleSkillPresenter(skill, creature);
     }
 
-    void update(Creature c);
-
+    default void update(Creature c) {}
     GuiComponent get();
 
     default boolean hasImage() {

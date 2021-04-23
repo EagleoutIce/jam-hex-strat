@@ -42,7 +42,7 @@ public class ClientController implements IClientController {
         this.socket.connect();
         new Thread(() -> {
             synchronized (readyLock) {
-                for (int attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
+                for (var attempts = 1; !isReady && attempts <= MAX_WAIT_INTERVAL; attempts++) {
                     HexStratLogger.log().log(Level.WARNING, "Waiting for a connection... Refreshing in 1s ({0}/{1})",
                             new Object[]{attempts, MAX_WAIT_INTERVAL});
                     try {
