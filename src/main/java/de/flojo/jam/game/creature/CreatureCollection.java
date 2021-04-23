@@ -72,7 +72,7 @@ public class CreatureCollection {
         }
     }
 
-    public boolean contains(Object o) {
+    public boolean contains(Creature o) {
         synchronized (collection) {
             return collection.contains(o);
         }

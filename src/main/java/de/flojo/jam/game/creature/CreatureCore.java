@@ -88,7 +88,7 @@ public class CreatureCore {
     }
 
     protected void render(Graphics2D g) {
-        final Tile ourTile = base.getTile();
+        final var ourTile = base.getTile();
         final Point2D c = ourTile.getCenter();
         final Point2D renderTarget = new Point2D.Double(c.getX() - base.getMovementOffsetX() + ourTile.getShiftX(),
                                                         c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());

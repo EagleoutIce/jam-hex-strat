@@ -64,7 +64,7 @@ public class CreatureFactory {
         if (c.getButton() != MouseEvent.BUTTON1 || !board.doesHover())
             return;
 
-        final Creature oldCreature = selectedCreature;
+        final var oldCreature = selectedCreature;
         this.selectedCreature = creatures.getHighlighted().orElse(null);
         if (oldCreature != selectedCreature) {
             HexStratLogger.log().log(Level.INFO, "Selected Creature: {0}.", this.selectedCreature);

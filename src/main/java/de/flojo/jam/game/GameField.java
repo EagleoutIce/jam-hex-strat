@@ -28,13 +28,10 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.function.Consumer;
 
-// The superduperwuperclass
 public class GameField implements IRenderable, IProvideContext {
     public static final String FIELD_BACKGROUND = "field-background.png";
     public static final int BOARD_HEIGHT = 33;
     public static final int BOARD_WIDTH = 24;
-
-    private final String screenName;
 
     private final Board board;
     private final Architect architect;
@@ -47,10 +44,8 @@ public class GameField implements IRenderable, IProvideContext {
 
     private boolean canBuild = false;
     private boolean ourTurn = false;
-    private boolean canDoAction = false;
 
     public GameField(final Screen target, final String screenName, PlayerId owner) {
-        this.screenName = screenName;
         this.owner = owner;
         this.board = new Board("configs/empty.terrain", screenName);
         this.spawner = new TrapSpawner(board, screenName);
@@ -72,7 +67,6 @@ public class GameField implements IRenderable, IProvideContext {
         if (canBuild) {
             buildingPhaseButtons.processMouse(e);
         }
-
     }
 
     public void updateTerrain(TerrainMap map) {
@@ -86,9 +80,10 @@ public class GameField implements IRenderable, IProvideContext {
 
     public void reset() {
         architect.clearField();
-        presenter.disable();
+        presenter.reset();
         factory.removeAll();
         spawner.removeAll();
+        buildingPhaseButtons.reset();
     }
 
     @Override
@@ -163,7 +158,6 @@ public class GameField implements IRenderable, IProvideContext {
 
     public void allowOneTurn(IActionSkip skip, IActionMove move, IActionSkill skill, ItIsYourTurnMessage message) {
         // do smth with message?
-        canDoAction = true;
         ourTurn = true;
         presenter.enable();
         presenter.setOnActionConsumer(new IAction() {
@@ -187,7 +181,6 @@ public class GameField implements IRenderable, IProvideContext {
             }
 
             private void cleanup() {
-                canDoAction = false;
                 ourTurn = false;
                 presenter.disable();
                 presenter.setOnActionConsumer(null);

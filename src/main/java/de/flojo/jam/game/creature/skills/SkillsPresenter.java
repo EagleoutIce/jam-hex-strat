@@ -35,7 +35,6 @@ public class SkillsPresenter {
     private final Screen target;
     private final Board board;
     private final CreatureFactory factory;
-    private final TrapSpawner traps;
     private final CreatureActionController actionController;
     private final AtomicBoolean enabled = new AtomicBoolean();
     private final Map<AbstractSkill, GuiComponent> skillPresenters;
@@ -53,7 +52,6 @@ public class SkillsPresenter {
         this.target = target;
         this.board = board;
         this.factory = factory;
-        this.traps = traps;
         this.playerId = playerId;
         this.factory.setOnSelectionChanged(this::updateCreature);
         this.skillPresenters = new LinkedHashMap<>();
@@ -79,10 +77,8 @@ public class SkillsPresenter {
             return;
         }
 
-        if (!movementBuffer.isEmpty()) {
-            // HexStratLogger.log().log(Level.INFO, "Deny for unfinished move buffer ({0}; {1})", new Object[] {c, movementBuffer});
+        if (!movementBuffer.isEmpty())
             moveOperationEnded(currentCreature, false, new BoardCoordinate(-1, -1));
-        }
 
         resetButtons();
 
@@ -185,7 +181,6 @@ public class SkillsPresenter {
         for (Map.Entry<AbstractSkill, GuiComponent> gcPair : skillPresenters.entrySet()) {
             if (gcPair.getValue() != null) {
                 gcPair.getValue().setEnabled(c.canCastSkill(gcPair.getKey()));
-                // TODO: update so that does not do this with a Image Button
                 if (gcPair.getValue() instanceof Button)
                     gcPair.getValue().setText(gcPair.getKey().getNameWithFallback());
             }
@@ -302,6 +297,12 @@ public class SkillsPresenter {
         updateCreature(factory.getSelectedCreature());
     }
 
+    public void reset() {
+        disable();
+        this.onAction = null;
+        this.setPlayerId(null);
+    }
+
     public void disable() {
         enabled.set(false);
         if (currentCreature != null)
@@ -310,10 +311,6 @@ public class SkillsPresenter {
         creatureCoordinate = null;
         movementBuffer.clear();
         resetButtons();
-    }
-
-    public CreatureFactory getFactory() {
-        return factory;
     }
 
     public Screen getTarget() {

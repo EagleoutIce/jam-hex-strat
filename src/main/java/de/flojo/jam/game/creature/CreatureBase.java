@@ -18,7 +18,6 @@ public class CreatureBase implements IRenderable {
     private int terrainOffsetY = 0;
     private boolean resetTerrainOffset = false;
     private CreatureCore core;
-    private boolean locked = false;
 
     public CreatureBase(Tile position) {
         this.position = position;
@@ -94,14 +93,6 @@ public class CreatureBase implements IRenderable {
         return core;
     }
 
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
     protected int getMovementOffsetX() {
         return movementOffsetX;
     }
@@ -129,7 +120,6 @@ public class CreatureBase implements IRenderable {
                 ", deltaY=" + deltaY +
                 ", terrainOffsetY=" + terrainOffsetY +
                 ", resetTerrainOffset=" + resetTerrainOffset +
-                ", locked=" + locked +
                 '}';
     }
 }

@@ -10,7 +10,6 @@ public class Hexagon extends Polygon {
 
     public static final int SIDES = 6;
     private static final long serialVersionUID = 1L;
-    private final Point2D[] points = new Point2D.Double[SIDES];
     private Point2D.Double center;
     private int radius;
     private int shiftX = 0;
@@ -27,7 +26,6 @@ public class Hexagon extends Polygon {
         updatePoints();
     }
 
-
     public Hexagon(double x, double y, int radius) {
         this(new Point2D.Double(x, y), radius);
     }
@@ -37,7 +35,7 @@ public class Hexagon extends Polygon {
     }
 
     private static Point2D.Double findPoint(double x, double y, double radius, double angle) {
-        double factor = 1.4;
+        var factor = 1.4d;
         if (angle == 0.0d || angle == Math.PI)
             factor = 1.25;
 
@@ -63,10 +61,6 @@ public class Hexagon extends Polygon {
         Point2D.Double point0 = findPoint(0, 0, radius, findAngle(1 / 6d));
         Point2D.Double point1 = findPoint(0, 0, radius, findAngle(5 / 6d));
         return Math.abs(point0.getY() - point1.getY());
-    }
-
-    public int getRadius() {
-        return radius;
     }
 
     public void setRadius(int radius) {
@@ -102,12 +96,11 @@ public class Hexagon extends Polygon {
     }
 
     public synchronized void updatePoints() {
-        for (int p = 0; p < SIDES; p++) {
+        for (var p = 0; p < SIDES; p++) {
             double angle = findAngle((double) p / SIDES);
             Point2D point = findPoint(center.getX() + shiftX, center.getY() + shiftY, radius, angle);
             xpoints[p] = (int) point.getX();
             ypoints[p] = (int) point.getY();
-            points[p] = point;
         }
         super.invalidate();
     }

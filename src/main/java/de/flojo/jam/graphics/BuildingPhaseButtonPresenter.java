@@ -29,7 +29,6 @@ import de.gurkenlabs.litiengine.util.Imaging;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.MouseEvent;
@@ -109,12 +108,12 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private void populateTerrainButtons() {
         // Populate TerrainButtons
         TerrainId[] terrains = TerrainId.values();
-        for (int i = 0; i < terrains.length; i++) {
+        for (var i = 0; i < terrains.length; i++) {
             TerrainId t = terrains[i];
             if (t == TerrainId.T_EMPTY)
                 continue;
 
-            ImageButton imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
+            final var imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
                                                 t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()),
                                                 Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
@@ -144,12 +143,12 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private void populateCreatureButtons() {
         // Populate TerrainButtons
         CreatureId[] creatures = CreatureId.values();
-        for (int i = 0; i < creatures.length; i++) {
+        for (var i = 0; i < creatures.length; i++) {
             CreatureId c = creatures[i];
             if (c == CreatureId.NONE)
                 continue;
             IRenderData creatureRenderer = c.getRenderer(ourId);
-            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
+            final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
                                                 creatureRenderer.getImage(), Integer.toString(c.getCost()),
                                                 Main.TEXT_NORMAL);
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
@@ -161,7 +160,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                 this.currentCreatureId = c;
                 this.selectionMode = BuildingPhaseSelectionMode.CREATURE;
 
-                Image img = context.getFactory().getScaledImage(c, ourId.ifOne(true, false));
+                final var img = context.getFactory().getScaledImage(c, ourId.ifOne(true, false));
                 if (img != null) {
                     Game.window().cursor().setVisible(true);
                     Game.window().cursor().set(img);
@@ -180,12 +179,12 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private void populateTrapButtons() {
         // Populate TerrainButtons
         TrapId[] traps = TrapId.values();
-        for (int i = 0; i < traps.length; i++) {
+        for (var i = 0; i < traps.length; i++) {
             TrapId t = traps[i];
             if (!t.canBeBuildByPlayer())
                 continue;
             IRenderData trapRenderer = t.getImprint().getNormalRenderer();
-            ImageButton imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85,
+            final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85,
                                                 Game.window().getHeight() - i * 80d - 110d,
                                                 trapRenderer.getImage(), Integer.toString(t.getCost()),
                                                 Main.TEXT_NORMAL);
@@ -210,7 +209,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void updatePositions() {
-        for (int i = 0; i < trapButtons.size(); i++) {
+        for (var i = 0; i < trapButtons.size(); i++) {
             trapButtons.get(i).setLocation(Main.INNER_MARGIN + 90, Game.window().getHeight() - i * 80d - 110d);
         }
     }
@@ -234,8 +233,6 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         enabled = false;
         resetCursor();
     }
-
-    // TODO: disable hoverover
 
     public void enable() {
         terrainButtons.forEach(ImageButton::prepare);
@@ -289,10 +286,10 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
 
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithSideBar(p))
             return;
-        Tile t = context.getBoard().findTile(p);
+        final var t = context.getBoard().findTile(p);
         if (t == null)
             return;
 
@@ -312,21 +309,23 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
 
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithSideBar(p))
             return;
-        Tile t = context.getBoard().findTile(p);
+        final var t = context.getBoard().findTile(p);
         if (t == null)
             return;
 
-        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
-                    && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
-                                                        context.getBoard())) {
+        if (shouldSpawnTrap(c, t)) {
                 context.getSpawner().spawnTrap(currentTrapId, ourId, t);
                 currentBuildConsumer.accept(new BuildChoice(null, null, currentTrapId, t.getCoordinate(), false));
-            }
         }
+    }
+
+    private boolean shouldSpawnTrap(final MouseEvent c, final Tile t) {
+        return c.getButton() == MouseEvent.BUTTON1 || ((c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) && ((t.getTerrainType() == TerrainTile.EMPTY) && context.getFactory().get(
+                t.getCoordinate()).isEmpty()  && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
+                                                    context.getBoard())));
     }
 
     private void summonCreature(MouseEvent c) {
@@ -341,21 +340,22 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             return;
 
 
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithSideBar(p))
             return;
-        Tile t = context.getBoard().findTile(p);
+        final var t = context.getBoard().findTile(p);
         if (t == null)
             return;
-        if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (!t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
-                    t.getCoordinate()).isEmpty()
-                    && context.getFactory().get(t.getCoordinate()).isEmpty()) {
+        if (shouldSummonCreature(c, t)) {
                 currentCreature.summon(UUID.randomUUID().toString(), t);
                 summonedCreature = true;
                 currentBuildConsumer.accept(new BuildChoice(null, currentCreatureId, null, t.getCoordinate(), false));
             }
         }
+
+    private boolean shouldSummonCreature(final MouseEvent c, final Tile t) {
+        return (c.getButton() == MouseEvent.BUTTON1) || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK && !t.getTerrainType().blocksWalking() && ourId == t.getPlacementOwner() && context.getTraps().get(
+                t.getCoordinate()).isEmpty() && context.getFactory().get(t.getCoordinate()).isEmpty();
     }
 
     @Override
@@ -365,10 +365,14 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         ImageRenderer.render(g, sidebar, 0, 0);
         g.setColor(Color.WHITE);
         g.setFont(Main.TEXT_STATUS);
-        final String money = Integer.toString(context.getMoneyLeft());
+        final var money = Integer.toString(context.getMoneyLeft());
         TextRenderer.render(g, money, 110d, 43d - TextRenderer.getHeight(g, money) / 2d);
         ImageRenderer.render(g, MONEY_SYMBOL, 40d + MONEY_SYMBOL.getWidth() / 2d,
                              43d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
+    }
+
+    public void reset() {
+        disable();
     }
 
     private enum BuildingPhaseSelectionMode {

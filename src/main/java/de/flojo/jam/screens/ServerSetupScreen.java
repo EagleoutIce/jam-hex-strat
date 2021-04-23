@@ -77,7 +77,9 @@ public class ServerSetupScreen extends Screen {
         g.setFont(Main.TEXT_STATUS);
         TextRenderer.render(g, "Server status: " + serverStatus(), Main.INNER_MARGIN,
                             15.0 + g.getFontMetrics().getHeight() + largeHeight);
-        TextRenderer.render(g, "Players: " + playerStatus(), Main.INNER_MARGIN,
+        final var playerStatus = playerStatus();
+        if(playerStatus != null)
+            TextRenderer.render(g, "Players: " + playerStatus(), Main.INNER_MARGIN,
                             15.0 + 2 * g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
                             Game.window().getHeight() - 50d);
@@ -105,10 +107,10 @@ public class ServerSetupScreen extends Screen {
         this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
         this.startMoney.setLocation(Main.INNER_MARGIN + 165d, height - 77d);
         this.startServer.setLocation(width - this.startServer.getWidth() - 0.5 * Main.INNER_MARGIN - 10d,
-                                     height - this.startServer.getHeight());
+                                     height - this.startServer.getHeight()-15);
         this.loadTerrain.setLocation(
                 width - this.startServer.getWidth() - Main.INNER_MARGIN - this.loadTerrain.getWidth(),
-                height - this.loadTerrain.getHeight());
+                height - this.loadTerrain.getHeight()-15);
         this.p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 23d);
         this.p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 23d);
         this.both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 23d);
@@ -188,7 +190,7 @@ public class ServerSetupScreen extends Screen {
             return;
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosenTerrainPath);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT,
+            final var map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT,
                                             new FileInputStream(chosenTerrainPath),
                                             chosenTerrainPath);
             gameField.updateTerrain(map);

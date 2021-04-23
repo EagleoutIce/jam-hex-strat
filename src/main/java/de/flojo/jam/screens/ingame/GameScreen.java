@@ -84,7 +84,6 @@ public class GameScreen extends Screen {
         this.clientController = ConnectScreen.get().getClientController();
         this.field.updateTerrain(new TerrainMap(clientController.getContext().getTerrain()));
         this.ourId = ourId;
-        // this.playerTag = this.ourId.ifOne("Spieler 1", "Spieler 2");
         this.clientController.setOnConnectionStateUpdate(this::onNetworkUpdate);
         InputController.get().onMoved(this::lockOnOver, GameScreen.NAME);
     }
@@ -106,6 +105,7 @@ public class GameScreen extends Screen {
         if (ask && askStupidUserForConfirmationOnExit())
             return;
         clientController.close();
+        this.field.reset();
         changeScreen(MenuScreen.NAME);
     }
 
@@ -238,7 +238,7 @@ public class GameScreen extends Screen {
                                      message.toJson());
             return;
         }
-        final Creature creature = mayCreature.get();
+        final var creature = mayCreature.get();
 
         switch (message.getAction()) {
             case MOVEMENT:
@@ -278,7 +278,7 @@ public class GameScreen extends Screen {
                 creature.getAttributes().useAp(skill.getCost());
                 break;
             case TILE:
-                Tile targetTile = getBoard().getTile(message.getTarget());
+                final var targetTile = getBoard().getTile(message.getTarget());
                 creature.useSkill(getBoard(), skill, targetTile);
                 creature.getAttributes().useAp(skill.getCost());
                 break;
