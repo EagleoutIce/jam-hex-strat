@@ -19,15 +19,12 @@ import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
 import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Game;
-import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -112,7 +109,8 @@ public class SkillsPresenter {
     private void setupSkillButtons(Creature c) {
         for (AbstractSkill skill : c.getAttributes().getSkills()) {
             GuiComponent component = setupSkillButton(c, skill);
-            toolTips.add(new ToolTip<>(component, () -> skill.getNameWithFallback() + "\n" + skill.getDescription() + "\nCost: " + skill.getCost() + "\nRange: " + skill.getMinRange() + "-" + (skill.getMaxRange() == Integer.MAX_VALUE ? "unbound" : skill.getMaxRange()) + " Tile(s)\nEffect: " + skill.getMaximumEffectLength() + " Tile(s)"));
+            toolTips.add(new ToolTip<>(component,
+                                       () -> skill.getNameWithFallback() + "\n" + skill.getDescription() + "\nCost: " + skill.getCost() + "\nRange: " + skill.getMinRange() + "-" + (skill.getMaxRange() == Integer.MAX_VALUE ? "unbound" : skill.getMaxRange()) + " Tile(s)\nEffect: " + skill.getMaximumEffectLength() + " Tile(s)"));
             component.prepare();
             skillPresenters.put(skill, component);
         }
@@ -140,7 +138,8 @@ public class SkillsPresenter {
 
     private void setupSkipButton() {
         skipSkill = new SingleSkipPresenter().get();
-        toolTips.add(new ToolTip<>(skipSkill, "Skip your current turn.\nThis will set AP and MP to 0 for the current round."));
+        toolTips.add(new ToolTip<>(skipSkill,
+                                   "Skip your current turn.\nThis will set AP and MP to 0 for the current round."));
         skipSkill.onClicked(me -> {
             actionController.cancelCurrentOperation();
             currentCreature.skip();
@@ -155,7 +154,8 @@ public class SkillsPresenter {
     private void setupMoveButton(Creature c) {
         movementPresenter = new SingleMovePresenter(c);
         movementSkill = movementPresenter.get();
-        toolTips.add(new ToolTip<>(movementSkill, () -> "Move one Field\n" + c.getAttributes().getMpLeft() + "MP left"));
+        toolTips.add(
+                new ToolTip<>(movementSkill, () -> "Move one Field\n" + c.getAttributes().getMpLeft() + "MP left"));
         movementSkill.onClicked(me -> {
             actionController.cancelCurrentOperation();
             if (currentCreature != null)

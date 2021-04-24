@@ -163,10 +163,10 @@ public class GameScreen extends Screen {
             renderGameOverBanner(g);
         super.render(g);
         List<ToolTip<GuiComponent>> presenterToolTips = field.getPresenter().getToolTips();
-        if(presenterToolTips != null)
+        if (presenterToolTips != null)
             presenterToolTips.forEach(t -> t.render(g));
         List<ToolTip<GuiComponent>> buildPhaseToolTips = field.getBuildingPhaseButtons().getToolTips();
-        if(buildPhaseToolTips != null)
+        if (buildPhaseToolTips != null)
             buildPhaseToolTips.forEach(t -> t.render(g));
     }
 

@@ -384,7 +384,9 @@ public class EditorScreen extends Screen {
     private void instantiateButton(CreatureId creatureId, boolean p1, int i) {
         final var bt = new Button(creatureId.getName() + (p1 ? "-P1" : "-P2"), Main.TEXT_NORMAL, 20);
         bt.setLocation(Main.INNER_MARGIN + (p1 ? 0 : 125d), (TerrainId.values().length + 1 + i) * 45d + 15d);
-        toolTips.add(new ToolTip<>(bt, "Summon: " + creatureId.getName() + (p1 ? " (P1)" : " (P2)") + "\nCost: " + creatureId.getCost(), Color.GREEN));
+        toolTips.add(new ToolTip<>(bt,
+                                   "Summon: " + creatureId.getName() + (p1 ? " (P1)" : " (P2)") + "\nCost: " + creatureId.getCost(),
+                                   Color.GREEN));
         creatureButtons.add(bt);
         bt.onClicked(c -> {
             this.currentTerrain = null;

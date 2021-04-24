@@ -51,11 +51,10 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private final List<ImageButton> creatureButtons;
     private final List<ImageButton> trapButtons;
     private final Button giftButton;
+    private final List<ToolTip<GuiComponent>> toolTips;
     private BufferedImage sidebar;
     private boolean summonedCreature = false;
     private Consumer<BuildChoice> currentBuildConsumer;
-    private final List<ToolTip<GuiComponent>> toolTips;
-
     private TerrainId currentTerrain = null;
     private ISummonCreature currentCreature = null;
     private CreatureId currentCreatureId = null;
@@ -77,7 +76,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         this.trapButtons = new ArrayList<>();
         populateTrapButtons();
         this.giftButton = new Button("Gift", Main.TEXT_STATUS);
-        toolTips.add(new ToolTip<>(giftButton, () -> "Gift remaining Gold\nDo not use remaining: " + context.getMoneyLeft() + " Gold.", Color.ORANGE));
+        toolTips.add(new ToolTip<>(giftButton,
+                                   () -> "Gift remaining Gold\nDo not use remaining: " + context.getMoneyLeft() + " Gold.",
+                                   Color.ORANGE));
         setupGiftButton();
         this.currentBuildConsumer = null;
         InputController.get().onMoved(this::lockOnOver, GameScreen.NAME);

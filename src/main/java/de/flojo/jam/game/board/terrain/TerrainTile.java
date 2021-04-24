@@ -51,7 +51,8 @@ public enum TerrainTile {
     //
     DEAD_TREE("Toter Baumstumpf", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE, 0, 0), true, true, true,
               false,
-              -1, PushDirection.NONE, new SimpleImageRenderer("tiles/baum_kahl.png", -356 / 2d, -597 / 1.25d, Main.DEFAULT_INTERNAL_SCALE)), //
+              -1, PushDirection.NONE,
+              new SimpleImageRenderer("tiles/baum_kahl.png", -356 / 2d, -597 / 1.25d, Main.DEFAULT_INTERNAL_SCALE)), //
     //
     DEAD_TREE_B("Toter Baumstumpf, Variante B", new TerrainImprintNodeMap(TerrainIdConstants.T_DEAD_TREE_B, 0, 0), true,
                 true, true, false,

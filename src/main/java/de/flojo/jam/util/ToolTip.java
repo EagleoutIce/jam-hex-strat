@@ -24,9 +24,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 public class ToolTip<T extends GuiComponent> implements IRenderable {
+    public static final Font TOOL_TIP_FONT = new JLabel().getFont().deriveFont(20f);
     private static final Color DEF_BLACK = new Color(0f, 0f, 0f, .65f);
     private static final int WIDTH = 275;
-    public static final Font TOOL_TIP_FONT = new JLabel().getFont().deriveFont(20f);
     private static final int PADDING = 3;
     private final Color color;
 
@@ -58,40 +58,6 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
         this.textSupplier = textSupplier;
     }
 
-
-    @Override
-    public void render(final Graphics2D g) {
-        if(!display.get())
-            return;
-        if(!host.isEnabled() || host.isSuspended()) {
-            display.set(false);
-            return;
-        }
-        final String text = textSupplier.get();
-        final Point2D position = mousePosition.get();
-        g.setColor(DEF_BLACK);
-        g.setFont(TOOL_TIP_FONT);
-        final double textWidth = TextRenderer.getWidth(g, text);
-        final double effectiveWidth = textWidth < WIDTH ? textWidth : WIDTH;
-
-        final double guessHeight = getHeightWithLinebreaks(g, text, effectiveWidth); // guess leading
-        // too high
-        final double heightOff = position.getY() - guessHeight;
-        if(heightOff < 0) {
-            position.setLocation(position.getX(), position.getY() - heightOff + 2 * PADDING); // mirror below
-        }
-        // too right
-        final double widthOff = Game.window().getWidth() - (position.getX() + effectiveWidth);
-        if(widthOff < 0) {
-            position.setLocation(position.getX() + widthOff - 2* PADDING, position.getY()); // mirror below
-        }
-        ShapeRenderer.render(g, new Rectangle2D.Double(position.getX()-PADDING,
-                                                       position.getY()-PADDING- guessHeight,
-                                                       effectiveWidth + 2d * PADDING, guessHeight + 2d * PADDING));
-        g.setColor(Color.WHITE);
-        renderWithLinebreaks(g, text, position.getX(), position.getY()-guessHeight, effectiveWidth, guessHeight, color);
-    }
-
     public static float getHeightWithLinebreaks(Graphics2D g, final String text, final double width) {
         if (text == null || text.isEmpty()) {
             return 0f;
@@ -105,7 +71,7 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
             final var measurer = new LineBreakMeasurer(iterator, frc);
             while (true) {
                 final var nextLayout = measurer.nextLayout((float) width);
-                if(nextLayout == null)
+                if (nextLayout == null)
                     break;
                 textHeight += nextLayout.getAscent() + nextLayout.getDescent();
                 if (measurer.getPosition() >= text.length()) {
@@ -118,7 +84,8 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
     }
 
     // modified variant, shipped seems to be buggy
-    public static void renderWithLinebreaks(final Graphics2D g, final String text, final double x, final double y, final double width, final double height, final Color firstColor) {
+    public static void renderWithLinebreaks(final Graphics2D g, final String text, final double x, final double y,
+                                            final double width, final double height, final Color firstColor) {
         if (text == null || text.isEmpty()) {
             return;
         }
@@ -137,7 +104,7 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
             final var measurer = new LineBreakMeasurer(iterator, frc);
             while (true) {
                 final var nextLayout = measurer.nextLayout((float) width);
-                if(nextLayout == null)
+                if (nextLayout == null)
                     break;
                 lines.add(nextLayout);
                 textHeight += nextLayout.getAscent() + nextLayout.getDescent();
@@ -150,16 +117,50 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
         var textY = (float) (y + valign.getLocation(height, textHeight));
         var first = true;
         for (TextLayout layout : lines) {
-            if(first) {
+            if (first) {
                 first = false;
                 g.setColor(firstColor);
             } else {
                 g.setColor(color);
             }
             textY += layout.getAscent();
-            layout.draw(g, (float)x , textY);
+            layout.draw(g, (float) x, textY);
             textY += layout.getDescent() + layout.getLeading();
         }
         g.setRenderingHints(originalHints);
+    }
+
+    @Override
+    public void render(final Graphics2D g) {
+        if (!display.get())
+            return;
+        if (!host.isEnabled() || host.isSuspended()) {
+            display.set(false);
+            return;
+        }
+        final String text = textSupplier.get();
+        final Point2D position = mousePosition.get();
+        g.setColor(DEF_BLACK);
+        g.setFont(TOOL_TIP_FONT);
+        final double textWidth = TextRenderer.getWidth(g, text);
+        final double effectiveWidth = textWidth < WIDTH ? textWidth : WIDTH;
+
+        final double guessHeight = getHeightWithLinebreaks(g, text, effectiveWidth); // guess leading
+        // too high
+        final double heightOff = position.getY() - guessHeight;
+        if (heightOff < 0) {
+            position.setLocation(position.getX(), position.getY() - heightOff + 2 * PADDING); // mirror below
+        }
+        // too right
+        final double widthOff = Game.window().getWidth() - (position.getX() + effectiveWidth);
+        if (widthOff < 0) {
+            position.setLocation(position.getX() + widthOff - 2 * PADDING, position.getY()); // mirror below
+        }
+        ShapeRenderer.render(g, new Rectangle2D.Double(position.getX() - PADDING,
+                                                       position.getY() - PADDING - guessHeight,
+                                                       effectiveWidth + 2d * PADDING, guessHeight + 2d * PADDING));
+        g.setColor(Color.WHITE);
+        renderWithLinebreaks(g, text, position.getX(), position.getY() - guessHeight, effectiveWidth, guessHeight,
+                             color);
     }
 }

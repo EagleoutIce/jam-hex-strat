@@ -92,12 +92,12 @@ public class ServerSetupScreen extends Screen {
                             Game.window().getHeight() - 80d);
         super.render(g);
         List<ToolTip<GuiComponent>> presenterToolTips = gameField.getPresenter().getToolTips();
-        if(presenterToolTips != null)
+        if (presenterToolTips != null)
             presenterToolTips.forEach(t -> t.render(g));
         List<ToolTip<GuiComponent>> buildPhaseToolTips = gameField.getBuildingPhaseButtons().getToolTips();
-        if(buildPhaseToolTips != null)
+        if (buildPhaseToolTips != null)
             buildPhaseToolTips.forEach(t -> t.render(g));
-        if(this.toolTips != null)
+        if (this.toolTips != null)
             this.toolTips.forEach(t -> t.render(g));
     }
 
@@ -135,7 +135,9 @@ public class ServerSetupScreen extends Screen {
 
         toolTips = new CopyOnWriteArrayList<>();
         this.startServer = new Button("Start", Main.GUI_FONT_SMALL);
-        toolTips.add(new ToolTip<>(startServer, () -> startServer.getText() + " the Server\nPort: " + portNumber.getText() + "\nStart Money: " + startMoney.getText(), Color.gray));
+        toolTips.add(new ToolTip<>(startServer,
+                                   () -> startServer.getText() + " the Server\nPort: " + portNumber.getText() + "\nStart Money: " + startMoney.getText(),
+                                   Color.gray));
         this.startServer.onClicked(c -> {
             if (serverStarted) {
                 stopServer(true);
@@ -147,7 +149,8 @@ public class ServerSetupScreen extends Screen {
         this.getComponents().add(startServer);
 
         this.loadTerrain = new Button("Terrain", Main.GUI_FONT_SMALL);
-        toolTips.add(new ToolTip<>(loadTerrain, () -> "Load a terrain\nThis can be created with the editor.", Color.gray));
+        toolTips.add(
+                new ToolTip<>(loadTerrain, () -> "Load a terrain\nThis can be created with the editor.", Color.gray));
         // jeah jeah.. outsource da shit -.-
         this.loadTerrain.onClicked(c -> loadTerrain());
         this.getComponents().add(loadTerrain);
