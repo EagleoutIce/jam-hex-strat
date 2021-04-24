@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class GameField implements IRenderable, IProvideContext {
-    public static final String FIELD_BACKGROUND = "field-background.png";
+    public static final String FIELD_BACKGROUND = "field-background.jpg";
     public static final int BOARD_HEIGHT = 33;
     public static final int BOARD_WIDTH = 24;
 

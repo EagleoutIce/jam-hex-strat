@@ -13,7 +13,6 @@ public abstract class CreatureImagesHost implements IRenderData {
     protected static final double GLOW_OFFSET_X = 1 / 11d;
     protected static final double GLOW_OFFSET_Y = 1 / 12d;
     protected final BufferedImage image;
-    protected final Image scaledImage;
     protected final BufferedImage highlightImage;
     protected final BufferedImage darkerImage;
     protected final BufferedImage darkerHighlightImage;
@@ -21,19 +20,19 @@ public abstract class CreatureImagesHost implements IRenderData {
     protected final BufferedImage glowImage;
     protected final BufferedImage flyImage;
     protected final float internalScale;
+    protected Image scaledImage;
 
     protected CreatureImagesHost(
             final String path, final float internalScale, final String glowPath, final String flyPath) {
+        this.internalScale = internalScale;
         this.image = Resources.images().get(path);
-        scaledImage = ImageUtil.scale(image, internalScale);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         darkerImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         darkerHighlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         glowImage = Resources.images().get(glowPath);
         flyImage = Resources.images().get(flyPath);
-        this.internalScale = internalScale;
-        generateImageVariants();
+        new Thread(this::generateImageVariants).start();
     }
 
     protected void generateImageVariants() {
@@ -41,6 +40,7 @@ public abstract class CreatureImagesHost implements IRenderData {
         ImageUtil.modifyRGBA(image, highlightImage, 1.36f, 1.36f, 1.36f, 1);
         ImageUtil.modifyRGBA(image, darkerHighlightImage, 0.8f, 0.8f, 0.8f, 1);
         ImageUtil.modifyRGBA(image, markImage, 1.2f, 1.2f, 1.2f, 1);
+        scaledImage = ImageUtil.scale(image, internalScale);
     }
 
     protected float scale() {
