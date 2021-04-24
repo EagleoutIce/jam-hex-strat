@@ -141,7 +141,7 @@ public class ClientController implements IClientController {
     private void handleError(final ErrorMessage message) {
         JOptionPane.showMessageDialog(null,
                                       message.getReason().getDescription() + " (" + message.getDebugMessage() + ")",
-                                      "Received Error " + message.getReason() , JOptionPane.ERROR_MESSAGE);
+                                      "Received Error " + message.getReason(), JOptionPane.ERROR_MESSAGE);
     }
 
 

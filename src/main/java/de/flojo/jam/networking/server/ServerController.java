@@ -77,7 +77,7 @@ public class ServerController implements IServerController {
             throw new IllegalMessageException("The uuid you sent (" + container.getClientId()
                                                       + ") differs from the one you got with the Hello-Reply (" + connection.getClientId()
                                                       + "). This is fatal and probably totally your fault.");
-        } else if(container != null && container.getVersion() != Main.getVersion()) {
+        } else if (container != null && container.getVersion() != Main.getVersion()) {
             throw new VersionMismatchException(container.getVersion());
         }
         return container;

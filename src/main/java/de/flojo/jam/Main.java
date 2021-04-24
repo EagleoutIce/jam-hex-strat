@@ -39,7 +39,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        try(final var scanner = new Scanner(Resources.get("version.info"))) {
+        try (final var scanner = new Scanner(Resources.get("version.info"))) {
             version = scanner.nextInt();
         }
 
