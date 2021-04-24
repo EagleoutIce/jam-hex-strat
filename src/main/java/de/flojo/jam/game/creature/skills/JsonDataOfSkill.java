@@ -40,6 +40,10 @@ public class JsonDataOfSkill implements IAmJson {
         return nameSupplier == null ? name : nameSupplier.get();
     }
 
+    public Supplier<String> getNameSupplierWithFallback() {
+        return nameSupplier == null ? () -> name : nameSupplier;
+    }
+
     @Override
     public String toJson() {
         this.name = getNameWithFallback();

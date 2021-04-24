@@ -25,6 +25,7 @@ import de.flojo.jam.graphics.ImageButton;
 import de.flojo.jam.util.FileHelper;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
+import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
@@ -44,6 +45,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 public class EditorScreen extends Screen {
@@ -72,6 +74,7 @@ public class EditorScreen extends Screen {
     private List<ImageButton> terrainButtons;
     private List<ImageButton> trapButtons;
     private List<Button> creatureButtons;
+    private List<ToolTip<?>> toolTips;
     private boolean locked;
 
     public EditorScreen() {
@@ -240,6 +243,7 @@ public class EditorScreen extends Screen {
 
     @Override
     protected void initializeComponents() {
+        toolTips = new CopyOnWriteArrayList<>();
         super.initializeComponents();
         initTerrainButtons();
         initTrapButtons();
@@ -251,14 +255,17 @@ public class EditorScreen extends Screen {
 
     private void initFileOperationButtons() {
         newField = new Button("New", Main.GUI_FONT_SMALL);
+        toolTips.add(new ToolTip<>(newField, "Create a new Field", Color.GRAY));
         newField.onClicked(c -> {
             architect.clearField();
             creatureFactory.removeAll();
             trapSpawner.removeAll();
         });
         saveField = new Button("Save", Main.GUI_FONT_SMALL);
+        toolTips.add(new ToolTip<>(saveField, "Save the created Field", Color.GRAY));
         saveField.onClicked(c -> saveField());
         loadField = new Button("Load", Main.GUI_FONT_SMALL);
+        toolTips.add(new ToolTip<>(loadField, "Load a Field", Color.GRAY));
         loadField.onClicked(c -> loadField());
         p1 = new Button("P1", Main.GUI_FONT_SMALL);
         p1.onClicked(c -> {//
@@ -293,6 +300,7 @@ public class EditorScreen extends Screen {
         both.setColors(Color.GREEN, Color.GREEN.brighter());
 
         nextRound = new Button("Next Round", Main.TEXT_STATUS);
+        toolTips.add(new ToolTip<>(nextRound, "Reset all Mp & AP"));
         nextRound.onClicked(c -> {
             creatureFactory.resetAll();
             presenter.update();
@@ -438,6 +446,7 @@ public class EditorScreen extends Screen {
 
             final var imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
                                               t.getName(), Main.TEXT_NORMAL);
+            toolTips.add(new ToolTip<>(imgBt, "Place: " + t.getName() + "\nCost: " + t.getCost(), Color.ORANGE));
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
@@ -469,6 +478,8 @@ public class EditorScreen extends Screen {
     public void render(final Graphics2D g) {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
+        toolTips.forEach(t -> t.render(g));
+        presenter.render(g);
     }
 
     private void changeScreen(final String name) {

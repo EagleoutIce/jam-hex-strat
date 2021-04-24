@@ -90,6 +90,7 @@ public class GameField implements IRenderable, IProvideContext {
     public void render(Graphics2D g) {
         board.jointRender(g, owner, factory, spawner);
         buildingPhaseButtons.render(g);
+        presenter.render(g);
     }
 
     @Override

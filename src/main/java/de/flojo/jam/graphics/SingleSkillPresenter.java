@@ -4,10 +4,12 @@ import de.flojo.jam.Main;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.util.HexStratLogger;
+import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.resources.ResourceLoadException;
 import de.gurkenlabs.litiengine.resources.Resources;
 
+import javax.swing.JComponent;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 
@@ -33,7 +35,6 @@ public class SingleSkillPresenter implements ISingleActionPresenter {
         } else {
             component = new ImageButton(107.5, 50, 0, 0, image, "", Main.GUI_FONT_SMALL);
         }
-
         update(c);
     }
 
