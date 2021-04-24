@@ -25,7 +25,7 @@ import java.util.logging.Level;
 
 public class ConnectScreen extends Screen {
     public static final String NAME = "Game-Connect";
-    private static final BufferedImage background = Resources.images().get("main_background.png");
+    private static final BufferedImage background = MenuScreen.MAIN_BACKGROUND;
     private static final String[] RANDOM_NAMES = new String[]{
             "PeterMeter", "Pain Gain", "H4ns3l", "Joseph", "Achtung Butter!", "Hallo Mami",
             "Jam-Ben", "Niemand", "Du", "Ich", "Wer?", "Name", "Bluhme", "Jonas", "Flo", "W3rW0lf", "Tschonas", "Tschonny",
@@ -46,7 +46,7 @@ public class ConnectScreen extends Screen {
 
     private ConnectScreen() {
         super(NAME);
-        Game.log().info("Building game connect Screen");
+        HexStratLogger.log().info("Building game connect Screen");
         updatePositions();
     }
 
@@ -234,4 +234,3 @@ public class ConnectScreen extends Screen {
         return nameField.getText();
     }
 }
-

@@ -54,7 +54,8 @@ public class TerrainMap implements Serializable {
             loadTerrainMapFromInputStream(terrainIs);
         }
         if (terrain == null) {
-            HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
+            if(terrainIs != null)
+                HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
             terrain = new Terrain(terrainPath == null ? "unnamed" : terrainPath, new TerrainData(h));
         }
         final TerrainData data = terrain.getData();
@@ -84,7 +85,7 @@ public class TerrainMap implements Serializable {
     public TerrainTile getTerrainAt(int x, int y) {
         TerrainData t = terrain.getData();
         if (t == null) {
-            Game.log().warning("Requested nonexistent terrain.");
+            HexStratLogger.log().warning("Requested nonexistent terrain.");
             return TerrainTile.EMPTY;
         } else {
             return t.getTerrainAt(x, y);
@@ -98,7 +99,7 @@ public class TerrainMap implements Serializable {
     public void updateTerrainAt(int x, int y, TerrainTile newType) {
         TerrainData t = terrain.getData();
         if (t == null) {
-            Game.log().warning("Requested nonexistent terrain.");
+            HexStratLogger.log().warning("Requested nonexistent terrain.");
         } else {
             t.setTerrainAt(x, y, newType);
         }

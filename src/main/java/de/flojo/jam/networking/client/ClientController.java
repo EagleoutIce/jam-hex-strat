@@ -92,7 +92,7 @@ public class ClientController implements IClientController {
         final MessageContainer container = NetworkGson.getContainer(message);
         final MessageTypeEnum type = container == null ? null : container.getType();
         if (type == null) {
-            Game.log().warning("Type was null; ignoring...");
+            HexStratLogger.log().warning("Type was null; ignoring...");
             return;
         }
 

@@ -56,7 +56,7 @@ public class Main {
         });
 
         Game.init(args);
-        Arrays.stream(Game.log().getHandlers()).forEach(h -> h.setLevel(Level.ALL));
+        Arrays.stream(HexStratLogger.log().getHandlers()).forEach(h -> h.setLevel(Level.ALL));
         Game.graphics().setBaseRenderScale(2f);
         Game.window().setTitle("Hex-Strat");
 

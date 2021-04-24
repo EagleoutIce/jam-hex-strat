@@ -2,6 +2,7 @@ package de.flojo.jam.screens;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.graphics.Button;
+import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -15,7 +16,7 @@ import java.util.Objects;
 
 public class MenuScreen extends Screen {
     public static final String NAME = "MENU";
-    private static final BufferedImage background = Resources.images().get("main_background.png");
+    public static final BufferedImage MAIN_BACKGROUND = Resources.images().get("main-background.jpg");
     private Button startGame;
     private Button showEditor;
     private Button showServer;
@@ -23,7 +24,7 @@ public class MenuScreen extends Screen {
 
     public MenuScreen() {
         super(NAME);
-        Game.log().info("Building Menu Screen");
+        HexStratLogger.log().info("Building Menu Screen");
     }
 
     @Override
@@ -32,16 +33,16 @@ public class MenuScreen extends Screen {
             Game.world().environment().render(g);
         }
 
-        ImageRenderer.render(g, background, 0, 0);
+        ImageRenderer.render(g, MAIN_BACKGROUND, 0, 0);
 
         // render info
-        final String info1 = "Hex-Strat";
+        final var info1 = "Hex-Strat";
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT);
         TextRenderer.render(g, info1, Game.window().getWidth() - TextRenderer.getWidth(g, info1) - 25,
                             7.0 + g.getFontMetrics().getHeight());
 
-        final String info2 = "A strategy game. With hex tiles";
+        final var info2 = "A strategy game. With hex tiles";
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT_SMALL);
         TextRenderer.render(g, info2, Game.window().getWidth() - TextRenderer.getWidth(g, info2) - 25,

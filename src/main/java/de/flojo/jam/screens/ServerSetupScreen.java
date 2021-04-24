@@ -47,7 +47,7 @@ public class ServerSetupScreen extends Screen {
 
     public ServerSetupScreen() {
         super(NAME);
-        Game.log().info("Building server Screen");
+        HexStratLogger.log().info("Building server Screen");
     }
 
     private String serverStatus() {
@@ -178,7 +178,7 @@ public class ServerSetupScreen extends Screen {
     private void loadTerrain() {
         String chosen = FileHelper.askForTerrainPathLoad();
         if (chosen == null) {
-            Game.log().info("Load was cancelled.");
+            HexStratLogger.log().info("Load was cancelled.");
             return;
         }
         this.chosenTerrainPath = chosen;

@@ -82,7 +82,7 @@ public class EditorScreen extends Screen {
         creatureFactory = new CreatureFactory(EditorScreen.NAME, board, trapSpawner.getTraps());
         architect = new Architect(board, this.creatureFactory, this.trapSpawner);
 
-        Game.log().info("Building Editor Screen");
+        HexStratLogger.log().info("Building Editor Screen");
         Game.window().onResolutionChanged(r -> updatePositions());
 
         Input.mouse().onDragged(this::plantTileOrOther);
@@ -312,21 +312,21 @@ public class EditorScreen extends Screen {
         board.getTerrainMap().changeName(terrainName.getText());
         final String chosen = FileHelper.askForTerrainPathSave(board.getTerrainMap().getTerrain().getName());
         if (chosen == null) {
-            Game.log().info("Save was cancelled.");
+            HexStratLogger.log().info("Save was cancelled.");
             return;
         }
         HexStratLogger.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
         try (final var writer = new PrintWriter(chosen)) {
             writer.println(gson.toJson(board.getTerrainMap().getTerrain()));
         } catch (IOException ex) {
-            Game.log().warning(ex.getMessage());
+            HexStratLogger.log().warning(ex.getMessage());
         }
     }
 
     private void loadField() {
         final String chosen = FileHelper.askForTerrainPathLoad();
         if (chosen == null) {
-            Game.log().info("Load was cancelled.");
+            HexStratLogger.log().info("Load was cancelled.");
             return;
         }
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);

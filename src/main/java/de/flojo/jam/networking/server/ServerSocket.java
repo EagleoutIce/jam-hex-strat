@@ -1,6 +1,6 @@
 package de.flojo.jam.networking.server;
 
-import de.gurkenlabs.litiengine.Game;
+import de.flojo.jam.util.HexStratLogger;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -9,9 +9,8 @@ import java.net.InetSocketAddress;
 
 public final class ServerSocket extends WebSocketServer {
 
-    private static final String SERVER_TEXT = "Server";
     protected boolean isReady;
-    private IServerController controller;
+    private final IServerController controller;
 
     public ServerSocket(InetSocketAddress address, IServerController controller) {
         super(address);
@@ -27,11 +26,6 @@ public final class ServerSocket extends WebSocketServer {
         return this.getAddress() + " (" + this.getConnections().size() + " connections)";
     }
 
-    public ServerSocket updateController(IServerController newController) {
-        this.controller = newController;
-        return this;
-    }
-
     @Override
     public void onClose(WebSocket conn, int code, String reason, boolean remote) {
         controller.handleCloseFor(conn, code, reason, remote);
@@ -40,7 +34,7 @@ public final class ServerSocket extends WebSocketServer {
 
     @Override
     public void onError(WebSocket conn, Exception ex) {
-        Game.log().severe(ex.getMessage());
+        HexStratLogger.log().severe(ex.getMessage());
         controller.handleError(conn, ex);
     }
 

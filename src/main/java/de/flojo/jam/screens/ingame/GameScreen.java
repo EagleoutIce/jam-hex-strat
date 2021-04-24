@@ -71,7 +71,7 @@ public class GameScreen extends Screen {
 
     private GameScreen() {
         super(NAME);
-        Game.log().info("Building Build-phase Screen");
+        HexStratLogger.log().info("Building Build-phase Screen");
     }
 
     public static GameScreen get() {

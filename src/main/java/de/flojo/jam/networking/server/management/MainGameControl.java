@@ -81,7 +81,7 @@ public class MainGameControl {
     }
 
     public void startMainGame() {
-        Game.log().info("Started main game!");
+        HexStratLogger.log().info("Started main game!");
         playerController.sendBoth(new GameStartMessage(null, getBoard().getTerrainMap(), getFactory().getCreatures(),
                                                        getSpawner().getTraps()));
         nextRound();
@@ -104,7 +104,7 @@ public class MainGameControl {
         state.nextPlayer(context.getCreatures());
         if (isGameOver()) {
             // GAME OVER
-            Game.log().info("Game Over");
+            HexStratLogger.log().info("Game Over");
             return false;
         } else if (roundEnd()) {
             nextRound();

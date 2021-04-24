@@ -155,7 +155,7 @@ public class CreatureActionController {
                                      new Object[]{creature, activeCreature});
             return false;
         } else if (creature == null) {
-            Game.log().severe("Requested Operation-Movement for null creature!");
+            HexStratLogger.log().severe("Requested Operation-Movement for null creature!");
             return false;
         }
 

@@ -36,7 +36,7 @@ public class ClientSocket extends WebSocketClient {
 
     @Override
     public void onError(Exception ex) {
-        Game.log().severe(ex.getMessage());
+        HexStratLogger.log().severe(ex.getMessage());
     }
 
 }
