@@ -73,6 +73,8 @@ public class CreatureCore {
         if (highlight.get()) {
             hints.add(RenderHint.GLOW);
             hints.add(RenderHint.MARKED);
+        } else if (base.getTile().isMarked()) {
+            hints.add(RenderHint.MARKED);
         }
 
         if (base.getTile().isHovered() || base.getTile().isMarked()) {
