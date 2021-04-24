@@ -20,7 +20,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 
 public class Main {
-
     public static final Image DEFAULT_CURSOR = Resources.images().get("cursor.png").getScaledInstance(30, 30,
                                                                                                       Image.SCALE_SMOOTH);
     public static final Image ICON = Resources.images().get("icon.png").getScaledInstance(42, 42, Image.SCALE_SMOOTH);
@@ -32,6 +31,9 @@ public class Main {
     public static final Font TEXT_NORMAL = GUI_FONT.deriveFont(12f);
     public static final float DEFAULT_INTERNAL_SCALE = .26f;
     public static final double INNER_MARGIN = 20d;
+
+    private static Thread loadEditor;
+    private static Thread loadServer;
 
     public static void main(String[] args) {
 
@@ -71,18 +73,29 @@ public class Main {
 
         Game.screens().add(new MenuScreen());
         Game.screens().add(GameScreen.get());
-        Game.screens().add(new EditorScreen());
         Game.screens().add(ConnectScreen.get());
-        Game.screens().add(new ServerSetupScreen());
-
+        loadEditor = new Thread(() -> Game.screens().add(new EditorScreen()));
+        loadServer = new Thread(() -> Game.screens().add(new ServerSetupScreen()));
         Game.start();
+
+        loadServer.start();
+        loadEditor.start();
 
         BackgroundMusic.getInstance().enable();
     }
+
 
     @SuppressWarnings("java:S106")
     private static void onUnhandledException(final Throwable ex) {
         HexStratLogger.log().severe(ex.getMessage());
         ex.printStackTrace();
+    }
+
+    public static Thread getStateOfEditorLoad() {
+        return loadEditor;
+    }
+
+    public static Thread getStateOfServerLoad() {
+        return loadServer;
     }
 }

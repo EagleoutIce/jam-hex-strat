@@ -22,6 +22,9 @@ public class MenuScreen extends Screen {
     private Button showServer;
     private boolean locked;
 
+    private static final String HEX_STRAT = "Hex-Strat";
+    private static final String HEX_STRAT_SUBTITLE = "A strategy game. With hex tiles";
+
     public MenuScreen() {
         super(NAME);
         HexStratLogger.log().info("Building Menu Screen");
@@ -29,24 +32,25 @@ public class MenuScreen extends Screen {
 
     @Override
     public void render(final Graphics2D g) {
-        if (Game.world().environment() != null) {
-            Game.world().environment().render(g);
-        }
-
         ImageRenderer.render(g, MAIN_BACKGROUND, 0, 0);
 
         // render info
-        final var info1 = "Hex-Strat";
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT);
-        TextRenderer.render(g, info1, Game.window().getWidth() - TextRenderer.getWidth(g, info1) - 25,
-                            7.0 + g.getFontMetrics().getHeight());
+        TextRenderer.render(g, HEX_STRAT, Game.window().getWidth() - TextRenderer.getWidth(g, HEX_STRAT) - 25,
+                            7d + g.getFontMetrics().getHeight());
 
-        final var info2 = "A strategy game. With hex tiles";
         g.setColor(Color.WHITE);
         g.setFont(Main.GUI_FONT_SMALL);
-        TextRenderer.render(g, info2, Game.window().getWidth() - TextRenderer.getWidth(g, info2) - 25,
-                            25.0 + 2 * g.getFontMetrics().getHeight());
+        TextRenderer.render(g, HEX_STRAT_SUBTITLE, Game.window().getWidth() - TextRenderer.getWidth(g,
+                                                                                                    HEX_STRAT_SUBTITLE) - 25,
+                            25d + 2 * g.getFontMetrics().getHeight());
+
+        g.setColor(Color.WHITE);
+        g.setFont(Main.TEXT_NORMAL);
+        final var states = "Server: " + (Main.getStateOfServerLoad().isAlive() ? "Loading" : "Done") + "; Editor: "+ (Main.getStateOfEditorLoad().isAlive() ? "Loading" : "Done");
+        final var bounds = TextRenderer.getBounds(g, states);
+        TextRenderer.render(g, states, Game.window().getWidth() - bounds.getWidth() - 25, Game.window().getHeight() - bounds.getHeight() - 25);
         super.render(g);
     }
 
