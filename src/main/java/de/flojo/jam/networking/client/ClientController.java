@@ -2,11 +2,13 @@ package de.flojo.jam.networking.client;
 
 import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
+import de.flojo.jam.networking.messages.ErrorMessage;
 import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
 import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.HexStratLogger;
 
+import javax.swing.JOptionPane;
 import java.net.URI;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -127,10 +129,19 @@ public class ClientController implements IClientController {
             case GAME_OVER:
                 GameScreen.get().gameOver(NetworkGson.getMessage(message));
                 break;
+            case ERROR:
+                handleError(NetworkGson.getMessage(message));
+                break;
             default:
                 HexStratLogger.log().log(Level.WARNING, "There was no handler for: {0} ({1}).",
                                          new Object[]{type, message});
         }
+    }
+
+    private void handleError(final ErrorMessage message) {
+        JOptionPane.showMessageDialog(null,
+                                      message.getReason().getDescription() + " (" + message.getDebugMessage() + ")",
+                                      "Received Error " + message.getReason() , JOptionPane.ERROR_MESSAGE);
     }
 
 

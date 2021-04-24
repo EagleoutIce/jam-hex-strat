@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.server;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.INeedUpdates;
 import de.flojo.jam.networking.NetworkGson;
@@ -7,6 +8,7 @@ import de.flojo.jam.networking.exceptions.ErrorTypeEnum;
 import de.flojo.jam.networking.exceptions.HandlerException;
 import de.flojo.jam.networking.exceptions.IllegalMessageException;
 import de.flojo.jam.networking.exceptions.NameNotAvailableException;
+import de.flojo.jam.networking.exceptions.VersionMismatchException;
 import de.flojo.jam.networking.messages.BuildChoiceMessage;
 import de.flojo.jam.networking.messages.BuildPhaseStartMessage;
 import de.flojo.jam.networking.messages.BuildUpdateMessage;
@@ -75,6 +77,8 @@ public class ServerController implements IServerController {
             throw new IllegalMessageException("The uuid you sent (" + container.getClientId()
                                                       + ") differs from the one you got with the Hello-Reply (" + connection.getClientId()
                                                       + "). This is fatal and probably totally your fault.");
+        } else if(container != null && container.getVersion() != Main.getVersion()) {
+            throw new VersionMismatchException(container.getVersion());
         }
         return container;
     }

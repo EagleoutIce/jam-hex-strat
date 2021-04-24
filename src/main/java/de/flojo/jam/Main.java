@@ -17,6 +17,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.logging.Level;
 
 public class Main {
@@ -34,8 +35,13 @@ public class Main {
 
     private static Thread loadEditor;
     private static Thread loadServer;
+    private static int version = -1;
 
     public static void main(String[] args) {
+
+        try(final var scanner = new Scanner(Resources.get("version.info"))) {
+            version = scanner.nextInt();
+        }
 
         Game.setInfo("info.xml");
         Game.addGameListener(new GameListener() {
@@ -97,5 +103,9 @@ public class Main {
 
     public static Thread getStateOfServerLoad() {
         return loadServer;
+    }
+
+    public static int getVersion() {
+        return version;
     }
 }

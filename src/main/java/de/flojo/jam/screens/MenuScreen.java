@@ -47,7 +47,7 @@ public class MenuScreen extends Screen {
 
         g.setColor(Color.WHITE);
         g.setFont(Main.TEXT_NORMAL);
-        final var states = (Main.getStateOfServerLoad().isAlive() ? "Server: Loading; " : "") + (Main.getStateOfEditorLoad().isAlive() ? "Editor: Loading; " : "");
+        final var states = (Main.getStateOfServerLoad().isAlive() ? "Server: Loading; " : "") + (Main.getStateOfEditorLoad().isAlive() ? "Editor: Loading; " : "") + "Version: " + Main.getVersion();
         final var bounds = TextRenderer.getBounds(g, states);
         TextRenderer.render(g, states, Game.window().getWidth() - bounds.getWidth() - 25,
                             Game.window().getHeight() - bounds.getHeight() - 25);

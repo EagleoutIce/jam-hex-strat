@@ -6,7 +6,7 @@
 
     <groupId>de.flojo.jam</groupId>
     <artifactId>hexstrat</artifactId>
-    <version>0</version>
+    <version>1.0.0</version>
 
     <name>hexstrat</name>
     <properties>

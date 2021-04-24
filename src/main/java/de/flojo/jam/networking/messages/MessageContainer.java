@@ -1,5 +1,6 @@
 package de.flojo.jam.networking.messages;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.networking.share.util.IAmJson;
 
 import java.util.Objects;
@@ -11,6 +12,7 @@ public class MessageContainer implements IAmJson {
     private final MessageTypeEnum type;
     private final long epoch;
     private final String debugMessage;
+    private final int version;
     private UUID clientId;
 
 
@@ -19,6 +21,7 @@ public class MessageContainer implements IAmJson {
         this.type = type;
         this.epoch = epoch;
         this.debugMessage = debugMessage;
+        this.version = Main.getVersion();
     }
 
     public MessageContainer(MessageTypeEnum type, UUID clientId, String debugMessage) {
@@ -39,10 +42,6 @@ public class MessageContainer implements IAmJson {
 
     public MessageTypeEnum getType() {
         return type;
-    }
-
-    public long getTimeStamp() {
-        return epoch;
     }
 
     public String getDebugMessage() {
@@ -75,12 +74,18 @@ public class MessageContainer implements IAmJson {
                 && Objects.equals(debugMessage, other.debugMessage) && type == other.type;
     }
 
+    public int getVersion() {
+        return version;
+    }
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("MessageContainer [clientId=").append(clientId).append(", debugMessage=").append(debugMessage)
-               .append(", epoch=").append(epoch).append(", type=").append(type).append("]");
-        return builder.toString();
+        return "MessageContainer{" +
+                "type=" + type +
+                ", epoch=" + epoch +
+                ", debugMessage='" + debugMessage + '\'' +
+                ", version=" + version +
+                ", clientId=" + clientId +
+                '}';
     }
 }
