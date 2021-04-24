@@ -9,7 +9,6 @@ import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
@@ -18,6 +17,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CreatureCore {
 
+    private static final Color DEF_TAINT = new Color(.96f, .97f, .96f, .85f);
+    private static final Color DEF_BLACK = new Color(0f, 0f, 0f, .65f);
     private final PlayerId owner;
     private final IRenderData dyingData;
     private final CreatureAttributes attributes;
@@ -27,9 +28,6 @@ public class CreatureCore {
     private CreatureBase base;
     private boolean isFlying = false;
     private boolean isDead = false;
-
-    private static final Color DEF_TAINT = new Color(.96f, .97f, .96f, .85f);
-    private static final Color DEF_BLACK = new Color(0f, 0f, 0f, .65f);
 
     public CreatureCore(PlayerId owner, boolean isOur, IRenderData mainData, IRenderData dyingData,
                         CreatureAttributes attributes) {
@@ -77,7 +75,7 @@ public class CreatureCore {
             hints.add(RenderHint.MARKED);
         }
 
-        if (base.getTile().isHovered() || base.getTile().isMarked() ) {
+        if (base.getTile().isHovered() || base.getTile().isMarked()) {
             hints.add(attributes.canDoSomething() ? RenderHint.HOVER : RenderHint.DARK_HOVER);
         } else if (hints.isEmpty()) {
             hints.add(attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK);

@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import de.flojo.jam.Main;
 import de.flojo.jam.game.GameField;
 import de.flojo.jam.game.board.Board;
-import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.Architect;
@@ -34,7 +33,6 @@ import de.gurkenlabs.litiengine.input.Input;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -334,7 +332,7 @@ public class EditorScreen extends Screen {
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
             final var map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
-                                            chosen);
+                                           chosen);
             this.board.setTerrainMap(map);
             HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"",
                                      board.getTerrainMap().getTerrain().getName());
@@ -413,7 +411,7 @@ public class EditorScreen extends Screen {
             final var t = traps[i];
 
             final var imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
-                                                t.getName(), Main.TEXT_NORMAL);
+                                              t.getName(), Main.TEXT_NORMAL);
             imgBt.setTextAlign(Align.RIGHT);
             trapButtons.add(imgBt);
             imgBt.onClicked(c -> {
@@ -439,7 +437,7 @@ public class EditorScreen extends Screen {
             final var t = terrains[i];
 
             final var imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
-                                                t.getName(), Main.TEXT_NORMAL);
+                                              t.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;

@@ -80,6 +80,7 @@ public class Hexagon extends Polygon {
     public int getShiftX() {
         return shiftX;
     }
+
     public int getShiftY() {
         return shiftY;
     }

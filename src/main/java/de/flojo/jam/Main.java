@@ -39,7 +39,7 @@ public class Main {
         Game.addGameListener(new GameListener() {
             @Override
             public void initialized(String... args) {
-               HexStratLogger.log().log(Level.INFO,"Initialized with: {0}", Arrays.toString(args));
+                HexStratLogger.log().log(Level.INFO, "Initialized with: {0}", Arrays.toString(args));
             }
 
             @Override

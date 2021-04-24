@@ -91,9 +91,10 @@ public class CreatureImageRenderer implements IRenderData {
                     renderImage = null;
                     break;
             }
-            if(renderImage != null)
-                ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY,
-                                       scale(), scale());
+            if (renderImage != null)
+                ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX,
+                                           pos.getY() + scale() * offsetY,
+                                           scale(), scale());
         }
     }
 

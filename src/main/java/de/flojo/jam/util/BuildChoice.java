@@ -7,11 +7,11 @@ import de.flojo.jam.game.creature.CreatureId;
 
 public class BuildChoice {
 
+    private final boolean isGift;
     private TerrainId chosenTerrain;
     private CreatureId chosenCreature;
     private TrapId chosenTrap;
     private BoardCoordinate selectedPosition;
-    private final boolean isGift;
 
     public BuildChoice(TerrainId chosenTerrain, CreatureId chosenCreature, TrapId chosenTrap,
                        BoardCoordinate selectedPosition, boolean isGift) {

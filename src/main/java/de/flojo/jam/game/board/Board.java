@@ -6,7 +6,6 @@ import de.flojo.jam.game.board.highlighting.IHighlightMask;
 import de.flojo.jam.game.board.highlighting.ImprintHighlighter;
 import de.flojo.jam.game.board.highlighting.SimpleHighlighter;
 import de.flojo.jam.game.board.terrain.TerrainMap;
-import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
@@ -215,7 +214,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             float deltaX = (1f - getZoom()) * background.getWidth() * BACKGROUND_ZOOM_FACTOR;
             float deltaY = (1f - getZoom()) * background.getHeight() * BACKGROUND_ZOOM_FACTOR;
             setZoom(1f);
-            tiles.values().parallelStream().forEach(t -> {t.updateZoom(getZoom()); t.move(-deltaX / 8, deltaY / 10);});
+            tiles.values().parallelStream().forEach(t -> {
+                t.updateZoom(getZoom());
+                t.move(-deltaX / 8, deltaY / 10);
+            });
             updateBoardPosition();
             // TODO: fix this
         }

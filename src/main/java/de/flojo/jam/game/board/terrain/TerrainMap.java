@@ -38,7 +38,7 @@ public class TerrainMap implements Serializable {
     public TerrainMap(int w, int h, InputStream stream, String terrainPath) {
         loadMapFrom(w, h, stream, terrainPath);
         try {
-            if(stream != null)
+            if (stream != null)
                 stream.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -50,7 +50,7 @@ public class TerrainMap implements Serializable {
     }
 
     private void loadMapFrom(int w, int h, InputStream terrainIs, String terrainPath) {
-        if(terrainIs != null) {
+        if (terrainIs != null) {
             loadTerrainMapFromInputStream(terrainIs);
         }
         if (terrain == null) {
