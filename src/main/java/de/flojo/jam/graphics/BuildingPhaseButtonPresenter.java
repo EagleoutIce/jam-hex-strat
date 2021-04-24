@@ -357,7 +357,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private boolean creatureCanBeSummonedHere(final Tile t) {
-        return !t.getTerrainType().blocksWalking() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
+        return t.getTerrainType().canBeWalkedOn() && (ourId == t.getPlacementOwner()) && context.getTraps().get(
                 t.getCoordinate()).isEmpty()
                 && context.getFactory().get(t.getCoordinate()).isEmpty();
     }

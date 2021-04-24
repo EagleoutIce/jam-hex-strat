@@ -108,7 +108,7 @@ public class CreatureActionController {
     }
 
     private boolean isWalkable(Tile t) {
-        return !t.getTerrainType().blocksWalking() && context.getCreatures().get(t.getCoordinate()).isEmpty();
+        return t.getTerrainType().canBeWalkedOn() && context.getCreatures().get(t.getCoordinate()).isEmpty();
     }
 
     public boolean requestSkillFor(Creature creature, JsonDataOfSkill skillData,
