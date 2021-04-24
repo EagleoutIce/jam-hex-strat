@@ -2,12 +2,10 @@ package de.flojo.jam.networking.server.management;
 
 import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.game.player.PlayerId;
-import de.flojo.jam.networking.share.GamePhase;
 import de.gurkenlabs.litiengine.Game;
 
 public class GameState {
     int currentRound = 0;
-    GamePhase phase = GamePhase.INIT;
 
     PlayerId currentTurn;
 
@@ -34,14 +32,6 @@ public class GameState {
 
     public void nextRound() {
         this.currentRound += 1;
-    }
-
-    public GamePhase getPhase() {
-        return phase;
-    }
-
-    public void setPhase(GamePhase phase) {
-        this.phase = phase;
     }
 
     public PlayerId getCurrentTurn() {

@@ -28,10 +28,6 @@ public class ClientContext {
         return myId;
     }
 
-    public void setMyId(UUID myId) {
-        this.myId = myId;
-    }
-
     public Terrain getTerrain() {
         return terrain;
     }
@@ -73,4 +69,3 @@ public class ClientContext {
         return p2Name;
     }
 }
-

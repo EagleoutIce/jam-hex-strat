@@ -21,10 +21,6 @@ public class HexMaths {
         return a > b ? 1 : -1;
     }
 
-    public static BoardCoordinate decodeDelta(int aX, int aY, int tX, int tY) {
-        return decodeDelta(new BoardCoordinate(aX, aY), new BoardCoordinate(tX, tY));
-    }
-
     // gerade ungerade, kleiner kleiner
     public static BoardCoordinate decodeDelta(BoardCoordinate a, BoardCoordinate t) {
         if (a.x == t.x && a.y == t.y)

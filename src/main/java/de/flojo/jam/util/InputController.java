@@ -64,24 +64,9 @@ public class InputController {
         });
     }
 
-
-    public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, String screen) {
-        onKeyTyped(keyCode, eventHandler, Set.of(screen));
-    }
-
     public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, Set<String> screens) {
         Input.keyboard().onKeyTyped(keyCode, ke -> {
             if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
-                return;
-            eventHandler.keyTyped(ke);
-        });
-    }
-
-    public void onKeyTyped(int keyCode, KeyTypedListener eventHandler, Set<String> screens, InputGroup<Integer> group) {
-        Input.keyboard().onKeyTyped(keyCode, ke -> {
-            if (!Game.window().isFocusOwner() || !screens.contains(Game.screens().current().getName()))
-                return;
-            if (group.tryLock(keyCode))
                 return;
             eventHandler.keyTyped(ke);
         });

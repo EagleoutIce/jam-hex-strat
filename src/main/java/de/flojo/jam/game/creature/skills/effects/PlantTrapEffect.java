@@ -17,7 +17,6 @@ public class PlantTrapEffect implements IEffectTarget {
 
     @Override
     public void effect(Tile target, Creature attacker) {
-        // TODO: ground effect
         TrapSpawner.injectTrap(TrapId.T_GOBLIN_TRAP, attacker.getOwner(), target, context.getBoard(),
                                context.getTraps());
     }

@@ -106,14 +106,6 @@ public class Creature implements IRenderable {
         this.base.render(g);
     }
 
-    public void useSkill(Board board, JsonDataOfSkill wantedSkill, Creature target) {
-        useSkill(new DefaultReadContext(board, cCollection, tCollection), wantedSkill, target);
-    }
-
-    public void useSkill(IProvideReadContext context, JsonDataOfSkill wantedSkill, Creature target) {
-        this.core.getAttributes().useSkill(context, wantedSkill, this, target);
-    }
-
     public void useSkill(IProvideReadContext context, AbstractSkill skill, Tile target) {
         this.core.getAttributes().useSkill(context, skill, this, target);
     }

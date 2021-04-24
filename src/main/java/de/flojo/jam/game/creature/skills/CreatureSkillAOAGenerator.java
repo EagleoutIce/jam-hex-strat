@@ -35,7 +35,7 @@ public class CreatureSkillAOAGenerator {
                                         int maxRange, boolean emptyOnly) {
         Set<Tile> tiles = new HashSet<>();
         Set<Tile> neighbours = start.getNeighbours();
-        for (Tile tile : neighbours) {
+        for (var tile : neighbours) {
             BoardCoordinate delta = HexMaths.decodeDelta(start.getCoordinate(), tile.getCoordinate());
             getAOASingleLine(start, board, creatures, minRange, maxRange, delta.x, delta.y, tiles);
         }
@@ -49,10 +49,10 @@ public class CreatureSkillAOAGenerator {
     private static void getAOASingleLine(Tile start, Board board, CreatureCollection creatures, int minRange,
                                          int maxRange, int dx, int dy, Set<Tile> tiles) {
         // start will never be included :D
-        BoardCoordinate current = start.getCoordinate();
-        for (int i = 0; i < maxRange; i++) {
+        var current = start.getCoordinate();
+        for (var i = 0; i < maxRange; i++) {
             current = current.translateRelativeX(dx, dy);
-            Tile currentTile = board.getTile(current);
+            final var currentTile = board.getTile(current);
             // line ended
             if (currentTile == null || currentTile.getTerrainType().blocksLineOfSight())
                 return;

@@ -14,11 +14,11 @@ public class JsonDataOfSkill implements IAmJson {
     protected final int bonusOnRaised;
     private final transient Supplier<String> nameSupplier;
     private final int cost;
-    private String name = null;
+    private String name;
 
     public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange,
                            final int bonusOnRaised, final Supplier<String> nameSupplier, final String description,
-                           SkillId skillId, final int cost) {
+                           final SkillId skillId, final int cost) {
         this.maximumEffectLength = maximumEffectLength;
         this.nameSupplier = nameSupplier;
         this.name = getNameWithFallback();
@@ -31,7 +31,7 @@ public class JsonDataOfSkill implements IAmJson {
     }
 
     public JsonDataOfSkill(final int maximumEffectLength, final int minRange, final int maxRange,
-                           final int bonusOnRaised, final String name, final String description, SkillId skillId,
+                           final int bonusOnRaised, final String name, final String description, final SkillId skillId,
                            final int cost) {
         this(maximumEffectLength, minRange, maxRange, bonusOnRaised, () -> name, description, skillId, cost);
     }
