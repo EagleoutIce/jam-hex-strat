@@ -384,6 +384,7 @@ public class EditorScreen extends Screen {
     private void instantiateButton(CreatureId creatureId, boolean p1, int i) {
         final var bt = new Button(creatureId.getName() + (p1 ? "-P1" : "-P2"), Main.TEXT_NORMAL, 20);
         bt.setLocation(Main.INNER_MARGIN + (p1 ? 0 : 125d), (TerrainId.values().length + 1 + i) * 45d + 15d);
+        toolTips.add(new ToolTip<>(bt, "Summon: " + creatureId.getName() + (p1 ? " (P1)" : " (P2)") + "\nCost: " + creatureId.getCost(), Color.GREEN));
         creatureButtons.add(bt);
         bt.onClicked(c -> {
             this.currentTerrain = null;
@@ -421,6 +422,7 @@ public class EditorScreen extends Screen {
             final var imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
                                               t.getName(), Main.TEXT_NORMAL);
             imgBt.setTextAlign(Align.RIGHT);
+            toolTips.add(new ToolTip<>(imgBt, "Spawn: " + t.getName() + "\nCost: " + t.getCost(), Color.MAGENTA));
             trapButtons.add(imgBt);
             imgBt.onClicked(c -> {
                 this.currentCreature = null;
@@ -479,7 +481,6 @@ public class EditorScreen extends Screen {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
         toolTips.forEach(t -> t.render(g));
-        presenter.render(g);
     }
 
     private void changeScreen(final String name) {

@@ -178,7 +178,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
 
     private void showHelp() {
         JOptionPane.showMessageDialog(null,
-                                      "Use W, A, S and D to control map movement. Use M to toggle map and C to toggle character information, P to toggle Audio. Use the mouse wheel for zoom.",
+                                      "Use W, A, S and D to control map movement.\nUse M to toggle map and C to toggle character information, P to toggle Audio.\nUse the mouse wheel for zoom.\nIn the Editor, T may be used to trigger Traps.",
                                       "Help", JOptionPane.INFORMATION_MESSAGE);
     }
 

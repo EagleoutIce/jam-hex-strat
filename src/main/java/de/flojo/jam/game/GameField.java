@@ -90,7 +90,6 @@ public class GameField implements IRenderable, IProvideContext {
     public void render(Graphics2D g) {
         board.jointRender(g, owner, factory, spawner);
         buildingPhaseButtons.render(g);
-        presenter.render(g);
     }
 
     @Override
@@ -116,6 +115,10 @@ public class GameField implements IRenderable, IProvideContext {
     @Override
     public SkillsPresenter getPresenter() {
         return presenter;
+    }
+
+    public BuildingPhaseButtonPresenter getBuildingPhaseButtons() {
+        return buildingPhaseButtons;
     }
 
     public void allowOneBuild(Consumer<BuildChoice> onChoice, int moneyLeft) {

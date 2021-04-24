@@ -17,6 +17,7 @@ import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
+import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Align;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
@@ -36,6 +37,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Consumer;
 
 public class BuildingPhaseButtonPresenter implements IRenderable {
@@ -52,6 +54,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     private BufferedImage sidebar;
     private boolean summonedCreature = false;
     private Consumer<BuildChoice> currentBuildConsumer;
+    private List<ToolTip<?>> toolTips;
 
     private TerrainId currentTerrain = null;
     private ISummonCreature currentCreature = null;
@@ -65,6 +68,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         this.screen = screen;
         this.ourId = ourId;
         this.context = context;
+        toolTips = new CopyOnWriteArrayList<>();
         assignSidebar();
         this.terrainButtons = new ArrayList<>();
         populateTerrainButtons();
@@ -116,6 +120,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             final var imgBt = new ImageButton(70d, 70d, Main.INNER_MARGIN, i * 80d - 5d,
                                               t.getImprint().getRenderer().getImage(), Integer.toString(t.getCost()),
                                               Main.TEXT_NORMAL);
+            toolTips.add(new ToolTip<>(imgBt, "Place: " + t.getName() + "\nCost: " + t.getCost(), Color.ORANGE));
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             terrainButtons.add(imgBt);
@@ -151,6 +156,8 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
                                               creatureRenderer.getImage(), Integer.toString(c.getCost()),
                                               Main.TEXT_NORMAL);
+            // TODO: skills aswell
+            toolTips.add(new ToolTip<>(imgBt, "Summon: " + c.getName() + "\nCost: " + c.getCost(), Color.GREEN));
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             creatureButtons.add(imgBt);
@@ -188,6 +195,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
                                               Game.window().getHeight() - i * 80d - 110d,
                                               trapRenderer.getImage(), Integer.toString(t.getCost()),
                                               Main.TEXT_NORMAL);
+            toolTips.add(new ToolTip<>(imgBt, "Spawn: " + t.getName() + "\nCost: " + t.getCost(), Color.MAGENTA));
             imgBt.setEnabledSupplier(() -> t.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             trapButtons.add(imgBt);
@@ -373,6 +381,10 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
         TextRenderer.render(g, money, 110d, 43d - TextRenderer.getHeight(g, money) / 2d);
         ImageRenderer.render(g, MONEY_SYMBOL, 40d + MONEY_SYMBOL.getWidth() / 2d,
                              43d - MONEY_SYMBOL.getHeight() / 2d - TextRenderer.getHeight(g, money) / 2 - 5d);
+    }
+
+    public List<ToolTip<?>> getToolTips() {
+        return toolTips;
     }
 
     public void reset() {

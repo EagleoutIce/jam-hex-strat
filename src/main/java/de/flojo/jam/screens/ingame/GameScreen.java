@@ -26,6 +26,7 @@ import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
+import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
@@ -157,12 +158,15 @@ public class GameScreen extends Screen {
         } else if (currentRound > 0) {
             ImageRenderer.render(g, MAIN_PHASE, Game.window().getCenter().getX() - MAIN_PHASE.getWidth() / 2d, 0);
         }
-
-        if (gameOver.get()) {
+        if (gameOver.get())
             renderGameOverBanner(g);
-        }
-
         super.render(g);
+        List<ToolTip<?>> presenterToolTips = field.getPresenter().getToolTips();
+        if(presenterToolTips != null)
+            presenterToolTips.forEach(t -> t.render(g));
+        List<ToolTip<?>> buildPhaseToolTips = field.getBuildingPhaseButtons().getToolTips();
+        if(buildPhaseToolTips != null)
+            buildPhaseToolTips.forEach(t -> t.render(g));
     }
 
     private void renderGameOverBanner(Graphics2D g) {

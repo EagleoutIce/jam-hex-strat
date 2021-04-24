@@ -35,7 +35,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
-public class SkillsPresenter implements IRenderable {
+public class SkillsPresenter {
     private final Screen target;
     private final Board board;
     private final CreatureFactory factory;
@@ -334,9 +334,7 @@ public class SkillsPresenter implements IRenderable {
         this.onAction = onAction;
     }
 
-    @Override
-    public void render(final Graphics2D g) {
-        if(toolTips != null)
-            toolTips.forEach(t -> t.render(g));
+    public List<ToolTip<?>> getToolTips() {
+        return toolTips;
     }
 }

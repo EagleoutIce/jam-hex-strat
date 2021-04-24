@@ -9,6 +9,7 @@ import de.flojo.jam.networking.server.ServerController;
 import de.flojo.jam.util.FileHelper;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
+import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 import de.gurkenlabs.litiengine.gui.TextFieldComponent;
@@ -22,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 
 public class ServerSetupScreen extends Screen {
@@ -86,6 +88,12 @@ public class ServerSetupScreen extends Screen {
         TextRenderer.render(g, "Start Money: ", Main.INNER_MARGIN,
                             Game.window().getHeight() - 80d);
         super.render(g);
+        List<ToolTip<?>> presenterToolTips = gameField.getPresenter().getToolTips();
+        if(presenterToolTips != null)
+            presenterToolTips.forEach(t -> t.render(g));
+        List<ToolTip<?>> buildPhaseToolTips = gameField.getBuildingPhaseButtons().getToolTips();
+        if(buildPhaseToolTips != null)
+            buildPhaseToolTips.forEach(t -> t.render(g));
     }
 
 
