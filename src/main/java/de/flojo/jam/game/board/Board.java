@@ -95,6 +95,10 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         setupInput();
     }
 
+    public Board(final String name) {
+        this((String) null, name);
+    }
+
     public static float getZoom() {
         return zoom;
     }
@@ -211,8 +215,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             float deltaX = (1f - getZoom()) * background.getWidth() * BACKGROUND_ZOOM_FACTOR;
             float deltaY = (1f - getZoom()) * background.getHeight() * BACKGROUND_ZOOM_FACTOR;
             setZoom(1f);
-            tiles.values().parallelStream().forEach(t -> t.updateZoom(getZoom()));
-            tiles.values().parallelStream().forEach(t -> t.move(-deltaX / 8, deltaY / 10));
+            tiles.values().parallelStream().forEach(t -> {t.updateZoom(getZoom()); t.move(-deltaX / 8, deltaY / 10);});
             updateBoardPosition();
             // TODO: fix this
         }
@@ -290,8 +293,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         final double hexSeg = Tile.getSegmentWidth();
         final double rowShift = hexWidth - hexSeg + PADDING;
         final double hexMidWidth = hexWidth - 2 * hexSeg;
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
+        for (var row = 0; row < height; row++) {
+            for (var col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 final double x = tilesUpperLeft.getX() + col * (hexWidth + hexMidWidth) + lineToggle(row) * rowShift;
                 final double y = tilesUpperLeft.getY() + row * (0.5 * hexHeight + PADDING);
                 tiles.put(new BoardCoordinate(col, row), new Tile(new BoardCoordinate(col, row), (int) x, (int) y,
@@ -343,8 +346,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         this.doHover.set(true);
     }
 
-    public boolean doesHover() {
-        return this.doHover.get();
+    public boolean doesNotHover() {
+        return !this.doHover.get();
     }
 
     public void doNotHover() {
@@ -358,7 +361,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             return;
         }
 
-        final Tile hoveredTile = findHovered(e);
+        final var hoveredTile = findHovered(e);
         if (hoveredTile == null)
             return;
 
@@ -376,14 +379,11 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         }
     }
 
-    // TODO: simplify
     private boolean updateHighlightingRecursive(final BoardCoordinate hPoint, final boolean[][] hl, final Point anchor,
                                                 final Set<Tile> highlightTiles) {
-        for (int y = 0; y < hl.length; y++) {
-            for (int x = 0; x < hl[y].length; x++) {
-                if (!hl[y][x])
-                    continue;
-                if (!processSingleTileHighlight(hPoint, x, y, anchor, highlightTiles))
+        for (var y = 0; y < hl.length; y++) {
+            for (var x = 0; x < hl[y].length; x++) {
+                if (hl[y][x] && !processSingleTileHighlight(hPoint, x, y, anchor, highlightTiles))
                     return false;
             }
         }
@@ -393,20 +393,19 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private boolean processSingleTileHighlight(BoardCoordinate hPoint, int x, int y, Point anchor,
                                                Set<Tile> highlightTiles) {
         // transform target in boardCoordinates
-        BoardCoordinate effectiveCoordinate = hPoint.translateRelativeX(x - anchor.x, y - anchor.y);
-        final Tile targetTile = getTile(effectiveCoordinate);
-        TerrainTile targetTerrainType = targetTile == null ? null : targetTile.getTerrainType();
-
+        final var effectiveCoordinate = hPoint.translateRelativeX(x - anchor.x, y - anchor.y);
+        final var targetTile = getTile(effectiveCoordinate);
         // invalid as too close to border
         if (targetTile == null)
             return false;
 
+        final var targetTerrainType = targetTile.getTerrainType();
+
         if (highlightTiles.add(targetTile)) {
-            IHighlightMask recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
+            final var recHighlightMask = new ImprintHighlighter(targetTerrainType.getNode().getImprint());
             return updateHighlightingRecursive(targetTile.getCoordinate(), recHighlightMask.getGrid(),
                                                targetTerrainType.getNode().getPos(), highlightTiles);
         }
-
         return true;
     }
 
@@ -417,8 +416,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
+        for (var row = 0; row < height; row++) {
+            for (var col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 tiles.get(new BoardCoordinate(col, row)).renderDecorations(g);
             }
         }
@@ -430,16 +429,16 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         for (final Tile tile : tiles.values())
             tile.render(g, showMapDetails.get());
 
-        for (int row = 0; row < height; row++) {
-            for (int col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
-                BoardCoordinate coordinate = new BoardCoordinate(col, row);
+        for (var row = 0; row < height; row++) {
+            for (var col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
+                final var coordinate = new BoardCoordinate(col, row);
                 traps.getRoot(coordinate).ifPresent(t -> t.renderBaseFor(g, renderOwner));
                 tiles.get(coordinate).renderDecorations(g);
                 factory.get(coordinate).ifPresent(c -> c.render(g));
                 traps.getRoot(coordinate).ifPresent(t -> t.renderTriggerFor(g, renderOwner));
             }
         }
-        final String str = "F11 for help.";
+        final var str = "F11 for help.";
         g.setFont(Main.TEXT_NORMAL);
         g.setColor(Color.YELLOW);
         TextRenderer.render(g, str, Game.window().getWidth() - TextRenderer.getWidth(g, str) - 15,

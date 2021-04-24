@@ -71,9 +71,9 @@ public class AnimationRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + Board.getZoom() * offsetX),
-                             (int) (pos.getY() + Board.getZoom() * offsetY), (int) (Board.getZoom() * sWidth),
-                             (int) (Board.getZoom() * sHeight));
+        return new Rectangle2D.Double(pos.getX() + Board.getZoom() * offsetX,
+                                      pos.getY() + Board.getZoom() * offsetY, Board.getZoom() * sWidth,
+                                      Board.getZoom() * sHeight);
     }
 
     @Override

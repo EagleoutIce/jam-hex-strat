@@ -32,13 +32,14 @@ public class TerrainMap implements Serializable {
     }
 
     public TerrainMap(int w, int h, String terrainPath) {
-        this(w, h, Resources.get(terrainPath), terrainPath);
+        this(w, h, terrainPath == null ? null : Resources.get(terrainPath), terrainPath);
     }
 
     public TerrainMap(int w, int h, InputStream stream, String terrainPath) {
         loadMapFrom(w, h, stream, terrainPath);
         try {
-            stream.close();
+            if(stream != null)
+                stream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -49,29 +50,35 @@ public class TerrainMap implements Serializable {
     }
 
     private void loadMapFrom(int w, int h, InputStream terrainIs, String terrainPath) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(terrainIs))) {
-            terrain = gson.fromJson(reader, Terrain.class);
-        } catch (IOException | JsonSyntaxException | JsonIOException ex) {
-            Game.log().warning(ex.getMessage());
-            System.exit(1);
+        if(terrainIs != null) {
+            loadTerrainMapFromInputStream(terrainIs);
         }
         if (terrain == null) {
             HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
-            terrain = new Terrain(terrainPath, new TerrainData(h));
+            terrain = new Terrain(terrainPath == null ? "unnamed" : terrainPath, new TerrainData(h));
         }
         final TerrainData data = terrain.getData();
         // fill up
-        while (data.size() < h)
+        for (var i = data.size(); i < h; i++)
             data.add(new ArrayList<>(HexMaths.effectiveWidth(w)));
 
-        for (int y = 0; y < h; y++) {
+        for (var y = 0; y < h; y++) {
             List<TerrainTile> line = data.get(y);
             int offset = HexMaths.effectiveWidth(w) - line.size();
-            for (int x = 0; x < offset; x++) {
+            for (var x = 0; x < offset; x++) {
                 line.add(TerrainTile.EMPTY);
             }
         }
         HexStratLogger.log().log(Level.INFO, "Loaded TerrainMap: {0}", terrain);
+    }
+
+    private void loadTerrainMapFromInputStream(final InputStream terrainIs) {
+        try (final var reader = new BufferedReader(new InputStreamReader(terrainIs))) {
+            terrain = gson.fromJson(reader, Terrain.class);
+        } catch (IOException | JsonSyntaxException | JsonIOException ex) {
+            HexStratLogger.log().warning(ex.getMessage());
+            System.exit(1);
+        }
     }
 
     public TerrainTile getTerrainAt(int x, int y) {

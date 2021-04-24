@@ -96,8 +96,8 @@ public class SimpleImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + scale() * offsetX), (int) (pos.getY() + scale() * offsetY),
-                             (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
+        return new Rectangle2D.Double(pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY,
+                                      scale() * image.getWidth(), scale() * image.getHeight());
     }
 
     @Override

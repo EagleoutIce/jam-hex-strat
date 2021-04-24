@@ -1,6 +1,5 @@
 package de.flojo.jam.game.board;
 
-import de.flojo.jam.Main;
 import de.flojo.jam.game.board.mask.DefaultBoardMask;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainTypeSupplier;
@@ -10,24 +9,22 @@ import de.flojo.jam.graphics.renderer.RenderHint;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static de.flojo.jam.game.TileConstants.DEFAULT_COLOR;
+import static de.flojo.jam.game.TileConstants.DEFAULT_RADIUS;
+import static de.flojo.jam.game.TileConstants.HIGHLIGHT_COLOR;
+import static de.flojo.jam.game.TileConstants.MARK_COLOR;
+import static de.flojo.jam.game.TileConstants.NONE_COLOR;
+import static de.flojo.jam.game.TileConstants.NUMBER_FONT;
+import static de.flojo.jam.game.TileConstants.P1_COLOR;
+import static de.flojo.jam.game.TileConstants.P2_COLOR;
+
 public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
-    public static final int DEFAULT_RADIUS = 30;
-
-    private static final Font NUMBER_FONT = Main.TEXT_NORMAL.deriveFont(20f);
-    private static final Color HIGHLIGHT_COLOR = new Color(0.6f, 0.6f, 0.3f, 0.25f);
-    private static final Color MARK_COLOR = new Color(0.3f, 0.6f, 0.3f, 0.4f);
-    private static final Color NONE_COLOR = new Color(0, 0, 0, 35); // 154, 215, 45
-    private static final Color P1_COLOR = new Color(45, 173, 215, 35);
-    private static final Color P2_COLOR = new Color(141, 45, 215, 35);
-    private static final long serialVersionUID = 9075282633765587910L;
     private final String tileLabel;
     private final PlayerId placementOwner;
     private final Color ownerColor;
@@ -37,6 +34,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     private final AtomicBoolean mark = new AtomicBoolean();
     private final double origX;
     private final double origY;
+    private float currentZoom = 1f;
     private Set<Tile> neighbours;
 
     public Tile(BoardCoordinate coordinate, double x, double y, TerrainTypeSupplier type) {
@@ -110,11 +108,10 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
             this.draw(g, 0, ownerColor, true);
         if (hover.get())
             this.draw(g, 0, HIGHLIGHT_COLOR, true);
-
         if (mark.get())
-            this.draw(g, 5, MARK_COLOR, true);
+            this.draw(g, 0, MARK_COLOR, true);
 
-        this.draw(g, 3, new Color(0.4f, 0.6f, 0.3f, 0.15f), false);
+        this.draw(g, 3 * currentZoom, DEFAULT_COLOR, false);
         if (showCordData) {
             g.setColor(Color.WHITE);
             g.setFont(NUMBER_FONT);
@@ -125,6 +122,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     }
 
     public void updateZoom(float newZoom) {
+        currentZoom = newZoom;
         this.setRadius((int) (DEFAULT_RADIUS * newZoom));
         this.setCenter(origX * newZoom, origY * newZoom);
     }
@@ -138,13 +136,13 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
 
     public Point2D getShiftedCenter() {
         final Point2D center = getCenter();
-        return new Point((int) (center.getX() + getShiftX()), (int) (center.getY() + getShiftY()));
+        return new Point2D.Double(center.getX() + getShiftX(), center.getY() + getShiftY());
     }
 
     private RenderHint getHint() {
         if (hover.get())
             return RenderHint.HOVER;
-        return mark.get() ? RenderHint.MARKED : RenderHint.NORMAL;
+        return mark.get() ? RenderHint.HOVER : RenderHint.NORMAL;
     }
 
     @Override

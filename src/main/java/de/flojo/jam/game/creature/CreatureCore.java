@@ -19,7 +19,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class CreatureCore {
 
     private final PlayerId owner;
-    private final IRenderData mainData;
     private final IRenderData dyingData;
     private final CreatureAttributes attributes;
     private final boolean isOur;
@@ -29,11 +28,13 @@ public class CreatureCore {
     private boolean isFlying = false;
     private boolean isDead = false;
 
+    private static final Color DEF_TAINT = new Color(.96f, .97f, .96f, .85f);
+    private static final Color DEF_BLACK = new Color(0f, 0f, 0f, .65f);
+
     public CreatureCore(PlayerId owner, boolean isOur, IRenderData mainData, IRenderData dyingData,
                         CreatureAttributes attributes) {
-        this.mainData = mainData;
         this.dyingData = dyingData;
-        this.renderCore = this.mainData;
+        this.renderCore = mainData;
         this.attributes = attributes;
         this.owner = owner;
         this.isOur = isOur;
@@ -71,12 +72,12 @@ public class CreatureCore {
 
     private RenderHint[] getRenderHints() {
         List<RenderHint> hints = new ArrayList<>();
-        if (base.getTile().isMarked() || highlight.get()) {
+        if (highlight.get()) {
             hints.add(RenderHint.GLOW);
             hints.add(RenderHint.MARKED);
         }
 
-        if (base.getTile().isHovered()) {
+        if (base.getTile().isHovered() || base.getTile().isMarked() ) {
             hints.add(attributes.canDoSomething() ? RenderHint.HOVER : RenderHint.DARK_HOVER);
         } else if (hints.isEmpty()) {
             hints.add(attributes.canDoSomething() ? RenderHint.NORMAL : RenderHint.DARK);
@@ -93,27 +94,31 @@ public class CreatureCore {
                                                         c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur && Creature.showMpAp.get()) {
-            g.setFont(Main.TEXT_NORMAL);
-            final String apInformation = getAttributes().getApLeft() + " / "
-                    + getAttributes().getMpLeft();
-            renderTarget.setLocation(renderTarget.getX() + (-TextRenderer.getWidth(g, apInformation) / 2),
-                                     renderTarget.getY() + (-renderCore.getEffectiveRectangle(
-                                             renderTarget).getHeight()) + 10);
-            final Color sc;
-            if (base.getTile().isMarked() || highlight.get()) {
-                g.setColor(new Color(.96f, .97f, .96f, .85f));
-                sc = Color.BLACK;
-            } else {
-                g.setColor(new Color(0f, 0f, 0f, .65f));
-                sc = Color.ORANGE;
-            }
-            Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
-            ShapeRenderer.render(g, new Rectangle((int) bound.getX() - 3, (int) bound.getY() - 3,
-                                                  (int) bound.getWidth() + 6, (int) bound.getHeight() + 6),
-                                 renderTarget);
-            g.setColor(sc);
-            TextRenderer.render(g, apInformation, renderTarget);
+            renderMpApInformation(g, renderTarget);
         }
+    }
+
+    private void renderMpApInformation(final Graphics2D g, final Point2D renderTarget) {
+        g.setFont(Main.TEXT_NORMAL);
+        final String apInformation = getAttributes().getApLeft() + " / "
+                + getAttributes().getMpLeft();
+        renderTarget.setLocation(renderTarget.getX() + (-TextRenderer.getWidth(g, apInformation) / 2),
+                                 renderTarget.getY() + (-renderCore.getEffectiveRectangle(
+                                         renderTarget).getHeight()) + 10);
+        final Color sc;
+        if (base.getTile().isMarked() || highlight.get()) {
+            g.setColor(DEF_TAINT);
+            sc = Color.BLACK;
+        } else {
+            g.setColor(DEF_BLACK);
+            sc = Color.ORANGE;
+        }
+        Rectangle2D bound = TextRenderer.getBounds(g, apInformation);
+        ShapeRenderer.render(g, new Rectangle2D.Double(bound.getX() - 3, bound.getY() - 3,
+                                                       bound.getWidth() + 6, bound.getHeight() + 6),
+                             renderTarget);
+        g.setColor(sc);
+        TextRenderer.render(g, apInformation, renderTarget);
     }
 
     public boolean isFlying() {

@@ -7,7 +7,6 @@ import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -39,6 +38,7 @@ public class CreatureImageRenderer implements IRenderData {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.internalScale = internalScale;
+        // TODO: make loading and creation async
         this.image = Resources.images().get(path);
         darkerImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
@@ -84,12 +84,15 @@ public class CreatureImageRenderer implements IRenderData {
                 case FLY:
                     renderImage = flyImage;
                     break;
-                default:
                 case NORMAL:
                     renderImage = image;
                     break;
+                default:
+                    renderImage = null;
+                    break;
             }
-            ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY,
+            if(renderImage != null)
+                ImageRenderer.renderScaled(g, renderImage, pos.getX() + scale() * offsetX, pos.getY() + scale() * offsetY,
                                        scale(), scale());
         }
     }
@@ -111,8 +114,8 @@ public class CreatureImageRenderer implements IRenderData {
 
     @Override
     public Rectangle2D getEffectiveRectangle(Point2D pos) {
-        return new Rectangle((int) (pos.getX() + scale() * (offsetX)), (int) (pos.getY() + scale() * (offsetY)),
-                             (int) (scale() * image.getWidth()), (int) (scale() * image.getHeight()));
+        return new Rectangle2D.Double(pos.getX() + scale() * (offsetX), pos.getY() + scale() * (offsetY),
+                                      scale() * image.getWidth(), scale() * image.getHeight());
     }
 
     @Override

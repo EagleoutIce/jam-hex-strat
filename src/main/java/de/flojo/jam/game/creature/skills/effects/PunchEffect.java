@@ -1,5 +1,6 @@
 package de.flojo.jam.game.creature.skills.effects;
 
+import de.flojo.jam.game.TileConstants;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
@@ -43,8 +44,8 @@ public class PunchEffect implements IEffectTarget {
         }
 
         // Peek next tile
-        BoardCoordinate punchTargetCoordinate = target.getCoordinate().translateRelativeX(deltaX, deltaY);
-        Tile punchTarget = context.getBoard().getTile(punchTargetCoordinate);
+        final var punchTargetCoordinate = target.getCoordinate().translateRelativeX(deltaX, deltaY);
+        final var punchTarget = context.getBoard().getTile(punchTargetCoordinate);
 
         // if no more on field exit
         if (punchTarget == null) {
@@ -87,8 +88,8 @@ public class PunchEffect implements IEffectTarget {
         target.moribund();
         awaitMovementCompletion(target);
         target.getBase().moveOutFieldRaw(
-                (int) (target.getBase().getTile().getShiftedCenter().getX() + Board.getZoom() * deltaX * Tile.DEFAULT_RADIUS * 1.25),
-                target.getBase().getTile().getShiftedCenter().getY() + Board.getZoom() * deltaY * Tile.DEFAULT_RADIUS);
+                target.getBase().getTile().getShiftedCenter().getX() + Board.getZoom() * deltaX * TileConstants.DEFAULT_RADIUS * 1.25,
+                target.getBase().getTile().getShiftedCenter().getY() + Board.getZoom() * deltaY * TileConstants.DEFAULT_RADIUS);
         awaitMovementCompletion(target);
         target.die();
     }

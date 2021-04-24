@@ -104,7 +104,7 @@ public class Hexagon extends Polygon {
         super.invalidate();
     }
 
-    public void draw(Graphics2D g, int lineThickness, Color color, boolean filled) {
+    public void draw(Graphics2D g, float lineThickness, Color color, boolean filled) {
         g.setColor(color);
         g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
         if (filled)

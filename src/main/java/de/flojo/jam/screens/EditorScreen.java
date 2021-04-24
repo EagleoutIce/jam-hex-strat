@@ -79,7 +79,7 @@ public class EditorScreen extends Screen {
     public EditorScreen() {
         super(NAME);
 
-        board = new Board("configs/empty.terrain", EditorScreen.NAME);
+        board = new Board(EditorScreen.NAME);
         trapSpawner = new TrapSpawner(board, EditorScreen.NAME);
         creatureFactory = new CreatureFactory(EditorScreen.NAME, board, trapSpawner.getTraps());
         architect = new Architect(board, this.creatureFactory, this.trapSpawner);
@@ -113,7 +113,6 @@ public class EditorScreen extends Screen {
         super.prepare();
         board.resetZoom();
 
-        // TODO: maybe group reset?
         trapSpawner.removeAll();
         creatureFactory.removeAll();
         architect.clearField();// init
@@ -134,7 +133,6 @@ public class EditorScreen extends Screen {
         }
     }
 
-    // TODO: simplify
     private boolean intersectsWithButton(Point p) {
         // this did escalate... maybe with list?
         if (newField.getBoundingBox().contains(p) || saveField.getBoundingBox().contains(p)
@@ -170,10 +168,10 @@ public class EditorScreen extends Screen {
         if (currentTerrain == null || currentTerrain == TerrainId.T_EMPTY)
             return;
 
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithButton(p))
             return;
-        Tile t = board.findTile(p);
+        final var t = board.findTile(p);
         if (t == null)
             return;
 
@@ -187,10 +185,10 @@ public class EditorScreen extends Screen {
         if (this.selectionMode != EditorSelectionMode.TRAP) {
             return;
         }
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithButton(p))
             return;
-        Tile t = board.findTile(p);
+        final var t = board.findTile(p);
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
@@ -207,10 +205,10 @@ public class EditorScreen extends Screen {
         if (this.selectionMode != EditorSelectionMode.CREATURE)
             return;
 
-        Point p = c.getPoint();
+        final var p = c.getPoint();
         if (intersectsWithButton(p))
             return;
-        Tile t = board.findTile(p);
+        final var t = board.findTile(p);
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
@@ -225,7 +223,7 @@ public class EditorScreen extends Screen {
     }
 
     void plantTileOrOther(MouseEvent e) {
-        if (!board.doesHover())
+        if (board.doesNotHover())
             return;
         switch (selectionMode) {
             case CREATURE:
@@ -296,7 +294,6 @@ public class EditorScreen extends Screen {
         });
         both.setColors(Color.GREEN, Color.GREEN.brighter());
 
-        // TODO: show round counter
         nextRound = new Button("Next Round", Main.TEXT_STATUS);
         nextRound.onClicked(c -> {
             creatureFactory.resetAll();
@@ -321,7 +318,7 @@ public class EditorScreen extends Screen {
             return;
         }
         HexStratLogger.log().log(Level.INFO, "Saving to: \"{0}\"", chosen);
-        try (PrintWriter writer = new PrintWriter(chosen)) {
+        try (final var writer = new PrintWriter(chosen)) {
             writer.println(gson.toJson(board.getTerrainMap().getTerrain()));
         } catch (IOException ex) {
             Game.log().warning(ex.getMessage());
@@ -336,7 +333,7 @@ public class EditorScreen extends Screen {
         }
         HexStratLogger.log().log(Level.INFO, "Loading from: \"{0}\"", chosen);
         try {
-            TerrainMap map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
+            final var map = new TerrainMap(GameField.BOARD_WIDTH, GameField.BOARD_HEIGHT, new FileInputStream(chosen),
                                             chosen);
             this.board.setTerrainMap(map);
             HexStratLogger.log().log(Level.INFO, "Loaded Terrain: \"{0}\"",
@@ -361,7 +358,7 @@ public class EditorScreen extends Screen {
         p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);
         both.setLocation(width - Main.INNER_MARGIN - both.getWidth() - 10d, 18d);
         nextRound.setLocation(width - Main.INNER_MARGIN - nextRound.getWidth() - 10d, 30d + both.getHeight());
-        for (int i = 0; i < trapButtons.size(); i++) {
+        for (var i = 0; i < trapButtons.size(); i++) {
             trapButtons.get(i).setLocation(width - 260d - Main.INNER_MARGIN - 10d, (i + 3) * 45d + 15d);
         }
     }
@@ -369,8 +366,8 @@ public class EditorScreen extends Screen {
     private void initCreatureButtons() {
         creatureButtons = new ArrayList<>();
         CreatureId[] creatures = CreatureId.values();
-        for (int i = 0; i < creatures.length; i++) {
-            CreatureId creatureId = creatures[i];
+        for (var i = 0; i < creatures.length; i++) {
+            final var creatureId = creatures[i];
             if (creatureId == CreatureId.NONE)
                 continue;
             instantiateButton(creatureId, true, i);
@@ -379,7 +376,7 @@ public class EditorScreen extends Screen {
     }
 
     private void instantiateButton(CreatureId creatureId, boolean p1, int i) {
-        Button bt = new Button(creatureId.getName() + (p1 ? "-P1" : "-P2"), Main.TEXT_NORMAL, 20);
+        final var bt = new Button(creatureId.getName() + (p1 ? "-P1" : "-P2"), Main.TEXT_NORMAL, 20);
         bt.setLocation(Main.INNER_MARGIN + (p1 ? 0 : 125d), (TerrainId.values().length + 1 + i) * 45d + 15d);
         creatureButtons.add(bt);
         bt.onClicked(c -> {
@@ -390,7 +387,7 @@ public class EditorScreen extends Screen {
             this.currentCreature = (n, t) -> creatureFactory.getSpell(creatureId).summon(creatureId + "_" + n, t,
                                                                                          p1 ? PlayerId.ONE : PlayerId.TWO,
                                                                                          true);
-            Image img = creatureFactory.getScaledImage(creatureId, p1);
+            final var img = creatureFactory.getScaledImage(creatureId, p1);
             if (img != null) {
                 Game.window().cursor().setVisible(true);
                 Game.window().cursor().set(img);
@@ -412,10 +409,10 @@ public class EditorScreen extends Screen {
         trapButtons = new ArrayList<>();
         TrapId[] traps = TrapId.values();
         final int width = Game.window().getWidth();
-        for (int i = 0; i < traps.length; i++) {
-            TrapId t = traps[i];
+        for (var i = 0; i < traps.length; i++) {
+            final var t = traps[i];
 
-            ImageButton imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
+            final var imgBt = new ImageButton(260d, 30d, width - 260d, (i + 3) * 45d, t.getImprint().getBitMap(),
                                                 t.getName(), Main.TEXT_NORMAL);
             imgBt.setTextAlign(Align.RIGHT);
             trapButtons.add(imgBt);
@@ -438,10 +435,10 @@ public class EditorScreen extends Screen {
     private void initTerrainButtons() {
         terrainButtons = new ArrayList<>();
         TerrainId[] terrains = TerrainId.values();
-        for (int i = 0; i < terrains.length; i++) {
-            TerrainId t = terrains[i];
+        for (var i = 0; i < terrains.length; i++) {
+            final var t = terrains[i];
 
-            ImageButton imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
+            final var imgBt = new ImageButton(260d, 30d, Main.INNER_MARGIN, (i + 1) * 45d, t.getImprint().getBitMap(),
                                                 t.getName(), Main.TEXT_NORMAL);
             terrainButtons.add(imgBt);
             imgBt.onClicked(c -> {

@@ -61,7 +61,7 @@ public class CreatureFactory {
     }
 
     private void setActiveCreature(final MouseEvent c) {
-        if (c.getButton() != MouseEvent.BUTTON1 || !board.doesHover())
+        if (c.getButton() != MouseEvent.BUTTON1 || board.doesNotHover())
             return;
 
         final var oldCreature = selectedCreature;

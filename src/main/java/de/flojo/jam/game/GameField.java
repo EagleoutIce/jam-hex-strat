@@ -61,7 +61,7 @@ public class GameField implements IRenderable, IProvideContext {
     }
 
     void processMouse(MouseEvent e) {
-        if (!board.doesHover() || !ourTurn)
+        if (board.doesNotHover() || !ourTurn)
             return;
 
         if (canBuild) {

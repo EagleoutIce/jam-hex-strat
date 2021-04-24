@@ -70,7 +70,7 @@ public enum CreatureId {
     ),
     OGER("Oger", 9, //
          new CreatureImageRenderer("creatures/oger_blau.png", "creatures/oger_blau_glow.png",
-                                   CreatureImageRenderer.FLY_BLAU, -329d / 1.7,
+                                   CreatureImageRenderer.FLY_BLAU, -329d / 1.8,
                                    -421 / 1.27d, Main.DEFAULT_INTERNAL_SCALE), //
          new CreatureImageRenderer("creatures/oger_lila.png", "creatures/oger_lila_glow.png",
                                    CreatureImageRenderer.FLY_LILA,

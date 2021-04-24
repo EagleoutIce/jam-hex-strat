@@ -22,9 +22,9 @@ public class BoardCoordinate extends Point {
         super(x, y);
     }
 
-    public BoardCoordinate translateRelativeX(int rx, int ry) {
-        int mX = Math.floorMod(x, 2);
-        int mY = Math.floorMod(y, 2);
+    public BoardCoordinate translateRelativeX(final int rx, final int ry) {
+        final int mX = Math.floorMod(x, 2);
+        final int mY = Math.floorMod(y, 2);
         if (rx != 0) { // marker kompensation
             if (mX == 1 && mY == 1 && rx > 0) // ungerade/ungerade
                 return new BoardCoordinate(x + rx - 1, y + ry);
