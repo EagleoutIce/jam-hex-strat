@@ -37,6 +37,9 @@ public class CreatureImageRenderer extends CreatureImagesHost {
                 case HOVER:
                     renderImage = highlightImage;
                     break;
+                case DARK_HOVER:
+                    renderImage = darkerHighlightImage;
+                    break;
                 case DARK:
                     renderImage = darkerImage;
                     break;
