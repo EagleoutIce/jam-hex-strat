@@ -57,7 +57,7 @@ public enum CreatureId {
            new CreatureImageRenderer("creatures/goblin_lila.png", "creatures/goblin_lila_glow.png",
                                      CreatureImagesHost.FLY_LILA,
                                      -74 / 1.95d, -97 / 1.32d),
-           new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/goblin_ton_", ".ogg", 1, 6)
+           new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/goblin_ton_", ".ogg", 1, 5)
     ),
     LIZARD("Lizard", 6, //
            new CreatureImageRenderer("creatures/echse_blau.png", "creatures/echse_blau_glow.png",
