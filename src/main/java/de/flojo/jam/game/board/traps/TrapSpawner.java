@@ -13,14 +13,13 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.logging.Level;
 
 public class TrapSpawner {
 
     private final Board board;
 
-    private TrapCollection traps;
+    private final TrapCollection traps;
 
     private Trap selectedTrap;
 
@@ -30,37 +29,34 @@ public class TrapSpawner {
         InputController.get().onClicked(this::setActiveTrap, screen);
     }
 
-    public static Trap injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
+    public static void injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
         if (traps.get(tile.getCoordinate()).isPresent())
-            return null;
-        Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"),
+            return;
+        final var trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"),
                              tile);
         traps.add(trap);
         HexStratLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"",
                                  new Object[]{id, tile, owner});
-        return trap;
     }
 
     private void setActiveTrap(MouseEvent c) {
         if (c.getButton() != MouseEvent.BUTTON1)
             return;
 
-
-        Trap oldTrap = selectedTrap;
+        final var oldTrap = selectedTrap;
         this.selectedTrap = traps.getHighlighted().orElse(null);
         if (oldTrap != selectedTrap)
             HexStratLogger.log().log(Level.INFO, "Selected Trap: {0}.", this.selectedTrap);
     }
 
-    public Trap spawnTrap(TrapId id, PlayerId owner, Tile tile) {
+    public void spawnTrap(TrapId id, PlayerId owner, Tile tile) {
         if (traps.get(tile.getCoordinate()).isPresent())
-            return null;
-        Trap trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"),
+            return;
+        final var trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"),
                              tile);
         traps.add(trap);
         HexStratLogger.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"",
                                  new Object[]{id, tile, owner});
-        return trap;
     }
 
     public Trap getSelectedTrap() {
@@ -75,11 +71,33 @@ public class TrapSpawner {
         return traps;
     }
 
+    private enum TileElevation {
+            ELEVATED, GROUND
+    }
+
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
-        Set<Tile> tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
-        for (Tile tile : tiles) {
-            if (tile == null || !tile.getTerrainType().equals(TerrainTile.EMPTY))
+        final var tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
+        TileElevation elevated = null;
+        for (var tile : tiles) {
+            // TODO: this is hacky
+            if (tile == null)
                 return false;
+            if (tile.getTerrainType().equals(TerrainTile.EMPTY)) {
+                if(elevated == null)
+                    elevated = TileElevation.GROUND;
+                else if (elevated == TileElevation.ELEVATED)
+                    return false;
+            }
+            else if (tile.getTerrainType().equals(TerrainTile.GRASS_HILL)) {
+                if (elevated == null)
+                    elevated = TileElevation.ELEVATED;
+                else if (elevated == TileElevation.GROUND) {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+
             if (playerId != null && tile.getPlacementOwner() != playerId)
                 return false;
         }
@@ -111,7 +129,7 @@ public class TrapSpawner {
     public void updateTraps(List<TrapJson> nT) {
         traps.clear();
         for (TrapJson tJ : nT) {
-            Trap deserialized = new Trap(board, tJ.getOwner(), tJ.getId(), board.getTile(tJ.getPos()));
+            final var deserialized = new Trap(board, tJ.getOwner(), tJ.getId(), board.getTile(tJ.getPos()));
             traps.add(deserialized);
         }
     }

@@ -15,7 +15,7 @@ public class CreatureBase implements IRenderable {
     private int movementOffsetY = 0;
     private double deltaX = 0;
     private double deltaY = 0;
-    private int terrainOffsetY = 0;
+    private float terrainOffsetY = 0;
     private boolean resetTerrainOffset = false;
     private CreatureCore core;
 
@@ -101,7 +101,7 @@ public class CreatureBase implements IRenderable {
         return movementOffsetY;
     }
 
-    protected int getTerrainOffsetY() {
+    protected float getTerrainOffsetY() {
         if (resetTerrainOffset && Math.abs(movementOffsetX) <= 11 && Math.abs(movementOffsetY) <= 11) {
             terrainOffsetY = 0;
             resetTerrainOffset = false;

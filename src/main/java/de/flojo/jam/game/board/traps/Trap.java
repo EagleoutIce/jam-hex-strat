@@ -4,11 +4,14 @@ import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.imprints.Imprint;
+import de.flojo.jam.game.board.terrain.TerrainTile;
+import de.flojo.jam.game.creature.CreatureBase;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -19,7 +22,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Trap implements Serializable {
 
     private static final long serialVersionUID = 2185724284978150753L;
-
+    private static final float RAISED_TRAP_OFFSET = -38;
     private static final int TRAP_DURATION = 1000;
 
     private final TrapId trapId;
@@ -106,7 +109,10 @@ public class Trap implements Serializable {
     public void renderBaseFor(Graphics2D g, PlayerId id) {
         if (id != null && id != owner && !enemyDidUncover)
             return;
-        getImprint().getNormalRenderer().render(g, rootPosition.getShiftedCenter(), isHovered());
+        final var target = rootPosition.getShiftedCenter();
+        if(rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
+            target.setLocation(target.getX(), target.getY() + RAISED_TRAP_OFFSET * Board.getZoom());
+        getImprint().getNormalRenderer().render(g, target, isHovered());
     }
 
     public void renderTriggerFor(Graphics2D g, PlayerId id) {
@@ -114,7 +120,10 @@ public class Trap implements Serializable {
             return;
         if (!triggered.get())
             return;
-        getImprint().getTriggeredRenderer().render(g, rootPosition.getShiftedCenter(), isHovered());
+        final var target = rootPosition.getShiftedCenter();
+        if(rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
+            target.setLocation(target.getX(), target.getY() + RAISED_TRAP_OFFSET * Board.getZoom());
+        getImprint().getTriggeredRenderer().render(g, target, isHovered());
     }
 
     public BoardCoordinate getCoordinate() {

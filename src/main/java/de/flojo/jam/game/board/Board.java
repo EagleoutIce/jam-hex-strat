@@ -434,8 +434,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         for (var row = 0; row < height; row++) {
             for (var col = 0; col < HexMaths.effectiveWidth(width) - lineToggle(row); col++) {
                 final var coordinate = new BoardCoordinate(col, row);
-                traps.getRoot(coordinate).ifPresent(t -> t.renderBaseFor(g, renderOwner));
                 tiles.get(coordinate).renderDecorations(g);
+                traps.getRoot(coordinate).ifPresent(t -> t.renderBaseFor(g, renderOwner));
                 factory.get(coordinate).ifPresent(c -> c.render(g));
                 traps.getRoot(coordinate).ifPresent(t -> t.renderTriggerFor(g, renderOwner));
             }

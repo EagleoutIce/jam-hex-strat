@@ -1,6 +1,7 @@
 package de.flojo.jam.game.creature;
 
 import de.flojo.jam.Main;
+import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 import de.flojo.jam.graphics.renderer.RenderHint;
@@ -91,7 +92,7 @@ public class CreatureCore {
         final var ourTile = base.getTile();
         final Point2D c = ourTile.getCenter();
         final Point2D renderTarget = new Point2D.Double(c.getX() - base.getMovementOffsetX() + ourTile.getShiftX(),
-                                                        c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() + ourTile.getShiftY());
+                                                        c.getY() - base.getMovementOffsetY() + base.getTerrainOffsetY() * Board.getZoom() + ourTile.getShiftY());
         renderCore.render(g, renderTarget, getRenderHints());
         if (isOur && Creature.showMpAp.get()) {
             renderMpApInformation(g, renderTarget);

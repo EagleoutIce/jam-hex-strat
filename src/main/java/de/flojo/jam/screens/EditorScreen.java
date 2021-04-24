@@ -193,7 +193,7 @@ public class EditorScreen extends Screen {
         if (t == null)
             return;
         if (c.getButton() == MouseEvent.BUTTON1 || c.getModifiersEx() == InputEvent.BUTTON1_DOWN_MASK) {
-            if (t.getTerrainType() == TerrainTile.EMPTY && creatureFactory.get(t.getCoordinate()).isEmpty()
+            if ((t.getTerrainType() == TerrainTile.EMPTY || t.getTerrainType() == TerrainTile.GRASS_HILL) && creatureFactory.get(t.getCoordinate()).isEmpty()
                     && trapSpawner.canBePlaced(creatureFactory, currentTrapId, t, getFakeId(), board)) {
                 trapSpawner.spawnTrap(currentTrapId, getFakeId(), t);
             }

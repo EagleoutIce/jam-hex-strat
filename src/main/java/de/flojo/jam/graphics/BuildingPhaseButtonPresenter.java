@@ -335,7 +335,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private boolean trapCanBePlacedHere(final Tile t) {
-        return t.getTerrainType() == TerrainTile.EMPTY && context.getFactory().get(t.getCoordinate()).isEmpty()
+        return (t.getTerrainType() == TerrainTile.EMPTY || t.getTerrainType() == TerrainTile.GRASS_HILL) && context.getFactory().get(t.getCoordinate()).isEmpty()
                 && context.getSpawner().canBePlaced(context.getFactory(), currentTrapId, t, ourId,
                                                     context.getBoard());
     }
