@@ -484,9 +484,9 @@ public class EditorScreen extends Screen {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
         final var presenterToolTips = presenter.getToolTips();
-        if(presenterToolTips != null)
+        if (presenterToolTips != null)
             presenterToolTips.forEach(t -> t.render(g));
-        if(toolTips != null)
+        if (toolTips != null)
             toolTips.forEach(t -> t.render(g));
     }
 

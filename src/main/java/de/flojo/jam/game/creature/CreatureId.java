@@ -125,6 +125,7 @@ public enum CreatureId {
     public int getDefaultAp() {
         return defaultAp;
     }
+
     public int getDefaultMp() {
         return defaultMp;
     }
