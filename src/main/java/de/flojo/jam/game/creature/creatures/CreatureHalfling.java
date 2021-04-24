@@ -36,7 +36,7 @@ public class CreatureHalfling extends Creature {
         skills.add(
                 new SkillSimplePunch(1, 0, 2, "Einfacher Ellenstubser", "Ein einfacher Stubser mit dem Ellenbogen."));
         skills.add(new SkillMultiPunch(2, 0, 1, "Grand Slam", "Wenn man sich einfach fallen lässt.", 2));
-        return new CreatureAttributes(3, 2, skills);
+        return new CreatureAttributes(CreatureId.HALFLING, skills);
     }
 
 }

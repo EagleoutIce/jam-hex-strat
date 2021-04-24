@@ -385,7 +385,8 @@ public class EditorScreen extends Screen {
         final var bt = new Button(creatureId.getName() + (p1 ? "-P1" : "-P2"), Main.TEXT_NORMAL, 20);
         bt.setLocation(Main.INNER_MARGIN + (p1 ? 0 : 125d), (TerrainId.values().length + 1 + i) * 45d + 15d);
         toolTips.add(new ToolTip<>(bt,
-                                   "Summon: " + creatureId.getName() + (p1 ? " (P1)" : " (P2)") + "\nCost: " + creatureId.getCost(),
+                                   "Summon: " + creatureId.getName() + (p1 ? " (P1)" : " (P2)") + "\nCost: " + creatureId.getCost() + " (" +
+                                           creatureId.getDefaultMp() + " MP, " + creatureId.getDefaultAp() + " AP)",
                                    Color.GREEN));
         creatureButtons.add(bt);
         bt.onClicked(c -> {
@@ -482,7 +483,11 @@ public class EditorScreen extends Screen {
     public void render(final Graphics2D g) {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         super.render(g);
-        toolTips.forEach(t -> t.render(g));
+        final var presenterToolTips = presenter.getToolTips();
+        if(presenterToolTips != null)
+            presenterToolTips.forEach(t -> t.render(g));
+        if(toolTips != null)
+            toolTips.forEach(t -> t.render(g));
     }
 
     private void changeScreen(final String name) {

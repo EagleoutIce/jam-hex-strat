@@ -34,6 +34,6 @@ public class CreatureGoblin extends Creature {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillSimplePunch(1, 0, 1, "Punch (1)", "Goblin knows his self-defense"));
         skills.add(new SkillPlantTrap(() -> "Plant Trap", 0, 1, "Plant a trap"));
-        return new CreatureAttributes(3, 1, skills);
+        return new CreatureAttributes(CreatureId.GOBLIN, skills);
     }
 }

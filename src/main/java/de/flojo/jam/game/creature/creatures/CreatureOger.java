@@ -32,6 +32,6 @@ public class CreatureOger extends Creature {
     private static CreatureAttributes createOgerAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillMultiPunch(4, 0, 2, "Grand Slam", "Wenn man sich einfach fallen lässt.", 2));
-        return new CreatureAttributes(3, 3, skills);
+        return new CreatureAttributes(CreatureId.OGER, skills);
     }
 }

@@ -158,8 +158,9 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
             final var imgBt = new ImageButton(75d, 75d, Main.INNER_MARGIN + 85, i * 80d - 5d,
                                               creatureRenderer.getImage(), Integer.toString(c.getCost()),
                                               Main.TEXT_NORMAL);
-            // TODO: skills aswell
-            toolTips.add(new ToolTip<>(imgBt, "Summon: " + c.getName() + "\nCost: " + c.getCost(), Color.GREEN));
+            // TODO: skills aswell => move Skills to Creature Id
+            toolTips.add(new ToolTip<>(imgBt, "Summon: " + c.getName() + "\nCost: " + c.getCost() + " (" +
+                    c.getDefaultMp() + " MP, " + c.getDefaultAp() + " AP)", Color.GREEN));
             imgBt.setEnabledSupplier(() -> c.getCost() <= context.getMoneyLeft());
             imgBt.setFont(Main.GUI_FONT_SMALL);
             creatureButtons.add(imgBt);

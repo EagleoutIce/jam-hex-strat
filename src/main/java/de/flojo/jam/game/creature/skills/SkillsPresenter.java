@@ -142,10 +142,12 @@ public class SkillsPresenter {
                                    "Skip your current turn.\nThis will set AP and MP to 0 for the current round."));
         skipSkill.onClicked(me -> {
             actionController.cancelCurrentOperation();
-            currentCreature.skip();
-            currentCreature.setOnDead(this::resetButtons);
-            if (onAction != null)
-                onAction.onSkip(currentCreature.getCoordinate());
+            if(currentCreature != null) {
+                currentCreature.skip();
+                currentCreature.setOnDead(this::resetButtons);
+                if (onAction != null)
+                    onAction.onSkip(currentCreature.getCoordinate());
+            }
             updatePositions();
         });
         skipSkill.prepare();

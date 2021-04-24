@@ -32,9 +32,9 @@ public class CreatureImp extends Creature {
     }
 
     private static CreatureAttributes createImpAttributes() {
-        Set<AbstractSkill> skills = new LinkedHashSet<>();
+        final Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillSimplePunch(1, 0, 1, "Punch (1)", "Ein einfacher Stupser mit dem Ellenbogen."));
-        return new CreatureAttributes(3, 1, skills);
+        return new CreatureAttributes(CreatureId.IMP, skills);
     }
 
 }

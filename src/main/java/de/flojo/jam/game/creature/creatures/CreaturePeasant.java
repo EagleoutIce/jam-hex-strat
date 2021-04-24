@@ -38,6 +38,6 @@ public class CreaturePeasant extends Creature {
                                         "Ein normaler Hieb mit der Harke, der den Gegner bis zu zwei Felder näher ans Jenseits befördert."));
         skills.add(new SkillSimplePunch(1, 0, 2, "Punch (1)",
                                         "Ein weiter Hieb mit der Harke, der den Gegner ein Feld näher ans Jenseits befördert."));
-        return new CreatureAttributes(4, 1, skills);
+        return new CreatureAttributes(CreatureId.PEASANT, skills);
     }
 }

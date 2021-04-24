@@ -34,6 +34,6 @@ public class CreatureElf extends Creature {
         skills.add(new SkillRangedPunch(1, 1, Integer.MAX_VALUE, "Sniper", "Ein scharfer Schuss.", 2));
         // TODO: make snipe more expensive
         // TODO: arrows
-        return new CreatureAttributes(4, 2, skills);
+        return new CreatureAttributes(CreatureId.ELF, skills);
     }
 }

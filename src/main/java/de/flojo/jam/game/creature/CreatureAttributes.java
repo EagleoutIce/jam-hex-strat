@@ -18,6 +18,12 @@ public class CreatureAttributes {
     private int currentMp;
     private int currentAp;
 
+    public CreatureAttributes(CreatureId id, Set<AbstractSkill> skills) {
+        this.maxMp = this.currentMp = id.getDefaultMp();
+        this.maxAp = this.currentAp = id.getDefaultAp();
+        this.skills = skills;
+    }
+
     public CreatureAttributes(int mp, int ap, Set<AbstractSkill> skills) {
         this.maxMp = this.currentMp = mp;
         this.maxAp = this.currentAp = ap;
