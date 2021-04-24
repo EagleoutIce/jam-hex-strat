@@ -25,6 +25,7 @@ import java.io.FileNotFoundException;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 
 public class ServerSetupScreen extends Screen {
@@ -36,6 +37,7 @@ public class ServerSetupScreen extends Screen {
     private TextFieldComponent startMoney;
     private Button startServer;
     private Button loadTerrain;
+    private List<ToolTip<GuiComponent>> toolTips;
 
     private GameField gameField;
 
@@ -95,6 +97,8 @@ public class ServerSetupScreen extends Screen {
         List<ToolTip<GuiComponent>> buildPhaseToolTips = gameField.getBuildingPhaseButtons().getToolTips();
         if(buildPhaseToolTips != null)
             buildPhaseToolTips.forEach(t -> t.render(g));
+        if(this.toolTips != null)
+            this.toolTips.forEach(t -> t.render(g));
     }
 
 
@@ -129,7 +133,9 @@ public class ServerSetupScreen extends Screen {
     protected void initializeComponents() {
         super.initializeComponents();
 
+        toolTips = new CopyOnWriteArrayList<>();
         this.startServer = new Button("Start", Main.GUI_FONT_SMALL);
+        toolTips.add(new ToolTip<>(startServer, () -> startServer.getText() + " the Server\nPort: " + portNumber.getText() + "\nStart Money: " + startMoney.getText(), Color.gray));
         this.startServer.onClicked(c -> {
             if (serverStarted) {
                 stopServer(true);
@@ -141,6 +147,7 @@ public class ServerSetupScreen extends Screen {
         this.getComponents().add(startServer);
 
         this.loadTerrain = new Button("Terrain", Main.GUI_FONT_SMALL);
+        toolTips.add(new ToolTip<>(loadTerrain, () -> "Load a terrain\nThis can be created with the editor.", Color.gray));
         // jeah jeah.. outsource da shit -.-
         this.loadTerrain.onClicked(c -> loadTerrain());
         this.getComponents().add(loadTerrain);

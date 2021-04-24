@@ -140,7 +140,7 @@ public class SkillsPresenter {
 
     private void setupSkipButton() {
         skipSkill = new SingleSkipPresenter().get();
-        toolTips.add(new ToolTip<>(skipSkill, () -> "Skip your current turn.\nThis will set AP and MP to 0 for the current round."));
+        toolTips.add(new ToolTip<>(skipSkill, "Skip your current turn.\nThis will set AP and MP to 0 for the current round."));
         skipSkill.onClicked(me -> {
             actionController.cancelCurrentOperation();
             currentCreature.skip();
