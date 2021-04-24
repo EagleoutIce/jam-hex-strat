@@ -78,7 +78,7 @@ public class ClientController implements IClientController {
         connected = false;
         // do nothing else?
         if (onConnectionStateUpdate != null)
-            onConnectionStateUpdate.call("CLOSED");
+            onConnectionStateUpdate.call(new String[]{"CLOSED"});
     }
 
     @Override
@@ -104,7 +104,7 @@ public class ClientController implements IClientController {
             case BUILD_START:
                 context.handleGameStart(NetworkGson.getMessage(message));
                 if (onConnectionStateUpdate != null)
-                    onConnectionStateUpdate.call("START");
+                    onConnectionStateUpdate.call(new String[]{"START"});
                 break;
             case YOU_CAN_BUILD:
                 GameScreen.get().buildOne(NetworkGson.getMessage(message));

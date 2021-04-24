@@ -56,7 +56,7 @@ public class ServerController implements IServerController {
         executorService.execute(() -> {
             playerController.removePlayer(conn);
             if (state != ServerStateEnum.WAITING_FOR_PLAYERS) {
-                networkUpdateTarget.call("STOPPED", "Player left in game");
+                networkUpdateTarget.call(new String[]{"STOPPED", "Player left in game"});
             }
         });
     }
@@ -249,8 +249,7 @@ public class ServerController implements IServerController {
 
     @Override
     public void handleError(final WebSocket conn, final Exception ex) {
-        networkUpdateTarget.call("STOPPED", ex.getMessage());
+        networkUpdateTarget.call(new String[]{"STOPPED", ex.getMessage()});
     }
-
 
 }

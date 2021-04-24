@@ -81,8 +81,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         this.width = w;
         this.height = h;
         this.backgroundPath = backgroundPath;
-        this.screenName = screenName;
         this.background = Resources.images().get(backgroundPath);
+        this.screenName = screenName;
         this.tiles = new HashMap<>(w * h);
         this.terrainMap = terrainMap;
         tilesUpperLeft = getTilesUpperLeft();
