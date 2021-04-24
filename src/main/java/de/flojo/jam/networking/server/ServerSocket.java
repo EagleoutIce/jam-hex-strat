@@ -9,8 +9,8 @@ import java.net.InetSocketAddress;
 
 public final class ServerSocket extends WebSocketServer {
 
-    protected boolean isReady;
     private final IServerController controller;
+    protected boolean isReady;
 
     public ServerSocket(InetSocketAddress address, IServerController controller) {
         super(address);

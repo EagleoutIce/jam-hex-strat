@@ -26,8 +26,9 @@ public class MultiPunchEffect implements IEffectTarget {
     @Override
     public void effect(Creature target, Creature attacker) {
         final Set<Tile> targetTiles = CreatureSkillAOAGenerator.getAOA(skill,
-                                                                 context.getBoard().getTile(attacker.getCoordinate()),
-                                                                 context.getBoard(), context.getCreatures());
+                                                                       context.getBoard().getTile(
+                                                                               attacker.getCoordinate()),
+                                                                       context.getBoard(), context.getCreatures());
         final Set<Creature> allTargets = new HashSet<>();
         for (var targetTile : targetTiles) {
             Optional<Creature> mayCreature = context.getCreatures().get(targetTile.getCoordinate());

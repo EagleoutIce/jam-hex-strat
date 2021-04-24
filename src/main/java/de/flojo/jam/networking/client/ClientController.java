@@ -6,7 +6,6 @@ import de.flojo.jam.networking.messages.MessageContainer;
 import de.flojo.jam.networking.messages.MessageTypeEnum;
 import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.HexStratLogger;
-import de.gurkenlabs.litiengine.Game;
 
 import java.net.URI;
 import java.util.concurrent.ExecutorService;

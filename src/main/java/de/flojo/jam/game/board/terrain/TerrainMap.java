@@ -8,7 +8,6 @@ import de.flojo.jam.game.board.terrain.management.Terrain;
 import de.flojo.jam.game.board.terrain.management.TerrainData;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStratLogger;
-import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.resources.Resources;
 
 import java.awt.Point;
@@ -54,8 +53,9 @@ public class TerrainMap implements Serializable {
             loadTerrainMapFromInputStream(terrainIs);
         }
         if (terrain == null) {
-            if(terrainIs != null)
-                HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null", terrainPath);
+            if (terrainIs != null)
+                HexStratLogger.log().log(Level.WARNING, "Loading of terrain on: {0} failed and returned null",
+                                         terrainPath);
             terrain = new Terrain(terrainPath == null ? "unnamed" : terrainPath, new TerrainData(h));
         }
         final TerrainData data = terrain.getData();

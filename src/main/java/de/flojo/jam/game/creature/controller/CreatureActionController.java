@@ -12,7 +12,6 @@ import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.creature.skills.TargetOfSkill;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
-import de.gurkenlabs.litiengine.Game;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;

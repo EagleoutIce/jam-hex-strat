@@ -17,13 +17,12 @@ import java.util.Objects;
 public class MenuScreen extends Screen {
     public static final String NAME = "MENU";
     public static final BufferedImage MAIN_BACKGROUND = Resources.images().get("main-background.jpg");
+    private static final String HEX_STRAT = "Hex-Strat";
+    private static final String HEX_STRAT_SUBTITLE = "A strategy game. With hex tiles";
     private Button startGame;
     private Button showEditor;
     private Button showServer;
     private boolean locked;
-
-    private static final String HEX_STRAT = "Hex-Strat";
-    private static final String HEX_STRAT_SUBTITLE = "A strategy game. With hex tiles";
 
     public MenuScreen() {
         super(NAME);
@@ -48,9 +47,10 @@ public class MenuScreen extends Screen {
 
         g.setColor(Color.WHITE);
         g.setFont(Main.TEXT_NORMAL);
-        final var states = "Server: " + (Main.getStateOfServerLoad().isAlive() ? "Loading" : "Done") + "; Editor: "+ (Main.getStateOfEditorLoad().isAlive() ? "Loading" : "Done");
+        final var states = (Main.getStateOfServerLoad().isAlive() ? "Server: Loading; " : "") + (Main.getStateOfEditorLoad().isAlive() ? "Editor: Loading; " : "");
         final var bounds = TextRenderer.getBounds(g, states);
-        TextRenderer.render(g, states, Game.window().getWidth() - bounds.getWidth() - 25, Game.window().getHeight() - bounds.getHeight() - 25);
+        TextRenderer.render(g, states, Game.window().getWidth() - bounds.getWidth() - 25,
+                            Game.window().getHeight() - bounds.getHeight() - 25);
         super.render(g);
     }
 

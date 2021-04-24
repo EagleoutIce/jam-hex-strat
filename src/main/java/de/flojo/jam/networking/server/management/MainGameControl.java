@@ -24,7 +24,6 @@ import de.flojo.jam.networking.server.PlayerController;
 import de.flojo.jam.networking.server.ServerController;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.IProvideContext;
-import de.gurkenlabs.litiengine.Game;
 
 import java.util.List;
 import java.util.Optional;

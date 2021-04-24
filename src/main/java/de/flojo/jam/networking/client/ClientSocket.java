@@ -1,7 +1,6 @@
 package de.flojo.jam.networking.client;
 
 import de.flojo.jam.util.HexStratLogger;
-import de.gurkenlabs.litiengine.Game;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
