@@ -6,7 +6,7 @@
 
     <groupId>de.flojo.jam</groupId>
     <artifactId>hexstrat</artifactId>
-    <version>0.0.1</version>
+    <version>0</version>
 
     <name>hexstrat</name>
     <properties>
@@ -100,7 +100,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>pack-pixie-shaded</id>
+                        <id>pack-litie-shaded</id>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
