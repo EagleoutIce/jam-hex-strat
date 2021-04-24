@@ -30,6 +30,7 @@ import de.flojo.jam.util.ToolTip;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.graphics.TextRenderer;
+import de.gurkenlabs.litiengine.gui.GuiComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
@@ -161,10 +162,10 @@ public class GameScreen extends Screen {
         if (gameOver.get())
             renderGameOverBanner(g);
         super.render(g);
-        List<ToolTip<?>> presenterToolTips = field.getPresenter().getToolTips();
+        List<ToolTip<GuiComponent>> presenterToolTips = field.getPresenter().getToolTips();
         if(presenterToolTips != null)
             presenterToolTips.forEach(t -> t.render(g));
-        List<ToolTip<?>> buildPhaseToolTips = field.getBuildingPhaseButtons().getToolTips();
+        List<ToolTip<GuiComponent>> buildPhaseToolTips = field.getBuildingPhaseButtons().getToolTips();
         if(buildPhaseToolTips != null)
             buildPhaseToolTips.forEach(t -> t.render(g));
     }

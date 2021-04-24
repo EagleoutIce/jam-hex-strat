@@ -50,7 +50,7 @@ public class SkillsPresenter {
     private GuiComponent skipSkill;
     private IAction onAction;
     private SingleMovePresenter movementPresenter;
-    private List<ToolTip<?>> toolTips;
+    private List<ToolTip<GuiComponent>> toolTips;
 
     public SkillsPresenter(Screen target, Board board, CreatureFactory factory, TrapSpawner traps, PlayerId playerId,
                            String screenName) {
@@ -334,7 +334,7 @@ public class SkillsPresenter {
         this.onAction = onAction;
     }
 
-    public List<ToolTip<?>> getToolTips() {
+    public List<ToolTip<GuiComponent>> getToolTips() {
         return toolTips;
     }
 }
