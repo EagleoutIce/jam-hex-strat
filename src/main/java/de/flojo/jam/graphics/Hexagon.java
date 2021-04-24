@@ -80,7 +80,6 @@ public class Hexagon extends Polygon {
     public int getShiftX() {
         return shiftX;
     }
-
     public int getShiftY() {
         return shiftY;
     }
@@ -97,8 +96,8 @@ public class Hexagon extends Polygon {
 
     public synchronized void updatePoints() {
         for (var p = 0; p < SIDES; p++) {
-            double angle = findAngle((double) p / SIDES);
-            Point2D point = findPoint(center.getX() + shiftX, center.getY() + shiftY, radius, angle);
+            final double angle = findAngle((double) p / SIDES);
+            final Point2D point = findPoint(center.getX() + shiftX, center.getY() + shiftY, radius, angle);
             xpoints[p] = (int) point.getX();
             ypoints[p] = (int) point.getY();
         }
@@ -108,7 +107,6 @@ public class Hexagon extends Polygon {
     public void draw(Graphics2D g, int lineThickness, Color color, boolean filled) {
         g.setColor(color);
         g.setStroke(new BasicStroke(lineThickness, BasicStroke.CAP_SQUARE, BasicStroke.JOIN_MITER));
-
         if (filled)
             g.fillPolygon(xpoints, ypoints, npoints);
         else

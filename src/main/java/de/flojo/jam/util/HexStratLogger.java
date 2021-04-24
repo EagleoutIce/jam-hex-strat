@@ -18,10 +18,10 @@ public class HexStratLogger {
         logger = Logger.getLogger("");
         logger.setLevel(Level.INFO);
         try {
-            ConsoleHandler consoleHandler = new ConsoleHandler();
+            final var consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.ALL);
             consoleHandler.setFormatter(new SimpleFormatter());
-            FileHandler fileHandler = new FileHandler("game.log", 50000, 1, true);
+            final var fileHandler = new FileHandler("game.log", 50000, 1, true);
             fileHandler.setLevel(Level.ALL);
             fileHandler.setFormatter(new SimpleFormatter());
             logger.addHandler(consoleHandler);

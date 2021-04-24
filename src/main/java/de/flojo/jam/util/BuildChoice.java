@@ -11,7 +11,7 @@ public class BuildChoice {
     private CreatureId chosenCreature;
     private TrapId chosenTrap;
     private BoardCoordinate selectedPosition;
-    private boolean isGift;
+    private final boolean isGift;
 
     public BuildChoice(TerrainId chosenTerrain, CreatureId chosenCreature, TrapId chosenTrap,
                        BoardCoordinate selectedPosition, boolean isGift) {
@@ -26,32 +26,16 @@ public class BuildChoice {
         return chosenTerrain;
     }
 
-    public void setChosenTerrain(TerrainId chosenTerrain) {
-        this.chosenTerrain = chosenTerrain;
-    }
-
     public CreatureId getChosenCreature() {
         return chosenCreature;
-    }
-
-    public void setChosenCreature(CreatureId chosenCreature) {
-        this.chosenCreature = chosenCreature;
     }
 
     public TrapId getChosenTrap() {
         return chosenTrap;
     }
 
-    public void setChosenTrap(TrapId chosenTrap) {
-        this.chosenTrap = chosenTrap;
-    }
-
     public BoardCoordinate getSelectedPosition() {
         return selectedPosition;
-    }
-
-    public void setSelectedPosition(BoardCoordinate selectedPosition) {
-        this.selectedPosition = selectedPosition;
     }
 
     public boolean isGift() {

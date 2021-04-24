@@ -5,7 +5,6 @@ import java.awt.Frame;
 import java.nio.file.Paths;
 
 public class FileHelper {
-
     private static final String TERRAIN_SUFFIX = ".terrain";
 
     private FileHelper() {
@@ -13,7 +12,7 @@ public class FileHelper {
     }
 
     public static String askForTerrainPathLoad() {
-        final FileDialog loadDialog = new FileDialog(new Frame(), "Load Terrain", FileDialog.LOAD);
+        final var loadDialog = new FileDialog(new Frame(), "Load Terrain", FileDialog.LOAD);
         loadDialog.setFilenameFilter((d, n) -> n.endsWith(TERRAIN_SUFFIX));
         loadDialog.setAlwaysOnTop(true);
         loadDialog.setMultipleMode(false);
@@ -23,7 +22,7 @@ public class FileHelper {
     }
 
     public static String askForTerrainPathSave(String terrainName) {
-        final FileDialog saveDialog = new FileDialog(new Frame(), "Save Terrain", FileDialog.SAVE);
+        final var saveDialog = new FileDialog(new Frame(), "Save Terrain", FileDialog.SAVE);
         saveDialog.setFilenameFilter((d, n) -> n.endsWith(TERRAIN_SUFFIX));
         saveDialog.setAlwaysOnTop(true);
         saveDialog.setMultipleMode(false);
@@ -32,6 +31,4 @@ public class FileHelper {
         return saveDialog.getFile() == null ? null
                 : Paths.get(saveDialog.getDirectory(), saveDialog.getFile()).toAbsolutePath().toString();
     }
-
-
 }

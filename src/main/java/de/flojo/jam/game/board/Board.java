@@ -219,7 +219,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
     // yes ... yes... post patches :)
-    private void updateForZoom(float newZoom) {
+    private synchronized void updateForZoom(float newZoom) {
         final float oldZoom = getZoom();
         setZoom(newZoom);
         thisZoom = newZoom;
@@ -238,31 +238,31 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         Creature.showMpAp.set(!Creature.showMpAp.get());
     }
 
-    private void cameraPanRight() {
+    private synchronized void cameraPanRight() {
         if (Game.window().getWidth() - shiftX < getZoom() * (background.getWidth() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move(-getZoom() * PAN_SPEED, 0));
+            tiles.values().parallelStream().forEach(h -> h.move(-getZoom() * PAN_SPEED, 0));
             shiftX -= getZoom() * PAN_SPEED;
         }
     }
 
-    private void cameraPanDown() {
+    private synchronized void cameraPanDown() {
         if (Game.window().getHeight() - shiftY < getZoom() * (background.getHeight() * BACKGROUND_ZOOM_FACTOR - PAN_SPEED)) {
-            tiles.forEach((c, h) -> h.move(0, -getZoom() * PAN_SPEED));
+            tiles.values().parallelStream().forEach(h -> h.move(0, -getZoom() * PAN_SPEED));
             shiftY -= getZoom() * PAN_SPEED;
         }
     }
 
-    private void cameraPanLeft() {
+    private synchronized void cameraPanLeft() {
         if (shiftX <= getZoom() * -PAN_SPEED) {
-            tiles.forEach((c, h) -> h.move(getZoom() * PAN_SPEED, 0));
+            tiles.values().parallelStream().forEach(h -> h.move(getZoom() * PAN_SPEED, 0));
             shiftX += getZoom() * PAN_SPEED;
         }
     }
 
-    private void cameraPanUp() {
+    private synchronized void cameraPanUp() {
         if (shiftY <= getZoom() * -PAN_SPEED) {
             shiftY += getZoom() * PAN_SPEED;
-            tiles.forEach((c, h) -> h.move(0, getZoom() * PAN_SPEED));
+            tiles.values().parallelStream().forEach(h -> h.move(0, getZoom() * PAN_SPEED));
         }
     }
 
@@ -301,7 +301,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     }
 
 
-    public void move(float rx, float ry) {
+    public synchronized void move(float rx, float ry) {
         final float tx = (shiftX + rx > 0) ? 0 : rx;
         final float ty = (shiftY + ry > 0) ? 0 : ry;
         shiftX += tx;

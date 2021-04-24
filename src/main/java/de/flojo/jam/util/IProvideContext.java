@@ -26,5 +26,4 @@ public interface IProvideContext extends IProvideReadContext {
     default TrapCollection getTraps() {
         return getSpawner().getTraps();
     }
-
 }

@@ -9,7 +9,7 @@ public class ImageUtil {
     }
 
     public static BufferedImage modifyRGBA(BufferedImage image, float r, float g, float b, float a) {
-        BufferedImage target = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        final var target = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         new RescaleOp(new float[]{r, g, b, a}, new float[4], null).filter(image, target);
         return target;
     }

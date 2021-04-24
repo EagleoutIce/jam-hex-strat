@@ -39,32 +39,28 @@ public class Main {
         Game.addGameListener(new GameListener() {
             @Override
             public void initialized(String... args) {
-                // nothing
+               HexStratLogger.log().log(Level.INFO,"Initialized with: {0}", Arrays.toString(args));
             }
 
             @Override
             public void started() {
                 Game.window().setResolution(Resolution.Ratio16x9.RES_1600x900);
                 Game.window().getRenderComponent().setPreferredSize(new Dimension(1600, 900));
+                HexStratLogger.log().info("Started Game Core");
             }
 
             @Override
             public void terminated() {
-                // nothing
+                HexStratLogger.log().info("Terminated");
             }
         });
 
         Game.init(args);
         Arrays.stream(Game.log().getHandlers()).forEach(h -> h.setLevel(Level.ALL));
-        Game.graphics().setBaseRenderScale(3.0f);
-
+        Game.graphics().setBaseRenderScale(2f);
         Game.window().setTitle("Hex-Strat");
 
-        Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> {
-            System.err.println("Mimimi do this with a stream");
-            HexStratLogger.log().severe(ex.getMessage());
-            ex.printStackTrace();
-        });
+        Game.setUncaughtExceptionHandler((Thread t, Throwable ex) -> onUnhandledException(ex));
 
         GuiProperties.getDefaultAppearance().setTextAntialiasing(true);
         GuiProperties.getDefaultAppearanceDisabled().setTextAntialiasing(true);
@@ -84,4 +80,9 @@ public class Main {
         BackgroundMusic.getInstance().enable();
     }
 
+    @SuppressWarnings("java:S106")
+    private static void onUnhandledException(final Throwable ex) {
+        HexStratLogger.log().severe(ex.getMessage());
+        ex.printStackTrace();
+    }
 }
