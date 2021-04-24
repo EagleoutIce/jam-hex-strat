@@ -63,6 +63,10 @@ public class ToolTip<T extends GuiComponent> implements IRenderable {
     public void render(final Graphics2D g) {
         if(!display.get())
             return;
+        if(!host.isEnabled() || host.isSuspended()) {
+            display.set(false);
+            return;
+        }
         final String text = textSupplier.get();
         final Point2D position = mousePosition.get();
         g.setColor(DEF_BLACK);
