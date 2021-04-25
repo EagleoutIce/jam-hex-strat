@@ -24,7 +24,6 @@ import static de.flojo.jam.game.TileConstants.P1_COLOR;
 import static de.flojo.jam.game.TileConstants.P2_COLOR;
 
 public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
-
     private final String tileLabel;
     private final PlayerId placementOwner;
     private final Color ownerColor;

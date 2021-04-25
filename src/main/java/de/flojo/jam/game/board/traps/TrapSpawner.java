@@ -29,14 +29,16 @@ public class TrapSpawner {
         InputController.get().onClicked(this::setActiveTrap, screen);
     }
 
-    public static void injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
-        if (traps.get(tile.getCoordinate()).isPresent())
-            return;
+    public static Trap injectTrap(TrapId id, PlayerId owner, Tile tile, Board board, TrapCollection traps) {
+        final var maybeTrap = traps.get(tile.getCoordinate());
+        if (maybeTrap.isPresent())
+            return maybeTrap.get();
         final var trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"),
                                   tile);
         traps.add(trap);
         HexStratLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"",
                                  new Object[]{id, tile, owner});
+        return trap;
     }
 
     private void setActiveTrap(MouseEvent c) {

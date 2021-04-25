@@ -139,6 +139,9 @@ public class Trap implements Serializable {
     public boolean uncoveredByEnemy() {
         return enemyDidUncover;
     }
+    public void enemyUncoversTrap() {
+        enemyDidUncover = true;
+    }
 
     @Override
     public String toString() {

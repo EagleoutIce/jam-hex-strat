@@ -17,7 +17,10 @@ public class PlantTrapEffect implements IEffectTarget {
 
     @Override
     public void effect(Tile target, Creature attacker) {
-        TrapSpawner.injectTrap(TrapId.T_GOBLIN_TRAP, attacker.getOwner(), target, context.getBoard(),
-                               context.getTraps());
+        final var trapGot = TrapSpawner.injectTrap(TrapId.T_GOBLIN_TRAP, attacker.getOwner(), target, context.getBoard(),
+                                                   context.getTraps());
+        if(!trapGot.getOwner().equals(attacker.getOwner())) {
+            trapGot.enemyUncoversTrap();
+        }
     }
 }
