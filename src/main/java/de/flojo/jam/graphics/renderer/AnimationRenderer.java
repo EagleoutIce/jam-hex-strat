@@ -12,7 +12,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
-public class AnimationRenderer implements IRenderData {
+public class AnimationRenderer implements IRenderAnimatedData {
     private final int totalFrameCount;
     private final int frameDuration;
     private final Spritesheet spritesheet;
@@ -42,9 +42,9 @@ public class AnimationRenderer implements IRenderData {
         }
         if (Game.time().since(lastFrameUpdate) >= this.frameDuration) {
             currentIndex = Math.min(currentIndex + 1, totalFrameCount - 1);
-            BufferedImage spriteImage = spritesheet.getSprite(this.currentIndex);
+            final var spriteImage = spritesheet.getSprite(this.currentIndex);
             currentImg = new BufferedImage(sWidth, sHeight, BufferedImage.TYPE_INT_ARGB);
-            RescaleOp lighterOperation = new RescaleOp(
+            final var lighterOperation = new RescaleOp(
                     new float[]{1f, 1f, 1f, (1 - 0.5f * currentIndex / (float) totalFrameCount)}, new float[4], null);
             lighterOperation.filter(spriteImage, currentImg);
             lastFrameUpdate = Game.time().now();
@@ -65,7 +65,7 @@ public class AnimationRenderer implements IRenderData {
 
     @Override
     public Image getImageScaled() {
-        return currentImg;// TODO: apply to scale
+        return currentImg;
     }
 
     @Override
@@ -85,4 +85,13 @@ public class AnimationRenderer implements IRenderData {
         return offsetY;
     }
 
+    @Override
+    public boolean completed() {
+        return totalFrameCount == currentIndex;
+    }
+
+    @Override
+    public float getProgress() {
+        return currentIndex / (float) totalFrameCount;
+    }
 }

@@ -33,7 +33,7 @@ public class TrapSpawner {
         if (traps.get(tile.getCoordinate()).isPresent())
             return;
         final var trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot inject trap without an id (TrapId)"),
-                             tile);
+                                  tile);
         traps.add(trap);
         HexStratLogger.log().log(Level.INFO, "Injected trap with id \"{0}\" at {1} with Id \"{2}\"",
                                  new Object[]{id, tile, owner});
@@ -53,7 +53,7 @@ public class TrapSpawner {
         if (traps.get(tile.getCoordinate()).isPresent())
             return;
         final var trap = new Trap(board, owner, Objects.requireNonNull(id, "Cannot spawn trap without an id (TrapId)"),
-                             tile);
+                                  tile);
         traps.add(trap);
         HexStratLogger.log().log(Level.INFO, "Spawned trap with id \"{0}\" at {1} with Id \"{2}\"",
                                  new Object[]{id, tile, owner});
@@ -71,10 +71,6 @@ public class TrapSpawner {
         return traps;
     }
 
-    private enum TileElevation {
-            ELEVATED, GROUND
-    }
-
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         final var tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
         TileElevation elevated = null;
@@ -83,12 +79,11 @@ public class TrapSpawner {
             if (tile == null)
                 return false;
             if (tile.getTerrainType().equals(TerrainTile.EMPTY)) {
-                if(elevated == null)
+                if (elevated == null)
                     elevated = TileElevation.GROUND;
                 else if (elevated == TileElevation.ELEVATED)
                     return false;
-            }
-            else if (tile.getTerrainType().equals(TerrainTile.GRASS_HILL)) {
+            } else if (tile.getTerrainType().equals(TerrainTile.GRASS_HILL)) {
                 if (elevated == null)
                     elevated = TileElevation.ELEVATED;
                 else if (elevated == TileElevation.GROUND) {
@@ -103,7 +98,6 @@ public class TrapSpawner {
         }
         return traps.getCollision(tiles).isEmpty() && creatures.get(tiles).isEmpty();
     }
-
 
     public Optional<Trap> get(BoardCoordinate coordinate) {
         return traps.get(coordinate);
@@ -132,5 +126,9 @@ public class TrapSpawner {
             final var deserialized = new Trap(board, tJ.getOwner(), tJ.getId(), board.getTile(tJ.getPos()));
             traps.add(deserialized);
         }
+    }
+
+    private enum TileElevation {
+        ELEVATED, GROUND
     }
 }

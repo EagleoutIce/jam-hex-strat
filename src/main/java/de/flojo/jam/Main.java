@@ -1,10 +1,6 @@
 package de.flojo.jam;
 
 import de.flojo.jam.audio.BackgroundMusic;
-import de.flojo.jam.game.GameField;
-import de.flojo.jam.game.TileConstants;
-import de.flojo.jam.game.board.Tile;
-import de.flojo.jam.graphics.Hexagon;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;

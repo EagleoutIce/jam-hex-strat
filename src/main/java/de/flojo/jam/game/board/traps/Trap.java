@@ -5,13 +5,11 @@ import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.board.imprints.Imprint;
 import de.flojo.jam.game.board.terrain.TerrainTile;
-import de.flojo.jam.game.creature.CreatureBase;
 import de.flojo.jam.game.player.PlayerId;
 import de.gurkenlabs.litiengine.Game;
 
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashSet;
@@ -110,7 +108,7 @@ public class Trap implements Serializable {
         if (id != null && id != owner && !enemyDidUncover)
             return;
         final var target = rootPosition.getShiftedCenter();
-        if(rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
+        if (rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
             target.setLocation(target.getX(), target.getY() + RAISED_TRAP_OFFSET * Board.getZoom());
         getImprint().getNormalRenderer().render(g, target, isHovered());
     }
@@ -121,7 +119,7 @@ public class Trap implements Serializable {
         if (!triggered.get())
             return;
         final var target = rootPosition.getShiftedCenter();
-        if(rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
+        if (rootPosition.getTerrainType().equals(TerrainTile.GRASS_HILL))
             target.setLocation(target.getX(), target.getY() + RAISED_TRAP_OFFSET * Board.getZoom());
         getImprint().getTriggeredRenderer().render(g, target, isHovered());
     }
