@@ -40,7 +40,7 @@ public enum CreatureId {
                                   CreatureImagesHost.FLY_LILA, -76 / 1.78d,
                                   -92 / 1.27d),
         new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/elf_ton_", ".ogg", 1, 6),
-        4, 2),
+        5, 2),
     HALFLING("Halbling", 13, //
              new CreatureImageRenderer("creatures/halbling_blau.png", "creatures/halbling_blau_glow.png",
                                        CreatureImagesHost.FLY_BLAU,
@@ -50,7 +50,7 @@ public enum CreatureId {
                                        -73 / 1.65d, -102 / 1.29d),
              new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/halbling_ton_", ".ogg", 1, 6),
              3, 4),
-    GOBLIN("Goblin", 15, //
+    GOBLIN("Goblin", 13, //
            new CreatureImageRenderer("creatures/goblin_blau.png", "creatures/goblin_blau_glow.png",
                                      CreatureImagesHost.FLY_BLAU,
                                      -76 / 2.1d, -97 / 1.30d), //
@@ -69,7 +69,7 @@ public enum CreatureId {
            new NoSoundPool(),
            // new RandomSoundPool(Creature.soundPlayGroup, "audio/creatures/echse_ton_", ".ogg", 1, 6)
            10, 1),
-    OGER("Oger", 11, //
+    OGER("Oger", 12, //
          new CreatureImageRenderer("creatures/oger_blau.png", "creatures/oger_blau_glow.png",
                                    CreatureImagesHost.FLY_BLAU, -329d / 1.8,
                                    -421 / 1.27d, Main.DEFAULT_INTERNAL_SCALE), //

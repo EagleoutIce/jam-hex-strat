@@ -5,6 +5,7 @@ public enum SkillId {
     RANGED_PUNCH("ranged_punch", false),
     MULTI_PUNCH("multi_punch", false),
     TOGGLE_FLY("toggle_fly", true),
+    TELEPORTATION("teleportation", false),
     PLANT_TRAP("plant_trap", false);
 
     private final String imgBaseName;

@@ -10,6 +10,7 @@ import de.flojo.jam.game.creature.CreatureCore;
 import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.SkillMultiPunch;
+import de.flojo.jam.game.creature.skills.SkillSimplePunch;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 
@@ -32,6 +33,7 @@ public class CreatureOger extends Creature {
     private static CreatureAttributes createOgerAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
         skills.add(new SkillMultiPunch(4, 0, 2, "Grand Slam", "Wenn man sich einfach fallen lässt.", 2));
+        skills.add(new SkillSimplePunch(7, 0, 1, "Punch (7)", "Head Bang."));
         return new CreatureAttributes(CreatureId.OGER, skills);
     }
 }

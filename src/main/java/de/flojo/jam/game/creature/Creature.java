@@ -58,6 +58,7 @@ public class Creature implements IRenderable, IEffectAttackerInformation {
         return base;
     }
 
+    @Override
     public CreatureCore getCore() {
         return core;
     }
@@ -186,6 +187,7 @@ public class Creature implements IRenderable, IEffectAttackerInformation {
         final boolean canCastFly = this.isFlying() && skill.castOnAir() || !this.isFlying() && skill.castOnGround();
         return this.getAttributes().getApLeft() >= skill.getCost() && canCastFly;
     }
+
 
     @Override
     public String toString() {

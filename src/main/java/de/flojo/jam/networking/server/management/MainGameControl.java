@@ -107,7 +107,7 @@ public class MainGameControl {
             return false;
         } else if (roundEnd()) {
             nextRound();
-            nextGameAction();
+            return nextGameAction();
         }
         sendTurnRequest();
         return true;

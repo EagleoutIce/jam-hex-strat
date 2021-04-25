@@ -63,7 +63,6 @@ public class GameState {
     }
 
     public void nextPlayer(CreatureCollection collection) {
-
         if (currentTurn == PlayerId.ONE && collection.p2CanDoSomething()) {
             currentTurn = PlayerId.TWO;
         } else if (currentTurn == PlayerId.TWO && collection.p1CanDoSomething()) {

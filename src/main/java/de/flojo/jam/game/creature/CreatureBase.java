@@ -87,6 +87,7 @@ public class CreatureBase implements IRenderable {
 
     public void setPosition(Tile position) {
         this.position = position;
+        updateTerrainOffset(position);
     }
 
     public CreatureCore getCreature() {

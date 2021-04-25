@@ -8,7 +8,10 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.util.HexMaths;
 
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class CreatureSkillAOAGenerator {
     private CreatureSkillAOAGenerator() {
@@ -25,10 +28,38 @@ public class CreatureSkillAOAGenerator {
             case LINE:
                 return getAOALine(start, board, creatures, skill.getMinRange(), maxRange,
                                   skill.getTarget().equals(TargetOfSkill.TILE));
+            case CIRCLE:
+                return getAOACircle(start, skill.getMinRange(), maxRange,
+                                    skill.getTarget().equals(TargetOfSkill.TILE));
             default:
             case SINGLE:
                 return Set.of(start);
         }
+    }
+
+    private static Set<Tile> getAOACircle(final Tile start, final int minRange, final int maxRange,
+                                          final boolean emptyOnly) {
+        // kill me
+        Set<Tile> tiles = new HashSet<>();
+        tiles.add(start);
+        for(var i = 0; i < maxRange; i++) {
+            final Set<Tile> newTiles = new HashSet<>();
+            for (Tile t: tiles)
+                newTiles.addAll(t.getNeighbours());
+            tiles.addAll(newTiles);
+        }
+        Set<Tile> killTiles = new HashSet<>();
+        killTiles.add(start);
+        for(var i = 0; i < minRange; i++) {
+            final Set<Tile> newTiles = new HashSet<>();
+            for (Tile t: killTiles)
+                newTiles.addAll(t.getNeighbours());
+            killTiles.addAll(newTiles);
+        }
+        tiles.removeIf(killTiles::contains);
+        if (emptyOnly)
+            tiles.removeIf(t -> !t.getTerrainType().equals(TerrainTile.EMPTY) && !t.getTerrainType().equals(TerrainTile.GRASS_HILL));
+        return tiles;
     }
 
     private static Set<Tile> getAOALine(Tile start, Board board, CreatureCollection creatures, int minRange,
