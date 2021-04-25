@@ -31,7 +31,7 @@ public class CreatureLizard extends Creature {
 
     private static CreatureAttributes createLizardAttributes() {
         Set<AbstractSkill> skills = new LinkedHashSet<>();
-        skills.add(new SkillSimplePunch(1, 0, 2, "Push (1)", "Lizard-kick."));
+        skills.add(new SkillSimplePunch(2, 0, 2, "Push (2)", "Lizard-kick."));
         return new CreatureAttributes(CreatureId.LIZARD, skills);
     }
 }

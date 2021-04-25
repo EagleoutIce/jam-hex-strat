@@ -11,7 +11,7 @@ import java.util.Arrays;
 public enum TerrainId {
     T_EMPTY("Leer", TerrainImprint.getSingle(TerrainTile.EMPTY), Color.WHITE, 0),
     T_GRASS_HILL("Grashügel", TerrainImprint.getSingle(TerrainTile.GRASS_HILL), Color.GREEN, 2),
-    T_BELT("Belt", TerrainImprint.getSingle(TerrainTile.BELT), Color.GREEN, 4, true),
+    T_BELT("Belt", TerrainImprint.getSingle(TerrainTile.BELT), Color.GREEN, 5, true),
     T_WDL_LEFT("Wand-L-Links", new TerrainImprint(new TerrainData(//
                                                                   Arrays.asList(//
                                                                                 Arrays.asList(
@@ -26,7 +26,7 @@ public enum TerrainId {
                                                                                 Arrays.asList(null, null), //
                                                                                 Arrays.asList(null,
                                                                                               TerrainTile.WDL_LEFT_SLAVE_2))),
-                                                  new Point(1, 1)), Color.RED, 5),
+                                                  new Point(1, 1)), Color.RED, 7),
     T_WDL_RIGHT("Wand-L-Rechts", new TerrainImprint(new TerrainData(//
                                                                     Arrays.asList(//
                                                                                   Arrays.asList(null,
@@ -42,7 +42,7 @@ public enum TerrainId {
                                                                                   Arrays.asList(
                                                                                           TerrainTile.WDL_RIGHT_SLAVE_2,
                                                                                           null))),
-                                                    new Point(0, 1)), Color.RED.darker(), 5),
+                                                    new Point(0, 1)), Color.RED.darker(), 7),
     T_DEAD_TREE("Baum kahl", TerrainImprint.getSingle(TerrainTile.DEAD_TREE), Color.YELLOW, 1),
     T_DEAD_TREE_B("Baum kahl, B", TerrainImprint.getSingle(TerrainTile.DEAD_TREE_B), Color.YELLOW.darker(), 1),
     T_CART_LEFT("Karren links", new TerrainImprint(new TerrainData(//
@@ -56,7 +56,7 @@ public enum TerrainId {
                                                                                  Arrays.asList(null,
                                                                                                TerrainTile.CART_LEFT) //
                                                                    )), new Point(1, 2)),
-                Color.ORANGE, 3),
+                Color.ORANGE, 4),
     T_CART_RIGHT("Karren rechts", new TerrainImprint(new TerrainData(//
                                                                      Arrays.asList(//
                                                                                    Arrays.asList(
@@ -68,7 +68,7 @@ public enum TerrainId {
                                                                                    Arrays.asList(TerrainTile.CART_RIGHT,
                                                                                                  null) //
                                                                      )), new Point(0, 2)),
-                 Color.ORANGE.darker(), 3);
+                 Color.ORANGE.darker(), 4);
 
     private final TerrainImprint imprint;
     private final Color simpleColor;
