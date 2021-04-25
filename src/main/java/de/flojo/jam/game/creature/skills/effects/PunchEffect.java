@@ -104,6 +104,7 @@ public class PunchEffect implements IEffectTarget {
     }
 
     private void trapExecution(Creature target, Tile punchTarget, Trap trap) {
+        target.moribund();
         target.moveBlocking(punchTarget);
         trap.trigger();
         CreatureActionController.sleep(trap.getAnimationCooldown());
