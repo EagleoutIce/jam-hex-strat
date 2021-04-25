@@ -10,6 +10,7 @@ import de.flojo.jam.game.creature.controller.CreatureActionController;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.DefaultReadContext;
 import de.flojo.jam.game.creature.skills.ICreatureSkill;
+import de.flojo.jam.game.creature.skills.IEffectAttackerInformation;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.game.creature.skills.JsonDataOfSkill;
 import de.flojo.jam.game.player.PlayerId;
@@ -21,7 +22,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 // compound of base and core; mostly delegates
-public class Creature implements IRenderable {
+public class Creature implements IRenderable, IEffectAttackerInformation {
 
     public static final SoundPoolPlayGroup soundPlayGroup = new SoundPoolPlayGroup(BackgroundMusic.toggleMusic::get);
     public static final AtomicBoolean showMpAp = new AtomicBoolean(true);

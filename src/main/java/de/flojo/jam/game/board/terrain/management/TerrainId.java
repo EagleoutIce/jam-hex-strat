@@ -11,6 +11,7 @@ import java.util.Arrays;
 public enum TerrainId {
     T_EMPTY("Leer", TerrainImprint.getSingle(TerrainTile.EMPTY), Color.WHITE, 0),
     T_GRASS_HILL("Grashügel", TerrainImprint.getSingle(TerrainTile.GRASS_HILL), Color.GREEN, 2),
+    T_BELT("Belt", TerrainImprint.getSingle(TerrainTile.BELT), Color.GREEN, 4, true),
     T_WDL_LEFT("Wand-L-Links", new TerrainImprint(new TerrainData(//
                                                                   Arrays.asList(//
                                                                                 Arrays.asList(
@@ -73,12 +74,21 @@ public enum TerrainId {
     private final Color simpleColor;
     private final String name;
     private final int cost;
+    // TODO: rotation modes
+    private final boolean rotatable;
 
     TerrainId(final String name, final TerrainImprint imprint, Color simpleColor, final int cost) {
+        this(name, imprint, simpleColor, cost, false);
+    }
+
+    TerrainId(
+            final String name, final TerrainImprint imprint, Color simpleColor, final int cost,
+            final boolean rotatable) {
         this.name = name;
         this.imprint = imprint;
         this.simpleColor = simpleColor;
         this.cost = cost;
+        this.rotatable = rotatable;
     }
 
     public TerrainImprint getImprint() {
@@ -95,5 +105,9 @@ public enum TerrainId {
 
     public int getCost() {
         return cost;
+    }
+
+    public boolean isRotatable() {
+        return rotatable;
     }
 }

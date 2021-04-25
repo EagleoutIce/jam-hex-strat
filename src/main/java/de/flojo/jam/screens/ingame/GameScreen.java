@@ -207,6 +207,7 @@ public class GameScreen extends Screen {
     public void nextRound(NextRoundMessage message) {
         getFactory().resetAll();
         field.getPresenter().update();
+        field.getBoard().nextRound(field.getFactory(), field.getSpawner());
         this.currentRound = message.getCurrentRound();
     }
 

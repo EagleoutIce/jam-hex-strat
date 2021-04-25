@@ -304,6 +304,7 @@ public class EditorScreen extends Screen {
         toolTips.add(new ToolTip<>(nextRound, "Reset all Mp & AP"));
         nextRound.onClicked(c -> {
             creatureFactory.resetAll();
+            board.nextRound(creatureFactory, trapSpawner);
             presenter.update();
         });
 

@@ -3,6 +3,7 @@ package de.flojo.jam.game.creature.skills.effects;
 import de.flojo.jam.game.board.traps.Trap;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.controller.CreatureActionController;
+import de.flojo.jam.game.creature.skills.IEffectAttackerInformation;
 import de.flojo.jam.game.creature.skills.IEffectTarget;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
 import de.flojo.jam.util.HexStratLogger;
@@ -19,7 +20,7 @@ public class ToggleFlyEffect implements IEffectTarget {
     }
 
     @Override
-    public void effect(Creature target, Creature attacker) {
+    public void effect(Creature target, IEffectAttackerInformation attacker) {
         boolean nowFlying = attacker.getCore().toggleFly();
         if (!nowFlying) {
             // Check if the creature landed on a mine:

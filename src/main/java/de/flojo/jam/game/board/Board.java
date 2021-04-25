@@ -9,6 +9,9 @@ import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.traps.TrapSpawner;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.CreatureFactory;
+import de.flojo.jam.game.creature.skills.DefaultEffectAttackerInformation;
+import de.flojo.jam.game.creature.skills.DefaultReadContext;
+import de.flojo.jam.game.creature.skills.effects.PunchEffect;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.util.HexMaths;
 import de.flojo.jam.util.HexStratLogger;
@@ -49,7 +52,6 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
     private final String screenName;
     private final int width;
     private final int height;
-    private final String backgroundPath;
     private final Point tilesUpperLeft;
     private final Map<BoardCoordinate, Tile> tiles;
     private final Set<Tile> highlightTiles = new HashSet<>();
@@ -80,7 +82,6 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
                  final String screenName) {
         this.width = w;
         this.height = h;
-        this.backgroundPath = backgroundPath;
         this.background = Resources.images().get(backgroundPath);
         this.screenName = screenName;
         this.tiles = new HashMap<>(w * h);
@@ -90,7 +91,7 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
         setupResizeListener();
         initialBoardShift();
         highlightMask = SimpleHighlighter.get();
-        HexStratLogger.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", this.backgroundPath);
+        HexStratLogger.log().log(Level.INFO, "Loaded Board with background: \"{0}\"", backgroundPath);
         setupInput();
     }
 
@@ -447,4 +448,31 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
                             Game.window().getHeight() - TextRenderer.getHeight(g, str) - 25);
     }
 
+    public void nextRound(CreatureFactory factory, TrapSpawner traps) {
+        // TODO: optimize this by caching those tiles
+        // collect all first, execute then:
+        Map<Creature, BoardCoordinate> punches = new HashMap<>();
+        // TODO: what on intersections?
+        for (final var tilePair : tiles.entrySet()) {
+            final var tile = tilePair.getValue();
+            final var coordinate = tilePair.getKey();
+            final var push = tile.getTerrainType().getPushDirection();
+            if(push.equals(PushDirection.NONE))
+                continue;
+            final var mayCreature = factory.get(coordinate);
+            // negate as we want to hit into this direction
+            mayCreature.ifPresent(creature -> punches.put(creature, coordinate.translateRelativeX(push.getDeltaX(), push.getDeltaY())));
+        }
+
+        // TODO: make more flexible effects
+        for (final var punch : punches.entrySet()) {
+            new PunchEffect(new DefaultReadContext(this, factory.getCreatures(), traps.getTraps()), 1).effect(
+                    punch.getKey(),
+                    new DefaultEffectAttackerInformation(
+                        punch.getValue(),
+                        punch.getKey().isNotRaised()
+                    )
+            );
+        }
+    }
 }

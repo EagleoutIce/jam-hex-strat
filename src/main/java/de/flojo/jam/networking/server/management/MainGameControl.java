@@ -121,6 +121,7 @@ public class MainGameControl {
 
     private void nextRound() {
         state.nextRound();
+        getBoard().nextRound(getFactory(), getSpawner());
         playerController.sendBoth(new NextRoundMessage(null, state.getCurrentRound()));
         getFactory().resetAll();
     }

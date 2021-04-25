@@ -4,6 +4,7 @@ import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.game.creature.Creature;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.CreatureSkillAOAGenerator;
+import de.flojo.jam.game.creature.skills.IEffectAttackerInformation;
 import de.flojo.jam.game.creature.skills.IEffectTarget;
 import de.flojo.jam.game.creature.skills.IProvideReadContext;
 
@@ -24,7 +25,7 @@ public class MultiPunchEffect implements IEffectTarget {
     }
 
     @Override
-    public void effect(Creature target, Creature attacker) {
+    public void effect(Creature target, IEffectAttackerInformation attacker) {
         final Set<Tile> targetTiles = CreatureSkillAOAGenerator.getAOA(skill,
                                                                        context.getBoard().getTile(
                                                                                attacker.getCoordinate()),
