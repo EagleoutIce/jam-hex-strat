@@ -21,7 +21,33 @@ public class HexMaths {
         return a > b ? 1 : -1;
     }
 
-    // gerade ungerade, kleiner kleiner
+    public static Direction decodeDirection(BoardCoordinate a, BoardCoordinate t) {
+        final var delta = decodeDelta(a, t);
+        if(delta.x == 0) {
+            if(delta.y == 0)
+                return Direction.NONE;
+            else if (delta.y > 0)
+                return Direction.DOWN;
+            else
+                return Direction.UP;
+        } else if(delta.x > 0) {
+                if(delta.y == 0)
+                    return Direction.RIGHT;
+                else if (delta.y > 0)
+                    return Direction.DOWN_RIGHT;
+                else
+                    return Direction.UP_RIGHT;
+        }  else {
+            if(delta.y == 0)
+                return Direction.LEFT;
+            else if (delta.y > 0)
+                return Direction.DOWN_LEFT;
+            else
+                return Direction.UP_LEFT;
+        }
+    }
+
+        // gerade ungerade, kleiner kleiner
     public static BoardCoordinate decodeDelta(BoardCoordinate a, BoardCoordinate t) {
         if (a.x == t.x && a.y == t.y)
             return new BoardCoordinate(0, 0);

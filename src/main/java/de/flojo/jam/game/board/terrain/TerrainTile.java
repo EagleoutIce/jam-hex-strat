@@ -3,16 +3,15 @@ package de.flojo.jam.game.board.terrain;
 import de.flojo.jam.Main;
 import de.flojo.jam.game.board.PushDirection;
 import de.flojo.jam.game.board.Tile;
-import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
 import de.flojo.jam.game.board.terrain.management.TerrainImprintNodeMap;
 import de.flojo.jam.graphics.renderer.IRenderTileData;
-import de.flojo.jam.graphics.renderer.IRenderData;
-import de.flojo.jam.graphics.renderer.MultitileImageRenderer;
+import de.flojo.jam.graphics.renderer.MultiTileImageRenderer;
 import de.flojo.jam.graphics.renderer.RenderHint;
 import de.flojo.jam.graphics.renderer.RotatedImageRenderer;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
 import de.flojo.jam.graphics.renderer.VoidRenderer;
+import de.flojo.jam.util.Direction;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
@@ -25,8 +24,19 @@ public enum TerrainTile {
     // dos not blick los or punch as it raised and we include a raised switch
     GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false,
                true, 2,
-               PushDirection.NONE, new MultitileImageRenderer(new HashMap<>() {{
+               PushDirection.NONE, new MultiTileImageRenderer(new HashMap<>() {{
                    put("tiles/multitile/gelaende_huegel.png", 0);
+                   put("tiles/multitile/gelaende_huegel_verb_1.png", MultiTileImageRenderer.imgIdx(Direction.UP));
+                   put("tiles/multitile/gelaende_huegel_verb_2.png", MultiTileImageRenderer.imgIdx(Direction.UP_RIGHT));
+                   put("tiles/multitile/gelaende_huegel_verb_3.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_RIGHT));
+                   put("tiles/multitile/gelaende_huegel_verb_4.png", MultiTileImageRenderer.imgIdx(Direction.DOWN));
+                   put("tiles/multitile/gelaende_huegel_verb_5.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_LEFT));
+                   put("tiles/multitile/gelaende_huegel_verb_6.png", MultiTileImageRenderer.imgIdx(Direction.UP_LEFT));
+                   put("tiles/multitile/gelaende_huegel_verb_1_2.png", MultiTileImageRenderer.imgIdx(true, true, false, false, false, false));
+                   put("tiles/multitile/gelaende_huegel_verb_2_5.png", MultiTileImageRenderer.imgIdx(false, true, false, false, true, false));
+                   put("tiles/multitile/gelaende_huegel_verb_3_4.png", MultiTileImageRenderer.imgIdx(false, false, true, true, false, false));
+                   put("tiles/multitile/gelaende_huegel_verb_3_6.png", MultiTileImageRenderer.imgIdx(false, false, true, false, false, true));
+                   put("tiles/multitile/gelaende_huegel_verb_5_6.png", MultiTileImageRenderer.imgIdx(false, false, false, false, true, true));
     }}, TerrainIdConstants.T_GRASS_HILL, -288 / 2.1d, -319 / 1.33,
                                                               Main.DEFAULT_INTERNAL_SCALE)), //
     BELT("Ein Fließband", new TerrainImprintNodeMap(TerrainIdConstants.T_BELT, 0, 0), false, false, false,
