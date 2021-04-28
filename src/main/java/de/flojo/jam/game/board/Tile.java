@@ -130,7 +130,7 @@ public class Tile extends Hexagon implements IHaveDecorations, IAmMoveable {
     public void renderDecorations(Graphics2D g) {
         TerrainTile tt = terrainSupplier.getTerrainAt(coordinate);
         if (tt != null)
-            tt.render(g, getShiftedCenter(), getHint());
+            tt.render(g, getShiftedCenter(), this, getHint());
     }
 
     public Point2D getShiftedCenter() {

@@ -25,5 +25,7 @@ public abstract class ImprintNodeMap<T> implements ImprintNode<T> {
         return pos;
     }
 
-
+    public String getImprintSupplierName() {
+        return imprintSupplierName;
+    }
 }

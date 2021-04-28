@@ -1,6 +1,7 @@
 package de.flojo.jam.graphics.renderer;
 
 import de.flojo.jam.game.board.Board;
+import de.flojo.jam.game.board.Tile;
 import de.flojo.jam.util.ImageUtil;
 import de.gurkenlabs.litiengine.graphics.ImageRenderer;
 import de.gurkenlabs.litiengine.resources.Resources;
@@ -12,7 +13,7 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 
-public class RotatedImageRenderer implements IRenderData {
+public class RotatedImageRenderer implements IRenderTileData {
     protected final double offsetX;
     protected final double offsetY;
     protected final float scale;
@@ -52,7 +53,7 @@ public class RotatedImageRenderer implements IRenderData {
     }
 
     @Override
-    public void render(final Graphics2D g, final Point2D pos, RenderHint... hints) {
+    public void render(final Graphics2D g, final Point2D pos, Tile ignored, RenderHint... hints) {
         BufferedImage renderImage;
         if (hints == null || hints.length == 0)
             return;

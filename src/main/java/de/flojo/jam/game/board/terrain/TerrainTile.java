@@ -2,9 +2,13 @@ package de.flojo.jam.game.board.terrain;
 
 import de.flojo.jam.Main;
 import de.flojo.jam.game.board.PushDirection;
+import de.flojo.jam.game.board.Tile;
+import de.flojo.jam.game.board.terrain.management.TerrainId;
 import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
 import de.flojo.jam.game.board.terrain.management.TerrainImprintNodeMap;
+import de.flojo.jam.graphics.renderer.IRenderTileData;
 import de.flojo.jam.graphics.renderer.IRenderData;
+import de.flojo.jam.graphics.renderer.MultitileImageRenderer;
 import de.flojo.jam.graphics.renderer.RenderHint;
 import de.flojo.jam.graphics.renderer.RotatedImageRenderer;
 import de.flojo.jam.graphics.renderer.SimpleImageRenderer;
@@ -12,6 +16,7 @@ import de.flojo.jam.graphics.renderer.VoidRenderer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 
 // TODO: flag for 'can be walked/trapped on'
 public enum TerrainTile {
@@ -20,8 +25,10 @@ public enum TerrainTile {
     // dos not blick los or punch as it raised and we include a raised switch
     GRASS_HILL("Ein Grashügel", new TerrainImprintNodeMap(TerrainIdConstants.T_GRASS_HILL, 0, 0), false, false, false,
                true, 2,
-               PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -288 / 2.1d, -319 / 1.33,
-                                                           Main.DEFAULT_INTERNAL_SCALE)), //
+               PushDirection.NONE, new MultitileImageRenderer(new HashMap<>() {{
+                   put("tiles/multitile/gelaende_huegel.png", 0);
+    }}, TerrainIdConstants.T_GRASS_HILL, -288 / 2.1d, -319 / 1.33,
+                                                              Main.DEFAULT_INTERNAL_SCALE)), //
     BELT("Ein Fließband", new TerrainImprintNodeMap(TerrainIdConstants.T_BELT, 0, 0), false, false, false,
          false, 1,
          PushDirection.TOP, new RotatedImageRenderer("tiles/belt_ini_0.png", -208 / 2.1d, -279 / 1.75,
@@ -95,13 +102,13 @@ public enum TerrainTile {
     private final boolean raised;
     private final int movementCost;
     private final PushDirection pushDirection;
-    private final IRenderData renderer;
+    private final IRenderTileData renderer;
     private final TerrainImprintNodeMap node;
 
     @SuppressWarnings("java:S107")
     TerrainTile(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
                 boolean blocksOnPunch, boolean raised, int movementCost, PushDirection pushDirection,
-                final IRenderData renderer) {
+                final IRenderTileData renderer) {
         this.displayName = displayName;
         this.blocksWalking = blocksWalking;
         this.blocksLineOfSight = blocksLineOfSight;
@@ -134,7 +141,7 @@ public enum TerrainTile {
         return pushDirection;
     }
 
-    public IRenderData getRenderer() {
+    public IRenderTileData getRenderer() {
         return renderer;
     }
 
@@ -151,8 +158,8 @@ public enum TerrainTile {
         return movementCost;
     }
 
-    public void render(Graphics2D g, Point2D pos, RenderHint hint) {
-        renderer.render(g, pos, hint);
+    public void render(Graphics2D g, Point2D pos, Tile terrainTile, RenderHint hint) {
+        renderer.render(g, pos, terrainTile, hint);
     }
 
     public TerrainImprintNodeMap getNode() {
