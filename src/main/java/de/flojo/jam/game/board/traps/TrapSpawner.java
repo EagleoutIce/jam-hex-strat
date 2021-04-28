@@ -75,30 +75,36 @@ public class TrapSpawner {
 
     public boolean canBePlaced(CreatureFactory creatures, TrapId id, Tile pos, PlayerId playerId, Board board) {
         final var tiles = Trap.getEffectiveTiles(id.getImprint(), pos, board);
+        if (canNotBePlacedDueToTiles(playerId, tiles)) return false;
+        return traps.getCollision(tiles).isEmpty() && creatures.get(tiles).isEmpty();
+    }
+
+    private boolean canNotBePlacedDueToTiles(final PlayerId playerId, final java.util.Set<Tile> tiles) {
         TileElevation elevated = null;
         for (var tile : tiles) {
             // TODO: this is hacky
             if (tile == null)
-                return false;
+                return true;
+
             if (tile.getTerrainType().equals(TerrainTile.EMPTY)) {
                 if (elevated == null)
                     elevated = TileElevation.GROUND;
                 else if (elevated == TileElevation.ELEVATED)
-                    return false;
+                    return true;
             } else if (tile.getTerrainType().equals(TerrainTile.GRASS_HILL)) {
                 if (elevated == null)
                     elevated = TileElevation.ELEVATED;
                 else if (elevated == TileElevation.GROUND) {
-                    return false;
+                    return true;
                 }
             } else {
-                return false;
+                return true;
             }
 
             if (playerId != null && tile.getPlacementOwner() != playerId)
-                return false;
+                return true;
         }
-        return traps.getCollision(tiles).isEmpty() && creatures.get(tiles).isEmpty();
+        return false;
     }
 
     public Optional<Trap> get(BoardCoordinate coordinate) {
