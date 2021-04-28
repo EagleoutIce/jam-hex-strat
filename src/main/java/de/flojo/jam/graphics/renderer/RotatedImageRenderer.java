@@ -20,6 +20,7 @@ public class RotatedImageRenderer implements IRenderData {
     private final Image scaledImage;
     private final BufferedImage highlightImage;
     private final BufferedImage markImage;
+
     public RotatedImageRenderer(final String path, final double offsetX, final double offsetY) {
         this(path, offsetX, offsetY, 1f);
     }

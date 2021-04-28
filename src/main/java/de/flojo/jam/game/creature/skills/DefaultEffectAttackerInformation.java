@@ -2,7 +2,7 @@ package de.flojo.jam.game.creature.skills;
 
 import de.flojo.jam.game.board.BoardCoordinate;
 
-public class DefaultEffectAttackerInformation implements IEffectAttackerInformation{
+public class DefaultEffectAttackerInformation implements IEffectAttackerInformation {
 
     private final BoardCoordinate coordinate;
     private final boolean raised;

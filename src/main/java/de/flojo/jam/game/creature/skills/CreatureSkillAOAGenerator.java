@@ -8,10 +8,7 @@ import de.flojo.jam.game.creature.CreatureCollection;
 import de.flojo.jam.util.HexMaths;
 
 import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public class CreatureSkillAOAGenerator {
     private CreatureSkillAOAGenerator() {
@@ -42,23 +39,24 @@ public class CreatureSkillAOAGenerator {
         // kill me
         Set<Tile> tiles = new HashSet<>();
         tiles.add(start);
-        for(var i = 0; i < maxRange; i++) {
+        for (var i = 0; i < maxRange; i++) {
             final Set<Tile> newTiles = new HashSet<>();
-            for (Tile t: tiles)
+            for (Tile t : tiles)
                 newTiles.addAll(t.getNeighbours());
             tiles.addAll(newTiles);
         }
         Set<Tile> killTiles = new HashSet<>();
         killTiles.add(start);
-        for(var i = 0; i < minRange; i++) {
+        for (var i = 0; i < minRange; i++) {
             final Set<Tile> newTiles = new HashSet<>();
-            for (Tile t: killTiles)
+            for (Tile t : killTiles)
                 newTiles.addAll(t.getNeighbours());
             killTiles.addAll(newTiles);
         }
         tiles.removeIf(killTiles::contains);
         if (emptyOnly)
-            tiles.removeIf(t -> !t.getTerrainType().equals(TerrainTile.EMPTY) && !t.getTerrainType().equals(TerrainTile.GRASS_HILL));
+            tiles.removeIf(t -> !t.getTerrainType().equals(TerrainTile.EMPTY) && !t.getTerrainType().equals(
+                    TerrainTile.GRASS_HILL));
         return tiles;
     }
 

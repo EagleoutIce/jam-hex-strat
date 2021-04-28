@@ -11,7 +11,6 @@ import de.flojo.jam.game.creature.CreatureId;
 import de.flojo.jam.game.creature.skills.AbstractSkill;
 import de.flojo.jam.game.creature.skills.SkillRangedPunch;
 import de.flojo.jam.game.creature.skills.SkillTeleportation;
-import de.flojo.jam.game.creature.skills.effects.TeleportationEffect;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.renderer.IRenderData;
 

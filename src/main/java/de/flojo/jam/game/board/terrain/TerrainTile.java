@@ -12,6 +12,7 @@ import de.flojo.jam.graphics.renderer.VoidRenderer;
 
 import java.awt.Graphics2D;
 import java.awt.geom.Point2D;
+
 // TODO: flag for 'can be walked/trapped on'
 public enum TerrainTile {
     EMPTY("Nothing.", new TerrainImprintNodeMap(TerrainIdConstants.T_EMPTY, 0, 0), false, false, false, false, 1,
@@ -22,9 +23,9 @@ public enum TerrainTile {
                PushDirection.NONE, new SimpleImageRenderer("tiles/gelaende_huegel.png", -288 / 2.1d, -319 / 1.33,
                                                            Main.DEFAULT_INTERNAL_SCALE)), //
     BELT("Ein Fließband", new TerrainImprintNodeMap(TerrainIdConstants.T_BELT, 0, 0), false, false, false,
-               false, 1,
-               PushDirection.TOP, new RotatedImageRenderer("tiles/belt_ini_0.png", -208 / 2.1d, -279 / 1.75,
-                                                            Main.DEFAULT_INTERNAL_SCALE)), //
+         false, 1,
+         PushDirection.TOP, new RotatedImageRenderer("tiles/belt_ini_0.png", -208 / 2.1d, -279 / 1.75,
+                                                     Main.DEFAULT_INTERNAL_SCALE)), //
     //
     WDL_LEFT("Doppel wand mit L-Knick nach links", new TerrainImprintNodeMap(TerrainIdConstants.T_WDL_LEFT, 1, 1), true,
              true,

@@ -457,11 +457,12 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             final var tile = tilePair.getValue();
             final var coordinate = tilePair.getKey();
             final var push = tile.getTerrainType().getPushDirection();
-            if(push.equals(PushDirection.NONE))
+            if (push.equals(PushDirection.NONE))
                 continue;
             final var mayCreature = factory.get(coordinate);
             // negate as we want to hit into this direction
-            mayCreature.ifPresent(creature -> punches.put(creature, coordinate.translateRelativeX(push.getDeltaX(), push.getDeltaY())));
+            mayCreature.ifPresent(creature -> punches.put(creature, coordinate.translateRelativeX(push.getDeltaX(),
+                                                                                                  push.getDeltaY())));
         }
 
         // TODO: make more flexible effects
@@ -469,8 +470,8 @@ public class Board implements IRenderable, IAmMoveable, Serializable, MouseMotio
             new PunchEffect(new DefaultReadContext(this, factory.getCreatures(), traps.getTraps()), 1).effect(
                     punch.getKey(),
                     new DefaultEffectAttackerInformation(
-                        punch.getValue(),
-                        punch.getKey().isNotRaised()
+                            punch.getValue(),
+                            punch.getKey().isNotRaised()
                     )
             );
         }
