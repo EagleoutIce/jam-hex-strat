@@ -1,3 +1,3 @@
-[submodule "litiengine"]
-	path = litiengine
-	url = https://github.com/EagleoutIce/litiengine
+[submodule "litiengine-custom"]
+	path = litiengine-custom
+	url = https://github.com/EagleoutIce/litiengine-custom
