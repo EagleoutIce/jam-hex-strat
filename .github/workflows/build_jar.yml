@@ -30,7 +30,7 @@ jobs:
           architecture: x64
 
       - name: Build engine
-        working-directory: litiengine
+        working-directory: litiengine-custom
         run: |
           sudo chmod 777 -R .
           ./gradlew clean distZip publishToMavenLocal -x test
