@@ -1,6 +1,5 @@
 package de.flojo.jam.game;
 
-import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.terrain.Architect;
@@ -93,10 +92,11 @@ public class GameField implements IRenderable, IProvideContext {
     @Override
     public void render(Graphics2D g) {
         board.jointRender(g, owner, factory, spawner);
-        if(isOurTurn()) {
+        if (isOurTurn()) {
             g.setColor(owner.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
             g.setStroke(new BasicStroke(7));
-            g.drawRect(0, 0, Game.window().getWidth() - 10, Game.window().getHeight()-Game.window().getHostControl().getInsets().top- 7);
+            g.drawRect(0, 0, Game.window().getWidth() - 10,
+                       Game.window().getHeight() - Game.window().getHostControl().getInsets().top - 7);
             g.setStroke(new BasicStroke());
         }
         buildingPhaseButtons.render(g);

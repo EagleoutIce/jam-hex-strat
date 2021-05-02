@@ -129,7 +129,8 @@ public class ConnectScreen extends Screen {
         this.getComponents().add(connect);
 
         // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 70, Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
+        this.portNumber = new TextFieldComponent(0, 0, 100, 70,
+                                                 Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
         this.portNumber.setFormat("[0-9]{0,4}");
         this.portNumber.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(portNumber);

@@ -36,7 +36,6 @@ import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
 
 import javax.swing.JOptionPane;
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -49,9 +48,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
-
-import static de.flojo.jam.game.TileConstants.P1_COLOR;
-import static de.flojo.jam.game.TileConstants.P2_COLOR;
 
 public class GameScreen extends Screen {
     public static final BufferedImage PLAYER_VIEW_TURN_P1 = Resources.images().get("ui/spieleranzeige_player1.png");

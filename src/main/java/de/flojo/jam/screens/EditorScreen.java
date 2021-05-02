@@ -487,10 +487,11 @@ public class EditorScreen extends Screen {
     public void render(final Graphics2D g) {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
         final var fakeId = getFakeId();
-        if(fakeId != null) {
+        if (fakeId != null) {
             g.setColor(fakeId.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
             g.setStroke(new BasicStroke(7));
-            g.drawRect(0, 0, Game.window().getWidth() - 10, Game.window().getHeight()-Game.window().getHostControl().getInsets().top- 7);
+            g.drawRect(0, 0, Game.window().getWidth() - 10,
+                       Game.window().getHeight() - Game.window().getHostControl().getInsets().top - 7);
             g.setStroke(new BasicStroke());
         }
         super.render(g);

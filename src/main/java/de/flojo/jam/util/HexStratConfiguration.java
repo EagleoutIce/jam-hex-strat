@@ -5,7 +5,7 @@ import de.flojo.jam.networking.share.util.IAmJson;
 public class HexStratConfiguration implements IAmJson {
     int defaultStartMoney = 45;
     String defaultIpAddress = "localhost";
-    int defaultPort =1096;
+    int defaultPort = 1096;
 
     public int getDefaultPort() {
         return defaultPort;

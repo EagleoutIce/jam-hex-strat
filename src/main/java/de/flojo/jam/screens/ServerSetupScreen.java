@@ -154,10 +154,12 @@ public class ServerSetupScreen extends Screen {
         this.getComponents().add(loadTerrain);
 
         // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 40, Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
+        this.portNumber = new TextFieldComponent(0, 0, 100, 40,
+                                                 Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
         this.portNumber.setFormat("[0-9]{1,4}");
         this.getComponents().add(portNumber);
-        this.startMoney = new TextFieldComponent(0, 0, 100, 40, Integer.toString(Main.getHexStratConfiguration().getDefaultStartMoney()));
+        this.startMoney = new TextFieldComponent(0, 0, 100, 40, Integer.toString(
+                Main.getHexStratConfiguration().getDefaultStartMoney()));
         this.startMoney.setFormat("[0-9]{1,6}");
         this.getComponents().add(startMoney);
         initShowTeamButtons();
