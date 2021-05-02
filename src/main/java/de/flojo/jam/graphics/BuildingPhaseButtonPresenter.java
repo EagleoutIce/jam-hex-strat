@@ -87,7 +87,7 @@ public class BuildingPhaseButtonPresenter implements IRenderable {
     }
 
     private void setupGiftButton() {
-        this.giftButton.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - this.giftButton.getHeight() - 50d);
+        this.giftButton.setLocation(Main.INNER_MARGIN, Main.getHeight() - this.giftButton.getHeight() - 50d);
         screen.getComponents().add(this.giftButton);
         this.giftButton.setEnabled(summonedCreature);
         this.giftButton.onClicked(c -> {

@@ -61,6 +61,10 @@ public class Main {
         return new HexStratConfiguration();
     }
 
+    public static int getHeight() {
+        return Game.window().getHeight() - Game.window().getHostControl().getInsets().top;
+    }
+
     public static void main(String[] args) {
 
         hexStratConfiguration = maybeLoadLocalConfigurationFile("hex-strat.conf");

@@ -1,5 +1,6 @@
 package de.flojo.jam.game;
 
+import de.flojo.jam.Main;
 import de.flojo.jam.game.board.Board;
 import de.flojo.jam.game.board.BoardCoordinate;
 import de.flojo.jam.game.board.terrain.Architect;
@@ -17,12 +18,15 @@ import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.BuildingPhaseButtonPresenter;
 import de.flojo.jam.networking.messages.ItIsYourTurnMessage;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.BuildChoice;
 import de.flojo.jam.util.IProvideContext;
 import de.flojo.jam.util.InputController;
+import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.graphics.IRenderable;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 
+import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -89,6 +93,12 @@ public class GameField implements IRenderable, IProvideContext {
     @Override
     public void render(Graphics2D g) {
         board.jointRender(g, owner, factory, spawner);
+        if(isOurTurn()) {
+            g.setColor(owner.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
+            g.setStroke(new BasicStroke(5));
+            g.drawRect(5, 5, Game.window().getWidth()-10, Main.getHeight() - 5);
+            g.setStroke(new BasicStroke());
+        }
         buildingPhaseButtons.render(g);
     }
 

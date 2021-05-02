@@ -36,6 +36,7 @@ import de.gurkenlabs.litiengine.resources.Resources;
 import de.gurkenlabs.litiengine.sound.Sound;
 
 import javax.swing.JOptionPane;
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -49,6 +50,9 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
+import static de.flojo.jam.game.TileConstants.P1_COLOR;
+import static de.flojo.jam.game.TileConstants.P2_COLOR;
+
 public class GameScreen extends Screen {
     public static final BufferedImage PLAYER_VIEW_TURN_P1 = Resources.images().get("ui/spieleranzeige_player1.png");
     public static final BufferedImage PLAYER_VIEW_TURN_P2 = Resources.images().get("ui/spieleranzeige_player2.png");
@@ -59,8 +63,8 @@ public class GameScreen extends Screen {
     public static final BufferedImage LOST = Resources.images().get("ui/verloren_sign.png");
     public static final Sound TURN_START = Resources.sounds().get("audio/sound/round_start.wav");
     public static final String NAME = "BUILDPHASE";
-    private static final Color P1_COLOR = new Color(45, 173, 215);
-    private static final Color P2_COLOR = new Color(141, 45, 215);
+    public static final Color P1_COLOR = new Color(45, 173, 215);
+    public static final Color P2_COLOR = new Color(141, 45, 215);
     private static final GameScreen instance = new GameScreen();
     private static final int MAX_NAME_LENGTH = 7;
     private final AtomicBoolean gameOver = new AtomicBoolean();
@@ -133,6 +137,7 @@ public class GameScreen extends Screen {
         if (field == null)
             return;
         field.render(g);
+
         PlayerId turnPlayerId = field.isOurTurn() ? ourId : ourId.other();
 
         ImageRenderer.render(g, turnPlayerId.ifOne(PLAYER_VIEW_TURN_P1, PLAYER_VIEW_TURN_P2),

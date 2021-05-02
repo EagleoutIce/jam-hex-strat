@@ -22,6 +22,7 @@ import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
+import de.flojo.jam.screens.ingame.GameScreen;
 import de.flojo.jam.util.FileHelper;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
@@ -32,6 +33,7 @@ import de.gurkenlabs.litiengine.gui.TextFieldComponent;
 import de.gurkenlabs.litiengine.gui.screens.Screen;
 import de.gurkenlabs.litiengine.input.Input;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -360,7 +362,7 @@ public class EditorScreen extends Screen {
         newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 100d);
         saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 100d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
-                              Game.window().getHeight() - 100d);
+                              Main.getHeight() - 100d);
         int width = Game.window().getWidth();
         p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 18d);
         p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);
@@ -484,6 +486,13 @@ public class EditorScreen extends Screen {
     @Override
     public void render(final Graphics2D g) {
         board.jointRender(g, getFakeId(), creatureFactory, trapSpawner);
+        final var fakeId = getFakeId();
+        if(fakeId != null) {
+            g.setColor(fakeId.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
+            g.setStroke(new BasicStroke(5));
+            g.drawRect(0, 0, Game.window().getWidth() - 10, Main.getHeight()-5);
+            g.setStroke(new BasicStroke());
+        }
         super.render(g);
         final var presenterToolTips = presenter.getToolTips();
         if (presenterToolTips != null)
