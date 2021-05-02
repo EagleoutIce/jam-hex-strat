@@ -29,6 +29,7 @@ public class CreatureActionController {
     private final Object selectionLock = new Object();
     private final Set<Tile> possibleTargets;
     private Creature activeCreature = null;
+    private BoardCoordinate activeCreatureStartCoordinate;
     private boolean completed = false;
     private boolean performed = false;
     private BiConsumer<Boolean, BoardCoordinate> onCompleted = null;
@@ -138,9 +139,10 @@ public class CreatureActionController {
         this.onCompleted = onCompleted;
 
         activeCreature = creature;
+        activeCreatureStartCoordinate = new BoardCoordinate(activeCreature.getCoordinate());
         possibleTargets.clear();
 
-        Tile start = creature.getBase().getTile();
+        final var start = creature.getBase().getTile();
         possibleTargets.addAll(
                 CreatureSkillAOAGenerator.getAOA(currentSkill, start, context.getBoard(), context.getCreatures()));
         possibleTargets.forEach(t -> t.mark(true));
@@ -192,12 +194,12 @@ public class CreatureActionController {
         if (me.getButton() != MouseEvent.BUTTON1)
             return;
 
-        Point target = me.getPoint();
+        final var target = me.getPoint();
         Optional<Tile> mayTile = identifyClickedOnValidTile(target);
         if (mayTile.isEmpty())
             return;
 
-        Tile tile = mayTile.get();
+        final var tile = mayTile.get();
         this.clickedOn = tile.getCoordinate();
 
         switch (currentActionType) {
@@ -303,6 +305,10 @@ public class CreatureActionController {
 
     public Creature getActiveCreature() {
         return activeCreature;
+    }
+
+    public BoardCoordinate getActiveStartCoordinate() {
+        return activeCreatureStartCoordinate;
     }
 
     private enum CurrentActionType {

@@ -182,7 +182,7 @@ public class SkillsPresenter {
         if (Boolean.TRUE.equals(performed)) {
             c.getAttributes().useAp(presenter.getSkill().getCost());
             if (onAction != null)
-                onAction.onSkill(actionController.getActiveCreature().getCoordinate(), target, presenter.getSkill());
+                onAction.onSkill(actionController.getActiveStartCoordinate(), target, presenter.getSkill());
         }
         updateSkillButtonStates(c);
     }

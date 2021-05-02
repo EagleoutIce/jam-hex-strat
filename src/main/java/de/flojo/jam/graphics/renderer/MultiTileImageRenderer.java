@@ -23,8 +23,22 @@ public class MultiTileImageRenderer implements IRenderTileData {
     private final HashMap<Integer, SimpleImageRenderer> images = new HashMap<>();
 
 
-    private static int toNum(boolean x) { return toNum(x, 1); }
-    private static int toNum(boolean x, int g) { return x ? g : 0; }
+    public MultiTileImageRenderer(final Map<String, Integer> images, String terrainId, final double offsetX,
+                                  final double offsetY, final float scale) {
+        this.offsetX = offsetX;
+        this.offsetY = offsetY;
+        this.scale = scale;
+        this.terrainId = terrainId;
+        images.forEach((n, i) -> this.images.put(i, new SimpleImageRenderer(n, offsetX, offsetY, scale)));
+    }
+
+    private static int toNum(boolean x) {
+        return toNum(x, 1);
+    }
+
+    private static int toNum(boolean x, int g) {
+        return x ? g : 0;
+    }
 
     public static int imgIdx(boolean u, boolean ur, boolean lr, boolean l, boolean ll, boolean ul) {
         return toNum(u) + toNum(ur) * 2 + toNum(lr) * 4 + toNum(l) * 8 + toNum(ll) * 16 + toNum(ul) * 32;
@@ -52,8 +66,8 @@ public class MultiTileImageRenderer implements IRenderTileData {
 
     private int getImageIndex(Tile base, Set<Tile> neighbours) {
         var idx = 0;
-        for (Tile t: neighbours) {
-            if(t.getTerrainType().getNode().getImprintSupplierName().equals(terrainId)) {
+        for (Tile t : neighbours) {
+            if (t.getTerrainType().getNode().getImprintSupplierName().equals(terrainId)) {
                 // calculate dir
                 final var dir = HexMaths.decodeDirection(base.getCoordinate(), t.getCoordinate());
                 idx += imgIdx(dir);
@@ -61,15 +75,6 @@ public class MultiTileImageRenderer implements IRenderTileData {
         }
         return idx;
     }
-
-    public MultiTileImageRenderer(final Map<String, Integer> images, String terrainId, final double offsetX, final double offsetY, final float scale) {
-        this.offsetX = offsetX;
-        this.offsetY = offsetY;
-        this.scale = scale;
-        this.terrainId = terrainId;
-        images.forEach((n, i) -> this.images.put(i, new SimpleImageRenderer(n, offsetX, offsetY, scale)));
-    }
-
 
     private float scale() {
         return Board.getZoom() * scale;
