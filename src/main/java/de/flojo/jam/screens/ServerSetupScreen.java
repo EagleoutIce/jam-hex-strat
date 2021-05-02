@@ -30,8 +30,6 @@ import java.util.logging.Level;
 
 public class ServerSetupScreen extends Screen {
     public static final String NAME = "Server-Setup";
-    public static final String DEFAULT_PORT = "1096";
-    public static final String DEFAULT_START_MONEY = "45";
     private ServerController serverController;
     private TextFieldComponent portNumber;
     private TextFieldComponent startMoney;
@@ -156,10 +154,10 @@ public class ServerSetupScreen extends Screen {
         this.getComponents().add(loadTerrain);
 
         // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 40, DEFAULT_PORT);
+        this.portNumber = new TextFieldComponent(0, 0, 100, 40, Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
         this.portNumber.setFormat("[0-9]{1,4}");
         this.getComponents().add(portNumber);
-        this.startMoney = new TextFieldComponent(0, 0, 100, 40, DEFAULT_START_MONEY);
+        this.startMoney = new TextFieldComponent(0, 0, 100, 40, Integer.toString(Main.getHexStratConfiguration().getDefaultStartMoney()));
         this.startMoney.setFormat("[0-9]{1,6}");
         this.getComponents().add(startMoney);
         initShowTeamButtons();

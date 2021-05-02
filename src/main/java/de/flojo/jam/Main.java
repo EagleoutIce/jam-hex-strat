@@ -1,11 +1,13 @@
 package de.flojo.jam;
 
+import com.google.gson.Gson;
 import de.flojo.jam.audio.BackgroundMusic;
 import de.flojo.jam.screens.ConnectScreen;
 import de.flojo.jam.screens.EditorScreen;
 import de.flojo.jam.screens.MenuScreen;
 import de.flojo.jam.screens.ServerSetupScreen;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.HexStratConfiguration;
 import de.flojo.jam.util.HexStratLogger;
 import de.gurkenlabs.litiengine.Game;
 import de.gurkenlabs.litiengine.GameListener;
@@ -16,6 +18,9 @@ import de.gurkenlabs.litiengine.resources.Resources;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -33,11 +38,32 @@ public class Main {
     public static final float DEFAULT_INTERNAL_SCALE = .26f;
     public static final double INNER_MARGIN = 20d;
 
+    private static HexStratConfiguration hexStratConfiguration;
+
     private static Thread loadEditor;
     private static Thread loadServer;
     private static int version = -1;
 
+    public static HexStratConfiguration maybeLoadLocalConfigurationFile(String filename) {
+        final var tempFile = new File(filename);
+        if (!tempFile.exists()) {
+            HexStratLogger.log().log(Level.INFO, "Configuration file \"{0}\" not found", filename);
+            return new HexStratConfiguration();
+        }
+        final var gson = new Gson();
+        try (final var reader = new FileReader(tempFile)) {
+            final var config = gson.fromJson(reader, HexStratConfiguration.class);
+            HexStratLogger.log().log(Level.INFO, "Loading from configuration file \"{0}\"", filename);
+            return config;
+        } catch (IOException e) {
+            HexStratLogger.log().log(Level.WARNING, e.getMessage());
+        }
+        return new HexStratConfiguration();
+    }
+
     public static void main(String[] args) {
+
+        hexStratConfiguration = maybeLoadLocalConfigurationFile("hex-strat.conf");
 
         try (final var scanner = new Scanner(Resources.get("version.info"))) {
             version = scanner.nextInt();
@@ -107,5 +133,9 @@ public class Main {
 
     public static int getVersion() {
         return version;
+    }
+
+    public static HexStratConfiguration getHexStratConfiguration() {
+        return hexStratConfiguration;
     }
 }

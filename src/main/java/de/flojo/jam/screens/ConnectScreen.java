@@ -129,11 +129,11 @@ public class ConnectScreen extends Screen {
         this.getComponents().add(connect);
 
         // pos will be recalculated
-        this.portNumber = new TextFieldComponent(0, 0, 100, 70, ServerSetupScreen.DEFAULT_PORT);
+        this.portNumber = new TextFieldComponent(0, 0, 100, 70, Integer.toString(Main.getHexStratConfiguration().getDefaultPort()));
         this.portNumber.setFormat("[0-9]{0,4}");
         this.portNumber.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(portNumber);
-        this.address = new TextFieldComponent(0, 0, 600, 70, "localhost");
+        this.address = new TextFieldComponent(0, 0, 600, 70, Main.getHexStratConfiguration().getDefaultIpAddress());
         this.address.setFormat("[a-zA-Z.0-9]{0,200}");
         this.address.getAppearance().setForeColor(new Color(23, 24, 14));
         this.getComponents().add(address);
