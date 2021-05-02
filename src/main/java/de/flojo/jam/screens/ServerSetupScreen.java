@@ -115,8 +115,8 @@ public class ServerSetupScreen extends Screen {
     private void updatePositions() {
         final double height = Game.window().getResolution().getHeight();
         final double width = Game.window().getResolution().getWidth();
-        this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 47d);
-        this.startMoney.setLocation(Main.INNER_MARGIN + 165d, height - 77d);
+        this.portNumber.setLocation(Main.INNER_MARGIN + 60d, height - 45d);
+        this.startMoney.setLocation(Main.INNER_MARGIN + 165d, height - 75d);
         this.startServer.setLocation(width - this.startServer.getWidth() - 0.5 * Main.INNER_MARGIN - 10d,
                                      height - this.startServer.getHeight() - 15);
         this.loadTerrain.setLocation(
