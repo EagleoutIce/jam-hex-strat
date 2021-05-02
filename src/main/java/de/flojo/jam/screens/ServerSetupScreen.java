@@ -85,9 +85,9 @@ public class ServerSetupScreen extends Screen {
             TextRenderer.render(g, "Players: " + playerStatus(), Main.INNER_MARGIN,
                                 15.0 + 2 * g.getFontMetrics().getHeight() + largeHeight);
         TextRenderer.render(g, "Port: ", Main.INNER_MARGIN,
-                            Main.getHeight() - 50d);
+                            Game.window().getHeight() - 50d);
         TextRenderer.render(g, "Start Money: ", Main.INNER_MARGIN,
-                            Main.getHeight() - 80d);
+                            Game.window().getHeight() - 80d);
         super.render(g);
         List<ToolTip<GuiComponent>> presenterToolTips = gameField.getPresenter().getToolTips();
         if (presenterToolTips != null)

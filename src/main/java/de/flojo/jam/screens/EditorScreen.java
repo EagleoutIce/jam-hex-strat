@@ -362,7 +362,7 @@ public class EditorScreen extends Screen {
         newField.setLocation(Main.INNER_MARGIN, Game.window().getHeight() - 100d);
         saveField.setLocation(Main.INNER_MARGIN + newField.getWidth() + 10d, Game.window().getHeight() - 100d);
         loadField.setLocation(Main.INNER_MARGIN + newField.getWidth() + saveField.getWidth() + 20d,
-                              Main.getHeight() - 100d);
+                              Game.window().getHeight() - 100d);
         int width = Game.window().getWidth();
         p1.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - p2.getWidth() - both.getWidth() - 35d, 18d);
         p2.setLocation(width - Main.INNER_MARGIN - p1.getWidth() - both.getWidth() - 30d, 18d);
@@ -489,8 +489,8 @@ public class EditorScreen extends Screen {
         final var fakeId = getFakeId();
         if(fakeId != null) {
             g.setColor(fakeId.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
-            g.setStroke(new BasicStroke(5));
-            g.drawRect(0, 0, Game.window().getWidth() - 10, Main.getHeight()-5);
+            g.setStroke(new BasicStroke(7));
+            g.drawRect(0, 0, Game.window().getWidth() - 10, Game.window().getHeight()-Game.window().getHostControl().getInsets().top- 7);
             g.setStroke(new BasicStroke());
         }
         super.render(g);

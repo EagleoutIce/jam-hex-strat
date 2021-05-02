@@ -95,8 +95,8 @@ public class GameField implements IRenderable, IProvideContext {
         board.jointRender(g, owner, factory, spawner);
         if(isOurTurn()) {
             g.setColor(owner.ifOne(GameScreen.P1_COLOR, GameScreen.P2_COLOR));
-            g.setStroke(new BasicStroke(5));
-            g.drawRect(5, 5, Game.window().getWidth()-10, Main.getHeight() - 5);
+            g.setStroke(new BasicStroke(7));
+            g.drawRect(0, 0, Game.window().getWidth() - 10, Game.window().getHeight()-Game.window().getHostControl().getInsets().top- 7);
             g.setStroke(new BasicStroke());
         }
         buildingPhaseButtons.render(g);
