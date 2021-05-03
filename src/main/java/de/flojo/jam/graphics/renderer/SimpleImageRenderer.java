@@ -27,10 +27,14 @@ public class SimpleImageRenderer implements IRenderTileData {
     }
 
     public SimpleImageRenderer(final String path, final double offsetX, final double offsetY, final float scale) {
+        this(path, offsetX, offsetY, scale, false);
+    }
+
+    public SimpleImageRenderer(final String path, final double offsetX, final double offsetY, final float scale, final boolean forceLoad) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.scale = scale;
-        this.image = Resources.images().get(path);
+        this.image = Resources.images().get(path, forceLoad);
         scaledImage = ImageUtil.scale(image, scale);
         highlightImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);
         markImage = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_INT_ARGB);

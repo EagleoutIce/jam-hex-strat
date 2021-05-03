@@ -11,6 +11,7 @@ import de.flojo.jam.game.board.terrain.Architect;
 import de.flojo.jam.game.board.terrain.TerrainMap;
 import de.flojo.jam.game.board.terrain.TerrainTile;
 import de.flojo.jam.game.board.terrain.management.TerrainId;
+import de.flojo.jam.game.board.terrain.management.TerrainIdConstants;
 import de.flojo.jam.game.board.terrain.management.TerrainImprint;
 import de.flojo.jam.game.board.traps.TrapId;
 import de.flojo.jam.game.board.traps.TrapImprint;
@@ -22,7 +23,9 @@ import de.flojo.jam.game.creature.skills.SkillsPresenter;
 import de.flojo.jam.game.player.PlayerId;
 import de.flojo.jam.graphics.Button;
 import de.flojo.jam.graphics.ImageButton;
+import de.flojo.jam.graphics.renderer.MultiTileImageRenderer;
 import de.flojo.jam.screens.ingame.GameScreen;
+import de.flojo.jam.util.Direction;
 import de.flojo.jam.util.FileHelper;
 import de.flojo.jam.util.HexStratLogger;
 import de.flojo.jam.util.InputController;
@@ -45,6 +48,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -100,6 +104,10 @@ public class EditorScreen extends Screen {
             }
         }, EditorScreen.NAME);
 
+        InputController.get().onKeyPressed(KeyEvent.VK_U, c -> {
+            updateGrassHillTiles();
+        }, EditorScreen.NAME);
+
         InputController.get().onKeyPressed(KeyEvent.VK_K, c -> {
             if (creatureFactory.getSelectedCreature() != null) {
                 creatureFactory.getSelectedCreature().die();
@@ -109,6 +117,30 @@ public class EditorScreen extends Screen {
         InputController.get().onKeyPressed(KeyEvent.VK_ESCAPE, e -> changeScreen(MenuScreen.NAME), EditorScreen.NAME);
         presenter = new SkillsPresenter(this, board, creatureFactory, trapSpawner, getFakeId(), EditorScreen.NAME);
         presenter.enable();
+    }
+
+    private void updateGrassHillTiles() {
+        HexStratLogger.log().info("Reloading grass hill tiles");
+        TerrainTile.GRASS_HILL.setRenderer(new MultiTileImageRenderer(new HashMap<>() {{
+            put("tiles/gelaende_huegel.png", 0);
+            put("tiles/gelaende_huegel_verb_1.png", MultiTileImageRenderer.imgIdx(Direction.UP));
+            put("tiles/gelaende_huegel_verb_2.png", MultiTileImageRenderer.imgIdx(Direction.UP_RIGHT));
+            put("tiles/gelaende_huegel_verb_3.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_RIGHT));
+            put("tiles/gelaende_huegel_verb_4.png", MultiTileImageRenderer.imgIdx(Direction.DOWN));
+            put("tiles/gelaende_huegel_verb_5.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_LEFT));
+            put("tiles/gelaende_huegel_verb_6.png", MultiTileImageRenderer.imgIdx(Direction.UP_LEFT));
+            put("tiles/gelaende_huegel_verb_1_2.png",
+                MultiTileImageRenderer.imgIdx(true, true, false, false, false, false));
+            put("tiles/gelaende_huegel_verb_2_5.png",
+                MultiTileImageRenderer.imgIdx(false, true, false, false, true, false));
+            put("tiles/gelaende_huegel_verb_3_4.png",
+                MultiTileImageRenderer.imgIdx(false, false, true, true, false, false));
+            put("tiles/gelaende_huegel_verb_3_6.png",
+                MultiTileImageRenderer.imgIdx(false, false, true, false, false, true));
+            put("tiles/gelaende_huegel_verb_5_6.png",
+                MultiTileImageRenderer.imgIdx(false, false, false, false, true, true));
+        }}, TerrainIdConstants.T_GRASS_HILL, -288 / 2.1d, -319 / 1.33,
+                                                                      Main.DEFAULT_INTERNAL_SCALE, true));
     }
 
     @Override

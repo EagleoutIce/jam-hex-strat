@@ -22,14 +22,17 @@ public class MultiTileImageRenderer implements IRenderTileData {
 
     private final HashMap<Integer, SimpleImageRenderer> images = new HashMap<>();
 
-
     public MultiTileImageRenderer(final Map<String, Integer> images, String terrainId, final double offsetX,
                                   final double offsetY, final float scale) {
+        this(images, terrainId, offsetX, offsetY, scale, false);
+    }
+    public MultiTileImageRenderer(final Map<String, Integer> images, String terrainId, final double offsetX,
+                                  final double offsetY, final float scale, final boolean forceLoad) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.scale = scale;
         this.terrainId = terrainId;
-        images.forEach((n, i) -> this.images.put(i, new SimpleImageRenderer(n, offsetX, offsetY, scale)));
+        images.forEach((n, i) -> this.images.put(i, new SimpleImageRenderer(n, offsetX, offsetY, scale, forceLoad)));
     }
 
     private static int toNum(boolean x) {

@@ -117,7 +117,7 @@ public enum TerrainTile {
     private final boolean raised;
     private final int movementCost;
     private final PushDirection pushDirection;
-    private final IRenderTileData renderer;
+    private IRenderTileData renderer;
     private final TerrainImprintNodeMap node;
 
     @SuppressWarnings("java:S107")
@@ -166,6 +166,10 @@ public enum TerrainTile {
 
     public boolean isRaised() {
         return raised;
+    }
+
+    public void setRenderer(final IRenderTileData renderer) {
+        this.renderer = renderer;
     }
 
     public int getMovementCost() {
