@@ -121,26 +121,31 @@ public class EditorScreen extends Screen {
 
     private void updateGrassHillTiles() {
         HexStratLogger.log().info("Reloading grass hill tiles");
-        TerrainTile.GRASS_HILL.setRenderer(new MultiTileImageRenderer(new HashMap<>() {{
-            put("tiles/gelaende_huegel.png", 0);
-            put("tiles/gelaende_huegel_verb_1.png", MultiTileImageRenderer.imgIdx(Direction.UP));
-            put("tiles/gelaende_huegel_verb_2.png", MultiTileImageRenderer.imgIdx(Direction.UP_RIGHT));
-            put("tiles/gelaende_huegel_verb_3.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_RIGHT));
-            put("tiles/gelaende_huegel_verb_4.png", MultiTileImageRenderer.imgIdx(Direction.DOWN));
-            put("tiles/gelaende_huegel_verb_5.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_LEFT));
-            put("tiles/gelaende_huegel_verb_6.png", MultiTileImageRenderer.imgIdx(Direction.UP_LEFT));
-            put("tiles/gelaende_huegel_verb_1_2.png",
+        final var map = new HashMap<String, Integer>();
+        map.put("tiles/gelaende_huegel.png", 0);
+        map.put("tiles/gelaende_huegel_verb_1.png", MultiTileImageRenderer.imgIdx(Direction.UP));
+        map.put("tiles/gelaende_huegel_verb_2.png", MultiTileImageRenderer.imgIdx(Direction.UP_RIGHT));
+        map.put("tiles/gelaende_huegel_verb_3.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_RIGHT));
+        map.put("tiles/gelaende_huegel_verb_4.png", MultiTileImageRenderer.imgIdx(Direction.DOWN));
+        map.put("tiles/gelaende_huegel_verb_5.png", MultiTileImageRenderer.imgIdx(Direction.DOWN_LEFT));
+        map.put("tiles/gelaende_huegel_verb_6.png", MultiTileImageRenderer.imgIdx(Direction.UP_LEFT));
+        map.put("tiles/gelaende_huegel_verb_1_2.png",
                 MultiTileImageRenderer.imgIdx(true, true, false, false, false, false));
-            put("tiles/gelaende_huegel_verb_2_5.png",
+        map.put("tiles/gelaende_huegel_verb_2_5.png",
                 MultiTileImageRenderer.imgIdx(false, true, false, false, true, false));
-            put("tiles/gelaende_huegel_verb_3_4.png",
+        map.put("tiles/gelaende_huegel_verb_3_4.png",
                 MultiTileImageRenderer.imgIdx(false, false, true, true, false, false));
-            put("tiles/gelaende_huegel_verb_3_6.png",
+        map.put("tiles/gelaende_huegel_verb_3_6.png",
                 MultiTileImageRenderer.imgIdx(false, false, true, false, false, true));
-            put("tiles/gelaende_huegel_verb_5_6.png",
+        map.put("tiles/gelaende_huegel_verb_5_6.png",
                 MultiTileImageRenderer.imgIdx(false, false, false, false, true, true));
-        }}, TerrainIdConstants.T_GRASS_HILL, -288 / 2.1d, -319 / 1.33,
-                                                                      Main.DEFAULT_INTERNAL_SCALE, true));
+        try {
+            TerrainTile.GRASS_HILL.setRenderer(
+                    new MultiTileImageRenderer(map, TerrainIdConstants.T_GRASS_HILL, -288 / 2.1d, -319 / 1.33,
+                                               Main.DEFAULT_INTERNAL_SCALE, true));
+        } catch (Exception ex) {
+            HexStratLogger.log().severe(ex.getMessage());
+        }
     }
 
     @Override

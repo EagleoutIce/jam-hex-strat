@@ -117,8 +117,8 @@ public enum TerrainTile {
     private final boolean raised;
     private final int movementCost;
     private final PushDirection pushDirection;
-    private IRenderTileData renderer;
     private final TerrainImprintNodeMap node;
+    private IRenderTileData renderer;
 
     @SuppressWarnings("java:S107")
     TerrainTile(String displayName, TerrainImprintNodeMap node, boolean blocksWalking, boolean blocksLineOfSight,
@@ -160,16 +160,16 @@ public enum TerrainTile {
         return renderer;
     }
 
+    public void setRenderer(final IRenderTileData renderer) {
+        this.renderer = renderer;
+    }
+
     public boolean canBeWalkedOn() {
         return !blocksWalking;
     }
 
     public boolean isRaised() {
         return raised;
-    }
-
-    public void setRenderer(final IRenderTileData renderer) {
-        this.renderer = renderer;
     }
 
     public int getMovementCost() {

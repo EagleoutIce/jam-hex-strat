@@ -26,6 +26,7 @@ public class MultiTileImageRenderer implements IRenderTileData {
                                   final double offsetY, final float scale) {
         this(images, terrainId, offsetX, offsetY, scale, false);
     }
+
     public MultiTileImageRenderer(final Map<String, Integer> images, String terrainId, final double offsetX,
                                   final double offsetY, final float scale, final boolean forceLoad) {
         this.offsetX = offsetX;

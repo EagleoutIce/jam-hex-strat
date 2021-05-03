@@ -30,7 +30,8 @@ public class SimpleImageRenderer implements IRenderTileData {
         this(path, offsetX, offsetY, scale, false);
     }
 
-    public SimpleImageRenderer(final String path, final double offsetX, final double offsetY, final float scale, final boolean forceLoad) {
+    public SimpleImageRenderer(final String path, final double offsetX, final double offsetY, final float scale,
+                               final boolean forceLoad) {
         this.offsetX = offsetX;
         this.offsetY = offsetY;
         this.scale = scale;
